@@ -1,10 +1,15 @@
 import { Bell, Menu } from 'lucide-react'
+import { useStore } from '../providers/store'
 
-export const Header = ({ setIsMobile }) => {
+export const Header = () => {
+    const setIsMobile = useStore((state) => state.setIsMobile)
+
     return (
         <header className='fixed bg-white left-64 h-16 border-b border-gray-300 right-0 transition-transform duration-300 max-lg:-translate-x-64 max-lg:w-full'>
             <section className='flex items-center h-full justify-between px-4 gap-4'>
-                <button className='p-2 rounded-lg cursor-pointer hidden max-lg:block hover:bg-gray-200' onClick={() => setIsMobile(true)}>
+                <button
+                    className='p-2 rounded-lg cursor-pointer hidden max-lg:block hover:bg-gray-200'
+                    onClick={() => setIsMobile(true)}>
                     <Menu className='w-5 h-5 visible' />
                 </button>
 

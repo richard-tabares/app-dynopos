@@ -8,8 +8,12 @@ import {
     X,
 } from 'lucide-react'
 import { NavLink } from 'react-router'
+import { useStore } from '../providers/store'
 
-export const SideBar = ({ isMobile, setIsMobile }) => {
+export const SideBar = () => {
+    const isMobile = useStore((state) => state.isMobile)
+    const setIsMobile = useStore((state) => state.setIsMobile)
+
     const menuItems = [
         {
             id: 'dashboard',
