@@ -6,13 +6,18 @@ import {
     RotateCcw,
     Settings,
     X,
+    LogOut,
 } from 'lucide-react'
-import { NavLink } from 'react-router'
+import { useNavigate, NavLink } from 'react-router'
 import { useStore } from '../providers/store'
+import { logout } from '../../features/auth/helpers/logout'
 
 export const SideBar = () => {
     const isMobile = useStore((state) => state.isMobile)
     const setIsMobile = useStore((state) => state.setIsMobile)
+    const setLogout = useStore((state) => state.setLogOut)
+    const user = useStore((state) => state.user)
+    const navigate = useNavigate()
 
     const menuItems = [
         {
@@ -21,7 +26,12 @@ export const SideBar = () => {
             icon: LayoutDashboard,
             path: '/dashboard',
         },
-        { id: 'sales', label: 'Ventas', icon: ShoppingCart, path: '/sales' },
+        {
+            id: 'sales',
+            label: 'Ventas',
+            icon: ShoppingCart,
+            path: '/sales',
+        },
         {
             id: 'returns',
             label: 'Devoluciones',
@@ -34,7 +44,12 @@ export const SideBar = () => {
             icon: Package,
             path: '/inventory',
         },
-        { id: 'reports', label: 'Reportes', icon: BarChart3, path: '/reports' },
+        {
+            id: 'reports',
+            label: 'Reportes',
+            icon: BarChart3,
+            path: '/reports',
+        },
         {
             id: 'settings',
             label: 'Configuraciones',
@@ -42,6 +57,13 @@ export const SideBar = () => {
             path: '/settings',
         },
     ]
+
+    const handleLogout = async () => {
+        await logout(setLogout)
+        setIsMobile(false)
+        // Redirigir al login
+        navigate('/login', { replace: true })
+    }
 
     return (
         <>
@@ -68,7 +90,7 @@ export const SideBar = () => {
                 </section>
                 {/* Nav */}
                 <nav className='flex-1 p-4'>
-                    <ul className='space-y-2 flex flex-col'>
+                    <ul className='h-full space-y-2 flex flex-col'>
                         {menuItems.map((item) => {
                             const Icon = item.icon
                             return (
@@ -91,16 +113,29 @@ export const SideBar = () => {
                                 </li>
                             )
                         })}
+                        {/* Menu salir */}
+                        <li
+                            className='mt-auto flex items-center text-red-600 text-sm font-semibold hover:bg-red-50 transition  px-3 py-2 rounded-lg cursor-pointer'
+                            onClick={handleLogout}>
+                            <LogOut className='mr-2 w-5 -h5' />
+                            <span>Salir</span>
+                        </li>
                     </ul>
                 </nav>
-                {/* User profile */}
-                <section className='flex border-t border-gray-300 b-0 p-4 gap-x-3'>
-                    <section className='flex items-center place-content-center w-10 h-10 bg-gray-200 rounded-full'>
-                        <span>AD</span>
-                    </section>
-                    <section className='flex flex-col'>
-                        <span className='text-sm font-medium'>Admin</span>
-                        <span className='text-xs'>admon@dynopos.com</span>
+                {/* Perfil de usuario */}
+                <section className='border-t border-gray-300 p-4 relative'>
+                    <section className='flex items-center gap-x-3'>
+                        <section className='flex items-center place-content-center w-10 h-10 bg-gray-200 rounded-full'>
+                            <span>AD</span>
+                        </section>
+                        <section className='flex flex-col text-left'>
+                            <span className='text-sm font-medium'>Admin</span>
+                            <span className='text-xs text-gray-500'>
+                                {
+                                    user && user.data.user.email
+                                }
+                            </span>
+                        </section>
                     </section>
                 </section>
             </aside>

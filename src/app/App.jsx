@@ -1,10 +1,17 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router'
 import { Dashboard } from '../features/dashboard/pages/Dashboard'
-import { SideBar } from './layout/SideBar'
-import { Header } from './layout/Header'
+import { DashboardLayout } from './layout/DashboardLayout'
+import { Sales } from '../features/sales/pages/Sales'
+import { Returns } from '../features/returns/pages/Returns'
+import { Inventory } from '../features/inventory/pages/Inventory'
+import { Reports } from '../features/reports/pages/Reports'
+import { Settings } from '../features/settings/pages/Settings'
+import { Login } from '../features/auth/components/Login'
+import { SignUp } from '../features/auth/components/SignUp'
+import { useStore } from './providers/store'
 
 export const App = () => {
-
+    const user = useStore((state) => state.user)
     const stats = {
         todaySales: '1,820',
         revenue: '56,700',
@@ -13,26 +20,57 @@ export const App = () => {
     return (
         <BrowserRouter>
             <section className='bg-gray-50'>
-                <SideBar />
-                <Header />
+                <Routes>
+                    {/* Rutas Publicas */}
+                    <Route
+                        path='/login'
+                        element={<Login />}
+                    />
 
-                <main>
-                    <Routes>
-                        <Route
-                            path='/'
-                            element={<Dashboard />}
-                        />
-                        <Route
-                            path='/dashboard'
-                            element={<Dashboard />}
-                        />
-
+                    <Route
+                        path='/signup'
+                        element={<SignUp />}
+                    />
+                    {/* Rutas Privadas */}
+                    {user && Object.keys(user).length > 0 ? (
+                        <Route element={<DashboardLayout />}>
+                            <Route
+                                path='/dashboard'
+                                element={<Dashboard />}
+                            />
+                            <Route
+                                path='/sales'
+                                element={<Sales />}
+                            />
+                            <Route
+                                path='/returns'
+                                element={<Returns />}
+                            />
+                            <Route
+                                path='/inventory'
+                                element={<Inventory />}
+                            />
+                            <Route
+                                path='/reports'
+                                element={<Reports />}
+                            />
+                            <Route
+                                path='/settings'
+                                element={<Settings />}
+                            />
+                            <Route
+                                path='/*'
+                                element={<Navigate to='/dashboard' />}
+                            />
+                        </Route>
+                    ) : (
+                        // Ruta por defecto 
                         <Route
                             path='/*'
-                            element={<Navigate to='/' />}
+                            element={<Navigate to='/login' />}
                         />
-                    </Routes>
-                </main>
+                    )}
+                </Routes>
             </section>
         </BrowserRouter>
     )
