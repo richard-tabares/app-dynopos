@@ -99,7 +99,7 @@ export const SideBar = () => {
                                     onClick={() => setIsMobile(false)}>
                                     <NavLink
                                         to={item.path}
-                                        className={({ isActive }) =>
+                                        className={({ isActive}) =>
                                             `flex items-center text-gray-600 text-sm font-semibold px-3 py-2 rounded-lg
                                             ${
                                                 isActive

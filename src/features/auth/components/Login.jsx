@@ -31,7 +31,7 @@ export const Login = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder='Correo Electrónico'
-                        className='border border-gray-300 rounded-md py-2 px-4 w-full mb-4'
+                        className='border border-gray-300 rounded-md py-3 px-4 w-full mb-4'
                     />
                     <input
                         type='password'
@@ -39,9 +39,9 @@ export const Login = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder='Contraseña'
-                        className='border border-gray-300 rounded-md py-2 px-4 w-full mb-4'
+                        className='border border-gray-300 rounded-md py-3 px-4 w-full mb-4'
                     />
-                    <button type="submit" className='py-2 px-4 bg-primary-600 rounded-md w-full cursor-pointer' onClick={onHandleSubmit}>
+                    <button type="submit" className='py-3 px-6 font-semibold bg-primary-600 text-white rounded-md w-full cursor-pointer' onClick={onHandleSubmit}>
                         Iniciar Sesión
                     </button>
                 </form>
