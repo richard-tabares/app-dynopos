@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router"
+import { NavLink, useNavigate } from "react-router"
 import { login } from '../helpers/login'
 import { useState } from "react"
 import { useStore } from '../../../app/providers/store'
@@ -22,8 +22,12 @@ export const Login = () => {
         navigate('/dashboard', {replace:true})
     }
     return (
-        <section className='flex justify-center place-items-center h-screen'>
-            <section className='w-1/4 max-lg:w-2/4 max-md:w-3/4'>
+        <section className='flex justify-center place-items-center h-screen bg-gray-100'>
+            <section className='bg-white w-1/3 max-lg:w-2/4 max-md:w-3/4 border border-gray-300 p-10'>
+                <h1 className='text-2xl font-bold text-center text-gray-800 mb-2'>Iniciar Sesión</h1>
+                <p className=' text-gray-600 text-center mb-8'>
+                    Bienvenido de vuelta! Inicia sesión para continuar con tu negocio
+                </p>
                 <form action=''>
                     <input
                         type='email'
@@ -31,7 +35,7 @@ export const Login = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder='Correo Electrónico'
-                        className='border border-gray-300 rounded-md py-3 px-4 w-full mb-4'
+                        className='border border-gray-200 rounded-md py-3 px-4 w-full mb-4'
                     />
                     <input
                         type='password'
@@ -39,11 +43,19 @@ export const Login = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder='Contraseña'
-                        className='border border-gray-300 rounded-md py-3 px-4 w-full mb-4'
+                        className='border border-gray-200 rounded-md py-3 px-4 w-full mb-4'
                     />
-                    <button type="submit" className='py-3 px-6 font-semibold bg-primary-600 text-white rounded-md w-full cursor-pointer' onClick={onHandleSubmit}>
+                    <button type="submit" className='py-3 px-6 font-semibold bg-primary-600 text-white rounded-md w-full cursor-pointer mb-4' onClick={onHandleSubmit}>
                         Iniciar Sesión
                     </button>
+                    <p className='text-center text-gray-600  m-0'>
+                        ¿Aún no tienes cuenta?{' '}
+                        <NavLink
+                            to='/signup'
+                            className='text-primary-600 text-decoration-none font-semibold transition-all duration-300 hover:text-purple-600 hover:underline'>
+                            Registrate aquí
+                        </NavLink>
+                    </p>
                 </form>
             </section>
         </section>

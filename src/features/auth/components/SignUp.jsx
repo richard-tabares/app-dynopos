@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Eye, EyeClosed } from 'lucide-react'
 import { signup as SignUpHelper } from '../helpers/signup'
-import { useNavigate } from 'react-router'
+import { NavLink, useNavigate } from 'react-router'
 
 export const SignUp = () => {
 
@@ -129,7 +129,7 @@ export const SignUp = () => {
     return (
         <section className='w-full flex flex-col items-center justify-center bg-gray-100 px-4 py-8'>
             <section className='w-2/4 max-lg:w-2/3 max-md:w-full bg-white border border-gray-300 p-10'>
-                <h1 className='text-3xl font-bold text-gray-900 text-center mb-2'>
+                <h1 className='text-2xl font-bold text-center text-gray-800 mb-2'>
                     Crear Cuenta
                 </h1>
                 <p className=' text-gray-600 text-center mb-8'>
@@ -364,13 +364,13 @@ export const SignUp = () => {
                         Crear Cuenta
                     </button>
 
-                    <p className='text-center text-gray-600  m-0'>
+                    <p className='text-center text-gray-600 m-0'>
                         ¿Ya tienes cuenta?{' '}
-                        <a
-                            href='/login'
+                        <NavLink
+                            to='/login'
                             className='text-primary-600 text-decoration-none font-semibold transition-all duration-300 hover:text-purple-600 hover:underline'>
                             Inicia sesión aquí
-                        </a>
+                        </NavLink>
                     </p>
                 </form>
             </section>
