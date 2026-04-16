@@ -37,7 +37,7 @@ export const Metrics = () => {
     return (
         <section className='grid grid-cols-4 max-md:grid-cols-1 max-lg:grid-cols-2 gap-4'>
             {metrics.map((metric, index) => (
-                <section key={index} className='flex gap-4 justify-between items-center bg-white border border-gray-200 rounded-xl shadow-xs p-6'>
+                <section key={index} className='flex gap-4 justify-between items-center bg-white border border-gray-300 shadow-xs p-6'>
                     <section className=''>
                         <section className='space-y-2'>
                             <h2 className='text-sm'>{metric.title}</h2>

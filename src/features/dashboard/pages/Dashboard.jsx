@@ -4,7 +4,7 @@ export const Dashboard = () => {
     return (
         <section className='space-y-6'>
             {/* Bienvenida */}
-            <section className='bg-primary-600 text-white rounded-xl p-6'>
+            <section className='bg-primary-600 text-white p-6'>
                 <h1 className='text-3xl font-semibold mb-2'>
                     Bienvenido de vuelta! 👋
                 </h1>

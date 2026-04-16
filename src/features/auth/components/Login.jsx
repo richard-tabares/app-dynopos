@@ -25,9 +25,10 @@ export const Login = () => {
         <section className='flex justify-center place-items-center h-screen bg-gray-100'>
             <section className='bg-white w-1/3 max-lg:w-2/4 max-md:w-3/4 border border-gray-300 p-10'>
                 <h1 className='text-2xl font-bold text-center text-gray-800 mb-2'>Iniciar Sesión</h1>
-                <p className=' text-gray-600 text-center mb-8'>
-                    Bienvenido de vuelta! Inicia sesión para continuar con tu negocio
+                <p className='text-gray-600 text-center'>
+                    Bienvenido de vuelta! 👋
                 </p>
+                <p className='text-gray-600 text-center mb-8'>Inicia sesión para administrar con tu negocio</p>
                 <form action=''>
                     <input
                         type='email'
@@ -45,10 +46,17 @@ export const Login = () => {
                         placeholder='Contraseña'
                         className='border border-gray-200 rounded-md py-3 px-4 w-full mb-4'
                     />
-                    <button type="submit" className='py-3 px-6 font-semibold bg-primary-600 text-white rounded-md w-full cursor-pointer mb-4' onClick={onHandleSubmit}>
+                    <button type="submit" className='py-3 px-6 font-semibold bg-primary-600 text-white rounded-md w-full cursor-pointer mb-2' onClick={onHandleSubmit}>
                         Iniciar Sesión
                     </button>
-                    <p className='text-center text-gray-600  m-0'>
+                    <p className='text-center text-gray-600 text-xs mb-8'>
+                        <NavLink
+                            to='/forgot-password'
+                            className='text-primary-600 text-decoration-none font-semibold transition-all duration-300 hover:text-purple-600 hover:underline'>
+                            Olvidaste tu contraseña
+                        </NavLink>
+                    </p>
+                    <p className='text-center text-gray-600'>
                         ¿Aún no tienes cuenta?{' '}
                         <NavLink
                             to='/signup'
