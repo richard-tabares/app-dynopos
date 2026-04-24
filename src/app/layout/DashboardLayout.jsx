@@ -1,13 +1,12 @@
 import { Outlet, useLocation } from 'react-router'
 import { SideBar } from './SideBar'
 import { Header } from './Header'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useStore } from '../providers/store'
 import { getDashboardData } from '../../features/dashboard/helpers/getDashboardData'
 
 export const DashboardLayout = () => {
-    const { user, isCollapsed } = useStore()
-    const [todayRevenue, setTodayRevenue] = useState(0)
+    const { user, isCollapsed, setTodayRevenue, todayRevenue } = useStore()
     const businessId = user?.data?.user?.id
     const location = useLocation()
 
@@ -23,7 +22,7 @@ export const DashboardLayout = () => {
             }
         }
         fetchRevenue()
-    }, [businessId, location.pathname])
+    }, [businessId, location.pathname, setTodayRevenue])
 
     return (
         <section className='bg-gray-50'>

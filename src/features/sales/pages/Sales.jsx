@@ -9,10 +9,14 @@ import { ProductGrid } from '../components/ProductGrid'
 import { OrderSidebar } from '../components/OrderSidebar'
 import { SaleConfirmationModal } from '../components/SaleConfirmationModal'
 import { SaleTicketModal } from '../../../shared/components/SaleTicketModal'
+import { SalesHistoryCard } from '../components/SalesHistoryCard'
 import { createSale } from '../helpers/createSale'
+import { getSales } from '../helpers/getSales'
+import { returnSale } from '../helpers/returnSale'
+import { getDashboardData } from '../../dashboard/helpers/getDashboardData'
 
 export const Sales = () => {
-    const { user, products, setProducts, cart, clearCart } = useStore()
+    const { user, products, setProducts, cart, clearCart, setTodayRevenue } = useStore()
     const [categories, setCategories] = useState([])
     const [searchTerm, setSearchTerm] = useState('')
     const [activeCategory, setActiveCategory] = useState('all')
@@ -21,6 +25,8 @@ export const Sales = () => {
     const [saleSummaryData, setSaleSummaryData] = useState(null)
     const [lastSaleTicket, setLastSaleTicket] = useState(null)
     const [showTicketModal, setShowTicketModal] = useState(false)
+
+    const [salesList, setSalesList] = useState([])
 
     const [visibleCount, setVisibleCount] = useState(10)
 
@@ -31,12 +37,14 @@ export const Sales = () => {
         const loadData = async () => {
             if (!businessId) return
             try {
-                const [productsData, categoriesData] = await Promise.all([
+                const [productsData, categoriesData, salesData] = await Promise.all([
                     getProducts(businessId),
-                    getCategories(businessId)
+                    getCategories(businessId),
+                    getSales(businessId)
                 ])
                 setProducts(productsData)
                 setCategories(categoriesData)
+                setSalesList(salesData)
             } catch (error) {
                 console.error('Error loading sales data:', error)
                 toast.error('Error al cargar datos de venta')
@@ -117,9 +125,15 @@ export const Sales = () => {
             })
             
             clearCart()
-            // Refresh products to update stock
-            const productsData = await getProducts(businessId)
+
+            const [productsData, salesData, dashboardData] = await Promise.all([
+                getProducts(businessId),
+                getSales(businessId),
+                getDashboardData(businessId)
+            ])
             setProducts(productsData)
+            setSalesList(salesData)
+            setTodayRevenue(dashboardData.metrics.todayRevenue)
             setShowConfirmationModal(false)
             setSaleSummaryData(null)
             setShowTicketModal(true) // Show ticket after success
@@ -127,6 +141,24 @@ export const Sales = () => {
             toast.error(error.message || 'Error al procesar la venta')
         } finally {
             setLoading(false)
+        }
+    }
+
+    const handleReturnSale = async (sale, reason) => {
+        try {
+            await returnSale(sale.id, { reason, businessId })
+            toast.success('Devolución procesada exitosamente')
+
+            const [salesData, productsData, dashboardData] = await Promise.all([
+                getSales(businessId),
+                getProducts(businessId),
+                getDashboardData(businessId)
+            ])
+            setSalesList(salesData)
+            setProducts(productsData)
+            setTodayRevenue(dashboardData.metrics.todayRevenue)
+        } catch (error) {
+            toast.error(error.message || 'Error al procesar la devolución')
         }
     }
 
@@ -179,6 +211,11 @@ export const Sales = () => {
                             )}
                         </div>
                     </section>
+
+                    <SalesHistoryCard
+                        sales={salesList}
+                        onReturn={handleReturnSale}
+                    />
                 </div>
 
                 {/* Sidebar: Current Order */}
