@@ -52,8 +52,7 @@ export const Products = () => {
                 setProducts(products)
                 const categories = await getCategories(businessId)
                 setCategories(categories)
-            // eslint-disable-next-line no-unused-vars
-            } catch (_error) {
+            } catch (error) {
                 setProducts([])
                 setCategories([])
             }
@@ -83,8 +82,8 @@ export const Products = () => {
                 )
                 toast.success('Producto actualizado correctamente')
                 setOpenModal(false)
-            } catch (_error) {
-                toast.error(_error.message || 'Error al actualizar el producto')
+            } catch (error) {
+                toast.error(error.message || 'Error al actualizar el producto')
             }
         } else {
             // Crear nuevo producto
@@ -93,8 +92,8 @@ export const Products = () => {
                 setProducts([...products, newProduct])
                 toast.success('Producto creado correctamente')
                 setOpenModal(false)
-            } catch (_error) {
-                toast.error(_error.message || 'Error al crear el producto')
+            } catch (error) {
+                toast.error(error.message || 'Error al crear el producto')
             }
         }
     }
@@ -105,8 +104,8 @@ export const Products = () => {
             await deleteProduct(productId)
             setProducts(products.filter((product) => product.id !== productId))
             toast.success('Producto eliminado correctamente')
-        } catch (_error) {
-            toast.error(_error.message || 'Error al eliminar el producto')
+        } catch (error) {
+            toast.error(error.message || 'Error al eliminar el producto')
         }
     }
     const onEditProduct = async (productId) => {
@@ -159,7 +158,7 @@ export const Products = () => {
                             {
                                 
                                     <span className='text-sm text-gray-500 font-medium'>
-                                        Total productos ({filteredProducts.length})
+                                        Total ({filteredProducts.length})
                                     </span>
                                 
                             }

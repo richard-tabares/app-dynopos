@@ -43,7 +43,7 @@ export const SaleConfirmationModal = ({
                                         <span className='truncate text-gray-800'>{item.name}</span>
                                     </div>
                                     <span className='font-semibold text-gray-900'>
-                                        ${(item.price * item.quantity).toFixed(2)}
+                                        ${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(item.price * item.quantity)}
                                     </span>
                                 </li>
                             ))}
@@ -58,7 +58,7 @@ export const SaleConfirmationModal = ({
                     </div>
                     <div className='flex justify-between items-center pb-2 border-b border-gray-200'>
                         <span className='font-medium'>Total de la Orden:</span>
-                        <span className='text-xl font-bold text-primary-600'>${total.toFixed(2)}</span>
+                        <span className='text-xl font-bold text-primary-600'>${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(total)}</span>
                     </div>
                 </div>
 

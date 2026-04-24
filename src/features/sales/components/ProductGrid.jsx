@@ -33,7 +33,7 @@ export const ProductCard = ({ product }) => {
                     {stock === 0 ? 'Sin Stock' : `Stock: ${stock}`}
                 </span>
                 <p className='text-lg font-bold text-primary-600'>
-                    ${parseFloat(product.price).toFixed(2)}
+                    ${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(product.price)}
                 </p>
             </div>
         </button>

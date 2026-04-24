@@ -23,14 +23,16 @@ export const Inventory = () => {
             try {
                 const data = await getProducts(businessId)
                 setProducts(data)
-            } catch (_error) {
-                toast.error(_error.message || 'Error al cargar el inventario')
+            } catch (error) {
+                toast.error(error.message || 'Error al cargar el inventario')
             }
         }
         loadInventory()
     }, [businessId, setProducts])
 
-    const filteredProducts = products.filter((product) => {
+    const activeProducts = products.filter(p => p.is_active !== false)
+
+    const filteredProducts = activeProducts.filter((product) => {
         const matchesSearch =
             product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             product.sku.toLowerCase().includes(searchTerm.toLowerCase())
@@ -74,8 +76,8 @@ export const Inventory = () => {
             } else {
                 toast.error('No se pudo actualizar el inventario')
             }
-        } catch (_error) {
-            toast.error(_error.message || 'Error de red al actualizar el inventario')
+        } catch (error) {
+            toast.error(error.message || 'Error de red al actualizar el inventario')
         }
     }
 
@@ -87,7 +89,7 @@ export const Inventory = () => {
         'Código',
         'Producto',
         'Categoría',
-        'Stock Actual',
+        'Stock',
         'Mínimo',
         'Estado',
         'Acciones',
@@ -112,7 +114,7 @@ export const Inventory = () => {
                     </p>
                 </section>
 
-                <InventorySummary products={products} />
+                <InventorySummary products={activeProducts} />
 
                 <section className='bg-white border border-gray-300 rounded-lg shadow-sm overflow-hidden'>
                     {/* Header de la tabla */}

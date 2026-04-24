@@ -8,18 +8,8 @@ export const OrderSidebar = ({ onProcessSale }) => {
     const [paymentMethod, setPaymentMethod] = useState('Efectivo')
 
     const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0)
-    const tax = subtotal * 0.08 // Example 8% tax
+    const tax = subtotal * 0.08
     const total = subtotal + tax
-    // const changeValue = Math.max(0, (parseFloat(amountReceived) || 0) - total)
-
-    // const handleAmountReceivedChange = (e) => {
-    //     const value = e.target.value
-    //     setAmountReceived(value)
-    // }
-
-    // const handleQuickCash = (amount) => {
-    //     setAmountReceived(amount)
-    // }
 
     const paymentMethods = [
         { id: 'Efectivo', label: 'Efectivo', icon: Banknote },
@@ -53,7 +43,7 @@ export const OrderSidebar = ({ onProcessSale }) => {
                                     {item.name}
                                 </h4>
                                 <p className='text-primary-600 font-bold text-xs'>
-                                    ${parseFloat(item.price).toFixed(2)}
+                                    ${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(item.price)}
                                 </p>
                             </div>
                             
@@ -92,15 +82,15 @@ export const OrderSidebar = ({ onProcessSale }) => {
                 <div className='flex flex-col gap-2 mb-6'>
                     <div className='flex justify-between text-sm text-gray-600'>
                         <span>Subtotal</span>
-                        <span>${subtotal.toFixed(2)}</span>
+                        <span>${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(subtotal)}</span>
                     </div>
                     <div className='flex justify-between text-sm text-gray-600'>
                         <span>Impuesto (8%)</span>
-                        <span>${tax.toFixed(2)}</span>
+                        <span>${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(tax)}</span>
                     </div>
                     <div className='flex justify-between text-xl font-bold text-gray-900 mt-2 pt-2 border-t border-gray-200'>
                         <span>Total</span>
-                        <span className='text-primary-600'>${total.toFixed(2)}</span>
+                        <span className='text-primary-600'>${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(total)}</span>
                     </div>
                 </div>
 
