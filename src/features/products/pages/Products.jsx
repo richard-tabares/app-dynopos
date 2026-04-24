@@ -9,7 +9,7 @@ import { useStore } from '../../../app/providers/store'
 import { deleteProduct } from '../helpers/deleteProduct'
 import { editProduct } from '../helpers/editProduct'
 import { getProductById } from '../helpers/getProductById'
-import { getCategories } from '../helpers/getCategories'
+import { getCategories } from '../../categories/helpers/getCategories'
 
 export const Products = () => {
     const [openModal, setOpenModal] = useState(false)

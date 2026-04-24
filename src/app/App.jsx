@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router'
 import { Dashboard } from '../features/dashboard/pages/Dashboard'
 import { DashboardLayout } from './layout/DashboardLayout'
 import { Sales } from '../features/sales/pages/Sales'
-import { Returns } from '../features/returns/pages/Returns'
+import { Categories } from '../features/categories/pages/Categories'
 import { Inventory } from '../features/inventory/pages/Inventory'
 import { Reports } from '../features/reports/pages/Reports'
 import { Settings } from '../features/settings/pages/Settings'
@@ -42,8 +42,8 @@ export const App = () => {
                                 element={<Sales />}
                             />
                             <Route
-                                path='/returns'
-                                element={<Returns />}
+                                path='/categories'
+                                element={<Categories />}
                             />
                             <Route
                                 path='/products'

@@ -3,7 +3,7 @@ import {
     ShoppingCart,
     Package,
     BarChart3,
-    RotateCcw,
+    Tags,
     Settings,
     X,
     LogOut,
@@ -39,16 +39,16 @@ export const SideBar = () => {
             path: '/sales',
         },
         {
-            id: 'returns',
-            label: 'Devoluciones',
-            icon: RotateCcw,
-            path: '/returns',
-        },
-        {
             id: 'products',
             label: 'Productos',
             icon: Package,
             path: '/products',
+        },
+        {
+            id: 'categories',
+            label: 'Categorías',
+            icon: Tags,
+            path: '/categories',
         },
         {
             id: 'inventory',
