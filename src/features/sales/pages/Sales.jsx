@@ -19,7 +19,7 @@ export const Sales = () => {
     const [showConfirmationModal, setShowConfirmationModal] = useState(false)
     const [saleSummaryData, setSaleSummaryData] = useState(null)
 
-    const [visibleCount, setVisibleCount] = useState(20)
+    const [visibleCount, setVisibleCount] = useState(10)
 
     const businessId = user?.data?.user?.id
     // const userId = user?.data?.user?.id // Assuming user ID is the same as the one stored
@@ -42,19 +42,27 @@ export const Sales = () => {
         loadData()
     }, [businessId, setProducts])
 
-    const filteredProducts = products.filter((product) => {
-        const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                             product.sku.toLowerCase().includes(searchTerm.toLowerCase())
-        const matchesCategory = activeCategory === 'all' || product.categories?.id === activeCategory
-        const isActive = product.is_active !== false
+    const filteredProducts = products
+        .filter((product) => {
+            const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                                 product.sku.toLowerCase().includes(searchTerm.toLowerCase())
+            const matchesCategory = activeCategory === 'all' || product.categories?.id === activeCategory
+            const isActive = product.is_active !== false
 
-        return matchesSearch && matchesCategory && isActive
-    })
+            return matchesSearch && matchesCategory && isActive
+        })
+        .sort((a, b) => {
+            // Sort by ID descending (assuming larger ID = more recent, or use created_at if available)
+            // Ideally, use a 'created_at' date if it exists in your product object.
+            // For now, assuming newer products are added to the end of the array or have higher IDs.
+            // Adjust this if you have a specific 'date_added' or 'created_at' field.
+            return (b.id > a.id) ? 1 : ((b.id < a.id) ? -1 : 0)
+        })
 
     const displayedProducts = filteredProducts.slice(0, visibleCount)
 
     const handleLoadMore = () => {
-        setVisibleCount((prev) => prev + 20)
+        setVisibleCount((prev) => prev + 10)
     }
 
     const handleProcessSale = (paymentMethod, total) => {
@@ -106,7 +114,7 @@ export const Sales = () => {
         <section className='flex flex-col gap-6'>
             <div className='flex flex-col lg:flex-row gap-8'>
                 {/* Main Content: Search, Categories, Products */}
-                <div className='flex-1 flex flex-col gap-6'>
+                <div className='flex-1 flex flex-col gap-6 order-1 lg:order-1'>
                     <section className='bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col gap-6'>
                         {/* Search Bar */}
                         <div className='relative'>
@@ -154,7 +162,7 @@ export const Sales = () => {
                 </div>
 
                 {/* Sidebar: Current Order */}
-                <div className='w-full lg:w-96'>
+                <div className='w-full lg:w-100 order-2 lg:order-2'>
                     <OrderSidebar onProcessSale={handleProcessSale} />
                 </div>
             </div>

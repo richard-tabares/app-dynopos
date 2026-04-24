@@ -147,6 +147,13 @@ export const Products = () => {
                         <h2 className='text-lg font-semibold flex items-center gap-2'>
                             <Package className='w-5 h-5 text-primary-600' />
                             Lista de Productos
+                            {
+                                
+                                    <span className='text-sm text-gray-500 font-medium'>
+                                        Total productos ({filteredProducts.length})
+                                    </span>
+                                
+                            }
                         </h2>
                         <button
                             className='flex items-center font-medium px-4 py-2 bg-primary-600 text-white text-sm rounded-lg hover:bg-primary-700 transition cursor-pointer'
@@ -196,7 +203,7 @@ export const Products = () => {
                                             {product.categories?.name || 'Sin categoría'}
                                         </td>
                                         <td className='px-6 py-4 text-gray-700 font-bold'>
-                                            {product.price}
+                                            ${new Intl.NumberFormat('es-CO').format(product.price)}
                                         </td>
                                         <td className='px-6 py-4'>
                                             {product.is_active ? (

@@ -32,7 +32,7 @@ export const InventorySummary = ({ products = [] }) => {
         },
         {
             title: 'Valor Inventario',
-            value: new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(inventoryValue),
+            value: new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(inventoryValue),
             icon: DollarSign,
             color: 'bg-green-50 text-green-600',
             iconBg: 'bg-green-100'
