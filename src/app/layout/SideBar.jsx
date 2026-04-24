@@ -23,7 +23,6 @@ export const SideBar = () => {
 
     const setLogout = useStore((state) => state.setLogOut)
     const user = useStore((state) => state.user)
-    console.log('Sidebar user state:', user)
     const navigate = useNavigate()
 
     const menuItems = [
@@ -93,7 +92,6 @@ export const SideBar = () => {
                 ${isCollapsed ? 'w-20' : 'w-64'}
                 `}>
                 {/* Logo */}
-                {console.log(user)}
                 <section className={`h-16 border-b border-gray-300 flex items-center gap-2 px-3 
                     ${isCollapsed ? 'justify-center' : 'justify-between'}
                 `}>

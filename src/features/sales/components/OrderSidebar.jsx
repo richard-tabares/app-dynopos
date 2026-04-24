@@ -7,9 +7,7 @@ export const OrderSidebar = ({ onProcessSale }) => {
 
     const [paymentMethod, setPaymentMethod] = useState('Efectivo')
 
-    const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0)
-    const tax = subtotal * 0.08
-    const total = subtotal + tax
+    const total = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0)
 
     const paymentMethods = [
         { id: 'Efectivo', label: 'Efectivo', icon: Banknote },
@@ -82,11 +80,7 @@ export const OrderSidebar = ({ onProcessSale }) => {
                 <div className='flex flex-col gap-2 mb-6'>
                     <div className='flex justify-between text-sm text-gray-600'>
                         <span>Subtotal</span>
-                        <span>${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(subtotal)}</span>
-                    </div>
-                    <div className='flex justify-between text-sm text-gray-600'>
-                        <span>Impuesto (8%)</span>
-                        <span>${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(tax)}</span>
+                        <span>${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(total)}</span>
                     </div>
                     <div className='flex justify-between text-xl font-bold text-gray-900 mt-2 pt-2 border-t border-gray-200'>
                         <span>Total</span>
