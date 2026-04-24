@@ -7,7 +7,9 @@ import {
     Settings,
     X,
     LogOut,
-    ClipboardList
+    ClipboardList,
+    PanelLeftOpen, 
+    PanelLeftClose
 } from 'lucide-react'
 import { useNavigate, NavLink } from 'react-router'
 import { useStore } from '../providers/store'
@@ -16,8 +18,12 @@ import { logout } from '../../features/auth/helpers/logout'
 export const SideBar = () => {
     const isMobile = useStore((state) => state.isMobile)
     const setIsMobile = useStore((state) => state.setIsMobile)
+    const isCollapsed = useStore((state) => state.isCollapsed)
+    const setIsCollapsed = useStore((state) => state.setIsCollapsed)
+
     const setLogout = useStore((state) => state.setLogOut)
     const user = useStore((state) => state.user)
+    console.log('Sidebar user state:', user)
     const navigate = useNavigate()
 
     const menuItems = [
@@ -82,19 +88,36 @@ export const SideBar = () => {
             )}
             {/* aside bar */}
             <aside
-                className={`fixed flex flex-col left-0 top-0 border-r justify-between border-gray-300 w-64 h-screen bg-white z-30 transition-transform duration-300 max-lg:-translate-x-64 ${isMobile ? 'max-lg:translate-x-0' : 'max-lg:-translate-x-64'}`}>
+                className={`fixed flex flex-col left-0 top-0 border-r justify-between border-gray-300 h-screen bg-white z-30 transition-all duration-300 
+                ${isMobile ? 'max-lg:translate-x-0 w-64' : 'max-lg:-translate-x-64'}
+                ${isCollapsed ? 'w-20' : 'w-64'}
+                `}>
                 {/* Logo */}
-                <section className='h-16 border-b border-gray-300 flex items-center place-content-center gap-2 px-6'>
-                    <ShoppingCart className='w-8 h-8' />
-                    <span className='text-2xl font-semibold flex-1'>
-                        Dyno POS
+                {console.log(user)}
+                <section className={`h-16 border-b border-gray-300 flex items-center gap-2 px-3 
+                    ${isCollapsed ? 'justify-center' : 'justify-between'}
+                `}>
+                    {user?.business?.business_logo ? (
+                        <img src={user.business.business_logo} alt="Business Logo" className={`w-8 h-8 rounded-full ${isCollapsed ? 'hidden' : 'block'}`} />
+                    ) : (
+                        ''
+                    )}
+                    
+                    <span className={`text-2xl font-semibold flex-1 ${isCollapsed ? 'hidden' : 'block'}`}>
+                        {user?.business.business_name || 'Dyno POS'}
                     </span>
+                    <button
+                        className={'p-2 rounded-lg cursor-pointer hover:bg-gray-200 hidden lg:block'} // Always visible on large screens
+                        onClick={() => setIsCollapsed(!isCollapsed)}>
+                        {isCollapsed ? <PanelLeftOpen className='w-5 h-5' /> : <PanelLeftClose className='w-5 h-5' />}
+                    </button>
                     <button
                         className='p-2 rounded-lg cursor-pointer hover:bg-gray-200 hidden max-lg:block'
                         onClick={() => setIsMobile(false)}>
                         <X className='w-5 h-5' />
                     </button>
                 </section>
+
                 {/* Nav */}
                 <nav className='flex-1 p-4'>
                     <ul className='h-full space-y-2 flex flex-col'>
@@ -108,34 +131,35 @@ export const SideBar = () => {
                                         to={item.path}
                                         className={({ isActive}) =>
                                             `flex items-center text-gray-600 text-sm font-semibold px-3 py-2 rounded-lg
+                                            ${isCollapsed ? 'justify-center' : 'justify-start'}
                                             ${
                                                 isActive
                                                     ? 'bg-primary-50 text-primary-600'
                                                     : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
                                             }`
                                         }>
-                                        <Icon className='mr-2 w-5 -h5' />
-                                        <span>{item.label}</span>
+                                        <Icon className={`w-5 h-5 ${isCollapsed ? 'mr-0' : 'mr-2'}`} />
+                                        <span className={`${isCollapsed ? 'hidden' : 'block'}`}>{item.label}</span>
                                     </NavLink>
                                 </li>
                             )
                         })}
                         {/* Menu salir */}
                         <li
-                            className='mt-auto flex items-center text-red-600 text-sm font-semibold hover:bg-red-50 transition  px-3 py-2 rounded-lg cursor-pointer'
+                            className={`mt-auto flex items-center text-red-600 text-sm font-semibold hover:bg-red-50 transition px-3 py-2 rounded-lg cursor-pointer ${isCollapsed ? 'justify-center' : 'justify-start'}`}
                             onClick={handleLogout}>
-                            <LogOut className='mr-2 w-5 -h5' />
-                            <span>Salir</span>
+                            <LogOut className={`w-5 h-5 ${isCollapsed ? 'mr-0' : 'mr-2'}`} />
+                            <span className={`${isCollapsed ? 'hidden' : 'block'}`}>Salir</span>
                         </li>
                     </ul>
                 </nav>
                 {/* Perfil de usuario */}
-                <section className='border-t border-gray-300 p-4 relative'>
-                    <section className='flex items-center gap-x-3'>
-                        <section className='flex items-center place-content-center w-10 h-10 bg-gray-200 rounded-full'>
+                <section className={`border-t border-gray-300 p-4 relative ${isCollapsed ? 'flex justify-center' : ''}`}>
+                    <section className={`flex items-center ${isCollapsed ? 'flex-col gap-y-2' : 'gap-x-3'}`}>
+                        <section className='flex items-center place-content-center w-10 h-10 bg-gray-200 rounded-full shrink-0'>
                             <span>AD</span>
                         </section>
-                        <section className='flex flex-col text-left'>
+                        <section className={`flex flex-col text-left ${isCollapsed ? 'hidden' : 'block'}`}>
                             <span className='text-sm font-medium'>Admin</span>
                             <span className='text-xs text-gray-500'>
                                 {
@@ -146,6 +170,7 @@ export const SideBar = () => {
                     </section>
                 </section>
             </aside>
+
         </>
     )
 }
