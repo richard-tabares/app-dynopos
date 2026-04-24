@@ -15,13 +15,22 @@ export const Products = () => {
     const [editProductData, setEditProductData] = useState({})
     const [categories, setCategories] = useState([])
     const [searchTerm, setSearchTerm] = useState('')
+    const [activeCategory, setActiveCategory] = useState('all')
     const [visibleCount, setVisibleCount] = useState(20)
     const { user, products, setProducts } = useStore()
 
-    const filteredProducts = products.filter((product) =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.sku.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    const filteredProducts = products
+        .filter((product) => {
+            const matchesSearch =
+                product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                product.sku.toLowerCase().includes(searchTerm.toLowerCase())
+            const matchesCategory =
+                activeCategory === 'all' ||
+                product.categories?.id === activeCategory
+
+            return matchesSearch && matchesCategory
+        })
+        .sort((a, b) => b.id - a.id)
 
     const displayedProducts = filteredProducts.slice(0, visibleCount)
 
@@ -163,7 +172,7 @@ export const Products = () => {
                         </button>
                     </section>
                     {/* Contenido de la tabla de productos */}
-                    <section className='px-6 py-4 border-b border-gray-200'>
+                    <section className='px-6 py-4 border-b border-gray-200 flex flex-col gap-4'>
                         <div className='relative'>
                             <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400' />
                             <input
@@ -173,6 +182,29 @@ export const Products = () => {
                                 className='w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
                                 placeholder='Buscar por nombre o código...'
                             />
+                        </div>
+                        <div className='flex gap-2 overflow-x-auto pb-1 scrollbar-none'>
+                            <button
+                                onClick={() => setActiveCategory('all')}
+                                className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer border whitespace-nowrap ${
+                                    activeCategory === 'all'
+                                        ? 'bg-primary-600 text-white border-primary-600'
+                                        : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
+                                }`}>
+                                Todas
+                            </button>
+                            {categories.map((category) => (
+                                <button
+                                    key={category.id}
+                                    onClick={() => setActiveCategory(category.id)}
+                                    className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer border whitespace-nowrap ${
+                                        activeCategory === category.id
+                                            ? 'bg-primary-600 text-white border-primary-600'
+                                            : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
+                                    }`}>
+                                    {category.name}
+                                </button>
+                            ))}
                         </div>
                     </section>
                     <section className='overflow-x-auto scrollbar-thin'>

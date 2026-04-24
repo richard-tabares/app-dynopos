@@ -7,7 +7,7 @@ export const SaleConfirmationModal = ({
     onCancel,
     loading = false,
 }) => {
-    const { total, paymentMethod, amountReceived, change } = orderSummary
+    const { total, paymentMethod } = orderSummary
     const { cart } = useStore()
 
     return (
