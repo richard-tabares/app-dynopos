@@ -10,13 +10,11 @@ import { Login } from '../features/auth/components/Login'
 import { SignUp } from '../features/auth/components/SignUp'
 import { useStore } from './providers/store'
 import { Products } from '../features/products/pages/Products'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 export const App = () => {
     const user = useStore((state) => state.user)
-    const stats = {
-        todaySales: '1,820',
-        revenue: '56,700',
-    }
 
     return (
         <BrowserRouter>
@@ -77,6 +75,18 @@ export const App = () => {
                     )}
                 </Routes>
             </section>
+            <ToastContainer
+                position='top-right'
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme='light'
+            />
         </BrowserRouter>
     )
 }

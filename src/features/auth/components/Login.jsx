@@ -18,7 +18,7 @@ export const Login = () => {
 
     const onHandleSubmit = async (e) => {
         e.preventDefault()
-        const data = await login(user, setLogin)
+        await login(user, setLogin)
         navigate('/dashboard', {replace:true})
     }
     return (

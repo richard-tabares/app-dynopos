@@ -1,4 +1,4 @@
-import { Plus, Edit2, Trash2 } from 'lucide-react'
+import { Plus, Edit2, Trash2, Package, Search } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Modal } from '../components/Modal'
 import { createNewProduct } from '../helpers/createNewProduct'
@@ -52,9 +52,9 @@ export const Products = () => {
     }, [businessId, setProducts])
 
     const handleOpenModal = (e) => {
-        e.stopPropagation()
+        if (e && e.stopPropagation) e.stopPropagation()
         setEditProductData({})
-        setOpenModal((prev) => !openModal)
+        setOpenModal(!openModal)
     }
     const handleSubmit = async (formData) => {
         const businessId = JSON.parse(localStorage.getItem('dynopos-store'))
@@ -125,24 +125,23 @@ export const Products = () => {
                 />
             )}
 
-            <section>
+            <section className='flex flex-col gap-6'>
                 {/* Titulo de la sección productos */}
-                <section className=''>
+                <section>
                     <h1 className='text-2xl font-bold'>Gestión de Productos</h1>
-                    <p>
+                    <p className='text-gray-600'>
                         Aquí puedes gestionar tus productos, agregar nuevos,
                         editar los existentes y eliminar los que ya no
                         necesites.
                     </p>
                 </section>
-                <section className='bg-white mt-6 border border-gray-300'>
+                <section className='bg-white border border-gray-300 shadow-sm overflow-hidden rounded-lg'>
                     {/* Titulo y boton de nuevo prodcuto de la tabla*/}
-                    <section className='border-b border-gray-300 flex justify-between items-center px-6 py-4'>
-                        <section>
-                            <h1 className='text-lg font-semibold'>
-                                Lista de Productos
-                            </h1>
-                        </section>
+                    <section className='border-b border-gray-300 flex justify-between items-center px-6 py-4 bg-gray-50/50'>
+                        <h2 className='text-lg font-semibold flex items-center gap-2'>
+                            <Package className='w-5 h-5 text-primary-600' />
+                            Lista de Productos
+                        </h2>
                         <button
                             className='flex items-center font-medium px-4 py-2 bg-primary-600 text-white text-sm rounded-lg hover:bg-primary-700 transition cursor-pointer'
                             onClick={handleOpenModal}>
@@ -151,53 +150,55 @@ export const Products = () => {
                         </button>
                     </section>
                     {/* Contenido de la tabla de productos */}
-                    <section className='px-6 py-4'>
-                        <input
-                            type='search'
-                            value={searchTerm}
-                            onChange={handleSearch}
-                            className='w-full px-4 py-2 border border-gray-300 rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
-                            placeholder='Buscar por nombre o código...'
-                        />
+                    <section className='px-6 py-4 border-b border-gray-200'>
+                        <div className='relative'>
+                            <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400' />
+                            <input
+                                type='search'
+                                value={searchTerm}
+                                onChange={handleSearch}
+                                className='w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                                placeholder='Buscar por nombre o código...'
+                            />
+                        </div>
                     </section>
-                    <section className='px-6 py-4 text-gray-600 overflow-x-auto scrollbar-thin'>
-                        <table className='w-full text-left border-collapse'>
+                    <section className='overflow-x-auto scrollbar-thin'>
+                        <table className='w-full text-left'>
                             <thead>
-                                <tr className='bg-gray-100 border-gray-300 border-b text-xs'>
+                                <tr className='bg-gray-100 border-b border-gray-300'>
                                     {/* Encabezados de la tabla */}
                                     {productsHeaders.map((header, index) => (
                                         <th
                                             key={index}
-                                            className='px-6 py-4 uppercase'>
+                                            className='px-6 py-4 text-xs font-bold text-gray-600 uppercase tracking-wider'>
                                             {header}
                                         </th>
                                     ))}
                                 </tr>
                             </thead>
-                            {/* Filas de la tabla */}
-                            {console.log(products, categories)}
-                            {displayedProducts.map((product, index) => (
-                                <tbody key={index}>
-                                    <tr className='border-b border-gray-300 hover:bg-gray-50 transition text-sm'>
-                                        <td className='px-6 py-4'>
+                            <tbody className='divide-y divide-gray-200'>
+                                {/* Filas de la tabla */}
+                                {displayedProducts.map((product, index) => (
+                                    <tr key={index} className='hover:bg-gray-50 transition-colors text-sm'>
+                                        <td className='px-6 py-4 font-medium text-gray-900'>
                                             {product.sku}
                                         </td>
-                                        <td className='px-6 py-4'>
+                                        <td className='px-6 py-4 text-gray-700'>
                                             {product.name}
                                         </td>
-                                        <td className='px-6 py-4'>
-                                            {product.categories?.name}
+                                        <td className='px-6 py-4 text-gray-500'>
+                                            {product.categories?.name || 'Sin categoría'}
                                         </td>
-                                        <td className='px-6 py-4'>
+                                        <td className='px-6 py-4 text-gray-700 font-bold'>
                                             {product.price}
                                         </td>
                                         <td className='px-6 py-4'>
                                             {product.is_active ? (
-                                                <span className='px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full'>
+                                                <span className='px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full'>
                                                     Activo
                                                 </span>
                                             ) : (
-                                                <span className='px-2 py-1 text-xs bg-red-100 text-red-800 rounded-full'>
+                                                <span className='px-2.5 py-0.5 text-xs font-medium bg-red-100 text-red-800 rounded-full'>
                                                     Inactivo
                                                 </span>
                                             )}
@@ -206,8 +207,9 @@ export const Products = () => {
                                             <section className='flex items-center gap-2'>
                                                 <button
                                                     onClick={() =>onEditProduct(product.id)}
-                                                    className='hover:bg-gray-200 p-2 rounded-sm cursor-pointer'>
-                                                    <Edit2 className='w-4 h-4' />
+                                                    className='hover:bg-gray-200 p-2 rounded-sm cursor-pointer'
+                                                    title='Editar Producto'>
+                                                    <Edit2 className='w-4 h-4 text-primary-600' />
                                                 </button>
                                                 <button
                                                     onClick={() =>
@@ -215,25 +217,32 @@ export const Products = () => {
                                                             product.id,
                                                         )
                                                     }
-                                                    className='hover:bg-red-700 bg-red-600 text-white p-2 rounded-sm cursor-pointer'>
+                                                    className='hover:bg-red-700 bg-red-600 text-white p-2 rounded-sm cursor-pointer'
+                                                    title='Eliminar Producto'>
                                                     <Trash2 className='w-4 h-4' />
                                                 </button>
                                             </section>
                                         </td>
                                     </tr>
-                                </tbody>
-                            ))}
+                                ))}
+                            </tbody>
                         </table>
                     </section>
                     {/* Botón Cargar Más */}
                     {visibleCount < filteredProducts.length && (
-                        <section className='flex justify-center pb-6'>
+                        <section className='p-6 bg-gray-50 border-t border-gray-200 flex justify-center'>
                             <button
                                 onClick={handleLoadMore}
-                                className='px-6 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition cursor-pointer border border-gray-300'>
+                                className='px-6 py-2 bg-white text-gray-700 font-medium rounded-lg hover:bg-gray-100 transition border border-gray-300 shadow-sm'>
                                 Cargar más productos
                             </button>
                         </section>
+                    )}
+                    {filteredProducts.length === 0 && (
+                        <div className='p-12 text-center'>
+                            <Package className='w-12 h-12 text-gray-300 mx-auto mb-4' />
+                            <p className='text-gray-500 font-medium'>No se encontraron productos</p>
+                        </div>
                     )}
                 </section>
             </section>
