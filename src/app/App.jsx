@@ -9,6 +9,7 @@ import { Settings } from '../features/settings/pages/Settings'
 import { Login } from '../features/auth/components/Login'
 import { SignUp } from '../features/auth/components/SignUp'
 import { useStore } from './providers/store'
+import { Products } from '../features/products/pages/Products'
 
 export const App = () => {
     const user = useStore((state) => state.user)
@@ -45,6 +46,10 @@ export const App = () => {
                             <Route
                                 path='/returns'
                                 element={<Returns />}
+                            />
+                            <Route
+                                path='/products'
+                                element={<Products />}
                             />
                             <Route
                                 path='/inventory'

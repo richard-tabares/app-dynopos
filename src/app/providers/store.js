@@ -6,9 +6,11 @@ export const useStore = create(
         (set) => ({
             user: {},
             isMobile: false,
+            products:[],
             setLogin: (payload) => set((state) => ({ user: payload })),
             setLogOut: (payload) => set((state) => ({ user: '' })),
             setIsMobile: (payload) => set((state) => ({ isMobile: payload })),
+            setProducts: (payload) => set((state) => ({ products: payload })),
         }),
         {
             name: 'dynopos-store',

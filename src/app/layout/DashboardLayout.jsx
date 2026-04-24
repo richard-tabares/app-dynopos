@@ -7,7 +7,7 @@ export const DashboardLayout = () => {
         <section className='bg-gray-50'>
             <SideBar />
             <Header />
-            <main className='p-6 border ml-64 translate-y-16 transition-transform duration-300 max-lg:ml-0'>
+            <main className='p-6 border ml-64 mt-16 transition-all duration-300 max-lg:ml-0'>
                 <Outlet />
             </main>
         </section>

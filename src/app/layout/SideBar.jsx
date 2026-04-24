@@ -7,6 +7,7 @@ import {
     Settings,
     X,
     LogOut,
+    ClipboardList
 } from 'lucide-react'
 import { useNavigate, NavLink } from 'react-router'
 import { useStore } from '../providers/store'
@@ -39,9 +40,15 @@ export const SideBar = () => {
             path: '/returns',
         },
         {
+            id: 'products',
+            label: 'Productos',
+            icon: Package,
+            path: '/products',
+        },
+        {
             id: 'inventory',
             label: 'Inventario',
-            icon: Package,
+            icon: ClipboardList,
             path: '/inventory',
         },
         {
