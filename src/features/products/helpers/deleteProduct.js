@@ -5,12 +5,13 @@ export const deleteProduct = async (productId) => {
         const response = await fetch(`${apiUrl}${endPoint}/${productId}`, {
             method: 'DELETE',
         })
-        if (!response.ok) {
-            throw new Error('Error al eliminar el producto')
-        }
         const data = await response.json()
+        if (!response.ok) {
+            throw new Error(data.error || 'Error al eliminar el producto')
+        }
         return data
     } catch (error) {
         console.error('Error:', error.message)
+        throw error // Re-lanzar para que el componente lo maneje
     }
 }

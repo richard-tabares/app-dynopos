@@ -8,6 +8,7 @@ import { CategoryTabs } from '../components/CategoryTabs'
 import { ProductGrid } from '../components/ProductGrid'
 import { OrderSidebar } from '../components/OrderSidebar'
 import { SaleConfirmationModal } from '../components/SaleConfirmationModal'
+import { SaleTicketModal } from '../../../shared/components/SaleTicketModal'
 import { createSale } from '../helpers/createSale'
 
 export const Sales = () => {
@@ -18,6 +19,8 @@ export const Sales = () => {
     const [loading, setLoading] = useState(false)
     const [showConfirmationModal, setShowConfirmationModal] = useState(false)
     const [saleSummaryData, setSaleSummaryData] = useState(null)
+    const [lastSaleTicket, setLastSaleTicket] = useState(null)
+    const [showTicketModal, setShowTicketModal] = useState(false)
 
     const [visibleCount, setVisibleCount] = useState(10)
 
@@ -95,14 +98,31 @@ export const Sales = () => {
         }
 
         try {
-            await createSale(saleData)
+            const response = await createSale(saleData)
             toast.success('Venta procesada exitosamente')
+            
+            // Prepare ticket data from response
+            const sale = response.data
+            setLastSaleTicket({
+                id: sale.id,
+                total: sale.total_amount,
+                date: sale.created_at.split('T')[0], // Extract only date
+                paymentMethod: sale.payment_method,
+                items: sale.salesItems.map(item => ({
+                    quantity: item.quantity,
+                    price: item.unit_price,
+                    subtotal: item.subtotal,
+                    name: item.products?.name || 'Producto'
+                }))
+            })
+            
             clearCart()
             // Refresh products to update stock
             const productsData = await getProducts(businessId)
             setProducts(productsData)
             setShowConfirmationModal(false)
             setSaleSummaryData(null)
+            setShowTicketModal(true) // Show ticket after success
         } catch (error) {
             toast.error(error.message || 'Error al procesar la venta')
         } finally {
@@ -175,6 +195,12 @@ export const Sales = () => {
                     loading={loading}
                 />
             )}
+
+            <SaleTicketModal 
+                isOpen={showTicketModal}
+                onClose={() => setShowTicketModal(false)}
+                sale={lastSaleTicket}
+            />
         </section>
     )
 }

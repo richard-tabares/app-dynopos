@@ -2,6 +2,7 @@ import { Plus, Edit2, Trash2, Package, Search } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { Modal } from '../components/Modal'
+import { ConfirmModal } from '../components/ConfirmModal'
 import { createNewProduct } from '../helpers/createNewProduct'
 import { getProducts } from '../helpers/getProducts'
 import { useStore } from '../../../app/providers/store'
@@ -12,6 +13,8 @@ import { getCategories } from '../helpers/getCategories'
 
 export const Products = () => {
     const [openModal, setOpenModal] = useState(false)
+    const [openConfirmModal, setOpenConfirmModal] = useState(false)
+    const [productToDelete, setProductToDelete] = useState(null)
     const [editProductData, setEditProductData] = useState({})
     const [categories, setCategories] = useState([])
     const [searchTerm, setSearchTerm] = useState('')
@@ -99,13 +102,33 @@ export const Products = () => {
     }
 
     const onDeleteProduct = async (productId) => {
-        // Lógica para eliminar el producto
+        setProductToDelete(productId)
+        setOpenConfirmModal(true)
+    }
+
+    const confirmDelete = async () => {
+        if (!productToDelete) return
+
         try {
-            await deleteProduct(productId)
-            setProducts(products.filter((product) => product.id !== productId))
-            toast.success('Producto eliminado correctamente')
+            const response = await deleteProduct(productToDelete)
+            
+            // Si el producto se marcó como inactivo en lugar de eliminarse
+            if (response.softDeleted) {
+                setProducts(products.map((product) => 
+                    product.id === productToDelete ? { ...product, is_active: false } : product
+                ))
+                toast.info('El producto tiene ventas asociadas y se ha marcado como inactivo.')
+            } else {
+                setProducts(products.filter((product) => product.id !== productToDelete))
+                toast.success('Producto eliminado correctamente')
+            }
         } catch (error) {
+            if (error.message?.includes('404') || error.message?.includes('not found')) {
+                setProducts(products.filter((product) => product.id !== productToDelete))
+            }
             toast.error(error.message || 'Error al eliminar el producto')
+        } finally {
+            setProductToDelete(null)
         }
     }
     const onEditProduct = async (productId) => {
@@ -138,6 +161,14 @@ export const Products = () => {
                     categories={categories}
                 />
             )}
+
+            <ConfirmModal
+                isOpen={openConfirmModal}
+                onClose={() => setOpenConfirmModal(false)}
+                onConfirm={confirmDelete}
+                title="¿Eliminar producto?"
+                message="Esta acción no se puede deshacer. El producto se eliminará permanentemente de tu inventario."
+            />
 
             <section className='flex flex-col gap-6'>
                 {/* Titulo de la sección productos */}
