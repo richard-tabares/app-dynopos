@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Eye, EyeClosed } from 'lucide-react'
 import { signup as SignUpHelper } from '../helpers/signup'
 import { NavLink, useNavigate } from 'react-router'
+import { toast } from 'react-toastify'
 
 export const SignUp = () => {
 
@@ -104,14 +105,19 @@ export const SignUp = () => {
         }))
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         const newErrors = validateForm()
 
         if (Object.keys(newErrors).length === 0) {
             // enviamos datos al backend
-          SignUpHelper(formData)
-          navigate('/login', {replace:true})
+            try {
+                await SignUpHelper(formData)
+                toast.success('Cuenta creada exitosamente. Por favor, inicia sesión.')
+                navigate('/login', {replace:true})
+            } catch (error) {
+                toast.error('Error al crear la cuenta')
+            }
         } else {
             setErrors(newErrors)
             // Marcar todos los campos como tocados para mostrar errores

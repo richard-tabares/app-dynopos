@@ -1,6 +1,7 @@
 import { NavLink, useNavigate } from "react-router"
 import { login } from '../helpers/login'
 import { useState } from "react"
+import { toast } from 'react-toastify'
 import { useStore } from '../../../app/providers/store'
 
 export const Login = () => {
@@ -18,8 +19,17 @@ export const Login = () => {
 
     const onHandleSubmit = async (e) => {
         e.preventDefault()
-        await login(user, setLogin)
-        navigate('/dashboard', {replace:true})
+        try {
+            const data = await login(user, setLogin)
+            if (data) {
+                toast.success('Sesión iniciada correctamente')
+                navigate('/dashboard', {replace:true})
+            } else {
+                toast.error('Credenciales incorrectas')
+            }
+        } catch (error) {
+            toast.error('Error al iniciar sesión')
+        }
     }
     return (
         <section className='flex justify-center place-items-center h-screen bg-gray-100'>

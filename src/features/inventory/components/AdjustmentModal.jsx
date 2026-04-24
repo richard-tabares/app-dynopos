@@ -8,8 +8,8 @@ export const AdjustmentModal = ({
 }) => {
     const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState({
-        stock: product.inventory?.stock || 0,
-        min_stock: product.inventory?.min_stock || 0,
+        stock: product.inventory?.[0]?.stock || 0,
+        min_stock: product.inventory?.[0]?.min_stock || 0,
     })
 
     const handleChange = (e) => {

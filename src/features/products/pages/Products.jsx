@@ -1,5 +1,6 @@
 import { Plus, Edit2, Trash2, Package, Search } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 import { Modal } from '../components/Modal'
 import { createNewProduct } from '../helpers/createNewProduct'
 import { getProducts } from '../helpers/getProducts'
@@ -43,7 +44,6 @@ export const Products = () => {
                 const categories = await getCategories(businessId)
                 setCategories(categories)
             } catch (error) {
-                console.error('Error:', error)
                 setProducts([])
                 setCategories([])
             }
@@ -71,33 +71,38 @@ export const Products = () => {
                         product.id === updatedProduct.id ? updatedProduct : product,
                     ),
                 )
+                toast.success('Producto actualizado correctamente')
                 setOpenModal(false)
             } catch (error) {
-                console.error('Error al actualizar producto:', error)
+                toast.error('Error al actualizar el producto')
             }
         } else {
             // Crear nuevo producto
             try {
                 const newProduct = await createNewProduct({ ...formData, business_id: businessId })
                 setProducts([...products, newProduct])
+                toast.success('Producto creado correctamente')
                 setOpenModal(false)
             } catch (error) {
-                console.error('Error al crear producto:', error)
+                toast.error('Error al crear el producto')
             }
         }
     }
 
     const onDeleteProduct = async (productId) => {
         // Lógica para eliminar el producto
-        setProducts(products.filter((product) => product.id !== productId))
-        const data = await deleteProduct(productId)
-        console.log(data)
+        try {
+            await deleteProduct(productId)
+            setProducts(products.filter((product) => product.id !== productId))
+            toast.success('Producto eliminado correctamente')
+        } catch (error) {
+            toast.error('Error al eliminar el producto')
+        }
     }
     const onEditProduct = async (productId) => {
         // Lógica para editar el producto
         const product = await getProductById(productId)
         setEditProductData(product)
-        console.log(product)
         if (product) {
             // setFormData(product)
             setOpenModal(true)

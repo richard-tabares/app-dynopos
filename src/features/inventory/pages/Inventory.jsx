@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Package, Search, AlertCircle, Settings2 } from 'lucide-react'
+import { toast } from 'react-toastify'
 import { useStore } from '../../../app/providers/store'
 import { getProducts } from '../../products/helpers/getProducts'
 import { AdjustmentModal } from '../components/AdjustmentModal'
@@ -9,7 +10,7 @@ import { InventorySummary } from '../components/InventorySummary'
 export const Inventory = () => {
     const { user, products, setProducts } = useStore()
     const [searchTerm, setSearchTerm] = useState('')
-    const [filterStatus, setFilterStatus] = useState('all') // 'all', 'lowStock', 'withStock'
+    const [filterStatus, setFilterStatus] = useState('all')
     const [selectedProduct, setSelectedProduct] = useState(null)
     const [openModal, setOpenModal] = useState(false)
     const [visibleCount, setVisibleCount] = useState(20)
@@ -24,6 +25,7 @@ export const Inventory = () => {
                 setProducts(data)
             } catch (error) {
                 console.error('Error al cargar inventario:', error)
+                toast.error('Error al cargar el inventario')
             }
         }
         loadInventory()
@@ -63,13 +65,19 @@ export const Inventory = () => {
         try {
             const updatedProduct = await updateInventory(productId, formData)
             if (updatedProduct) {
-                setProducts(products.map((p) => 
-                    p.id === updatedProduct.id ? updatedProduct : p
-                ))
+                setProducts(
+                    products.map((p) =>
+                        p.id === updatedProduct.id ? updatedProduct : p,
+                    ),
+                )
+                toast.success('Inventario actualizado correctamente')
                 handleCloseModal()
+            } else {
+                toast.error('No se pudo actualizar el inventario')
             }
         } catch (error) {
             console.error('Error al actualizar inventario:', error)
+            toast.error('Error de red al actualizar el inventario')
         }
     }
 
@@ -77,7 +85,15 @@ export const Inventory = () => {
         setVisibleCount((prev) => prev + 20)
     }
 
-    const headers = ['Código', 'Producto', 'Categoría', 'Stock Actual', 'Mínimo', 'Estado', 'Acciones']
+    const headers = [
+        'Código',
+        'Producto',
+        'Categoría',
+        'Stock Actual',
+        'Mínimo',
+        'Estado',
+        'Acciones',
+    ]
 
     return (
         <>
@@ -93,7 +109,8 @@ export const Inventory = () => {
                 <section>
                     <h1 className='text-2xl font-bold'>Inventario</h1>
                     <p className='text-gray-600'>
-                        Controla las existencias de tus productos y configura alertas de stock bajo.
+                        Controla las existencias de tus productos y configura
+                        alertas de stock bajo.
                     </p>
                 </section>
 
@@ -160,7 +177,9 @@ export const Inventory = () => {
                             <thead className='bg-gray-100 border-b border-gray-300'>
                                 <tr>
                                     {headers.map((header) => (
-                                        <th key={header} className='px-6 py-4 text-xs font-bold text-gray-600 uppercase tracking-wider'>
+                                        <th
+                                            key={header}
+                                            className='px-6 py-4 text-xs font-bold text-gray-600 uppercase tracking-wider'>
                                             {header}
                                         </th>
                                     ))}
@@ -168,12 +187,16 @@ export const Inventory = () => {
                             </thead>
                             <tbody className='divide-y divide-gray-200'>
                                 {displayedProducts.map((product) => {
-                                    const stock = product.inventory?.[0]?.stock || 0
-                                    const minStock = product.inventory?.[0]?.min_stock || 0
+                                    const stock =
+                                        product.inventory?.[0]?.stock || 0
+                                    const minStock =
+                                        product.inventory?.[0]?.min_stock || 0
                                     const isLowStock = stock <= minStock
 
                                     return (
-                                        <tr key={product.id} className='hover:bg-gray-50 transition-colors'>
+                                        <tr
+                                            key={product.id}
+                                            className='hover:bg-gray-50 transition-colors'>
                                             <td className='px-6 py-4 text-sm font-medium text-gray-900'>
                                                 {product.sku}
                                             </td>
@@ -181,9 +204,11 @@ export const Inventory = () => {
                                                 {product.name}
                                             </td>
                                             <td className='px-6 py-4 text-sm text-gray-500'>
-                                                {product.categories?.name || 'Sin categoría'}
+                                                {product.categories?.name ||
+                                                    'Sin categoría'}
                                             </td>
-                                            <td className={`px-6 py-4 text-sm font-bold ${isLowStock ? 'text-red-600' : 'text-gray-700'}`}>
+                                            <td
+                                                className={`px-6 py-4 text-sm font-bold ${isLowStock ? 'text-red-600' : 'text-gray-700'}`}>
                                                 {stock}
                                             </td>
                                             <td className='px-6 py-4 text-sm text-gray-500'>
@@ -203,10 +228,11 @@ export const Inventory = () => {
                                             </td>
                                             <td className='px-6 py-4'>
                                                 <button
-                                                    onClick={() => handleOpenModal(product)}
+                                                    onClick={() =>
+                                                        handleOpenModal(product)
+                                                    }
                                                     className='hover:bg-gray-200 p-2 rounded-sm cursor-pointer text-primary-600'
-                                                    title='Ajustar Inventario'
-                                                >
+                                                    title='Ajustar Inventario'>
                                                     <Settings2 className='w-4 h-4' />
                                                 </button>
                                             </td>
@@ -222,8 +248,7 @@ export const Inventory = () => {
                         <div className='p-6 bg-gray-50 border-t border-gray-200 flex justify-center'>
                             <button
                                 onClick={handleLoadMore}
-                                className='px-6 py-2 bg-white text-gray-700 font-medium rounded-lg hover:bg-gray-100 transition border border-gray-300 shadow-sm'
-                            >
+                                className='px-6 py-2 bg-white text-gray-700 font-medium rounded-lg hover:bg-gray-100 transition border border-gray-300 shadow-sm'>
                                 Cargar más productos
                             </button>
                         </div>
@@ -232,7 +257,9 @@ export const Inventory = () => {
                     {filteredProducts.length === 0 && (
                         <div className='p-12 text-center'>
                             <Package className='w-12 h-12 text-gray-300 mx-auto mb-4' />
-                            <p className='text-gray-500 font-medium'>No se encontraron productos</p>
+                            <p className='text-gray-500 font-medium'>
+                                No se encontraron productos
+                            </p>
                         </div>
                     )}
                 </section>

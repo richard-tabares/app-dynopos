@@ -6,7 +6,6 @@ export const Modal = ({
     editProductData = {},
     categories = {},
 }) => {
-    console.log(editProductData)
 
     const [formData, setFormData] = useState({
         sku: editProductData.sku || '',
