@@ -115,8 +115,8 @@ export const SignUp = () => {
                 await SignUpHelper(formData)
                 toast.success('Cuenta creada exitosamente. Por favor, inicia sesión.')
                 navigate('/login', {replace:true})
-            } catch (error) {
-                toast.error('Error al crear la cuenta')
+            } catch (_error) {
+                toast.error(_error.message || 'Error al crear la cuenta')
             }
         } else {
             setErrors(newErrors)

@@ -23,9 +23,8 @@ export const Inventory = () => {
             try {
                 const data = await getProducts(businessId)
                 setProducts(data)
-            } catch (error) {
-                console.error('Error al cargar inventario:', error)
-                toast.error('Error al cargar el inventario')
+            } catch (_error) {
+                toast.error(_error.message || 'Error al cargar el inventario')
             }
         }
         loadInventory()
@@ -75,9 +74,8 @@ export const Inventory = () => {
             } else {
                 toast.error('No se pudo actualizar el inventario')
             }
-        } catch (error) {
-            console.error('Error al actualizar inventario:', error)
-            toast.error('Error de red al actualizar el inventario')
+        } catch (_error) {
+            toast.error(_error.message || 'Error de red al actualizar el inventario')
         }
     }
 

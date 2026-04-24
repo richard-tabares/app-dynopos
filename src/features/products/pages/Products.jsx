@@ -43,7 +43,8 @@ export const Products = () => {
                 setProducts(products)
                 const categories = await getCategories(businessId)
                 setCategories(categories)
-            } catch (error) {
+            // eslint-disable-next-line no-unused-vars
+            } catch (_error) {
                 setProducts([])
                 setCategories([])
             }
@@ -73,8 +74,8 @@ export const Products = () => {
                 )
                 toast.success('Producto actualizado correctamente')
                 setOpenModal(false)
-            } catch (error) {
-                toast.error('Error al actualizar el producto')
+            } catch (_error) {
+                toast.error(_error.message || 'Error al actualizar el producto')
             }
         } else {
             // Crear nuevo producto
@@ -83,8 +84,8 @@ export const Products = () => {
                 setProducts([...products, newProduct])
                 toast.success('Producto creado correctamente')
                 setOpenModal(false)
-            } catch (error) {
-                toast.error('Error al crear el producto')
+            } catch (_error) {
+                toast.error(_error.message || 'Error al crear el producto')
             }
         }
     }
@@ -95,8 +96,8 @@ export const Products = () => {
             await deleteProduct(productId)
             setProducts(products.filter((product) => product.id !== productId))
             toast.success('Producto eliminado correctamente')
-        } catch (error) {
-            toast.error('Error al eliminar el producto')
+        } catch (_error) {
+            toast.error(_error.message || 'Error al eliminar el producto')
         }
     }
     const onEditProduct = async (productId) => {

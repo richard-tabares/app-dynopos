@@ -27,8 +27,8 @@ export const Login = () => {
             } else {
                 toast.error('Credenciales incorrectas')
             }
-        } catch (error) {
-            toast.error('Error al iniciar sesión')
+        } catch (_error) {
+            toast.error(_error.message || 'Error al iniciar sesión')
         }
     }
     return (

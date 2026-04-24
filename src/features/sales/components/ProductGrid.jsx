@@ -12,10 +12,6 @@ export const ProductCard = ({ product }) => {
             className='bg-white p-4 rounded-lg border border-gray-200 shadow-sm hover:shadow-md hover:border-primary-400 transition-all flex items-center justify-between cursor-pointer group disabled:opacity-60 disabled:cursor-not-allowed'
         >
             <div className='flex items-center gap-4'>
-                <div className='w-12 h-12 bg-gray-100 rounded-md flex items-center justify-center text-gray-400 text-xs font-semibold'>
-                    {/* Placeholder for product image/icon */}
-                    IMG
-                </div>
                 <div className='text-left'>
                     <h3 className='font-semibold text-gray-900 text-base group-hover:text-primary-600 transition-colors line-clamp-1'>
                         {product.name}
@@ -27,14 +23,14 @@ export const ProductCard = ({ product }) => {
             </div>
             
             <div className='flex items-center gap-4'>
-                <p className='text-lg font-bold text-primary-600'>
-                    ${parseFloat(product.price).toFixed(2)}
-                </p>
                 <span className={`text-xs px-2 py-1 rounded-full font-medium ${
                     stock === 0 ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
                 }`}>
                     {stock === 0 ? 'Sin Stock' : `Stock: ${stock}`}
                 </span>
+                <p className='text-lg font-bold text-primary-600'>
+                    ${parseFloat(product.price).toFixed(2)}
+                </p>
             </div>
         </button>
     )

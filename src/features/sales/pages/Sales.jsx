@@ -7,6 +7,7 @@ import { getCategories } from '../../products/helpers/getCategories'
 import { CategoryTabs } from '../components/CategoryTabs'
 import { ProductGrid } from '../components/ProductGrid'
 import { OrderSidebar } from '../components/OrderSidebar'
+import { SaleConfirmationModal } from '../components/SaleConfirmationModal'
 import { createSale } from '../helpers/createSale'
 
 export const Sales = () => {
@@ -15,6 +16,8 @@ export const Sales = () => {
     const [searchTerm, setSearchTerm] = useState('')
     const [activeCategory, setActiveCategory] = useState('all')
     const [loading, setLoading] = useState(false)
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false)
+    const [saleSummaryData, setSaleSummaryData] = useState(null)
 
     const businessId = user?.data?.user?.id
     const userId = user?.data?.user?.id // Assuming user ID is the same as the one stored
@@ -46,14 +49,30 @@ export const Sales = () => {
         return matchesSearch && matchesCategory && isActive
     })
 
-    const handleProcessSale = async () => {
-        if (cart.length === 0) return
+    const handleProcessSale = (paymentMethod, amountReceived, total, change) => {
+        if (cart.length === 0) {
+            toast.warn('El carrito está vacío')
+            return
+        }
+
+        setSaleSummaryData({
+            total,
+            paymentMethod,
+            amountReceived,
+            change,
+        })
+        setShowConfirmationModal(true)
+    }
+
+    const confirmSaleHandler = async () => {
+        if (!saleSummaryData) return
 
         setLoading(true)
         const saleData = {
             business_id: businessId,
             user_id: userId,
-            payment_method: 'Efectivo', // Default for now
+            payment_method: saleSummaryData.paymentMethod,
+            total_amount: saleSummaryData.total,
             status: 'completed',
             salesItems: cart.map(item => ({
                 product_id: item.id,
@@ -68,6 +87,8 @@ export const Sales = () => {
             // Refresh products to update stock
             const productsData = await getProducts(businessId)
             setProducts(productsData)
+            setShowConfirmationModal(false)
+            setSaleSummaryData(null)
         } catch (error) {
             toast.error(error.message || 'Error al procesar la venta')
         } finally {
@@ -77,11 +98,6 @@ export const Sales = () => {
 
     return (
         <section className='flex flex-col gap-6'>
-            <div>
-                <h1 className='text-2xl font-bold text-gray-900'>Ventas</h1>
-                <p className='text-gray-500'>Gestiona y registra nuevas transacciones</p>
-            </div>
-
             <div className='flex flex-col lg:flex-row gap-8'>
                 {/* Main Content: Search, Categories, Products */}
                 <div className='flex-1 flex flex-col gap-6'>
@@ -106,7 +122,7 @@ export const Sales = () => {
                         />
 
                         {/* Product Grid */}
-                        <div className='min-h-[400px]'>
+                        <div className='min-h-100'>
                             {filteredProducts.length === 0 ? (
                                 <div className='flex flex-col items-center justify-center py-20 text-gray-400'>
                                     <Search className='w-12 h-12 opacity-20 mb-4' />
@@ -124,6 +140,15 @@ export const Sales = () => {
                     <OrderSidebar onProcessSale={handleProcessSale} />
                 </div>
             </div>
+
+            {showConfirmationModal && saleSummaryData && (
+                <SaleConfirmationModal
+                    orderSummary={saleSummaryData}
+                    onConfirm={confirmSaleHandler}
+                    onCancel={() => setShowConfirmationModal(false)}
+                    loading={loading}
+                />
+            )}
         </section>
     )
 }

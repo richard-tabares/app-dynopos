@@ -1,12 +1,32 @@
-import { Minus, Plus, Trash2, ShoppingCart } from 'lucide-react'
+import { Minus, Plus, Trash2, ShoppingCart, CreditCard, Banknote, ReceiptText } from 'lucide-react'
 import { useStore } from '../../../app/providers/store'
+import { useState } from 'react'
 
 export const OrderSidebar = ({ onProcessSale }) => {
     const { cart, removeFromCart, updateQuantity } = useStore()
 
+    const [paymentMethod, setPaymentMethod] = useState('Efectivo')
+    const [amountReceived, setAmountReceived] = useState(0)
+
     const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0)
     const tax = subtotal * 0.08 // Example 8% tax
     const total = subtotal + tax
+    const changeValue = Math.max(0, (parseFloat(amountReceived) || 0) - total)
+
+    const handleAmountReceivedChange = (e) => {
+        const value = e.target.value
+        setAmountReceived(value)
+    }
+
+    const handleQuickCash = (amount) => {
+        setAmountReceived(amount)
+    }
+
+    const paymentMethods = [
+        { id: 'Efectivo', label: 'Efectivo', icon: Banknote },
+        { id: 'Tarjeta', label: 'Tarjeta', icon: CreditCard },
+        { id: 'Transferencia', label: 'Transferencia', icon: ReceiptText },
+    ]
 
     return (
         <section className='bg-white rounded-xl border border-gray-200 shadow-sm flex flex-col h-[calc(100vh-140px)] sticky top-20'>
@@ -85,9 +105,73 @@ export const OrderSidebar = ({ onProcessSale }) => {
                     </div>
                 </div>
 
+                {/* Payment Methods */}
+                <div className='mb-6'>
+                    <h3 className='text-sm font-medium text-gray-700 mb-2'>Método de Pago</h3>
+                    <div className='grid grid-cols-3 gap-2'>
+                        {paymentMethods.map((method) => {
+                            const Icon = method.icon
+                            return (
+                                <button
+                                    key={method.id}
+                                    onClick={() => setPaymentMethod(method.id)}
+                                    className={`flex flex-col items-center justify-center p-3 border rounded-lg transition-colors ${
+                                        paymentMethod === method.id
+                                            ? 'border-primary-600 bg-primary-50 text-primary-600'
+                                            : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'
+                                    }`}
+                                >
+                                    <Icon className='w-5 h-5 mb-1' />
+                                    <span className='text-xs font-medium'>{method.label}</span>
+                                </button>
+                            )
+                        })}
+                    </div>
+                </div>
+
+                {/* Amount Received */}
+                {paymentMethod === 'Efectivo' && (
+                    <div className='mb-6'>
+                        <h3 className='text-sm font-medium text-gray-700 mb-2'>Monto Recibido (Opcional)</h3>
+                        <div className='relative'>
+                            <span className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400'>$</span>
+                            <input
+                                type='number'
+                                value={amountReceived}
+                                onChange={handleAmountReceivedChange}
+                                placeholder='0.00'
+                                className='w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all'
+                            />
+                        </div>
+                        <div className='flex gap-2 mt-2'>
+                            {[20, 50, 100, 200].map((amount) => (
+                                <button
+                                    key={amount}
+                                    onClick={() => handleQuickCash(amount)}
+                                    className={`px-4 py-2 rounded-lg text-sm font-medium border transition-colors ${
+                                        amountReceived === amount
+                                            ? 'bg-primary-600 text-white border-primary-600'
+                                            : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
+                                    }`}
+                                >
+                                    ${amount}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Change */}
+                {paymentMethod === 'Efectivo' && (amountReceived > 0 && amountReceived >= total) && (
+                    <div className='flex justify-between items-center bg-green-50 text-green-800 p-4 rounded-lg font-bold text-lg mb-6'>
+                        <span>Cambio:</span>
+                        <span>${changeValue.toFixed(2)}</span>
+                    </div>
+                )}
+
                 <button
-                    onClick={onProcessSale}
-                    disabled={cart.length === 0}
+                    onClick={() => onProcessSale(paymentMethod, amountReceived, total, changeValue)}
+                    disabled={cart.length === 0 || (paymentMethod === 'Efectivo' && amountReceived < total)}
                     className='w-full py-4 bg-primary-600 text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-primary-700 transition-all shadow-lg shadow-primary-600/20 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer'
                 >
                     <ShoppingCart className='w-5 h-5' />
