@@ -3,7 +3,7 @@ import { ShoppingBag, RotateCcw } from 'lucide-react'
 import { SaleTicketModal } from '../../../shared/components/SaleTicketModal'
 
 const initialItemSelections = (items) =>
-    items.map(item => ({ ...item, returnQuantity: 0 }))
+    items.map((item) => ({ ...item, returnQuantity: 0 }))
 
 export const SalesHistoryCard = ({ sales = [], onReturn }) => {
     const [visibleCount, setVisibleCount] = useState(10)
@@ -25,37 +25,46 @@ export const SalesHistoryCard = ({ sales = [], onReturn }) => {
     }
 
     const toggleItem = (itemId) => {
-        setSelectedItems(prev =>
-            prev.map(item =>
+        setSelectedItems((prev) =>
+            prev.map((item) =>
                 item.id === itemId
-                    ? { ...item, returnQuantity: item.returnQuantity > 0 ? 0 : item.quantity }
-                    : item
-            )
+                    ? {
+                          ...item,
+                          returnQuantity:
+                              item.returnQuantity > 0 ? 0 : item.quantity,
+                      }
+                    : item,
+            ),
         )
     }
 
     const updateQuantity = (itemId, quantity) => {
-        const item = selectedItems.find(i => i.id === itemId)
+        const item = selectedItems.find((i) => i.id === itemId)
         if (!item) return
         const clamped = Math.max(0, Math.min(quantity, item.quantity))
-        setSelectedItems(prev =>
-            prev.map(i => i.id === itemId ? { ...i, returnQuantity: clamped } : i)
+        setSelectedItems((prev) =>
+            prev.map((i) =>
+                i.id === itemId ? { ...i, returnQuantity: clamped } : i,
+            ),
         )
     }
 
-    const hasSelectedItems = selectedItems.some(i => i.returnQuantity > 0)
-    const totalReturn = selectedItems.reduce((sum, i) => sum + (i.returnQuantity * i.price), 0)
+    const hasSelectedItems = selectedItems.some((i) => i.returnQuantity > 0)
+    const totalReturn = selectedItems.reduce(
+        (sum, i) => sum + i.returnQuantity * i.price,
+        0,
+    )
 
     const handleConfirmReturn = () => {
         if (!returnReason.trim() || !hasSelectedItems) return
 
         const itemsToReturn = selectedItems
-            .filter(i => i.returnQuantity > 0)
-            .map(i => ({
+            .filter((i) => i.returnQuantity > 0)
+            .map((i) => ({
                 product_id: i.product_id,
                 quantity: i.returnQuantity,
                 unit_price: i.price,
-                subtotal: i.returnQuantity * i.price
+                subtotal: i.returnQuantity * i.price,
             }))
 
         onReturn(returnTarget, returnReason.trim(), itemsToReturn)
@@ -104,12 +113,12 @@ export const SalesHistoryCard = ({ sales = [], onReturn }) => {
                                 </div>
 
                                 {sale.status !== 'returned' && (
-                                <button
-                                    onClick={() => openReturnModal(sale)}
-                                    className='p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors shrink-0'
-                                    title='Devolver venta'>
-                                    <RotateCcw className='w-4 h-4' />
-                                </button>
+                                    <button
+                                        onClick={() => openReturnModal(sale)}
+                                        className='p-2 text-red-500 hover:bg-red-100 rounded-lg transition-colors shrink-0 cursor-pointer'
+                                        title='Devolver venta'>
+                                        <RotateCcw className='w-4 h-4' />
+                                    </button>
                                 )}
                             </div>
                         ))
@@ -147,59 +156,110 @@ export const SalesHistoryCard = ({ sales = [], onReturn }) => {
                                 <RotateCcw className='w-6 h-6 text-red-600' />
                             </div>
                             <h3 className='text-lg font-bold text-gray-900 mb-2'>
-                                Devolver Venta #{String(returnTarget.id).padStart(4, '0')}
+                                Devolver Venta #
+                                {String(returnTarget.id).padStart(4, '0')}
                             </h3>
                         </div>
 
                         <div className='p-6 overflow-y-auto flex-1'>
-                            <p className='text-sm font-semibold text-gray-700 mb-3'>Selecciona los productos a devolver:</p>
+                            <p className='text-sm font-semibold text-gray-700 mb-3'>
+                                Selecciona los productos a devolver:
+                            </p>
                             <div className='space-y-3'>
                                 {selectedItems.map((item) => (
-                                    <div key={item.id} className='flex items-center gap-3 p-3 border border-gray-200 rounded-lg'>
+                                    <div
+                                        key={item.id}
+                                        className='flex items-center gap-3 p-3 border border-gray-200 rounded-lg'>
                                         <input
                                             type='checkbox'
                                             checked={item.returnQuantity > 0}
                                             onChange={() => toggleItem(item.id)}
                                             className='w-4 h-4 accent-red-600'
                                         />
+
                                         <div className='flex-1 min-w-0'>
-                                            <p className='text-sm font-medium text-gray-900 truncate'>{item.name}</p>
-                                            <p className='text-xs text-gray-500'>
-                                                ${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(item.price)} c/u
+                                            <p className='text-sm font-bold text-gray-900'>
+                                                $
+                                                {new Intl.NumberFormat(
+                                                    'es-CO',
+                                                    {
+                                                        maximumFractionDigits: 0,
+                                                    },
+                                                ).format(
+                                                    item.returnQuantity *
+                                                        item.price,
+                                                )}
                                             </p>
+                                            <p className='text-sm font-medium text-gray-900 truncate'>
+                                                {item.name}
+                                            </p>
+                                            <div className='flex'>
+                                                <p className='text-xs text-gray-500'>
+                                                    Cant:{' '}
+                                                    {`${item.quantity} x $ ${new Intl.NumberFormat(
+                                                        'es-CO',
+                                                        {
+                                                            maximumFractionDigits: 0,
+                                                        },
+                                                    ).format(item.price)} c/u`}
+                                                </p>
+                                            </div>
                                         </div>
                                         <div className='flex items-center gap-1'>
                                             <button
-                                                onClick={() => updateQuantity(item.id, item.returnQuantity - 1)}
+                                                onClick={() =>
+                                                    updateQuantity(
+                                                        item.id,
+                                                        item.returnQuantity - 1,
+                                                    )
+                                                }
                                                 className='w-7 h-7 rounded border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 text-sm font-bold'
-                                                disabled={item.returnQuantity <= 0}
-                                            >-</button>
-                                            <span className='w-8 text-center text-sm font-bold tabular-nums'>{item.returnQuantity}</span>
+                                                disabled={
+                                                    item.returnQuantity <= 0
+                                                }>
+                                                -
+                                            </button>
+                                            <span className='w-8 text-center text-sm font-bold tabular-nums'>
+                                                {item.returnQuantity}
+                                            </span>
                                             <button
-                                                onClick={() => updateQuantity(item.id, item.returnQuantity + 1)}
+                                                onClick={() =>
+                                                    updateQuantity(
+                                                        item.id,
+                                                        item.returnQuantity + 1,
+                                                    )
+                                                }
                                                 className='w-7 h-7 rounded border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 text-sm font-bold'
-                                                disabled={item.returnQuantity >= item.quantity}
-                                            >+</button>
+                                                disabled={
+                                                    item.returnQuantity >=
+                                                    item.quantity
+                                                }>
+                                                +
+                                            </button>
                                         </div>
-                                        <p className='text-sm font-bold text-gray-900 w-16 text-right'>
-                                            ${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(item.returnQuantity * item.price)}
-                                        </p>
                                     </div>
                                 ))}
                             </div>
 
                             {totalReturn > 0 && (
                                 <div className='flex justify-between items-center mt-4 pt-3 border-t border-gray-200'>
-                                    <span className='text-sm font-semibold text-gray-700'>Total a devolver:</span>
+                                    <span className='text-sm font-semibold text-gray-700'>
+                                        Total a devolver:
+                                    </span>
                                     <span className='text-lg font-bold text-red-600'>
-                                        ${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(totalReturn)}
+                                        $
+                                        {new Intl.NumberFormat('es-CO', {
+                                            maximumFractionDigits: 0,
+                                        }).format(totalReturn)}
                                     </span>
                                 </div>
                             )}
 
                             <textarea
                                 value={returnReason}
-                                onChange={(e) => setReturnReason(e.target.value)}
+                                onChange={(e) =>
+                                    setReturnReason(e.target.value)
+                                }
                                 placeholder='Motivo de la devolución (obligatorio)'
                                 className='w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 resize-none h-20 mt-4'
                             />
@@ -214,8 +274,14 @@ export const SalesHistoryCard = ({ sales = [], onReturn }) => {
                             <button
                                 onClick={handleConfirmReturn}
                                 className='flex-1 py-2.5 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 transition text-sm disabled:opacity-50'
-                                disabled={!returnReason.trim() || !hasSelectedItems}>
-                                Devolver (${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(totalReturn)})
+                                disabled={
+                                    !returnReason.trim() || !hasSelectedItems
+                                }>
+                                Devolver ($
+                                {new Intl.NumberFormat('es-CO', {
+                                    maximumFractionDigits: 0,
+                                }).format(totalReturn)}
+                                )
                             </button>
                         </div>
                     </section>

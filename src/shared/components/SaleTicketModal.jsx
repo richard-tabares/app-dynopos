@@ -101,7 +101,7 @@ export const SaleTicketModal = ({ isOpen, onClose, sale }) => {
                     </div>
 
                     <div className='space-y-1 mt-2'>
-                        <div className='flex justify-between text-base font-bold text-gray-900 border-t border-double border-gray-300 pt-1 print:text-[14px]'>
+                        <div className='flex justify-between text-base font-bold text-gray-900 pt-1 print:text-[14px]'>
                             <span>TOTAL</span>
                             <span>{formatCurrency(sale.total)}</span>
                         </div>
