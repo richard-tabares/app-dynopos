@@ -8,8 +8,12 @@ export const ProductCard = ({ product }) => {
     return (
         <button
             onClick={() => addToCart(product)}
-            disabled={stock === 0} // Disable if out of stock
-            className='bg-white p-4 rounded-lg border border-gray-200 shadow-sm hover:shadow-md hover:border-primary-400 transition-all flex items-center justify-between cursor-pointer group disabled:opacity-60 disabled:cursor-not-allowed'
+            disabled={stock === 0}
+            className={`bg-white p-4 rounded-lg border shadow-sm transition-all flex items-center justify-between group ${
+                stock === 0 
+                    ? 'border-gray-200 opacity-50 cursor-not-allowed bg-gray-50 grayscale' 
+                    : 'border-gray-200 hover:shadow-md hover:border-primary-400 cursor-pointer'
+            }`}
         >
             <div className='flex items-center gap-4'>
                 <div className='text-left'>

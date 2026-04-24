@@ -6,21 +6,20 @@ export const OrderSidebar = ({ onProcessSale }) => {
     const { cart, removeFromCart, updateQuantity } = useStore()
 
     const [paymentMethod, setPaymentMethod] = useState('Efectivo')
-    const [amountReceived, setAmountReceived] = useState(0)
 
     const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0)
     const tax = subtotal * 0.08 // Example 8% tax
     const total = subtotal + tax
-    const changeValue = Math.max(0, (parseFloat(amountReceived) || 0) - total)
+    // const changeValue = Math.max(0, (parseFloat(amountReceived) || 0) - total)
 
-    const handleAmountReceivedChange = (e) => {
-        const value = e.target.value
-        setAmountReceived(value)
-    }
+    // const handleAmountReceivedChange = (e) => {
+    //     const value = e.target.value
+    //     setAmountReceived(value)
+    // }
 
-    const handleQuickCash = (amount) => {
-        setAmountReceived(amount)
-    }
+    // const handleQuickCash = (amount) => {
+    //     setAmountReceived(amount)
+    // }
 
     const paymentMethods = [
         { id: 'Efectivo', label: 'Efectivo', icon: Banknote },
@@ -50,7 +49,7 @@ export const OrderSidebar = ({ onProcessSale }) => {
                     cart.map((item) => (
                         <div key={item.id} className='flex items-center gap-4 bg-gray-50 p-3 rounded-lg border border-gray-100'>
                             <div className='flex-1'>
-                                <h4 className='font-bold text-sm text-gray-900 truncate max-w-[120px]'>
+                                <h4 className='font-bold text-sm text-gray-900 truncate max-w-30'>
                                     {item.name}
                                 </h4>
                                 <p className='text-primary-600 font-bold text-xs'>
@@ -129,49 +128,9 @@ export const OrderSidebar = ({ onProcessSale }) => {
                     </div>
                 </div>
 
-                {/* Amount Received */}
-                {paymentMethod === 'Efectivo' && (
-                    <div className='mb-6'>
-                        <h3 className='text-sm font-medium text-gray-700 mb-2'>Monto Recibido (Opcional)</h3>
-                        <div className='relative'>
-                            <span className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400'>$</span>
-                            <input
-                                type='number'
-                                value={amountReceived}
-                                onChange={handleAmountReceivedChange}
-                                placeholder='0.00'
-                                className='w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all'
-                            />
-                        </div>
-                        <div className='flex gap-2 mt-2'>
-                            {[20, 50, 100, 200].map((amount) => (
-                                <button
-                                    key={amount}
-                                    onClick={() => handleQuickCash(amount)}
-                                    className={`px-4 py-2 rounded-lg text-sm font-medium border transition-colors ${
-                                        amountReceived === amount
-                                            ? 'bg-primary-600 text-white border-primary-600'
-                                            : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
-                                    }`}
-                                >
-                                    ${amount}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                )}
-
-                {/* Change */}
-                {paymentMethod === 'Efectivo' && (amountReceived > 0 && amountReceived >= total) && (
-                    <div className='flex justify-between items-center bg-green-50 text-green-800 p-4 rounded-lg font-bold text-lg mb-6'>
-                        <span>Cambio:</span>
-                        <span>${changeValue.toFixed(2)}</span>
-                    </div>
-                )}
-
                 <button
-                    onClick={() => onProcessSale(paymentMethod, amountReceived, total, changeValue)}
-                    disabled={cart.length === 0 || (paymentMethod === 'Efectivo' && amountReceived < total)}
+                    onClick={() => onProcessSale(paymentMethod, total)}
+                    disabled={cart.length === 0}
                     className='w-full py-4 bg-primary-600 text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-primary-700 transition-all shadow-lg shadow-primary-600/20 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer'
                 >
                     <ShoppingCart className='w-5 h-5' />

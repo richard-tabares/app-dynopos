@@ -19,8 +19,10 @@ export const Sales = () => {
     const [showConfirmationModal, setShowConfirmationModal] = useState(false)
     const [saleSummaryData, setSaleSummaryData] = useState(null)
 
+    const [visibleCount, setVisibleCount] = useState(20)
+
     const businessId = user?.data?.user?.id
-    const userId = user?.data?.user?.id // Assuming user ID is the same as the one stored
+    // const userId = user?.data?.user?.id // Assuming user ID is the same as the one stored
 
     useEffect(() => {
         const loadData = async () => {
@@ -49,7 +51,13 @@ export const Sales = () => {
         return matchesSearch && matchesCategory && isActive
     })
 
-    const handleProcessSale = (paymentMethod, amountReceived, total, change) => {
+    const displayedProducts = filteredProducts.slice(0, visibleCount)
+
+    const handleLoadMore = () => {
+        setVisibleCount((prev) => prev + 20)
+    }
+
+    const handleProcessSale = (paymentMethod, total) => {
         if (cart.length === 0) {
             toast.warn('El carrito está vacío')
             return
@@ -57,9 +65,7 @@ export const Sales = () => {
 
         setSaleSummaryData({
             total,
-            paymentMethod,
-            amountReceived,
-            change,
+            paymentMethod
         })
         setShowConfirmationModal(true)
     }
@@ -70,7 +76,7 @@ export const Sales = () => {
         setLoading(true)
         const saleData = {
             business_id: businessId,
-            user_id: userId,
+            user_id: user?.data?.user?.id,
             payment_method: saleSummaryData.paymentMethod,
             total_amount: saleSummaryData.total,
             status: 'completed',
@@ -129,7 +135,19 @@ export const Sales = () => {
                                     <p className='text-lg font-medium'>No se encontraron productos</p>
                                 </div>
                             ) : (
-                                <ProductGrid products={filteredProducts} />
+                                <>
+                                    <ProductGrid products={displayedProducts} />
+                                    {visibleCount < filteredProducts.length && (
+                                        <div className='mt-6 flex justify-center'>
+                                            <button
+                                                onClick={handleLoadMore}
+                                                className='px-6 py-2 bg-gray-50 text-gray-700 font-medium rounded-lg hover:bg-gray-100 transition border border-gray-200 shadow-sm'
+                                            >
+                                                Cargar más productos
+                                            </button>
+                                        </div>
+                                    )}
+                                </>
                             )}
                         </div>
                     </section>
