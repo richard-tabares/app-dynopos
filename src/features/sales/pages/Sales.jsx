@@ -144,9 +144,9 @@ export const Sales = () => {
         }
     }
 
-    const handleReturnSale = async (sale, reason) => {
+    const handleReturnSale = async (sale, reason, items) => {
         try {
-            await returnSale(sale.id, { reason, businessId })
+            await returnSale(sale.id, { reason, businessId, items })
             toast.success('Devolución procesada exitosamente')
 
             const [salesData, productsData, dashboardData] = await Promise.all([
