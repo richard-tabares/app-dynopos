@@ -1,4 +1,4 @@
-import { Plus, Edit2, Trash2, Package, Search, Tags, ClipboardList } from 'lucide-react'
+import { Plus, Edit2, Trash2, Package, Search, Tags, ClipboardList, ChevronDown } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { Modal } from '../components/Modal'
@@ -26,6 +26,7 @@ export const Products = () => {
     const [showCategoryModal, setShowCategoryModal] = useState(false)
     const [categoryName, setCategoryName] = useState('')
     const [savingCategory, setSavingCategory] = useState(false)
+    const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
 
     const filteredProducts = products
         .filter((product) => {
@@ -260,20 +261,29 @@ export const Products = () => {
                             }
                         </h2>
                         <section className='flex items-center gap-2'>
-                            <section className='relative group'>
-                                <button className='flex items-center font-medium px-4 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-100 transition cursor-pointer'>
+                            <section className='relative'>
+                                <button
+                                    onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
+                                    className='flex items-center font-medium px-4 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-100 transition cursor-pointer'>
                                     <Tags className='w-4 h-4 lg:w-5 lg:h-5 lg:mr-2' />
                                     Categorías
+                                    <ChevronDown className='w-4 h-4 ml-1' />
                                 </button>
-                                <section className='absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50'>
+                                {showCategoryDropdown && (
+                                    <section
+                                        className='fixed inset-0 z-40'
+                                        onClick={() => setShowCategoryDropdown(false)}
+                                    />
+                                )}
+                                <section className={`absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50 ${showCategoryDropdown ? 'block' : 'hidden'}`}>
                                     <button
-                                        onClick={() => setShowCategoryModal(true)}
+                                        onClick={() => { setShowCategoryModal(true); setShowCategoryDropdown(false) }}
                                         className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg cursor-pointer'>
                                         <Plus className='w-4 h-4' />
                                         Crear categoría
                                     </button>
                                     <button
-                                        onClick={() => navigate('/categories')}
+                                        onClick={() => { navigate('/categories'); setShowCategoryDropdown(false) }}
                                         className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 rounded-b-lg cursor-pointer'>
                                         <Tags className='w-4 h-4' />
                                         Gestionar categorías
@@ -289,7 +299,7 @@ export const Products = () => {
                             <button
                                 className='flex items-center font-medium px-4 py-2 bg-primary-600 text-white text-sm rounded-lg hover:bg-primary-700 transition cursor-pointer'
                                 onClick={handleOpenModal}>
-                                <Plus className='w-4 h-4 lg:w-5 lg:h-5 lg:mr-2' />
+                                <Package className='w-4 h-4 lg:w-5 lg:h-5 lg:mr-2' />
                                 Nuevo Producto
                             </button>
                         </section>
