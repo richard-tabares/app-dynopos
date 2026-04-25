@@ -8,7 +8,7 @@ import { changePassword } from '../helpers/changePassword'
 
 export const Settings = () => {
     const { user, setBusiness } = useStore()
-    const businessId = user?.business?.id
+    const businessId = user?.data?.user?.id
 
     const [formData, setFormData] = useState({
         business_name: '',
@@ -115,7 +115,7 @@ export const Settings = () => {
         setChangingPassword(true)
         try {
             const result = await changePassword({
-                email: formData.email,
+                email: user?.data?.user?.email || formData.email,
                 currentPassword: passwordData.currentPassword,
                 newPassword: passwordData.newPassword,
             })

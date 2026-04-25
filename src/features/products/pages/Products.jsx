@@ -43,8 +43,8 @@ export const Products = () => {
     const filteredProducts = products
         .filter((product) => {
             const matchesSearch =
-                product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                product.sku.toLowerCase().includes(searchTerm.toLowerCase())
+                product.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                product.sku?.toLowerCase().includes(searchTerm.toLowerCase())
             const matchesCategory =
                 activeCategory === 'all' ||
                 product.categories?.id === activeCategory

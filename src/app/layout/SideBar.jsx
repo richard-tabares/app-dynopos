@@ -96,7 +96,7 @@ export const SideBar = () => {
                     ${isCollapsed ? 'justify-center' : 'justify-between'}
                 `}>
                     {user?.business?.business_logo ? (
-                        <img src={user.business.business_logo} alt="Business Logo" className={`w-8 h-8 rounded-full ${isCollapsed ? 'hidden' : 'block'}`} />
+                        <img src={user.business.business_logo} alt="Business Logo" className={`w-12 h-12 rounded-full ${isCollapsed ? 'hidden' : 'block'}`} />
                     ) : (
                         ''
                     )}
