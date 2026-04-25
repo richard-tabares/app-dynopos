@@ -1,4 +1,14 @@
-import { Plus, Edit2, Trash2, Package, Search, Tags, ClipboardList, ChevronDown } from 'lucide-react'
+import {
+    Plus,
+    Edit2,
+    Trash2,
+    Package,
+    Search,
+    Tags,
+    ClipboardList,
+    ChevronDown,
+    EllipsisVertical,
+} from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { Modal } from '../components/Modal'
@@ -21,12 +31,14 @@ export const Products = () => {
     const [searchTerm, setSearchTerm] = useState('')
     const [activeCategory, setActiveCategory] = useState('all')
     const [visibleCount, setVisibleCount] = useState(20)
-    const { user, products, setProducts, categories, setCategories } = useStore()
+    const { user, products, setProducts, categories, setCategories } =
+        useStore()
     const navigate = useNavigate()
     const [showCategoryModal, setShowCategoryModal] = useState(false)
     const [categoryName, setCategoryName] = useState('')
     const [savingCategory, setSavingCategory] = useState(false)
     const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
+    const [showMobileActions, setShowMobileActions] = useState(null)
 
     const filteredProducts = products
         .filter((product) => {
@@ -81,12 +93,15 @@ export const Products = () => {
         if (formData.id) {
             // Actualizar producto existente
             try {
-                const updatedProduct = await editProduct(
-                    formData.id,
-                    { ...formData, business_id: businessId },
-                )
-                setProducts(products.map((product) =>
-                        product.id === updatedProduct.id ? updatedProduct : product,
+                const updatedProduct = await editProduct(formData.id, {
+                    ...formData,
+                    business_id: businessId,
+                })
+                setProducts(
+                    products.map((product) =>
+                        product.id === updatedProduct.id
+                            ? updatedProduct
+                            : product,
                     ),
                 )
                 toast.success('Producto actualizado correctamente')
@@ -97,7 +112,10 @@ export const Products = () => {
         } else {
             // Crear nuevo producto
             try {
-                const newProduct = await createNewProduct({ ...formData, business_id: businessId })
+                const newProduct = await createNewProduct({
+                    ...formData,
+                    business_id: businessId,
+                })
                 setProducts([...products, newProduct])
                 toast.success('Producto creado correctamente')
                 setOpenModal(false)
@@ -117,20 +135,37 @@ export const Products = () => {
 
         try {
             const response = await deleteProduct(productToDelete)
-            
+
             // Si el producto se marcó como inactivo en lugar de eliminarse
             if (response.softDeleted) {
-                setProducts(products.map((product) => 
-                    product.id === productToDelete ? { ...product, is_active: false } : product
-                ))
-                toast.info('El producto tiene ventas asociadas y se ha marcado como inactivo.')
+                setProducts(
+                    products.map((product) =>
+                        product.id === productToDelete
+                            ? { ...product, is_active: false }
+                            : product,
+                    ),
+                )
+                toast.info(
+                    'El producto tiene ventas asociadas y se ha marcado como inactivo.',
+                )
             } else {
-                setProducts(products.filter((product) => product.id !== productToDelete))
+                setProducts(
+                    products.filter(
+                        (product) => product.id !== productToDelete,
+                    ),
+                )
                 toast.success('Producto eliminado correctamente')
             }
         } catch (error) {
-            if (error.message?.includes('404') || error.message?.includes('not found')) {
-                setProducts(products.filter((product) => product.id !== productToDelete))
+            if (
+                error.message?.includes('404') ||
+                error.message?.includes('not found')
+            ) {
+                setProducts(
+                    products.filter(
+                        (product) => product.id !== productToDelete,
+                    ),
+                )
             }
             toast.error(error.message || 'Error al eliminar el producto')
         } finally {
@@ -159,7 +194,10 @@ export const Products = () => {
         }
         setSavingCategory(true)
         try {
-            const newCategory = await createCategory({ business_id: businessId, name: categoryName.trim() })
+            const newCategory = await createCategory({
+                business_id: businessId,
+                name: categoryName.trim(),
+            })
             setCategories([...categories, newCategory])
             toast.success('Categoría creada exitosamente')
             setShowCategoryModal(false)
@@ -191,29 +229,36 @@ export const Products = () => {
                 isOpen={openConfirmModal}
                 onClose={() => setOpenConfirmModal(false)}
                 onConfirm={confirmDelete}
-                title="¿Eliminar producto?"
-                message="Esta acción no se puede deshacer. El producto se eliminará permanentemente de tu inventario."
+                title='¿Eliminar producto?'
+                message='Esta acción no se puede deshacer. El producto se eliminará permanentemente de tu inventario.'
             />
 
             {/* Modal crear categoría */}
             {showCategoryModal && (
                 <section
                     className='fixed inset-0 bg-gray-900/50 w-full h-full flex items-center justify-center z-[70]'
-                    onClick={() => { setShowCategoryModal(false); setCategoryName('') }}
-                >
+                    onClick={() => {
+                        setShowCategoryModal(false)
+                        setCategoryName('')
+                    }}>
                     <section
                         className='bg-white rounded-lg shadow-2xl w-full max-w-md relative overflow-hidden'
-                        onClick={(e) => e.stopPropagation()}
-                    >
+                        onClick={(e) => e.stopPropagation()}>
                         <div className='p-6 border-b border-gray-100'>
-                            <h3 className='text-lg font-bold text-gray-900'>Nueva Categoría</h3>
+                            <h3 className='text-lg font-bold text-gray-900'>
+                                Nueva Categoría
+                            </h3>
                         </div>
                         <div className='p-6'>
-                            <label className='block text-sm font-medium text-gray-700 mb-2'>Nombre</label>
+                            <label className='block text-sm font-medium text-gray-700 mb-2'>
+                                Nombre
+                            </label>
                             <input
                                 type='text'
                                 value={categoryName}
-                                onChange={(e) => setCategoryName(e.target.value)}
+                                onChange={(e) =>
+                                    setCategoryName(e.target.value)
+                                }
                                 placeholder='Nombre de la categoría'
                                 className='w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400'
                                 autoFocus
@@ -221,13 +266,18 @@ export const Products = () => {
                         </div>
                         <div className='px-6 pb-6 flex gap-3'>
                             <button
-                                onClick={() => { setShowCategoryModal(false); setCategoryName('') }}
+                                onClick={() => {
+                                    setShowCategoryModal(false)
+                                    setCategoryName('')
+                                }}
                                 className='flex-1 py-2.5 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition text-sm cursor-pointer'>
                                 Cancelar
                             </button>
                             <button
                                 onClick={handleCreateCategory}
-                                disabled={savingCategory || !categoryName.trim()}
+                                disabled={
+                                    savingCategory || !categoryName.trim()
+                                }
                                 className='flex-1 py-2.5 bg-primary-600 text-white rounded-lg font-bold hover:bg-primary-700 transition text-sm disabled:opacity-50 cursor-pointer'>
                                 {savingCategory ? 'Guardando...' : 'Guardar'}
                             </button>
@@ -249,59 +299,134 @@ export const Products = () => {
                 <section className='bg-white border border-gray-300 shadow-sm overflow-hidden rounded-lg'>
                     {/* Titulo y boton de nuevo prodcuto de la tabla*/}
                     <section className='border-b border-gray-300 flex justify-between items-center px-6 py-4 bg-gray-50/50'>
-                        <h2 className='text-lg font-semibold flex items-center gap-2'>
-                            <Package className='w-5 h-5 text-primary-600' />
-                            Lista de Productos
-                            {
-                                
-                                    <span className='text-sm text-gray-500 font-medium'>
-                                        Total ({filteredProducts.length})
-                                    </span>
-                                
-                            }
-                        </h2>
                         <section className='flex items-center gap-2'>
-                            <section className='relative'>
+                            <Package className='w-5 h-5 text-primary-600' />
+                            <h2 className='text-lg font-semibold flex flex-col'>
+                                Lista de Productos
+                            <span className='text-sm text-gray-500 font-medium'>
+                                Total ({filteredProducts.length})
+                            </span>
+                            </h2>
+                        </section>
+                        <section className='flex items-center gap-2'>
+                            {/* Desktop buttons */}
+                            <section className='hidden sm:flex items-center gap-2'>
+                                <section className='relative'>
+                                    <button
+                                        onClick={() =>
+                                            setShowCategoryDropdown(
+                                                !showCategoryDropdown,
+                                            )
+                                        }
+                                        className='flex items-center font-medium px-4 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-100 transition cursor-pointer'>
+                                        <Tags className='w-4 h-5 mr-2' />
+                                        Categorías
+                                        <ChevronDown className='w-4 h-4 ml-1' />
+                                    </button>
+                                    {showCategoryDropdown && (
+                                        <section
+                                            className='fixed inset-0 z-40'
+                                            onClick={() =>
+                                                setShowCategoryDropdown(false)
+                                            }
+                                        />
+                                    )}
+                                    <section
+                                        className={`absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50 ${showCategoryDropdown ? 'block' : 'hidden'}`}>
+                                        <button
+                                            onClick={() => {
+                                                setShowCategoryModal(true)
+                                                setShowCategoryDropdown(false)
+                                            }}
+                                            className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg cursor-pointer'>
+                                            <Plus className='w-4 h-4' />
+                                            Crear categoría
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                navigate('/categories')
+                                                setShowCategoryDropdown(false)
+                                            }}
+                                            className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 rounded-b-lg cursor-pointer'>
+                                            <Tags className='w-4 h-4' />
+                                            Gestionar categorías
+                                        </button>
+                                    </section>
+                                </section>
                                 <button
-                                    onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
+                                    onClick={() => navigate('/inventory')}
                                     className='flex items-center font-medium px-4 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-100 transition cursor-pointer'>
-                                    <Tags className='w-4 h-4 lg:w-5 lg:h-5 lg:mr-2' />
-                                    Categorías
-                                    <ChevronDown className='w-4 h-4 ml-1' />
+                                    <ClipboardList className='w-4 h-5 mr-2' />
+                                    Inventario
                                 </button>
-                                {showCategoryDropdown && (
+                                <button
+                                    className='flex items-center font-medium px-4 py-2 bg-primary-600 text-white text-sm rounded-lg hover:bg-primary-700 transition cursor-pointer'
+                                    onClick={handleOpenModal}>
+                                    <Package className='w-4 h-5 mr-2' />
+                                    Nuevo Producto
+                                </button>
+                            </section>
+                            {/* Mobile 3-dots menu */}
+                            <section className='relative sm:hidden'>
+                                <button
+                                    onClick={() =>
+                                        setShowMobileActions(
+                                            showMobileActions === 'header'
+                                                ? null
+                                                : 'header',
+                                        )
+                                    }
+                                    className='p-2 text-gray-700 hover:bg-gray-100 rounded-lg transition cursor-pointer'>
+                                    <EllipsisVertical className='w-6 h-6' />
+                                </button>
+                                {showMobileActions === 'header' && (
                                     <section
                                         className='fixed inset-0 z-40'
-                                        onClick={() => setShowCategoryDropdown(false)}
+                                        onClick={() =>
+                                            setShowMobileActions(null)
+                                        }
                                     />
                                 )}
-                                <section className={`absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50 ${showCategoryDropdown ? 'block' : 'hidden'}`}>
+                                <section
+                                    className={`absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50 ${showMobileActions === 'header' ? 'block' : 'hidden'}`}>
                                     <button
-                                        onClick={() => { setShowCategoryModal(true); setShowCategoryDropdown(false) }}
+                                        onClick={() => {
+                                            handleOpenModal()
+                                            setShowMobileActions(null)
+                                        }}
                                         className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg cursor-pointer'>
-                                        <Plus className='w-4 h-4' />
-                                        Crear categoría
+                                        <Package className='w-4 h-4' />
+                                        Nuevo Producto
                                     </button>
                                     <button
-                                        onClick={() => { navigate('/categories'); setShowCategoryDropdown(false) }}
-                                        className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 rounded-b-lg cursor-pointer'>
+                                        onClick={() => {
+                                            setShowCategoryModal(true)
+                                            setShowMobileActions(null)
+                                        }}
+                                        className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer'>
+                                        <Plus className='w-4 h-4' />
+                                        Nueva categoría
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            navigate('/categories')
+                                            setShowMobileActions(null)
+                                        }}
+                                        className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer'>
                                         <Tags className='w-4 h-4' />
                                         Gestionar categorías
                                     </button>
+                                    <button
+                                        onClick={() => {
+                                            navigate('/inventory')
+                                            setShowMobileActions(null)
+                                        }}
+                                        className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 rounded-b-lg cursor-pointer'>
+                                        <ClipboardList className='w-4 h-4' />
+                                        Inventario
+                                    </button>
                                 </section>
                             </section>
-                            <button
-                                onClick={() => navigate('/inventory')}
-                                className='flex items-center font-medium px-4 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-100 transition cursor-pointer'>
-                                <ClipboardList className='w-4 h-4 lg:w-5 lg:h-5 lg:mr-2' />
-                                Inventario
-                            </button>
-                            <button
-                                className='flex items-center font-medium px-4 py-2 bg-primary-600 text-white text-sm rounded-lg hover:bg-primary-700 transition cursor-pointer'
-                                onClick={handleOpenModal}>
-                                <Package className='w-4 h-4 lg:w-5 lg:h-5 lg:mr-2' />
-                                Nuevo Producto
-                            </button>
                         </section>
                     </section>
                     {/* Contenido de la tabla de productos */}
@@ -329,7 +454,9 @@ export const Products = () => {
                             {categories.map((category) => (
                                 <button
                                     key={category.id}
-                                    onClick={() => setActiveCategory(category.id)}
+                                    onClick={() =>
+                                        setActiveCategory(category.id)
+                                    }
                                     className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer border whitespace-nowrap ${
                                         activeCategory === category.id
                                             ? 'bg-primary-600 text-white border-primary-600'
@@ -357,7 +484,9 @@ export const Products = () => {
                             <tbody className='divide-y divide-gray-200'>
                                 {/* Filas de la tabla */}
                                 {displayedProducts.map((product, index) => (
-                                    <tr key={index} className='hover:bg-gray-50 transition-colors text-sm'>
+                                    <tr
+                                        key={index}
+                                        className='hover:bg-gray-50 transition-colors text-sm'>
                                         <td className='px-6 py-4 font-medium text-gray-900'>
                                             {product.sku}
                                         </td>
@@ -365,10 +494,14 @@ export const Products = () => {
                                             {product.name}
                                         </td>
                                         <td className='px-6 py-4 text-gray-500'>
-                                            {product.categories?.name || 'Sin categoría'}
+                                            {product.categories?.name ||
+                                                'Sin categoría'}
                                         </td>
                                         <td className='px-6 py-4 text-gray-700 font-bold'>
-                                            ${new Intl.NumberFormat('es-CO').format(product.price)}
+                                            $
+                                            {new Intl.NumberFormat(
+                                                'es-CO',
+                                            ).format(product.price)}
                                         </td>
                                         <td className='px-6 py-4'>
                                             {product.is_active ? (
@@ -382,9 +515,14 @@ export const Products = () => {
                                             )}
                                         </td>
                                         <td className='px-6 py-4'>
-                                            <section className='flex items-center gap-2'>
+                                            {/* Desktop action buttons */}
+                                            <section className='hidden sm:flex items-center gap-2'>
                                                 <button
-                                                    onClick={() =>onEditProduct(product.id)}
+                                                    onClick={() =>
+                                                        onEditProduct(
+                                                            product.id,
+                                                        )
+                                                    }
                                                     className='hover:bg-gray-200 p-2 rounded-sm cursor-pointer'
                                                     title='Editar Producto'>
                                                     <Edit2 className='w-4 h-4 text-primary-600' />
@@ -399,6 +537,61 @@ export const Products = () => {
                                                     title='Eliminar Producto'>
                                                     <Trash2 className='w-4 h-4' />
                                                 </button>
+                                            </section>
+                                            {/* Mobile row 3-dots menu */}
+                                            <section className='relative sm:hidden'>
+                                                <button
+                                                    onClick={() =>
+                                                        setShowMobileActions(
+                                                            showMobileActions ===
+                                                                product.id
+                                                                ? null
+                                                                : product.id,
+                                                        )
+                                                    }
+                                                    className='p-1 text-gray-700 hover:bg-gray-100 rounded-lg transition cursor-pointer'>
+                                                    <EllipsisVertical className='w-5 h-5' />
+                                                </button>
+                                                {showMobileActions ===
+                                                    product.id && (
+                                                    <section
+                                                        className='fixed inset-0 z-40'
+                                                        onClick={() =>
+                                                            setShowMobileActions(
+                                                                null,
+                                                            )
+                                                        }
+                                                    />
+                                                )}
+                                                <section
+                                                    className={`absolute right-0 mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-50 ${showMobileActions === product.id ? 'block' : 'hidden'}`}>
+                                                    <button
+                                                        onClick={() => {
+                                                            onEditProduct(
+                                                                product.id,
+                                                            )
+                                                            setShowMobileActions(
+                                                                null,
+                                                            )
+                                                        }}
+                                                        className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg cursor-pointer'>
+                                                        <Edit2 className='w-4 h-4 text-primary-600' />
+                                                        Editar
+                                                    </button>
+                                                    <button
+                                                        onClick={() => {
+                                                            onDeleteProduct(
+                                                                product.id,
+                                                            )
+                                                            setShowMobileActions(
+                                                                null,
+                                                            )
+                                                        }}
+                                                        className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-red-600 hover:bg-gray-50 rounded-b-lg cursor-pointer'>
+                                                        <Trash2 className='w-4 h-4' />
+                                                        Eliminar
+                                                    </button>
+                                                </section>
                                             </section>
                                         </td>
                                     </tr>
@@ -419,7 +612,9 @@ export const Products = () => {
                     {filteredProducts.length === 0 && (
                         <div className='p-12 text-center'>
                             <Package className='w-12 h-12 text-gray-300 mx-auto mb-4' />
-                            <p className='text-gray-500 font-medium'>No se encontraron productos</p>
+                            <p className='text-gray-500 font-medium'>
+                                No se encontraron productos
+                            </p>
                         </div>
                     )}
                 </section>
