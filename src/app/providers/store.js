@@ -10,6 +10,9 @@ export const useStore = create(
             cart: [],
             setLogin: (payload) => set({ user: payload }),
             setLogOut: () => set({ user: '' }),
+            setBusiness: (payload) => set((state) => ({
+                user: { ...state.user, business: { ...state.user.business, ...payload } }
+            })),
             setIsMobile: (payload) => set({ isMobile: payload }),
             setIsCollapsed: (payload) => set({ isCollapsed: payload }),
             setProducts: (payload) => set({ products: payload }),
