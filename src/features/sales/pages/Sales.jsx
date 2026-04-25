@@ -16,8 +16,7 @@ import { returnSale } from '../helpers/returnSale'
 import { getDashboardData } from '../../dashboard/helpers/getDashboardData'
 
 export const Sales = () => {
-    const { user, products, setProducts, cart, clearCart, setTodayRevenue } = useStore()
-    const [categories, setCategories] = useState([])
+    const { user, products, setProducts, cart, clearCart, setTodayRevenue, categories, setCategories } = useStore()
     const [searchTerm, setSearchTerm] = useState('')
     const [activeCategory, setActiveCategory] = useState('all')
     const [loading, setLoading] = useState(false)

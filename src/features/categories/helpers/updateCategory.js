@@ -15,7 +15,8 @@ export const updateCategory = async (id, categoryData) => {
             throw new Error(errorData.error || 'Error al actualizar la categoría')
         }
 
-        return await response.json()
+        const result = await response.json()
+        return result.data?.[0] || result
     } catch (error) {
         console.error('Error:', error.message)
         throw error

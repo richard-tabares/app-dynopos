@@ -37,6 +37,8 @@ export const useStore = create(
             clearCart: () => set({ cart: [] }),
             todayRevenue: 0,
             setTodayRevenue: (payload) => set({ todayRevenue: payload }),
+            categories: [],
+            setCategories: (payload) => set({ categories: payload }),
         }),
         {
             name: 'dynopos-store',

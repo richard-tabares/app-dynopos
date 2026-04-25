@@ -1,4 +1,4 @@
-import { Plus, Edit2, Trash2, Package, Search } from 'lucide-react'
+import { Plus, Edit2, Trash2, Package, Search, Tags, ClipboardList } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { Modal } from '../components/Modal'
@@ -6,21 +6,26 @@ import { ConfirmModal } from '../components/ConfirmModal'
 import { createNewProduct } from '../helpers/createNewProduct'
 import { getProducts } from '../helpers/getProducts'
 import { useStore } from '../../../app/providers/store'
+import { useNavigate } from 'react-router'
 import { deleteProduct } from '../helpers/deleteProduct'
 import { editProduct } from '../helpers/editProduct'
 import { getProductById } from '../helpers/getProductById'
 import { getCategories } from '../../categories/helpers/getCategories'
+import { createCategory } from '../../categories/helpers/createCategory'
 
 export const Products = () => {
     const [openModal, setOpenModal] = useState(false)
     const [openConfirmModal, setOpenConfirmModal] = useState(false)
     const [productToDelete, setProductToDelete] = useState(null)
     const [editProductData, setEditProductData] = useState({})
-    const [categories, setCategories] = useState([])
     const [searchTerm, setSearchTerm] = useState('')
     const [activeCategory, setActiveCategory] = useState('all')
     const [visibleCount, setVisibleCount] = useState(20)
-    const { user, products, setProducts } = useStore()
+    const { user, products, setProducts, categories, setCategories } = useStore()
+    const navigate = useNavigate()
+    const [showCategoryModal, setShowCategoryModal] = useState(false)
+    const [categoryName, setCategoryName] = useState('')
+    const [savingCategory, setSavingCategory] = useState(false)
 
     const filteredProducts = products
         .filter((product) => {
@@ -146,6 +151,25 @@ export const Products = () => {
         setVisibleCount(20)
     }
 
+    const handleCreateCategory = async () => {
+        if (!categoryName.trim()) {
+            toast.warn('El nombre de la categoría es obligatorio')
+            return
+        }
+        setSavingCategory(true)
+        try {
+            const newCategory = await createCategory({ business_id: businessId, name: categoryName.trim() })
+            setCategories([...categories, newCategory])
+            toast.success('Categoría creada exitosamente')
+            setShowCategoryModal(false)
+            setCategoryName('')
+        } catch (error) {
+            toast.error(error.message || 'Error al crear la categoría')
+        } finally {
+            setSavingCategory(false)
+        }
+    }
+
     const handleLoadMore = () => {
         setVisibleCount((prev) => prev + 20)
     }
@@ -169,6 +193,47 @@ export const Products = () => {
                 title="¿Eliminar producto?"
                 message="Esta acción no se puede deshacer. El producto se eliminará permanentemente de tu inventario."
             />
+
+            {/* Modal crear categoría */}
+            {showCategoryModal && (
+                <section
+                    className='fixed inset-0 bg-gray-900/50 w-full h-full flex items-center justify-center z-[70]'
+                    onClick={() => { setShowCategoryModal(false); setCategoryName('') }}
+                >
+                    <section
+                        className='bg-white rounded-lg shadow-2xl w-full max-w-md relative overflow-hidden'
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className='p-6 border-b border-gray-100'>
+                            <h3 className='text-lg font-bold text-gray-900'>Nueva Categoría</h3>
+                        </div>
+                        <div className='p-6'>
+                            <label className='block text-sm font-medium text-gray-700 mb-2'>Nombre</label>
+                            <input
+                                type='text'
+                                value={categoryName}
+                                onChange={(e) => setCategoryName(e.target.value)}
+                                placeholder='Nombre de la categoría'
+                                className='w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400'
+                                autoFocus
+                            />
+                        </div>
+                        <div className='px-6 pb-6 flex gap-3'>
+                            <button
+                                onClick={() => { setShowCategoryModal(false); setCategoryName('') }}
+                                className='flex-1 py-2.5 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition text-sm cursor-pointer'>
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={handleCreateCategory}
+                                disabled={savingCategory || !categoryName.trim()}
+                                className='flex-1 py-2.5 bg-primary-600 text-white rounded-lg font-bold hover:bg-primary-700 transition text-sm disabled:opacity-50 cursor-pointer'>
+                                {savingCategory ? 'Guardando...' : 'Guardar'}
+                            </button>
+                        </div>
+                    </section>
+                </section>
+            )}
 
             <section className='flex flex-col gap-6'>
                 {/* Titulo de la sección productos */}
@@ -194,12 +259,40 @@ export const Products = () => {
                                 
                             }
                         </h2>
-                        <button
-                            className='flex items-center font-medium px-4 py-2 bg-primary-600 text-white text-sm rounded-lg hover:bg-primary-700 transition cursor-pointer'
-                            onClick={handleOpenModal}>
-                            <Plus className='w-4 h-4 lg:w-5 lg:h-5 lg:mr-2' />
-                            Nuevo Producto
-                        </button>
+                        <section className='flex items-center gap-2'>
+                            <section className='relative group'>
+                                <button className='flex items-center font-medium px-4 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-100 transition cursor-pointer'>
+                                    <Tags className='w-4 h-4 lg:w-5 lg:h-5 lg:mr-2' />
+                                    Categorías
+                                </button>
+                                <section className='absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50'>
+                                    <button
+                                        onClick={() => setShowCategoryModal(true)}
+                                        className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg cursor-pointer'>
+                                        <Plus className='w-4 h-4' />
+                                        Crear categoría
+                                    </button>
+                                    <button
+                                        onClick={() => navigate('/categories')}
+                                        className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 rounded-b-lg cursor-pointer'>
+                                        <Tags className='w-4 h-4' />
+                                        Gestionar categorías
+                                    </button>
+                                </section>
+                            </section>
+                            <button
+                                onClick={() => navigate('/inventory')}
+                                className='flex items-center font-medium px-4 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-100 transition cursor-pointer'>
+                                <ClipboardList className='w-4 h-4 lg:w-5 lg:h-5 lg:mr-2' />
+                                Inventario
+                            </button>
+                            <button
+                                className='flex items-center font-medium px-4 py-2 bg-primary-600 text-white text-sm rounded-lg hover:bg-primary-700 transition cursor-pointer'
+                                onClick={handleOpenModal}>
+                                <Plus className='w-4 h-4 lg:w-5 lg:h-5 lg:mr-2' />
+                                Nuevo Producto
+                            </button>
+                        </section>
                     </section>
                     {/* Contenido de la tabla de productos */}
                     <section className='px-6 py-4 border-b border-gray-200 flex flex-col gap-4'>

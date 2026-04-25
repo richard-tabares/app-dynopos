@@ -8,8 +8,7 @@ import { updateCategory } from '../../categories/helpers/updateCategory'
 import { deleteCategory } from '../../categories/helpers/deleteCategory'
 
 export const Categories = () => {
-    const { user } = useStore()
-    const [categories, setCategories] = useState([])
+    const { user, categories, setCategories } = useStore()
     const [loading, setLoading] = useState(false)
     const [searchTerm, setSearchTerm] = useState('')
     const [showModal, setShowModal] = useState(false)

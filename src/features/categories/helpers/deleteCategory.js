@@ -14,7 +14,8 @@ export const deleteCategory = async (id) => {
             throw new Error(errorData.error || 'Error al eliminar la categoría')
         }
 
-        return await response.json()
+        const result = await response.json()
+        return result.data?.[0] || result
     } catch (error) {
         console.error('Error:', error.message)
         throw error
