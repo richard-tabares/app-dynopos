@@ -7,10 +7,14 @@ export const Modal = ({
     categories = {},
 }) => {
 
+    const generalCategory = Array.isArray(categories)
+        ? categories.find(cat => cat.name === 'General')
+        : null
+
     const [formData, setFormData] = useState({
         sku: editProductData.sku || '',
         name: editProductData.name || '',
-        category_id: editProductData.categories?.id || '',
+        category_id: editProductData.categories?.id || generalCategory?.id || '',
         price: editProductData.price || 0,
         is_active: editProductData.is_active || false,
     })
@@ -89,11 +93,6 @@ export const Modal = ({
                             value={formData.category_id}
                             onChange={handleChange}
                             className='w-full px-4 py-2 border border-gray-300 rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'>
-                            <option
-                                value=''
-                                disabled>
-                                Seleccione una categoría
-                            </option>
                             {categories.map((category) => (
                                 <option
                                     key={category.id}
