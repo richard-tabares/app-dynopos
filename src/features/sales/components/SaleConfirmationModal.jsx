@@ -16,7 +16,8 @@ export const SaleConfirmationModal = ({
             onClick={onCancel}>
             <section
                 className='bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative max-h-[90vh] flex flex-col'
-                onClick={(e) => e.stopPropagation()}>
+                onClick={(e) => e.stopPropagation()}
+                onKeyDown={(e) => e.key === 'Enter' && !loading && onConfirm()}>
                 <button
                     className='absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition mb-4'
                     onClick={onCancel}>

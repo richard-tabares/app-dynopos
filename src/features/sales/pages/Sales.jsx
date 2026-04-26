@@ -8,7 +8,6 @@ import { CategoryTabs } from '../components/CategoryTabs'
 import { ProductGrid } from '../components/ProductGrid'
 import { OrderSidebar } from '../components/OrderSidebar'
 import { SaleConfirmationModal } from '../components/SaleConfirmationModal'
-import { SaleTicketModal } from '../../../shared/components/SaleTicketModal'
 import { SalesHistoryCard } from '../components/SalesHistoryCard'
 import { createSale } from '../helpers/createSale'
 import { getSales } from '../helpers/getSales'
@@ -30,7 +29,6 @@ export const Sales = () => {
     const [visibleCount, setVisibleCount] = useState(10)
 
     const businessId = user?.data?.user?.id
-    // const userId = user?.data?.user?.id // Assuming user ID is the same as the one stored
 
     useEffect(() => {
         const loadData = async () => {
@@ -135,7 +133,6 @@ export const Sales = () => {
             setTodayRevenue(dashboardData.metrics.todayRevenue)
             setShowConfirmationModal(false)
             setSaleSummaryData(null)
-            setShowTicketModal(true) // Show ticket after success
         } catch (error) {
             toast.error(error.message || 'Error al procesar la venta')
         } finally {
@@ -232,11 +229,6 @@ export const Sales = () => {
                 />
             )}
 
-            <SaleTicketModal 
-                isOpen={showTicketModal}
-                onClose={() => setShowTicketModal(false)}
-                sale={lastSaleTicket}
-            />
         </section>
     )
 }

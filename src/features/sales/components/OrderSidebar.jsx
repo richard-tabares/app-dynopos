@@ -3,7 +3,7 @@ import { useStore } from '../../../app/providers/store'
 import { useState } from 'react'
 
 export const OrderSidebar = ({ onProcessSale }) => {
-    const { cart, removeFromCart, updateQuantity } = useStore()
+    const { cart, removeFromCart, updateQuantity, clearCart } = useStore()
 
     const [paymentMethod, setPaymentMethod] = useState('Efectivo')
 
@@ -18,10 +18,21 @@ export const OrderSidebar = ({ onProcessSale }) => {
     return (
         <section className='bg-white rounded-xl border border-gray-200 shadow-sm flex flex-col h-[calc(100vh-140px)] sticky top-20'>
             <div className='p-6 border-b border-gray-100'>
-                <h2 className='text-xl font-bold flex items-center gap-2'>
-                    <ShoppingCart className='w-5 h-5 text-primary-600' />
-                    Orden Actual
-                </h2>
+                <div className='flex items-center justify-between'>
+                    <h2 className='text-xl font-bold flex items-center gap-2'>
+                        <ShoppingCart className='w-5 h-5 text-primary-600' />
+                        Orden Actual
+                    </h2>
+                    {cart.length > 0 && (
+                        <button
+                            onClick={clearCart}
+                            className='flex items-center gap-1 text-xs text-red-500 hover:text-red-700 font-medium cursor-pointer'
+                        >
+                            <Trash2 className='w-3.5 h-3.5' />
+                            Limpiar
+                        </button>
+                    )}
+                </div>
                 <p className='text-sm text-gray-500 mt-1'>
                     {cart.length} {cart.length === 1 ? 'item' : 'items'}
                 </p>
@@ -59,7 +70,8 @@ export const OrderSidebar = ({ onProcessSale }) => {
                                     </span>
                                     <button
                                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                        className='p-1 hover:bg-gray-100 text-gray-500 cursor-pointer'
+                                        className='p-1 hover:bg-gray-100 text-gray-500 cursor-pointer disabled:opacity-30'
+                                        disabled={item.quantity >= (item.inventory?.[0]?.stock || 0)}
                                     >
                                         <Plus className='w-3 h-3' />
                                     </button>

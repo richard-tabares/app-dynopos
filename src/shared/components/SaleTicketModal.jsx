@@ -49,7 +49,8 @@ export const SaleTicketModal = ({ isOpen, onClose, sale }) => {
 
             <section
                 className='bg-white rounded-lg shadow-2xl w-full max-w-sm relative overflow-hidden print-content print:shadow-none print:max-w-none print:w-[57mm] print:rounded-none print:border-none'
-                onClick={(e) => e.stopPropagation()}>
+                onClick={(e) => e.stopPropagation()}
+                onKeyDown={(e) => e.key === 'Enter' && window.print()}>
                 
                 <div className='bg-primary-600 p-4 text-white flex justify-between items-center print:hidden'>
                     <div className='flex items-center gap-2'>

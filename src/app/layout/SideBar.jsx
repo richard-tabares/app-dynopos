@@ -158,10 +158,10 @@ export const SideBar = () => {
                             <span>AD</span>
                         </section>
                         <section className={`flex flex-col text-left ${isCollapsed ? 'hidden' : 'block'}`}>
-                            <span className='text-sm font-medium'>Admin</span>
+                            <span className='text-sm font-medium first-letter:uppercase'>{ user.profile.role }</span>
                             <span className='text-xs text-gray-500'>
                                 {
-                                    user && user.data.user.email
+                                    user && user.business.owner_name || 'Usuario'
                                 }
                             </span>
                         </section>
