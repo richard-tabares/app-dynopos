@@ -63,7 +63,7 @@ export const SaleTicketModal = ({ isOpen, onClose, sale }) => {
 
                 <div className='p-6 font-mono text-sm print:p-2 print:text-[12px]'>
                     <div className='text-center mb-4 border-b border-dashed border-gray-300 pb-2'>
-                        <h2 className='text-lg font-bold uppercase print:text-[16px]'>DynoPOS</h2>
+                        <h2 className='text-lg font-bold uppercase print:text-[16px]'>{business?.business_name}</h2>
                         <p className='text-[11px] text-gray-500'>Comprobante No Fiscal</p>
                     </div>
 
