@@ -1,6 +1,10 @@
 import { X, Printer, ReceiptText } from 'lucide-react'
+import { useStore } from '../../app/providers/store'
 
 export const SaleTicketModal = ({ isOpen, onClose, sale }) => {
+    const business = useStore((state) => state.user.business)
+    const ticketFooter = business?.ticket_footer || ''
+
     if (!isOpen || !sale) return null
 
     const formatCurrency = (value) => 
@@ -108,7 +112,7 @@ export const SaleTicketModal = ({ isOpen, onClose, sale }) => {
                     </div>
 
                     <div className='text-center mt-6 pt-2 border-t border-dashed border-gray-300'>
-                        <p className='text-[9px] text-gray-400 uppercase tracking-widest'>¡Gracias por su compra!</p>
+                        <p className='text-[9px] text-gray-400 tracking-widest'>{ticketFooter || '¡Gracias por su compra!'}</p>
                     </div>
                 </div>
 
