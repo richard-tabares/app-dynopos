@@ -223,6 +223,7 @@ export const Products = () => {
                     handleOpenModal={handleOpenModal}
                     editProductData={editProductData}
                     categories={categories}
+                    products={products}
                 />
             )}
 

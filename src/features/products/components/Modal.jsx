@@ -1,10 +1,12 @@
 import { X } from 'lucide-react'
 import { useState } from 'react'
+import { toast } from 'react-toastify'
 export const Modal = ({
     handleSubmit,
     handleOpenModal,
     editProductData = {},
     categories = {},
+    products = [],
 }) => {
     const generalCategory = Array.isArray(categories)
         ? categories.find((cat) => cat.name === 'General')
@@ -16,8 +18,11 @@ export const Modal = ({
         category_id:
             editProductData.categories?.id || generalCategory?.id || '',
         price: editProductData.price || 0,
-        is_active: editProductData.is_active || false,
+        is_active: editProductData.is_active ?? true,
     })
+
+    const isFormValid = formData.sku.trim() && formData.name.trim() && Number(formData.price) > 0
+
     // const [formData, setFormData] = useState(editProductData)
 
     // Lógica para manejar los cambios en los campos del formulario
@@ -32,6 +37,18 @@ export const Modal = ({
 
     const handleFormSubmit = (e) => {
         e.preventDefault()
+
+        const skuDuplicate = products.some(
+            (p) =>
+                p.sku?.toLowerCase() === formData.sku.trim().toLowerCase() &&
+                p.id !== editProductData.id,
+        )
+
+        if (skuDuplicate) {
+            toast.error('Ya existe un producto con este SKU')
+            return
+        }
+
         const businessId = JSON.parse(localStorage.getItem('dynopos-store'))
             .state.user.data.user.id
         handleSubmit({
@@ -141,7 +158,8 @@ export const Modal = ({
                         </button>
                         <button
                             type='submit'
-                            className='px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium transition cursor-pointer'>
+                            disabled={!isFormValid}
+                            className='px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'>
                             {editProductData.id ? 'Actualizar' : 'Guardar'}
                         </button>
                     </section>
