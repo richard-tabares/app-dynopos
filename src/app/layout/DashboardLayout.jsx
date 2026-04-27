@@ -8,7 +8,12 @@ import { getDashboardData } from '../../features/dashboard/helpers/getDashboardD
 export const DashboardLayout = () => {
     const { user, isCollapsed, setTodayRevenue, todayRevenue } = useStore()
     const businessId = user?.data?.user?.id
+    const businessName = `${user?.business?.business_name} - POS`
     const location = useLocation()
+
+    useEffect(() => {
+        document.title = businessName || 'DynoPOS'
+    }, [businessName])
 
     useEffect(() => {
         const fetchRevenue = async () => {
