@@ -8,6 +8,8 @@ export const useStore = create(
             isMobile: false,
             products:[],
             cart: [],
+            todayRevenue: 0,
+            categories: [],
             setLogin: (payload) => set({ user: payload }),
             setLogOut: () => set({ user: '' }),
             setBusiness: (payload) => set((state) => ({
@@ -38,9 +40,7 @@ export const useStore = create(
                 )
             })),
             clearCart: () => set({ cart: [] }),
-            todayRevenue: 0,
             setTodayRevenue: (payload) => set({ todayRevenue: payload }),
-            categories: [],
             setCategories: (payload) => set({ categories: payload }),
         }),
         {

@@ -6,15 +6,18 @@ export const WeeklySalesChart = ({ data = [] }) => {
     const chartData = Array.from({ length: 7 }).map((_, i) => {
         const d = new Date()
         d.setDate(d.getDate() - (6 - i))
+        const year = d.getFullYear()
+        const month = String(d.getMonth() + 1).padStart(2, '0')
+        const day = String(d.getDate()).padStart(2, '0')
         return {
             name: days[d.getDay()],
-            fullDate: d.toISOString().split('T')[0],
+            fullDate: `${year}-${month}-${day}`,
             ventas: 0
         }
     })
 
     data.forEach(sale => {
-        const saleDate = new Date(sale.created_at).toISOString().split('T')[0]
+        const saleDate = sale.created_at
         const dayEntry = chartData.find(d => d.fullDate === saleDate)
         if (dayEntry) {
             dayEntry.ventas += sale.total_amount
