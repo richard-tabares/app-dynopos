@@ -10,6 +10,8 @@ import { Login } from '../features/auth/components/Login'
 import { SignUp } from '../features/auth/components/SignUp'
 import { EmailConfirmation } from '../features/auth/components/EmailConfirmation'
 import { EmailConfirmationSuccess } from '../features/auth/components/EmailConfirmationSuccess'
+import { ForgotPassword } from '../features/auth/components/ForgotPassword'
+import { ResetPassword } from '../features/auth/components/ResetPassword'
 import { useStore } from './providers/store'
 import { Products } from '../features/products/pages/Products'
 import { ToastContainer } from 'react-toastify'
@@ -42,6 +44,17 @@ export const App = () => {
                         path='/emailConfirmation/success'
                         element={<EmailConfirmationSuccess />}
                     />
+
+                    <Route
+                        path='/forgot-password'
+                        element={<ForgotPassword />}
+                    />
+
+                    <Route
+                        path='/reset-password'
+                        element={<ResetPassword />}
+                    />
+
                     {/* Rutas Privadas */}
                     {user && Object.keys(user).length > 0 ? (
                         <Route element={<DashboardLayout />}>
