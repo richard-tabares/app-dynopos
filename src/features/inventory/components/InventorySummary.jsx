@@ -63,7 +63,7 @@ export const InventorySummary = ({ products = [] }) => {
                 {cards.map((card, index) => (
                     <div key={index} className='bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4 transition-all hover:shadow-md'>
                         <div className={`p-3 rounded-xl ${card.iconBg}`}>
-                            <card.icon className={`w-6 h-6 ${card.color.split(' ')[1]}`} />
+                            <card.icon className={`w-5 h-5 ${card.color.split(' ')[1]}`} />
                         </div>
                         <div>
                             <p className='text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider truncate'>
