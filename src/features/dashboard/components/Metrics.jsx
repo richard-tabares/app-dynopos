@@ -40,7 +40,7 @@ export const Metrics = ({ data }) => {
                     </section>
                     <section>
                         <section className={`${metric.colorIcon} p-3 rounded-md`}>
-                            <metric.icon className='w-6 h-6' />
+                            <metric.icon className='w-5 h-5' />
                         </section>
                     </section>
                 </section>

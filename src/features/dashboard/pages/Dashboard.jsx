@@ -4,9 +4,15 @@ import { WeeklySalesChart } from '../components/WeeklySalesChart'
 import { LowStockCard } from '../components/LowStockCard'
 import { RecentSalesCard } from '../components/RecentSalesCard'
 import { TopProductsChart } from '../components/TopProductsChart'
+import {
+    MetricsSkeleton,
+    ChartSkeleton,
+    LowStockSkeleton,
+    TopProductsSkeleton,
+    RecentSalesSkeleton
+} from '../components/Skeletons'
 import { getDashboardData } from '../helpers/getDashboardData'
 import { useStore } from '../../../app/providers/store'
-import { Loader2 } from 'lucide-react'
 
 export const Dashboard = () => {
     const { user } = useStore()
@@ -22,7 +28,7 @@ export const Dashboard = () => {
                 setLoading(false)
                 return
             }
-            
+
             try {
                 setLoading(true)
                 const result = await getDashboardData(businessId)
@@ -37,15 +43,6 @@ export const Dashboard = () => {
         loadData()
     }, [businessId])
 
-
-    if (loading) {
-        return (
-            <div className='h-[80vh] flex items-center justify-center'>
-                <Loader2 className='w-8 h-8 animate-spin text-primary-600' />
-            </div>
-        )
-    }
-
     if (error) {
         return (
             <div className='p-6 text-center text-red-600 bg-red-50 border border-red-200 rounded-lg'>
@@ -56,34 +53,38 @@ export const Dashboard = () => {
 
     return (
         <section className='space-y-6 pb-12'>
-            {/* Bienvenida */}
-            <section className='bg-primary-600 text-white p-8 rounded-xl shadow-sm'>
-                <h1 className='text-3xl font-bold mb-2'>
-                    ¡Bienvenido de vuelta! 👋
-                </h1>
-                <p className='text-primary-100'>Aquí está el resumen de tu negocio hoy</p>
-            </section>
+            {loading && (
+                <section className='bg-primary-600/80 text-white p-8 rounded-xl shadow-sm animate-pulse'>
+                    <div className='h-9 w-72 bg-white/20 rounded mb-2' />
+                    <div className='h-5 w-56 bg-white/20 rounded' />
+                </section>
+            )}
+            {!loading && (
+                <section className='bg-primary-600 text-white p-8 rounded-xl shadow-sm'>
+                    <h1 className='text-3xl font-bold mb-2'>
+                        ¡Bienvenido de vuelta! 👋
+                    </h1>
+                    <p className='text-primary-100'>Aquí está el resumen de tu negocio hoy</p>
+                </section>
+            )}
 
-            {/* Métricas principales */}
-            <Metrics data={data?.metrics} />
+            {data?.metrics ? <Metrics data={data.metrics} /> : <MetricsSkeleton />}
 
-            {/* Fila del medio: Gráfico principal y Stock Bajo */}
             <div className='grid grid-cols-3 max-xl:grid-cols-1 gap-6'>
                 <div className='col-span-2 max-xl:col-span-1'>
-                    <WeeklySalesChart data={data?.weeklySales} />
+                    {data?.weeklySales ? <WeeklySalesChart data={data.weeklySales} /> : <ChartSkeleton />}
                 </div>
                 <div>
-                    <LowStockCard items={data?.lowStockItems} />
+                    {data?.lowStockItems ? <LowStockCard items={data.lowStockItems} /> : <LowStockSkeleton />}
                 </div>
             </div>
 
-            {/* Fila inferior: Ventas Recientes y Top Productos */}
             <div className='grid grid-cols-3 max-xl:grid-cols-1 gap-6'>
                 <div className='col-span-2 max-xl:col-span-1 h-fit'>
-                    <TopProductsChart data={data?.topProducts} />
+                    {data?.topProducts ? <TopProductsChart data={data.topProducts} /> : <TopProductsSkeleton />}
                 </div>
                 <div className='col-span-1 max-xl:col-span-1'>
-                    <RecentSalesCard sales={data?.recentSales} />
+                    {data?.recentSales ? <RecentSalesCard sales={data.recentSales} /> : <RecentSalesSkeleton />}
                 </div>
             </div>
         </section>

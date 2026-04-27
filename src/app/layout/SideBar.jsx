@@ -101,7 +101,7 @@ export const SideBar = () => {
                         ''
                     )}
                     
-                    <span className={`text-2xl font-semibold flex-1 ${isCollapsed ? 'hidden' : 'block'}`}>
+                    <span className={`text-xl font-semibold flex-1 ${isCollapsed ? 'hidden' : 'block'}`}>
                         {user?.business.business_name || 'Dyno POS'}
                     </span>
                     <button
