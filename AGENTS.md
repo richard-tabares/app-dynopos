@@ -164,3 +164,4 @@ defineConfig([
 - **No tests exist** in either frontend or backend.
 - `index.html` has no favicon and title set to `"frontend"` (needs updating).
 - Reports feature is a placeholder (`<div>Reports</div>`).
+- Nunca hacer commit son mi autorizacion antes
