@@ -264,6 +264,12 @@ export const Products = () => {
                                 onChange={(e) =>
                                     setCategoryName(e.target.value)
                                 }
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        e.preventDefault()
+                                        handleCreateCategory()
+                                    }
+                                }}
                                 placeholder='Nombre de la categoría'
                                 className='w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400'
                                 autoFocus
