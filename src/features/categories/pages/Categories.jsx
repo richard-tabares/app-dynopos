@@ -69,10 +69,10 @@ export const Categories = () => {
                 })
                 toast.success('Categoría creada exitosamente')
             }
-            setShowModal(false)
             setCategoryName('')
             setEditingCategory(null)
             await loadCategories()
+            setShowModal(false)
         } catch (error) {
             toast.error(error.message || 'Error al guardar la categoría')
         } finally {
@@ -100,9 +100,7 @@ export const Categories = () => {
             {/* Create/Edit Modal */}
             {showModal && (
                 <section className='fixed inset-0 bg-gray-900/50 w-full h-full flex items-center justify-center z-[70]'>
-                    <section
-                        className='bg-white rounded-lg shadow-2xl w-full max-w-md relative overflow-hidden'
-                        onClick={(e) => e.stopPropagation()}>
+                    <section className='bg-white rounded-lg shadow-2xl w-full max-w-md relative overflow-hidden'>
                         <div className='p-6 border-b border-gray-100 flex items-center justify-between'>
                             <h3 className='text-lg font-bold text-gray-900'>
                                 {editingCategory
@@ -129,6 +127,12 @@ export const Categories = () => {
                                 onChange={(e) =>
                                     setCategoryName(e.target.value)
                                 }
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        e.preventDefault()
+                                        handleSave()
+                                    }
+                                }}
                                 placeholder='Nombre de la categoría'
                                 className='w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400'
                                 autoFocus
