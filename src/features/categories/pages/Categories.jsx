@@ -6,6 +6,7 @@ import { getCategories } from '../../categories/helpers/getCategories'
 import { createCategory } from '../../categories/helpers/createCategory'
 import { updateCategory } from '../../categories/helpers/updateCategory'
 import { deleteCategory } from '../../categories/helpers/deleteCategory'
+import { useEscape } from '../../../shared/helpers/useEscape'
 
 export const Categories = () => {
     const { user, categories, setCategories } = useStore()
@@ -16,6 +17,16 @@ export const Categories = () => {
     const [categoryName, setCategoryName] = useState('')
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(null)
     const [saving, setSaving] = useState(false)
+
+    const handleEscapeCreate = () => {
+        setShowModal(false)
+        setEditingCategory(null)
+        setCategoryName('')
+    }
+
+    const handleEscapeDelete = () => setShowDeleteConfirm(null)
+
+    useEscape(showModal ? handleEscapeCreate : showDeleteConfirm ? handleEscapeDelete : null)
 
     const businessId = user?.data?.user?.id
 

@@ -1,5 +1,6 @@
 import { X, CheckCircle, CircleDollarSign } from 'lucide-react'
 import { useStore } from '../../../app/providers/store'
+import { useEscape } from '../../../shared/helpers/useEscape'
 
 export const SaleConfirmationModal = ({
     orderSummary = {},
@@ -9,6 +10,8 @@ export const SaleConfirmationModal = ({
 }) => {
     const { total, paymentMethod } = orderSummary
     const { cart } = useStore()
+
+    useEscape(onCancel)
 
     return (
         <section

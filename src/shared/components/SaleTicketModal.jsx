@@ -1,9 +1,12 @@
 import { X, Printer, ReceiptText } from 'lucide-react'
 import { useStore } from '../../app/providers/store'
+import { useEscape } from '../helpers/useEscape'
 
 export const SaleTicketModal = ({ isOpen, onClose, sale }) => {
     const business = useStore((state) => state.user.business)
     const ticketFooter = business?.ticket_footer || ''
+
+    useEscape(onClose)
 
     if (!isOpen || !sale) return null
 

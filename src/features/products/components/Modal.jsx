@@ -1,6 +1,7 @@
 import { X } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
+import { useEscape } from '../../../shared/helpers/useEscape'
 export const Modal = ({
     handleSubmit,
     handleOpenModal,
@@ -22,6 +23,8 @@ export const Modal = ({
     })
 
     const isFormValid = formData.sku.trim() && formData.name.trim() && Number(formData.price) > 0
+
+    useEscape(handleOpenModal)
 
     // const [formData, setFormData] = useState(editProductData)
 

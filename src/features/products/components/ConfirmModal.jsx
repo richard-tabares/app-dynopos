@@ -1,6 +1,9 @@
 import { X, AlertTriangle } from 'lucide-react'
+import { useEscape } from '../../../shared/helpers/useEscape'
 
 export const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message }) => {
+    useEscape(onClose)
+
     if (!isOpen) return null
 
     return (

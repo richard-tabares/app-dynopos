@@ -1,5 +1,6 @@
 import { X } from 'lucide-react'
 import { useState } from 'react'
+import { useEscape } from '../../../shared/helpers/useEscape'
 
 export const AdjustmentModal = ({
     product = {},
@@ -11,6 +12,8 @@ export const AdjustmentModal = ({
         stock: product.inventory?.[0]?.stock || 0,
         min_stock: product.inventory?.[0]?.min_stock || 0,
     })
+
+    useEscape(handleClose)
 
     const handleChange = (e) => {
         const { name, value } = e.target

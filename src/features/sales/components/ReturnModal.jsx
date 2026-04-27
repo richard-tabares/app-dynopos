@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { RotateCcw } from 'lucide-react'
+import { useEscape } from '../../../shared/helpers/useEscape'
 
 const initialItemSelections = (items) =>
     items.map((item) => ({ ...item, returnQuantity: 0 }))
@@ -7,6 +8,8 @@ const initialItemSelections = (items) =>
 export const ReturnModal = ({ isOpen, sale, onClose, onConfirm }) => {
     const [selectedItems, setSelectedItems] = useState([])
     const [returnReason, setReturnReason] = useState('')
+
+    useEscape(onClose)
 
     if (!isOpen || !sale) return null
 
