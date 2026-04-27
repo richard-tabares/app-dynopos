@@ -30,7 +30,9 @@ export const Inventory = () => {
         loadInventory()
     }, [businessId, setProducts])
 
-    const activeProducts = products.filter(p => p.is_active !== false)
+    const activeProducts = products.filter(p => p.is_active !== false && p.track_stock !== false)
+
+    const noStockControlProducts = products.filter(p => p.is_active !== false && p.track_stock === false)
 
     const filteredProducts = activeProducts.filter((product) => {
         const matchesSearch =
@@ -85,15 +87,9 @@ export const Inventory = () => {
         setVisibleCount((prev) => prev + 20)
     }
 
-    const headers = [
-        'Código',
-        'Producto',
-        'Categoría',
-        'Stock',
-        'Mínimo',
-        'Estado',
-        'Acciones',
-    ]
+    const headers = filterStatus === 'noStockControl'
+        ? ['Código', 'Producto', 'Categoría']
+        : ['Código', 'Producto', 'Categoría', 'Stock', 'Mínimo', 'Estado', 'Acciones']
 
     return (
         <>
@@ -168,6 +164,15 @@ export const Inventory = () => {
                                 }`}>
                                 Con Stock
                             </button>
+                            <button
+                                onClick={() => setFilterStatus('noStockControl')}
+                                className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer border ${
+                                    filterStatus === 'noStockControl'
+                                        ? 'bg-gray-600 text-white border-gray-600'
+                                        : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
+                                }`}>
+                                Sin control
+                            </button>
                         </div>
                     </section>
 
@@ -186,14 +191,29 @@ export const Inventory = () => {
                                 </tr>
                             </thead>
                             <tbody className='divide-y divide-gray-200'>
-                                {displayedProducts.map((product) => {
+                                {(filterStatus === 'noStockControl' ? noStockControlProducts : displayedProducts).map((product) => {
                                     const stock =
                                         product.inventory?.[0]?.stock || 0
                                     const minStock =
                                         product.inventory?.[0]?.min_stock || 0
                                     const isLowStock = stock <= minStock
 
-                                    return (
+                                    return filterStatus === 'noStockControl' ? (
+                                        <tr
+                                            key={product.id}
+                                            className='hover:bg-gray-50 transition-colors'>
+                                            <td className='px-6 py-4 text-sm font-medium text-gray-900'>
+                                                {product.sku}
+                                            </td>
+                                            <td className='px-6 py-4 text-sm text-gray-700'>
+                                                {product.name}
+                                            </td>
+                                            <td className='px-6 py-4 text-sm text-gray-500'>
+                                                {product.categories?.name ||
+                                                    'Sin categoría'}
+                                            </td>
+                                        </tr>
+                                    ) : (
                                         <tr
                                             key={product.id}
                                             className='hover:bg-gray-50 transition-colors'>
@@ -244,7 +264,7 @@ export const Inventory = () => {
                     </div>
 
                     {/* Footer / Cargar más */}
-                    {visibleCount < filteredProducts.length && (
+                    {filterStatus !== 'noStockControl' && visibleCount < filteredProducts.length && (
                         <div className='p-6 bg-gray-50 border-t border-gray-200 flex justify-center'>
                             <button
                                 onClick={handleLoadMore}
@@ -254,7 +274,16 @@ export const Inventory = () => {
                         </div>
                     )}
 
-                    {filteredProducts.length === 0 && (
+                    {filterStatus === 'noStockControl' ? (
+                        noStockControlProducts.length === 0 && (
+                            <div className='p-12 text-center'>
+                                <Package className='w-12 h-12 text-gray-300 mx-auto mb-4' />
+                                <p className='text-gray-500 font-medium'>
+                                    No hay productos sin control de stock
+                                </p>
+                            </div>
+                        )
+                    ) : filteredProducts.length === 0 && (
                         <div className='p-12 text-center'>
                             <Package className='w-12 h-12 text-gray-300 mx-auto mb-4' />
                             <p className='text-gray-500 font-medium'>
