@@ -21,10 +21,9 @@ export const SalesHistoryCard = ({ sales = [], onReturn }) => {
                         displayedSales.map((sale) => (
                             <div
                                 key={sale.id}
-                                className='flex items-center gap-4 p-3 hover:bg-primary-50 rounded-lg transition-colors border-b border-gray-100 last:border-0'>
-                                <div
-                                    className='flex items-center gap-4 flex-1 min-w-0 cursor-pointer'
-                                    onClick={() => setSelectedSale(sale)}>
+                                className='flex items-center gap-4 p-3 hover:bg-primary-50 rounded-lg transition-colors border-b border-gray-100 last:border-0 cursor-pointer'
+                                onClick={() => setSelectedSale(sale)}>
+                                <div className='flex items-center gap-4 flex-1 min-w-0'>
                                     <div className='p-2 bg-blue-50 text-blue-600 rounded-lg'>
                                         <ShoppingBag className='w-5 h-5' />
                                     </div>
@@ -51,7 +50,10 @@ export const SalesHistoryCard = ({ sales = [], onReturn }) => {
 
                                 {sale.status !== 'returned' && (
                                     <button
-                                        onClick={() => setReturnTarget(sale)}
+                                        onClick={(e) => {
+                                            e.stopPropagation()
+                                            setReturnTarget(sale)
+                                        }}
                                         className='p-2 text-red-500 hover:bg-red-100 rounded-lg transition-colors shrink-0 cursor-pointer'
                                         title='Devolver venta'>
                                         <RotateCcw className='w-4 h-4' />
