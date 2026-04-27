@@ -23,6 +23,7 @@ import { editProduct } from '../helpers/editProduct'
 import { getProductById } from '../helpers/getProductById'
 import { getCategories } from '../../categories/helpers/getCategories'
 import { createCategory } from '../../categories/helpers/createCategory'
+import { useEscape } from '../../../shared/helpers/useEscape'
 
 export const Products = () => {
     const [openModal, setOpenModal] = useState(false)
@@ -40,6 +41,8 @@ export const Products = () => {
     const [savingCategory, setSavingCategory] = useState(false)
     const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
     const [showMobileActions, setShowMobileActions] = useState(null)
+
+    useEscape(showCategoryModal ? () => { setShowCategoryModal(false); setCategoryName('') } : null)
 
     const filteredProducts = products
         .filter((product) => {
