@@ -28,7 +28,7 @@ export const useStore = create(
             todayRevenue: 0,
             categories: [],
             setLogin: (payload) => set({ user: payload, token: payload?.access_token || null }),
-            setLogOut: () => set({ user: '', token: null }),
+            setLogOut: () => set({ user: '', token: null, cart:[] }),
             setToken: (token) => set({ token }),
             setBusiness: (payload) => set((state) => ({
                 user: { ...state.user, business: { ...state.user.business, ...payload } }
