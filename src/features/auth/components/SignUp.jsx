@@ -113,8 +113,8 @@ export const SignUp = () => {
             // enviamos datos al backend
             try {
                 await SignUpHelper(formData)
-                toast.success('Cuenta creada exitosamente. Por favor, inicia sesión.')
-                navigate('/login', {replace:true})
+                toast.success('Cuenta creada exitosamente. Revisa tu correo para confirmar.')
+                navigate('/emailConfirmation', { state: { email: formData.email }, replace: true })
             } catch (error) {
                 toast.error(error.message || 'Error al crear la cuenta')
             }

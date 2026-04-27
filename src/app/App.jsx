@@ -8,6 +8,8 @@ import { Reports } from '../features/reports/pages/Reports'
 import { Settings } from '../features/settings/pages/Settings'
 import { Login } from '../features/auth/components/Login'
 import { SignUp } from '../features/auth/components/SignUp'
+import { EmailConfirmation } from '../features/auth/components/EmailConfirmation'
+import { EmailConfirmationSuccess } from '../features/auth/components/EmailConfirmationSuccess'
 import { useStore } from './providers/store'
 import { Products } from '../features/products/pages/Products'
 import { ToastContainer } from 'react-toastify'
@@ -29,6 +31,16 @@ export const App = () => {
                     <Route
                         path='/signup'
                         element={<SignUp />}
+                    />
+
+                    <Route
+                        path='/emailConfirmation'
+                        element={<EmailConfirmation />}
+                    />
+
+                    <Route
+                        path='/emailConfirmation/success'
+                        element={<EmailConfirmationSuccess />}
                     />
                     {/* Rutas Privadas */}
                     {user && Object.keys(user).length > 0 ? (
