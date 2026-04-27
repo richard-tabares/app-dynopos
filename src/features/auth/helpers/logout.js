@@ -1,23 +1,11 @@
+import { apiFetch } from '../../../shared/helpers/apiFetch'
+import { useStore } from '../../../app/providers/store'
 
-export const logout = async (setLogin) => {
+export const logout = async () => {
     const apiUrl = import.meta.env.VITE_API_URL
-    const endPoint = '/api/auth/logout'
-    
     try {
-        const response = await fetch(apiUrl + endPoint, {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json',
-            },
-        })
-        
-        if (!response.ok) {
-            throw new Error(`Error ${response.status}`)
-        }
-        
-        const data = await response.json()
-        setLogin(null)
-        return data
+        await apiFetch(`${apiUrl}/api/auth/logout`, { method: 'POST' })
+        useStore.getState().setLogOut()
     } catch (error) {
         console.log('Logout error:', error)
     }

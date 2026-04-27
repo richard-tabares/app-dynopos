@@ -1,17 +1,35 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
+const migrateToken = () => {
+    try {
+        const raw = localStorage.getItem('dynopos-store')
+        if (raw) {
+            const parsed = JSON.parse(raw)
+            const state = parsed?.state
+            if (state && !state.token && state.user?.data?.session?.access_token) {
+                state.token = state.user.data.session.access_token
+                localStorage.setItem('dynopos-store', JSON.stringify(parsed))
+            }
+        }
+    } catch {}
+}
+
+migrateToken()
+
 export const useStore = create(
     persist(
         (set) => ({
             user: {},
+            token: null,
             isMobile: false,
             products:[],
             cart: [],
             todayRevenue: 0,
             categories: [],
-            setLogin: (payload) => set({ user: payload }),
-            setLogOut: () => set({ user: '' }),
+            setLogin: (payload) => set({ user: payload, token: payload?.access_token || null }),
+            setLogOut: () => set({ user: '', token: null }),
+            setToken: (token) => set({ token }),
             setBusiness: (payload) => set((state) => ({
                 user: { ...state.user, business: { ...state.user.business, ...payload } }
             })),

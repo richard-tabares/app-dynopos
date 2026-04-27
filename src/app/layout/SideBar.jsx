@@ -21,7 +21,6 @@ export const SideBar = () => {
     const isCollapsed = useStore((state) => state.isCollapsed)
     const setIsCollapsed = useStore((state) => state.setIsCollapsed)
 
-    const setLogout = useStore((state) => state.setLogOut)
     const user = useStore((state) => state.user)
     const navigate = useNavigate()
 
@@ -71,9 +70,8 @@ export const SideBar = () => {
     ]
 
     const handleLogout = async () => {
-        await logout(setLogout)
+        await logout()
         setIsMobile(false)
-        // Redirigir al login
         navigate('/login', { replace: true })
     }
 

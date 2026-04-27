@@ -1,19 +1,10 @@
+import { apiFetch } from '../../../shared/helpers/apiFetch'
+
 export const getProductById = async (productId) => {
     const apiUrl = import.meta.env.VITE_API_URL
-    const endPoint = '/api/products/product'
     try {
-        const response = await fetch(`${apiUrl}${endPoint}/${productId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-        if (!response.ok) {
-            throw new Error('Error al obtener el producto')
-        }
-        const data = await response.json()
-
-        return data
+        const response = await apiFetch(`${apiUrl}/api/products/product/${productId}`)
+        return await response.json()
     } catch (error) {
         console.error('Error:', error.message)
         return null

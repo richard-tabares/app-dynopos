@@ -1,20 +1,11 @@
+import { apiFetch } from '../../../shared/helpers/apiFetch'
+
 export const getCategories = async (businessId) => {
     const apiUrl = import.meta.env.VITE_API_URL
-    const endPoint = '/api/categories'
     try {
-        const response = await fetch(`${apiUrl}${endPoint}/${businessId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-
-        if (!response.ok) {
-            throw new Error('Error al obtener las categorías')
-        }
+        const response = await apiFetch(`${apiUrl}/api/categories/${businessId}`)
         const data = await response.json()
 
-        // Asegurar que siempre retorna un array
         if (Array.isArray(data)) {
             return data
         }

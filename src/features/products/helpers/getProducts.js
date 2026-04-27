@@ -1,15 +1,11 @@
+import { apiFetch } from '../../../shared/helpers/apiFetch'
 
 export const getProducts = async (businessId) => {
     const apiUrl = import.meta.env.VITE_API_URL
-    const endPoint = '/api/products'
     try {
-        const response = await fetch(`${apiUrl}${endPoint}/${businessId}`)
-        if (!response.ok) {
-            throw new Error('Error al obtener los productos')
-        }
+        const response = await apiFetch(`${apiUrl}/api/products/${businessId}`)
         const data = await response.json()
-        
-        // Asegurar que siempre retorna un array
+
         if (Array.isArray(data)) {
             return data
         }
