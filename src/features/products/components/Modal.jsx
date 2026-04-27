@@ -6,15 +6,15 @@ export const Modal = ({
     editProductData = {},
     categories = {},
 }) => {
-
     const generalCategory = Array.isArray(categories)
-        ? categories.find(cat => cat.name === 'General')
+        ? categories.find((cat) => cat.name === 'General')
         : null
 
     const [formData, setFormData] = useState({
         sku: editProductData.sku || '',
         name: editProductData.name || '',
-        category_id: editProductData.categories?.id || generalCategory?.id || '',
+        category_id:
+            editProductData.categories?.id || generalCategory?.id || '',
         price: editProductData.price || 0,
         is_active: editProductData.is_active || false,
     })
@@ -34,13 +34,15 @@ export const Modal = ({
         e.preventDefault()
         const businessId = JSON.parse(localStorage.getItem('dynopos-store'))
             .state.user.data.user.id
-        handleSubmit({ ...formData, business_id: businessId, id: editProductData.id || undefined })
+        handleSubmit({
+            ...formData,
+            business_id: businessId,
+            id: editProductData.id || undefined,
+        })
     }
 
     return (
-        <section
-            className='fixed inset-0 bg-gray-900/50 w-full h-full flex flex-col items-center justify-center z-50'
-            onClick={handleOpenModal}>
+        <section className='fixed inset-0 bg-gray-900/50 w-full h-full flex flex-col items-center justify-center z-50'>
             <section
                 className='bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative'
                 onClick={(e) => e.stopPropagation()}>

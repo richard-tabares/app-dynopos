@@ -4,7 +4,7 @@ import { useState } from 'react'
 export const AdjustmentModal = ({
     product = {},
     handleClose,
-    handleSubmit
+    handleSubmit,
 }) => {
     const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState({
@@ -24,16 +24,17 @@ export const AdjustmentModal = ({
         e.preventDefault()
         setLoading(true)
         try {
-            await handleSubmit(product.id, { ...formData, business_id: product.business_id })
+            await handleSubmit(product.id, {
+                ...formData,
+                business_id: product.business_id,
+            })
         } finally {
             setLoading(false)
         }
     }
 
     return (
-        <section
-            className='fixed inset-0 bg-gray-900/50 w-full h-full flex flex-col items-center justify-center z-50'
-            onClick={handleClose}>
+        <section className='fixed inset-0 bg-gray-900/50 w-full h-full flex flex-col items-center justify-center z-50'>
             <section
                 className='bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative'
                 onClick={(e) => e.stopPropagation()}>
@@ -44,9 +45,12 @@ export const AdjustmentModal = ({
                 </button>
                 <h2 className='text-xl font-bold'>Ajuste de Inventario</h2>
                 <p className='text-sm text-gray-500 mt-1'>
-                    Producto: <span className='font-semibold text-gray-700'>{product.name}</span>
+                    Producto:{' '}
+                    <span className='font-semibold text-gray-700'>
+                        {product.name}
+                    </span>
                 </p>
-                
+
                 <form
                     className='flex flex-col gap-4 mt-6'
                     onSubmit={onFormSubmit}>
@@ -64,7 +68,7 @@ export const AdjustmentModal = ({
                             placeholder='0'
                         />
                     </section>
-                    
+
                     <section>
                         <label className='block text-sm font-medium text-gray-700 mb-1'>
                             Stock Mínimo (Alerta)

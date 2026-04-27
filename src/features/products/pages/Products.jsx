@@ -8,6 +8,7 @@ import {
     ClipboardList,
     ChevronDown,
     EllipsisVertical,
+    X,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
@@ -238,12 +239,16 @@ export const Products = () => {
                 <section
                     className='fixed inset-0 bg-gray-900/50 w-full h-full flex items-center justify-center z-[70]'
                     onClick={() => {
-                        setShowCategoryModal(false)
                         setCategoryName('')
                     }}>
                     <section
                         className='bg-white rounded-lg shadow-2xl w-full max-w-md relative overflow-hidden'
                         onClick={(e) => e.stopPropagation()}>
+                    <button
+                    className='absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition mb-4'
+                    onClick={() => setShowCategoryModal(false)}>
+                    <X className='w-6 h-6' />
+                </button>
                         <div className='p-6 border-b border-gray-100'>
                             <h3 className='text-lg font-bold text-gray-900'>
                                 Nueva Categoría

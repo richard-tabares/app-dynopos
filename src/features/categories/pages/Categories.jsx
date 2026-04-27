@@ -34,7 +34,7 @@ export const Categories = () => {
     }, [businessId])
 
     const filteredCategories = categories.filter((cat) =>
-        cat.name.toLowerCase().includes(searchTerm.toLowerCase())
+        cat.name.toLowerCase().includes(searchTerm.toLowerCase()),
     )
 
     const openCreateModal = () => {
@@ -58,10 +58,15 @@ export const Categories = () => {
         setSaving(true)
         try {
             if (editingCategory) {
-                await updateCategory(editingCategory.id, { name: categoryName.trim() })
+                await updateCategory(editingCategory.id, {
+                    name: categoryName.trim(),
+                })
                 toast.success('Categoría actualizada exitosamente')
             } else {
-                await createCategory({ business_id: businessId, name: categoryName.trim() })
+                await createCategory({
+                    business_id: businessId,
+                    name: categoryName.trim(),
+                })
                 toast.success('Categoría creada exitosamente')
             }
             setShowModal(false)
@@ -94,31 +99,36 @@ export const Categories = () => {
         <>
             {/* Create/Edit Modal */}
             {showModal && (
-                <section
-                    className='fixed inset-0 bg-gray-900/50 w-full h-full flex items-center justify-center z-[70]'
-                    onClick={() => { setShowModal(false); setEditingCategory(null); setCategoryName('') }}
-                >
+                <section className='fixed inset-0 bg-gray-900/50 w-full h-full flex items-center justify-center z-[70]'>
                     <section
                         className='bg-white rounded-lg shadow-2xl w-full max-w-md relative overflow-hidden'
-                        onClick={(e) => e.stopPropagation()}
-                    >
+                        onClick={(e) => e.stopPropagation()}>
                         <div className='p-6 border-b border-gray-100 flex items-center justify-between'>
                             <h3 className='text-lg font-bold text-gray-900'>
-                                {editingCategory ? 'Editar Categoría' : 'Nueva Categoría'}
+                                {editingCategory
+                                    ? 'Editar Categoría'
+                                    : 'Nueva Categoría'}
                             </h3>
                             <button
-                                onClick={() => { setShowModal(false); setEditingCategory(null); setCategoryName('') }}
-                                className='p-1 hover:bg-gray-100 rounded-lg transition cursor-pointer'
-                            >
+                                onClick={() => {
+                                    setShowModal(false)
+                                    setEditingCategory(null)
+                                    setCategoryName('')
+                                }}
+                                className='p-1 hover:bg-gray-100 rounded-lg transition cursor-pointer'>
                                 <X className='w-5 h-5 text-gray-500' />
                             </button>
                         </div>
                         <div className='p-6'>
-                            <label className='block text-sm font-medium text-gray-700 mb-2'>Nombre</label>
+                            <label className='block text-sm font-medium text-gray-700 mb-2'>
+                                Nombre
+                            </label>
                             <input
                                 type='text'
                                 value={categoryName}
-                                onChange={(e) => setCategoryName(e.target.value)}
+                                onChange={(e) =>
+                                    setCategoryName(e.target.value)
+                                }
                                 placeholder='Nombre de la categoría'
                                 className='w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400'
                                 autoFocus
@@ -126,16 +136,18 @@ export const Categories = () => {
                         </div>
                         <div className='px-6 pb-6 flex gap-3'>
                             <button
-                                onClick={() => { setShowModal(false); setEditingCategory(null); setCategoryName('') }}
-                                className='flex-1 py-2.5 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition text-sm cursor-pointer'
-                            >
+                                onClick={() => {
+                                    setShowModal(false)
+                                    setEditingCategory(null)
+                                    setCategoryName('')
+                                }}
+                                className='flex-1 py-2.5 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition text-sm cursor-pointer'>
                                 Cancelar
                             </button>
                             <button
                                 onClick={handleSave}
                                 disabled={saving || !categoryName.trim()}
-                                className='flex-1 py-2.5 bg-primary-600 text-white rounded-lg font-bold hover:bg-primary-700 transition text-sm disabled:opacity-50 cursor-pointer'
-                            >
+                                className='flex-1 py-2.5 bg-primary-600 text-white rounded-lg font-bold hover:bg-primary-700 transition text-sm disabled:opacity-50 cursor-pointer'>
                                 {saving ? 'Guardando...' : 'Guardar'}
                             </button>
                         </div>
@@ -147,33 +159,33 @@ export const Categories = () => {
             {showDeleteConfirm && (
                 <section
                     className='fixed inset-0 bg-gray-900/50 w-full h-full flex items-center justify-center z-[70]'
-                    onClick={() => setShowDeleteConfirm(null)}
-                >
+                    onClick={() => setShowDeleteConfirm(null)}>
                     <section
                         className='bg-white rounded-lg shadow-2xl w-full max-w-sm relative overflow-hidden'
-                        onClick={(e) => e.stopPropagation()}
-                    >
+                        onClick={(e) => e.stopPropagation()}>
                         <div className='p-6 text-center'>
                             <div className='mx-auto w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-4'>
                                 <Trash2 className='w-6 h-6 text-red-600' />
                             </div>
-                            <h3 className='text-lg font-bold text-gray-900 mb-2'>Eliminar Categoría</h3>
+                            <h3 className='text-lg font-bold text-gray-900 mb-2'>
+                                Eliminar Categoría
+                            </h3>
                             <p className='text-sm text-gray-500'>
-                                ¿Estás seguro de eliminar <strong>{showDeleteConfirm.name}</strong>? Esta acción no se puede deshacer.
+                                ¿Estás seguro de eliminar{' '}
+                                <strong>{showDeleteConfirm.name}</strong>? Esta
+                                acción no se puede deshacer.
                             </p>
                         </div>
                         <div className='px-6 pb-6 flex gap-3'>
                             <button
                                 onClick={() => setShowDeleteConfirm(null)}
-                                className='flex-1 py-2.5 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition text-sm cursor-pointer'
-                            >
+                                className='flex-1 py-2.5 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition text-sm cursor-pointer'>
                                 Cancelar
                             </button>
                             <button
                                 onClick={handleDelete}
                                 disabled={loading}
-                                className='flex-1 py-2.5 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 transition text-sm disabled:opacity-50 cursor-pointer'
-                            >
+                                className='flex-1 py-2.5 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 transition text-sm disabled:opacity-50 cursor-pointer'>
                                 {loading ? 'Eliminando...' : 'Eliminar'}
                             </button>
                         </div>
@@ -186,8 +198,9 @@ export const Categories = () => {
                 <section>
                     <h1 className='text-2xl font-bold'>Categorías</h1>
                     <p className='text-gray-600'>
-                        Aquí puedes gestionar las categorías de tus productos, agregar nuevas,
-                        editar las existentes y eliminar las que ya no necesites.
+                        Aquí puedes gestionar las categorías de tus productos,
+                        agregar nuevas, editar las existentes y eliminar las que
+                        ya no necesites.
                     </p>
                 </section>
                 <section className='bg-white border border-gray-300 shadow-sm overflow-hidden rounded-lg'>
@@ -234,23 +247,33 @@ export const Categories = () => {
                             </thead>
                             <tbody className='divide-y divide-gray-200'>
                                 {filteredCategories.map((category) => (
-                                    <tr key={category.id} className='hover:bg-gray-50 transition-colors text-sm'>
+                                    <tr
+                                        key={category.id}
+                                        className='hover:bg-gray-50 transition-colors text-sm'>
                                         <td className='px-6 py-4'>
                                             <div className='flex items-center gap-2'>
                                                 <Tag className='w-4 h-4 text-primary-600' />
-                                                <span className='font-medium text-gray-900'>{category.name}</span>
+                                                <span className='font-medium text-gray-900'>
+                                                    {category.name}
+                                                </span>
                                             </div>
                                         </td>
                                         <td className='px-6 py-4 text-right'>
                                             <section className='flex items-center justify-end gap-2'>
                                                 <button
-                                                    onClick={() => openEditModal(category)}
+                                                    onClick={() =>
+                                                        openEditModal(category)
+                                                    }
                                                     className='hover:bg-gray-200 p-2 rounded-sm cursor-pointer'
                                                     title='Editar Categoría'>
                                                     <Edit2 className='w-4 h-4 text-primary-600' />
                                                 </button>
                                                 <button
-                                                    onClick={() => setShowDeleteConfirm(category)}
+                                                    onClick={() =>
+                                                        setShowDeleteConfirm(
+                                                            category,
+                                                        )
+                                                    }
                                                     className='hover:bg-red-700 bg-red-600 text-white p-2 rounded-sm cursor-pointer'
                                                     title='Eliminar Categoría'>
                                                     <Trash2 className='w-4 h-4' />
@@ -265,7 +288,9 @@ export const Categories = () => {
                     {filteredCategories.length === 0 && (
                         <div className='p-12 text-center'>
                             <Tag className='w-12 h-12 text-gray-300 mx-auto mb-4' />
-                            <p className='text-gray-500 font-medium'>No se encontraron categorías</p>
+                            <p className='text-gray-500 font-medium'>
+                                No se encontraron categorías
+                            </p>
                         </div>
                     )}
                 </section>
