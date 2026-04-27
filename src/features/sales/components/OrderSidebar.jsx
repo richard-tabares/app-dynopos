@@ -11,7 +11,7 @@ export const OrderSidebar = ({ onProcessSale }) => {
 
     const paymentMethods = [
         { id: 'Efectivo', label: 'Efectivo', icon: Banknote },
-        { id: 'Tarjeta', label: 'Tarjeta', icon: CreditCard },
+        // { id: 'Tarjeta', label: 'Tarjeta', icon: CreditCard },
         { id: 'Transferencia', label: 'Transferencia', icon: ReceiptText },
     ]
 
