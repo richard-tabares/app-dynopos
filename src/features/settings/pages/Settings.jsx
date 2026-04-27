@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router'
 import { Store, Shield, Receipt, Bell, Save, Loader } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { useStore } from '../../../app/providers/store'
@@ -7,7 +8,8 @@ import { uploadLogo } from '../helpers/uploadLogo'
 import { changePassword } from '../helpers/changePassword'
 
 export const Settings = () => {
-    const { user, setBusiness } = useStore()
+    const { user, setBusiness, setLogOut } = useStore()
+    const navigate = useNavigate()
     const businessId = user?.data?.user?.id
 
     const [formData, setFormData] = useState({
@@ -107,6 +109,10 @@ export const Settings = () => {
             toast.warn('La contraseña debe tener al menos 6 caracteres')
             return
         }
+        if (passwordData.currentPassword === passwordData.newPassword) {
+            toast.warn('La nueva contraseña debe ser diferente a la actual')
+            return
+        }
         if (!formData.email) {
             toast.error('No se encontró el correo del negocio')
             return
@@ -120,8 +126,9 @@ export const Settings = () => {
                 newPassword: passwordData.newPassword,
             })
             if (result.status === 200) {
-                toast.success('Contraseña actualizada exitosamente')
-                setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' })
+                toast.success('Contraseña actualizada exitosamente. Inicia sesión de nuevo.')
+                setLogOut()
+                navigate('/login', { replace: true })
             }
         } catch (error) {
             toast.error(error.message || 'Error al cambiar la contraseña')

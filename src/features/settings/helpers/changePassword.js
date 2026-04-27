@@ -7,6 +7,7 @@ export const changePassword = async (data) => {
             method: 'POST',
             body: JSON.stringify(data),
         })
+        
         return await response.json()
     } catch (error) {
         console.error('Error:', error.message)
