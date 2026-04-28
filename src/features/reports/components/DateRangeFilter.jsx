@@ -24,7 +24,7 @@ export const DateRangeFilter = ({ value: currentFilter = 'month', onChange, star
 
     return (
         <section className='bg-white border border-gray-300 p-4 shadow-xs rounded-lg flex flex-wrap items-end gap-3'>
-            <div className='flex gap-1 bg-gray-100 rounded-lg p-1'>
+            <div className='flex gap-1 bg-gray-100 rounded-lg p-1 max-w-full overflow-x-auto scrollbar-none'>
                 {periods.map((p) => {
                     const Icon = periodIcons[p.value]
                     return (

@@ -134,7 +134,7 @@ export const Inventory = () => {
                                 placeholder='Buscar por nombre o código de barras...'
                             />
                         </div>
-                        <div className='flex gap-1 bg-gray-100 rounded-lg p-1 w-fit'>
+                        <div className='flex gap-1 bg-gray-100 rounded-lg p-1 w-fit max-w-full overflow-x-auto scrollbar-none'>
                             <button
                                 onClick={() => setFilterStatus('all')}
                                 className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer ${

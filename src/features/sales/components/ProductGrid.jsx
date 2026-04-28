@@ -2,18 +2,21 @@ import { useStore } from '../../../app/providers/store'
 
 export const ProductCard = ({ product }) => {
     const addToCart = useStore((state) => state.addToCart)
+    const cart = useStore((state) => state.cart)
 
-    const stock = product.inventory?.[0]?.stock || 0
+    const originalStock = product.inventory?.[0]?.stock || 0
+    const cartQuantity = cart.find(item => item.id === product.id)?.quantity || 0
+    const availableStock = originalStock - cartQuantity
     const noStockControl = product.track_stock === false
 
     return (
         <button
             onClick={() => addToCart(product)}
-            disabled={!noStockControl && stock === 0}
-            className={`bg-white p-4 rounded-lg border shadow-sm transition-all flex items-center justify-between group ${
-                !noStockControl && stock === 0
+            disabled={!noStockControl && availableStock <= 0}
+            className={`bg-white p-4 rounded-lg border transition-all flex items-center justify-between group ${
+                !noStockControl && availableStock <= 0
                     ? 'border-gray-200 opacity-50 cursor-not-allowed bg-gray-50 grayscale' 
-                    : 'border-gray-200 hover:shadow-md hover:border-primary-400 cursor-pointer'
+                    : 'border-gray-200 hover:border-primary-400 cursor-pointer'
             }`}
         >
             <div className='flex items-center gap-4'>
@@ -29,9 +32,9 @@ export const ProductCard = ({ product }) => {
             
             <div className='flex items-center gap-4'>
                 <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-                    noStockControl ? 'bg-gray-100 text-gray-600' : stock === 0 ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
+                    noStockControl ? 'bg-gray-100 text-gray-600' : availableStock <= 0 ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
                 }`}>
-                    {noStockControl ? 'Sin control' : stock === 0 ? 'Sin Stock' : `Stock: ${stock}`}
+                    {noStockControl ? 'Sin control' : availableStock <= 0 ? 'Sin Stock' : `Stock: ${availableStock}`}
                 </span>
                 <p className='text-lg font-bold text-primary-600'>
                     ${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(product.price)}

@@ -7,10 +7,10 @@ import { useStore } from '../../../app/providers/store'
 import { AlertTriangle, PackageCheck, Package, Layers } from 'lucide-react'
 
 const stockFilters = [
+    { value: 'all', label: 'Todos', icon: Layers, color: 'text-primary-600', bg: 'bg-primary-50' },
     { value: 'stock_bajo', label: 'Stock Bajo', icon: AlertTriangle, color: 'text-red-500', bg: 'bg-red-50' },
     { value: 'con_stock', label: 'Con Stock', icon: PackageCheck, color: 'text-emerald-500', bg: 'bg-emerald-50' },
     { value: 'sin_control', label: 'Sin Control', icon: Package, color: 'text-gray-500', bg: 'bg-gray-50' },
-    { value: 'all', label: 'Todos', icon: Layers, color: 'text-primary-600', bg: 'bg-primary-50' },
 ]
 
 export const InventoryReports = () => {
@@ -19,7 +19,7 @@ export const InventoryReports = () => {
     const [data, setData] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
-    const [stockFilter, setStockFilter] = useState('stock_bajo')
+    const [stockFilter, setStockFilter] = useState('all')
 
     useEffect(() => {
         if (!businessId) return
@@ -45,7 +45,7 @@ export const InventoryReports = () => {
         <section className='space-y-6 pb-12'>
             <h2 className='text-2xl font-bold text-gray-900'>Reporte de Inventario</h2>
 
-            <div className='flex gap-2 bg-gray-100 rounded-lg p-1 w-fit'>
+            <div className='flex gap-2 bg-gray-100 rounded-lg p-1 w-fit max-w-full overflow-x-auto scrollbar-none'>
                 {stockFilters.map((f) => {
                     const Icon = f.icon
                     return (

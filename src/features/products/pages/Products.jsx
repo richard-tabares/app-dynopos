@@ -469,7 +469,7 @@ export const Products = () => {
                                 placeholder='Buscar por nombre o código...'
                             />
                         </div>
-                        <div className='flex flex-wrap items-center gap-2'>
+                        <div className='flex flex-wrap items-center gap-2 max-w-full overflow-x-auto scrollbar-none'>
                             <div className='flex gap-1 bg-gray-100 rounded-lg p-1 w-fit'>
                                 <button
                                     onClick={() => setActiveCategory('all')}

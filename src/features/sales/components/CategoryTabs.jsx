@@ -2,7 +2,7 @@ import { Layers, Tags } from 'lucide-react'
 
 export const CategoryTabs = ({ categories = [], activeCategory, onSelectCategory }) => {
     return (
-        <div className='flex gap-1 bg-gray-100 rounded-lg p-1 w-fit'>
+        <div className='flex gap-1 bg-gray-100 rounded-lg p-1 w-fit max-w-full overflow-x-auto scrollbar-none'>
             <button
                 onClick={() => onSelectCategory('all')}
                 className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
@@ -12,7 +12,7 @@ export const CategoryTabs = ({ categories = [], activeCategory, onSelectCategory
                 }`}
             >
                 <Layers className='w-4 h-4' />
-                Todos
+                Ninguna
             </button>
             {categories.map((category) => (
                 <button

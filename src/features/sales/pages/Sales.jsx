@@ -26,6 +26,7 @@ export const Sales = () => {
 
     const [salesList, setSalesList] = useState([])
 
+    const [showProducts, setShowProducts] = useState(false)
     const [visibleCount, setVisibleCount] = useState(10)
 
     const businessId = user?.data?.user?.id
@@ -68,6 +69,14 @@ export const Sales = () => {
         })
 
     const displayedProducts = filteredProducts.slice(0, visibleCount)
+
+    useEffect(() => {
+        if (searchTerm.trim() || activeCategory !== 'all') {
+            setShowProducts(true)
+        } else {
+            setShowProducts(false)
+        }
+    }, [searchTerm, activeCategory])
 
     const handleLoadMore = () => {
         setVisibleCount((prev) => prev + 10)
@@ -185,7 +194,13 @@ export const Sales = () => {
 
                         {/* Product Grid */}
                         <div className='min-h-100'>
-                            {filteredProducts.length === 0 ? (
+                            {!showProducts ? (
+                                <div className='flex flex-col items-center justify-center py-20 text-gray-400'>
+                                    <Search className='w-12 h-12 opacity-20 mb-4' />
+                                    <p className='text-lg font-medium'>Busca productos o selecciona una categoría</p>
+                                    <p className='text-sm text-gray-400 mt-1'>Los productos aparecerán aquí</p>
+                                </div>
+                            ) : filteredProducts.length === 0 ? (
                                 <div className='flex flex-col items-center justify-center py-20 text-gray-400'>
                                     <Search className='w-12 h-12 opacity-20 mb-4' />
                                     <p className='text-lg font-medium'>No se encontraron productos</p>
