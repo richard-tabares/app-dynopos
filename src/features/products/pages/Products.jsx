@@ -10,6 +10,11 @@ import {
     ChevronDown,
     EllipsisVertical,
     X,
+    CheckCircle2,
+    CheckCircle,
+    XCircle,
+    PackageCheck,
+    PackageX,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
@@ -33,6 +38,8 @@ export const Products = () => {
     const [editProductData, setEditProductData] = useState({})
     const [searchTerm, setSearchTerm] = useState('')
     const [activeCategory, setActiveCategory] = useState('all')
+    const [activeStatus, setActiveStatus] = useState('all')
+    const [activeStock, setActiveStock] = useState('all')
     const [visibleCount, setVisibleCount] = useState(20)
     const { user, products, setProducts, categories, setCategories } =
         useStore()
@@ -53,8 +60,16 @@ export const Products = () => {
             const matchesCategory =
                 activeCategory === 'all' ||
                 product.categories?.id === activeCategory
+            const matchesStatus =
+                activeStatus === 'all' ||
+                (activeStatus === 'active' && product.is_active !== false) ||
+                (activeStatus === 'inactive' && product.is_active === false)
+            const matchesStock =
+                activeStock === 'all' ||
+                (activeStock === 'with' && product.track_stock !== false) ||
+                (activeStock === 'without' && product.track_stock === false)
 
-            return matchesSearch && matchesCategory
+            return matchesSearch && matchesCategory && matchesStatus && matchesStock
         })
         .sort((a, b) => b.id - a.id)
 
@@ -65,6 +80,7 @@ export const Products = () => {
         'Nombre',
         'Categoría',
         'Precio',
+        'Maneja Stock',
         'Estado',
         'Acciones',
     ]
@@ -453,42 +469,108 @@ export const Products = () => {
                                 placeholder='Buscar por nombre o código...'
                             />
                         </div>
-                        <div className='flex gap-1 bg-gray-100 rounded-lg p-1 w-fit'>
-                            <button
-                                onClick={() => setActiveCategory('all')}
-                                className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
-                                    activeCategory === 'all'
-                                        ? 'bg-white shadow-xs text-primary-600'
-                                        : 'text-gray-500 hover:text-gray-700'
-                                }`}>
-                                <Layers className='w-4 h-4' />
-                                Todas
-                            </button>
-                            {categories.map((category) => (
+                        <div className='flex flex-wrap items-center gap-2'>
+                            <div className='flex gap-1 bg-gray-100 rounded-lg p-1 w-fit'>
                                 <button
-                                    key={category.id}
-                                    onClick={() =>
-                                        setActiveCategory(category.id)
-                                    }
+                                    onClick={() => setActiveCategory('all')}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
-                                        activeCategory === category.id
+                                        activeCategory === 'all'
                                             ? 'bg-white shadow-xs text-primary-600'
                                             : 'text-gray-500 hover:text-gray-700'
                                     }`}>
-                                    <Tags className='w-4 h-4' />
-                                    {category.name}
+                                    <Layers className='w-4 h-4' />
+                                    Todas
                                 </button>
-                            ))}
+                                {categories.map((category) => (
+                                    <button
+                                        key={category.id}
+                                        onClick={() =>
+                                            setActiveCategory(category.id)
+                                        }
+                                        className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
+                                            activeCategory === category.id
+                                                ? 'bg-white shadow-xs text-primary-600'
+                                                : 'text-gray-500 hover:text-gray-700'
+                                        }`}>
+                                        <Tags className='w-4 h-4' />
+                                        {category.name}
+                                    </button>
+                                ))}
+                            </div>
+                            <div className='flex gap-1 bg-gray-100 rounded-lg p-1 w-fit ml-auto'>
+                                <button
+                                    onClick={() => { setActiveStatus('all'); setVisibleCount(20) }}
+                                    className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
+                                        activeStatus === 'all'
+                                            ? 'bg-white shadow-xs text-primary-600'
+                                            : 'text-gray-500 hover:text-gray-700'
+                                    }`}>
+                                    <CheckCircle2 className='w-4 h-4' />
+                                    Todos
+                                </button>
+                                <button
+                                    onClick={() => { setActiveStatus('active'); setVisibleCount(20) }}
+                                    className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
+                                        activeStatus === 'active'
+                                            ? 'bg-white shadow-xs text-primary-600'
+                                            : 'text-gray-500 hover:text-gray-700'
+                                    }`}>
+                                    <CheckCircle className='w-4 h-4' />
+                                    Activo
+                                </button>
+                                <button
+                                    onClick={() => { setActiveStatus('inactive'); setVisibleCount(20) }}
+                                    className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
+                                        activeStatus === 'inactive'
+                                            ? 'bg-white shadow-xs text-primary-600'
+                                            : 'text-gray-500 hover:text-gray-700'
+                                    }`}>
+                                    <XCircle className='w-4 h-4' />
+                                    Inactivo
+                                </button>
+                            </div>
+                            <div className='flex gap-1 bg-gray-100 rounded-lg p-1 w-fit'>
+                                <button
+                                    onClick={() => { setActiveStock('all'); setVisibleCount(20) }}
+                                    className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
+                                        activeStock === 'all'
+                                            ? 'bg-white shadow-xs text-primary-600'
+                                            : 'text-gray-500 hover:text-gray-700'
+                                    }`}>
+                                    <Layers className='w-4 h-4' />
+                                    Todos
+                                </button>
+                                <button
+                                    onClick={() => { setActiveStock('with'); setVisibleCount(20) }}
+                                    className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
+                                        activeStock === 'with'
+                                            ? 'bg-white shadow-xs text-primary-600'
+                                            : 'text-gray-500 hover:text-gray-700'
+                                    }`}>
+                                    <PackageCheck className='w-4 h-4' />
+                                    Con stock
+                                </button>
+                                <button
+                                    onClick={() => { setActiveStock('without'); setVisibleCount(20) }}
+                                    className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
+                                        activeStock === 'without'
+                                            ? 'bg-white shadow-xs text-primary-600'
+                                            : 'text-gray-500 hover:text-gray-700'
+                                    }`}>
+                                    <PackageX className='w-4 h-4' />
+                                    Sin stock
+                                </button>
+                            </div>
                         </div>
                     </section>
                     <div className='overflow-x-auto px-6 pb-2'>
-                        <table className='w-full text-sm overflow-hidden rounded-t-lg'>
+                        <table className='text-sm overflow-hidden rounded-t-lg w-full'>
                             <thead>
                                 <tr className='bg-gray-100 border-b border-gray-200 text-gray-500 uppercase text-xs tracking-wider'>
                                     {productsHeaders.map((header, index) => (
                                         <th
                                             key={index}
-                                            className={`py-3 px-4 font-medium ${header === 'Precio' || header === 'Acciones' ? 'text-right' : 'text-left'}`}>
+                                            className={`border border-r-gray-500 py-3 px-4 font-medium ${header === 'Precio' || header === 'Acciones' || header === 'Control Stock' ? 'text-right' : 'text-left'}`}>
                                             {header}
                                         </th>
                                     ))}
@@ -515,7 +597,18 @@ export const Products = () => {
                                                 'es-CO',
                                             ).format(product.price)}
                                         </td>
-                                        <td className='py-3 px-4'>
+                                        <td className='py-3 px-4 text-right whitespace-nowrap'>
+                                            {product.track_stock !== false ? (
+                                                <span className='px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 rounded-full whitespace-nowrap'>
+                                                    Sí
+                                                </span>
+                                            ) : (
+                                                <span className='px-2.5 py-0.5 text-xs font-medium bg-gray-100 text-gray-500 rounded-full whitespace-nowrap'>
+                                                    No
+                                                </span>
+                                            )}
+                                        </td>
+                                        <td className='py-3 px-4 whitespace-nowrap'>
                                             {product.is_active ? (
                                                 <span className='px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full'>
                                                     Activo
