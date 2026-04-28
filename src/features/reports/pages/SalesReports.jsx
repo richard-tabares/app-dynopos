@@ -4,6 +4,9 @@ import { SalesLineChart } from '../components/SalesLineChart'
 import { SalesCountChart } from '../components/SalesCountChart'
 import { PaymentPieChart } from '../components/PaymentPieChart'
 import { CategorySalesTable } from '../components/CategorySalesTable'
+import { TopBottomProducts } from '../components/TopBottomProducts'
+import { ProductPerformanceSearch } from '../components/ProductPerformanceSearch'
+import { AvgTicketCard } from '../components/AvgTicketCard'
 import { ReportSkeletons } from '../components/ReportsSkeletons'
 import { getReports } from '../helpers/getReports'
 import { useStore } from '../../../app/providers/store'
@@ -45,8 +48,13 @@ export const SalesReports = () => {
             setLoading(true)
             setError(null)
             const dates = filter === 'range' ? { startDate: rangeStart, endDate: rangeEnd } : computeDates(filter)
-            const result = await getReports(businessId, { section: 'sales', filter, startDate: dates.startDate, endDate: dates.endDate })
-            setData(result.data)
+
+            const [salesResult, perfResult] = await Promise.all([
+                getReports(businessId, { section: 'sales', filter, startDate: dates.startDate, endDate: dates.endDate }),
+                getReports(businessId, { section: 'performance', filter, startDate: dates.startDate, endDate: dates.endDate }),
+            ])
+
+            setData({ ...salesResult.data, ...perfResult.data })
         } catch (err) {
             setError(err.message)
         } finally {
@@ -104,14 +112,28 @@ export const SalesReports = () => {
 
             <DateRangeFilter value={filter} onChange={handleFilterChange} startDate={rangeStart} endDate={rangeEnd} />
 
-            <SalesLineChart data={data?.dailySales || []} />
+            <SalesLineChart data={data?.dailySales || []} showDayNames={filter === 'week'} />
 
-            <div className='grid grid-cols-2 max-md:grid-cols-1 gap-6'>
-                <SalesCountChart data={data?.dailySales || []} />
-                <PaymentPieChart data={data?.salesByPayment || []} />
+            <div className='grid grid-cols-3 max-xl:grid-cols-1 gap-6'>
+                <div className='col-span-1 max-xl:col-span-1'>
+                    <TopBottomProducts data={data?.topProducts || []} type='top' />
+                </div>
+                <div className='col-span-2 max-xl:col-span-1 space-y-6'>
+                    <SalesCountChart data={data?.dailySales || []} showDayNames={filter === 'week'} />
+                    <PaymentPieChart data={data?.salesByPayment || []} />
+                </div>
             </div>
 
-            <CategorySalesTable data={data?.salesByCategory || []} />
+            <div className='grid grid-cols-3 max-xl:grid-cols-1 gap-6'>
+                <div className='col-span-1 max-xl:col-span-1'>
+                    <ProductPerformanceSearch />
+                </div>
+                <div className='col-span-2 max-xl:col-span-1'>
+                    <CategorySalesTable data={data?.salesByCategory || []} />
+                </div>
+            </div>
+
+            <AvgTicketCard overallAvgTicket={data?.overallAvgTicket || 0} tickets={data?.avgTickets || []} showDayNames={filter === 'week'} />
         </section>
     )
 }

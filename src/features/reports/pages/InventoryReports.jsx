@@ -4,12 +4,13 @@ import { InventoryValuation } from '../components/InventoryValuation'
 import { ReportSkeletons } from '../components/ReportsSkeletons'
 import { getReports } from '../helpers/getReports'
 import { useStore } from '../../../app/providers/store'
-import { AlertTriangle, PackageCheck, Package } from 'lucide-react'
+import { AlertTriangle, PackageCheck, Package, Layers } from 'lucide-react'
 
 const stockFilters = [
     { value: 'stock_bajo', label: 'Stock Bajo', icon: AlertTriangle, color: 'text-red-500', bg: 'bg-red-50' },
     { value: 'con_stock', label: 'Con Stock', icon: PackageCheck, color: 'text-emerald-500', bg: 'bg-emerald-50' },
     { value: 'sin_control', label: 'Sin Control', icon: Package, color: 'text-gray-500', bg: 'bg-gray-50' },
+    { value: 'all', label: 'Todos', icon: Layers, color: 'text-primary-600', bg: 'bg-primary-50' },
 ]
 
 export const InventoryReports = () => {

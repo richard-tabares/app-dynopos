@@ -1,6 +1,7 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { DateRangeFilter } from '../components/DateRangeFilter'
 import { ReturnsChart } from '../components/ReturnsChart'
+import { ReturnsTable } from '../components/ReturnsTable'
 import { ReturnDetailModal } from '../components/ReturnDetailModal'
 import { ReportSkeletons } from '../components/ReportsSkeletons'
 import { getReports } from '../helpers/getReports'
@@ -35,11 +36,13 @@ export const AdminReports = () => {
     const [filter, setFilter] = useState('month')
     const [rangeStart, setRangeStart] = useState('')
     const [rangeEnd, setRangeEnd] = useState('')
+    const [shouldFetch, setShouldFetch] = useState(true)
     const [returnDetail, setReturnDetail] = useState(null)
     const [detailLoading, setDetailLoading] = useState(false)
+    const initialLoad = useRef(true)
 
     const fetchData = useCallback(async () => {
-        if (!businessId) return
+        if (!businessId || !shouldFetch) return
         try {
             setLoading(true)
             setError(null)
@@ -51,18 +54,30 @@ export const AdminReports = () => {
         } finally {
             setLoading(false)
         }
-    }, [businessId, filter, rangeStart, rangeEnd])
+    }, [businessId, filter, rangeStart, rangeEnd, shouldFetch])
 
-    useEffect(() => { fetchData() }, [fetchData])
+    useEffect(() => {
+        if (initialLoad.current) {
+            initialLoad.current = false
+            setShouldFetch(true)
+        }
+        fetchData()
+    }, [fetchData])
 
     const handleFilterChange = ({ filter: newFilter, startDate, endDate }) => {
         setFilter(newFilter)
         if (newFilter === 'range') {
             if (startDate) setRangeStart(startDate)
-            if (endDate) setRangeEnd(endDate)
+            if (endDate) {
+                setRangeEnd(endDate)
+                setShouldFetch(true)
+            } else {
+                setShouldFetch(false)
+            }
         } else {
             setRangeStart('')
             setRangeEnd('')
+            setShouldFetch(true)
         }
     }
 
@@ -82,6 +97,18 @@ export const AdminReports = () => {
         }
     }
 
+    if (!shouldFetch && filter !== 'month') {
+        return (
+            <section className='space-y-6 pb-12'>
+                <h2 className='text-2xl font-bold text-gray-900'>Reporte Administrativo</h2>
+                <DateRangeFilter value={filter} onChange={handleFilterChange} startDate={rangeStart} endDate={rangeEnd} />
+                <div className='text-center text-gray-400 italic py-12'>
+                    Selecciona una fecha de inicio y fin para ver los resultados
+                </div>
+            </section>
+        )
+    }
+
     if (loading) return <ReportSkeletons type='returns' />
     if (error) return <div className='bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg'>{error}</div>
 
@@ -91,7 +118,9 @@ export const AdminReports = () => {
 
             <DateRangeFilter value={filter} onChange={handleFilterChange} startDate={rangeStart} endDate={rangeEnd} />
 
-            <ReturnsChart data={data?.returns || []} onReturnClick={handleReturnClick} />
+            <ReturnsChart data={data?.chart || []} showDayNames={filter === 'week'} />
+
+            <ReturnsTable data={data?.list || []} onReturnClick={handleReturnClick} />
 
             {detailLoading && (
                 <div className='fixed inset-0 bg-gray-900/50 flex items-center justify-center z-[70]'>

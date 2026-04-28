@@ -1,14 +1,23 @@
-import { useState } from 'react'
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
 import { Undo2 } from 'lucide-react'
+
+const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
 
 const formatCurrency = (value) =>
     new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(value)
 
-export const ReturnsChart = ({ data = [], onReturnClick }) => {
-    const [visibleCount, setVisibleCount] = useState(10)
-
+export const ReturnsChart = ({ data = [], showDayNames = false }) => {
+    const chartData = [...data].reverse()
     const totalReturns = data.reduce((sum, r) => sum + Number(r.total_amount), 0)
+
+    const formatTick = (val) => {
+        if (showDayNames && val) {
+            const d = new Date(val + 'T12:00:00')
+            return dayNames[d.getDay()]
+        }
+        const parts = val?.split('-')
+        return parts ? `${parts[2]}/${parts[1]}` : val
+    }
 
     return (
         <section className='bg-white border border-gray-300 p-6 shadow-xs rounded-lg'>
@@ -31,7 +40,7 @@ export const ReturnsChart = ({ data = [], onReturnClick }) => {
             <div className='h-[300px] w-full' style={{ position: 'relative', overflow: 'hidden' }}>
                 {data.length > 0 ? (
                     <ResponsiveContainer width='100%' height='100%'>
-                        <AreaChart data={data}>
+                        <AreaChart data={chartData}>
                             <defs>
                                 <linearGradient id="colorReturns" x1="0" y1="0" x2="0" y2="1">
                                     <stop offset="5%" stopColor="#ef4444" stopOpacity={0.1} />
@@ -44,10 +53,7 @@ export const ReturnsChart = ({ data = [], onReturnClick }) => {
                                 axisLine={false}
                                 tickLine={false}
                                 tick={{ fontSize: 12, fill: '#6b7280' }}
-                                tickFormatter={(val) => {
-                                    const parts = val?.split('-')
-                                    return parts ? `${parts[2]}/${parts[1]}` : val
-                                }}
+                                tickFormatter={formatTick}
                             />
                             <YAxis
                                 axisLine={false}
@@ -74,41 +80,6 @@ export const ReturnsChart = ({ data = [], onReturnClick }) => {
                     <div className='h-full flex items-center justify-center text-gray-400 italic'>Sin devoluciones en este período</div>
                 )}
             </div>
-
-            {data.length > 0 && (
-                <div className='overflow-x-auto mt-6'>
-                    <table className='w-full text-sm'>
-                        <thead>
-                            <tr className='border-b border-gray-200 text-gray-500 uppercase text-xs tracking-wider'>
-                                <th className='text-left py-3 px-4 font-medium'>Fecha</th>
-                                <th className='text-right py-3 px-4 font-medium'>Cant. Devuelta</th>
-                                <th className='text-right py-3 px-4 font-medium'>Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {data.slice(0, visibleCount).map((item, i) => (
-                                <tr
-                                    key={i}
-                                    className='border-b border-gray-100 hover:bg-red-50 cursor-pointer transition'
-                                    onClick={() => onReturnClick && onReturnClick(item)}
-                                >
-                                    <td className='py-3 px-4'>{item.return_date}</td>
-                                    <td className='py-3 px-4 text-right'>{item.total_items_returned}</td>
-                                    <td className='py-3 px-4 text-right font-medium text-red-600'>{formatCurrency(item.total_amount)}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                    {visibleCount < data.length && (
-                        <button
-                            onClick={() => setVisibleCount(prev => prev + 10)}
-                            className='w-full mt-4 py-2 text-sm font-medium text-primary-600 hover:bg-primary-50 rounded-lg transition cursor-pointer'
-                        >
-                            Cargar más ({data.length - visibleCount} restantes)
-                        </button>
-                    )}
-                </div>
-            )}
         </section>
     )
 }

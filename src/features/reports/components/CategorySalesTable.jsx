@@ -1,10 +1,17 @@
+import { Tags } from 'lucide-react'
+
 const formatCurrency = (value) =>
     new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(value)
 
 export const CategorySalesTable = ({ data = [] }) => {
     return (
         <section className='bg-white border border-gray-300 p-6 shadow-xs rounded-lg'>
-            <h3 className='text-lg font-semibold mb-6 text-gray-900'>Ventas por Categoría</h3>
+            <div className='flex items-center gap-2 mb-6'>
+                <div className='p-2 rounded-lg bg-blue-50'>
+                    <Tags className='w-5 h-5 text-blue-600' />
+                </div>
+                <h3 className='text-lg font-semibold text-gray-900'>Ventas por Categoría</h3>
+            </div>
             <div className='overflow-x-auto'>
                 {data.length > 0 ? (
                     <table className='w-full text-sm'>

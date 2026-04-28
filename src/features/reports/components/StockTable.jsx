@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Search, AlertTriangle, PackageCheck, Package } from 'lucide-react'
+import { Search, AlertTriangle, PackageCheck, Package, ClipboardList } from 'lucide-react'
 
 const statusConfig = {
     stock_bajo: { label: 'Stock Bajo', color: 'text-red-600', bg: 'bg-red-50' },
@@ -21,11 +21,17 @@ export const StockTable = ({ data = [], filter = 'stock_bajo' }) => {
     }, [data, filter, search])
 
     const visible = filtered.slice(0, visibleCount)
-    const current = statusConfig[filter] || statusConfig.stock_bajo
+
+    const getStatusConfig = (status) => statusConfig[status] || statusConfig.stock_bajo
 
     return (
         <section className='bg-white border border-gray-300 p-6 shadow-xs rounded-lg'>
-            <h3 className='text-lg font-semibold mb-4 text-gray-900'>Estado de Inventario</h3>
+            <div className='flex items-center gap-2 mb-4'>
+                <div className='p-2 rounded-lg bg-blue-50'>
+                    <ClipboardList className='w-5 h-5 text-blue-600' />
+                </div>
+                <h3 className='text-lg font-semibold text-gray-900'>Estado de Inventario</h3>
+            </div>
 
             <div className='relative mb-4'>
                 <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400' />
@@ -57,8 +63,8 @@ export const StockTable = ({ data = [], filter = 'stock_bajo' }) => {
                                         <td className='py-3 px-4 text-right'>{item.current_stock}</td>
                                         <td className='py-3 px-4 text-right'>{item.min_stock}</td>
                                         <td className='py-3 px-4 text-right'>
-                                            <span className={`text-xs font-medium px-2 py-1 rounded-full ${current.bg} ${current.color}`}>
-                                                {current.label}
+                                            <span className={`text-xs font-medium px-2 py-1 rounded-full ${getStatusConfig(item.stock_status).bg} ${getStatusConfig(item.stock_status).color}`}>
+                                                {getStatusConfig(item.stock_status).label}
                                             </span>
                                         </td>
                                     </tr>

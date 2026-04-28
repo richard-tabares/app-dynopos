@@ -12,7 +12,6 @@ import {
     PanelLeftOpen,
     PanelLeftClose,
     ChevronDown,
-    TrendingUp,
     FileText,
     Warehouse
 } from 'lucide-react'
@@ -35,7 +34,6 @@ export const SideBar = () => {
     const reportSubItems = [
         { id: 'ventas', label: 'Ventas', icon: ShoppingCart, path: '/reports/ventas' },
         { id: 'inventario', label: 'Inventario', icon: Warehouse, path: '/reports/inventario' },
-        { id: 'rendimiento', label: 'Rendimiento', icon: TrendingUp, path: '/reports/rendimiento' },
         { id: 'administrativos', label: 'Administrativos', icon: FileText, path: '/reports/administrativos' },
     ]
 
@@ -145,9 +143,8 @@ export const SideBar = () => {
                                             onClick={() => {
                                                 if (!isCollapsed) {
                                                     setReportsOpen(!reportsOpen)
-                                                    if (!reportsOpen) navigate('/reports/ventas')
                                                 } else {
-                                                    navigate('/reports/ventas')
+                                                    navigate('/reports')
                                                 }
                                                 setIsMobile(false)
                                             }}

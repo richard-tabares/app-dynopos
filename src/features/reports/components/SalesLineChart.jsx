@@ -1,12 +1,28 @@
+import { TrendingUp } from 'lucide-react'
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
 
 const formatCurrency = (value) =>
     new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(value)
 
-export const SalesLineChart = ({ data = [] }) => {
+const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
+
+export const SalesLineChart = ({ data = [], showDayNames = false }) => {
+    const formatTick = (val) => {
+        if (showDayNames && val) {
+            const d = new Date(val + 'T12:00:00')
+            return dayNames[d.getDay()]
+        }
+        const parts = val?.split('-')
+        return parts ? `${parts[2]}/${parts[1]}` : val
+    }
     return (
         <section className='bg-white border border-gray-300 p-6 shadow-xs rounded-lg'>
-            <h3 className='text-lg font-semibold mb-6 text-gray-900'>Ventas por Período</h3>
+            <div className='flex items-center gap-2 mb-6'>
+                <div className='p-2 rounded-lg bg-blue-50'>
+                    <TrendingUp className='w-5 h-5 text-blue-600' />
+                </div>
+                <h3 className='text-lg font-semibold text-gray-900'>Ventas Totales</h3>
+            </div>
             <div className='h-[300px] w-full' style={{ position: 'relative', overflow: 'hidden' }}>
                 {data.length > 0 ? (
                     <ResponsiveContainer width='100%' height='100%'>
@@ -23,10 +39,7 @@ export const SalesLineChart = ({ data = [] }) => {
                                 axisLine={false}
                                 tickLine={false}
                                 tick={{ fontSize: 12, fill: '#6b7280' }}
-                                tickFormatter={(val) => {
-                                    const parts = val?.split('-')
-                                    return parts ? `${parts[2]}/${parts[1]}` : val
-                                }}
+                                tickFormatter={formatTick}
                             />
                             <YAxis
                                 axisLine={false}

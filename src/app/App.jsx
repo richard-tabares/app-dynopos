@@ -7,7 +7,6 @@ import { Inventory } from '../features/inventory/pages/Inventory'
 import { Reports } from '../features/reports/pages/Reports'
 import { SalesReports } from '../features/reports/pages/SalesReports'
 import { InventoryReports } from '../features/reports/pages/InventoryReports'
-import { PerformanceReports } from '../features/reports/pages/PerformanceReports'
 import { AdminReports } from '../features/reports/pages/AdminReports'
 import { Settings } from '../features/settings/pages/Settings'
 import { Login } from '../features/auth/components/Login'
@@ -86,7 +85,6 @@ export const App = () => {
                                 <Route index element={<Navigate to='ventas' replace />} />
                                 <Route path='ventas' element={<SalesReports />} />
                                 <Route path='inventario' element={<InventoryReports />} />
-                                <Route path='rendimiento' element={<PerformanceReports />} />
                                 <Route path='administrativos' element={<AdminReports />} />
                             </Route>
                             <Route

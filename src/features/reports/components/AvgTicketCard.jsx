@@ -1,10 +1,12 @@
 import { Receipt } from 'lucide-react'
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
 
+const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
+
 const formatCurrency = (value) =>
     new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(value)
 
-export const AvgTicketCard = ({ overallAvgTicket = 0, tickets = [] }) => {
+export const AvgTicketCard = ({ overallAvgTicket = 0, tickets = [], showDayNames = false }) => {
     const chartData = tickets
         .slice()
         .reverse()
@@ -14,12 +16,21 @@ export const AvgTicketCard = ({ overallAvgTicket = 0, tickets = [] }) => {
             ticket: Math.round(Number(t.total_amount) / Number(t.sale_count)),
         }))
 
+    const formatTick = (val) => {
+        if (showDayNames && val) {
+            const d = new Date(val + 'T12:00:00')
+            return dayNames[d.getDay()]
+        }
+        const parts = val?.split('-')
+        return parts ? `${parts[2]}/${parts[1]}` : val
+    }
+
     return (
         <section className='bg-white border border-gray-300 p-6 shadow-xs rounded-lg'>
             <div className='flex items-start justify-between mb-6'>
                 <div className='flex items-center gap-3'>
-                    <div className='p-3 rounded-lg bg-primary-50'>
-                        <Receipt className='w-6 h-6 text-primary-600' />
+                    <div className='p-2 rounded-lg bg-blue-50'>
+                        <Receipt className='w-5 h-5 text-blue-600' />
                     </div>
                     <div>
                         <h3 className='text-lg font-semibold text-gray-900'>Ticket Promedio</h3>
@@ -43,10 +54,7 @@ export const AvgTicketCard = ({ overallAvgTicket = 0, tickets = [] }) => {
                             </defs>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
                             <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#6b7280' }}
-                                tickFormatter={(val) => {
-                                    const parts = val?.split('-')
-                                    return parts ? `${parts[2]}/${parts[1]}` : val
-                                }}
+                                tickFormatter={formatTick}
                             />
                             <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#6b7280' }}
                                 tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
