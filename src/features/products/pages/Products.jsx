@@ -497,7 +497,7 @@ export const Products = () => {
                                     </button>
                                 ))}
                             </div>
-                            <div className='flex gap-1 bg-gray-100 rounded-lg p-1 w-fit ml-auto'>
+                            <div className='flex gap-1 bg-gray-100 rounded-lg p-1 w-fit ml-0 xl:ml-4'>
                                 <button
                                     onClick={() => { setActiveStatus('all'); setVisibleCount(20) }}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
@@ -570,7 +570,7 @@ export const Products = () => {
                                     {productsHeaders.map((header, index) => (
                                         <th
                                             key={index}
-                                            className={`border border-r-gray-500 py-3 px-4 font-medium ${header === 'Precio' || header === 'Acciones' || header === 'Control Stock' ? 'text-right' : 'text-left'}`}>
+                                            className={`py-3 px-4 font-medium ${header === 'Precio' || header === 'Acciones' || header === 'Control Stock' ? 'text-right' : 'text-left'}`}>
                                             {header}
                                         </th>
                                     ))}
@@ -597,7 +597,7 @@ export const Products = () => {
                                                 'es-CO',
                                             ).format(product.price)}
                                         </td>
-                                        <td className='py-3 px-4 text-right whitespace-nowrap'>
+                                        <td className='py-3 px-4 whitespace-nowrap'>
                                             {product.track_stock !== false ? (
                                                 <span className='px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 rounded-full whitespace-nowrap'>
                                                     Sí
