@@ -14,9 +14,9 @@ export const CategorySalesTable = ({ data = [] }) => {
             </div>
             <div className='overflow-x-auto'>
                 {data.length > 0 ? (
-                    <table className='w-full text-sm'>
+                    <table className='w-full text-sm overflow-hidden rounded-t-lg'>
                         <thead>
-                            <tr className='border-b border-gray-200 text-gray-500 uppercase text-xs tracking-wider'>
+                            <tr className='bg-gray-100 border-b border-gray-200 text-gray-500 uppercase text-xs tracking-wider'>
                                 <th className='text-left py-3 px-4 font-medium'>Categoría</th>
                                 <th className='text-right py-3 px-4 font-medium'>Cant. Ventas</th>
                                 <th className='text-right py-3 px-4 font-medium'>Total</th>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Package, Search, AlertCircle, Settings2 } from 'lucide-react'
+import { Package, Search, AlertCircle, Settings2, AlertTriangle, PackageCheck, Layers } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { useStore } from '../../../app/providers/store'
 import { getProducts } from '../../products/helpers/getProducts'
@@ -13,7 +13,7 @@ export const Inventory = () => {
     const [filterStatus, setFilterStatus] = useState('all')
     const [selectedProduct, setSelectedProduct] = useState(null)
     const [openModal, setOpenModal] = useState(false)
-    const [visibleCount, setVisibleCount] = useState(20)
+    const [visibleCount, setVisibleCount] = useState(10)
 
     const businessId = user?.data?.user?.id
 
@@ -84,7 +84,7 @@ export const Inventory = () => {
     }
 
     const handleLoadMore = () => {
-        setVisibleCount((prev) => prev + 20)
+        setVisibleCount((prev) => prev + 10)
     }
 
     const headers = filterStatus === 'noStockControl'
@@ -112,8 +112,7 @@ export const Inventory = () => {
 
                 <InventorySummary products={activeProducts} />
 
-                <section className='bg-white border border-gray-300 rounded-lg shadow-sm overflow-hidden'>
-                    {/* Header de la tabla */}
+                <section className='bg-white border border-gray-300 shadow-xs rounded-lg'>
                     <section className='border-b border-gray-300 flex justify-between items-center px-6 py-4 bg-gray-50/50'>
                         <h2 className='text-lg font-semibold flex items-center gap-2'>
                             <Package className='w-5 h-5 text-primary-600' />
@@ -121,8 +120,7 @@ export const Inventory = () => {
                         </h2>
                     </section>
 
-                    {/* Buscador y Filtros */}
-                    <section className='px-6 py-4 border-b border-gray-200 flex flex-col gap-4'>
+                    <section className='p-6 flex flex-col gap-4'>
                         <div className='relative'>
                             <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400' />
                             <input
@@ -132,65 +130,68 @@ export const Inventory = () => {
                                     setSearchTerm(e.target.value)
                                     setVisibleCount(20)
                                 }}
-                                className='w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all'
+                                className='w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
                                 placeholder='Buscar por nombre o código de barras...'
                             />
                         </div>
-                        <div className='flex gap-2'>
+                        <div className='flex gap-1 bg-gray-100 rounded-lg p-1 w-fit'>
                             <button
                                 onClick={() => setFilterStatus('all')}
-                                className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer border ${
+                                className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer ${
                                     filterStatus === 'all'
-                                        ? 'bg-primary-600 text-white border-primary-600'
-                                        : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
+                                        ? 'bg-white shadow-xs text-gray-900'
+                                        : 'text-gray-500 hover:text-gray-700'
                                 }`}>
+                                <Layers className='w-4 h-4 text-primary-600' />
                                 Todos
                             </button>
                             <button
                                 onClick={() => setFilterStatus('lowStock')}
-                                className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer border ${
+                                className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer ${
                                     filterStatus === 'lowStock'
-                                        ? 'bg-amber-600 text-white border-amber-600'
-                                        : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
+                                        ? 'bg-white shadow-xs text-gray-900'
+                                        : 'text-gray-500 hover:text-gray-700'
                                 }`}>
+                                <AlertTriangle className='w-4 h-4 text-red-500' />
                                 Stock Bajo
                             </button>
                             <button
                                 onClick={() => setFilterStatus('withStock')}
-                                className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer border ${
+                                className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer ${
                                     filterStatus === 'withStock'
-                                        ? 'bg-emerald-600 text-white border-emerald-600'
-                                        : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
+                                        ? 'bg-white shadow-xs text-gray-900'
+                                        : 'text-gray-500 hover:text-gray-700'
                                 }`}>
+                                <PackageCheck className='w-4 h-4 text-emerald-500' />
                                 Con Stock
                             </button>
                             <button
                                 onClick={() => setFilterStatus('noStockControl')}
-                                className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer border ${
+                                className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer ${
                                     filterStatus === 'noStockControl'
-                                        ? 'bg-gray-600 text-white border-gray-600'
-                                        : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
+                                        ? 'bg-white shadow-xs text-gray-900'
+                                        : 'text-gray-500 hover:text-gray-700'
                                 }`}>
+                                <Package className='w-4 h-4 text-gray-500' />
                                 Sin control
                             </button>
                         </div>
                     </section>
 
-                    {/* Tabla */}
-                    <div className='overflow-x-auto'>
-                        <table className='w-full text-left'>
-                            <thead className='bg-gray-100 border-b border-gray-300'>
-                                <tr>
+                    <div className='overflow-x-auto px-6 pb-2'>
+                        <table className='w-full text-sm overflow-hidden rounded-t-lg'>
+                            <thead>
+                                <tr className='bg-gray-100 border-b border-gray-200 text-gray-500 uppercase text-xs tracking-wider'>
                                     {headers.map((header) => (
                                         <th
                                             key={header}
-                                            className='px-6 py-4 text-xs font-bold text-gray-600 uppercase tracking-wider'>
+                                            className={`py-3 px-4 font-medium ${header === 'Stock' || header === 'Mínimo' ? 'text-right' : header === 'Acciones' ? 'text-right' : 'text-left'}`}>
                                             {header}
                                         </th>
                                     ))}
                                 </tr>
                             </thead>
-                            <tbody className='divide-y divide-gray-200'>
+                            <tbody>
                                 {(filterStatus === 'noStockControl' ? noStockControlProducts : displayedProducts).map((product) => {
                                     const stock =
                                         product.inventory?.[0]?.stock || 0
@@ -201,14 +202,14 @@ export const Inventory = () => {
                                     return filterStatus === 'noStockControl' ? (
                                         <tr
                                             key={product.id}
-                                            className='hover:bg-gray-50 transition-colors'>
-                                            <td className='px-6 py-4 text-sm font-medium text-gray-900'>
+                                            className='border-b border-gray-100 hover:bg-gray-50'>
+                                            <td className='py-3 px-4 font-medium text-gray-900'>
                                                 {product.sku}
                                             </td>
-                                            <td className='px-6 py-4 text-sm text-gray-700'>
+                                            <td className='py-3 px-4 text-gray-700'>
                                                 {product.name}
                                             </td>
-                                            <td className='px-6 py-4 text-sm text-gray-500'>
+                                            <td className='py-3 px-4 text-gray-500'>
                                                 {product.categories?.name ||
                                                     'Sin categoría'}
                                             </td>
@@ -216,25 +217,25 @@ export const Inventory = () => {
                                     ) : (
                                         <tr
                                             key={product.id}
-                                            className='hover:bg-gray-50 transition-colors'>
-                                            <td className='px-6 py-4 text-sm font-medium text-gray-900'>
+                                            className='border-b border-gray-100 hover:bg-gray-50'>
+                                            <td className='py-3 px-4 font-medium text-gray-900'>
                                                 {product.sku}
                                             </td>
-                                            <td className='px-6 py-4 text-sm text-gray-700'>
+                                            <td className='py-3 px-4 text-gray-700'>
                                                 {product.name}
                                             </td>
-                                            <td className='px-6 py-4 text-sm text-gray-500'>
+                                            <td className='py-3 px-4 text-gray-500'>
                                                 {product.categories?.name ||
                                                     'Sin categoría'}
                                             </td>
                                             <td
-                                                className={`px-6 py-4 text-sm font-bold ${isLowStock ? 'text-red-600' : 'text-gray-700'}`}>
+                                                className={`py-3 px-4 text-right font-bold ${isLowStock ? 'text-red-600' : 'text-gray-700'}`}>
                                                 {stock}
                                             </td>
-                                            <td className='px-6 py-4 text-sm text-gray-500'>
+                                            <td className='py-3 px-4 text-right text-gray-500'>
                                                 {minStock}
                                             </td>
-                                            <td className='px-6 py-4'>
+                                            <td className='py-3 px-4'>
                                                 {isLowStock ? (
                                                     <span className='inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800'>
                                                         <AlertCircle className='w-3 h-3' />
@@ -246,12 +247,12 @@ export const Inventory = () => {
                                                     </span>
                                                 )}
                                             </td>
-                                            <td className='px-6 py-4'>
+                                            <td className='py-3 px-2 text-right whitespace-nowrap'>
                                                 <button
                                                     onClick={() =>
                                                         handleOpenModal(product)
                                                     }
-                                                    className='hover:bg-gray-200 p-2 rounded-sm cursor-pointer text-primary-600'
+                                                    className='hover:bg-gray-200 p-1.5 rounded-sm cursor-pointer text-primary-600'
                                                     title='Ajustar Inventario'>
                                                     <Settings2 className='w-4 h-4' />
                                                 </button>
@@ -263,32 +264,23 @@ export const Inventory = () => {
                         </table>
                     </div>
 
-                    {/* Footer / Cargar más */}
                     {filterStatus !== 'noStockControl' && visibleCount < filteredProducts.length && (
-                        <div className='p-6 bg-gray-50 border-t border-gray-200 flex justify-center'>
-                            <button
-                                onClick={handleLoadMore}
-                                className='px-6 py-2 bg-white text-gray-700 font-medium rounded-lg hover:bg-gray-100 transition border border-gray-300 shadow-sm'>
-                                Cargar más productos
-                            </button>
-                        </div>
+                        <button
+                            onClick={handleLoadMore}
+                            className='w-full mt-4 py-2 text-sm font-medium text-primary-600 hover:bg-primary-50 rounded-lg transition cursor-pointer px-6'>
+                            Cargar más ({filteredProducts.length - visibleCount} restantes)
+                        </button>
                     )}
 
                     {filterStatus === 'noStockControl' ? (
                         noStockControlProducts.length === 0 && (
-                            <div className='p-12 text-center'>
-                                <Package className='w-12 h-12 text-gray-300 mx-auto mb-4' />
-                                <p className='text-gray-500 font-medium'>
-                                    No hay productos sin control de stock
-                                </p>
+                            <div className='text-center text-gray-400 italic py-12 px-6'>
+                                No hay productos sin control de stock
                             </div>
                         )
                     ) : filteredProducts.length === 0 && (
-                        <div className='p-12 text-center'>
-                            <Package className='w-12 h-12 text-gray-300 mx-auto mb-4' />
-                            <p className='text-gray-500 font-medium'>
-                                No se encontraron productos
-                            </p>
+                        <div className='text-center text-gray-400 italic py-12 px-6'>
+                            No se encontraron productos
                         </div>
                     )}
                 </section>

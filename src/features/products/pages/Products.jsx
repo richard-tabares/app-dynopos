@@ -5,6 +5,7 @@ import {
     Package,
     Search,
     Tags,
+    Layers,
     ClipboardList,
     ChevronDown,
     EllipsisVertical,
@@ -311,8 +312,7 @@ export const Products = () => {
                         necesites.
                     </p>
                 </section>
-                <section className='bg-white border border-gray-300 shadow-sm overflow-hidden rounded-lg'>
-                    {/* Titulo y boton de nuevo prodcuto de la tabla*/}
+                <section className='bg-white border border-gray-300 shadow-xs rounded-lg'>
                     <section className='border-b border-gray-300 flex justify-between items-center px-6 py-4 bg-gray-50/50'>
                         <section className='flex items-center gap-2'>
                             <Package className='w-5 h-5 text-primary-600' />
@@ -324,7 +324,6 @@ export const Products = () => {
                             </h2>
                         </section>
                         <section className='flex items-center gap-2'>
-                            {/* Desktop buttons */}
                             <section className='hidden sm:flex items-center gap-2'>
                                 <section className='relative'>
                                     <button
@@ -381,7 +380,6 @@ export const Products = () => {
                                     Nuevo Producto
                                 </button>
                             </section>
-                            {/* Mobile 3-dots menu */}
                             <section className='relative sm:hidden'>
                                 <button
                                     onClick={() =>
@@ -444,26 +442,26 @@ export const Products = () => {
                             </section>
                         </section>
                     </section>
-                    {/* Contenido de la tabla de productos */}
-                    <section className='px-6 py-4 border-b border-gray-200 flex flex-col gap-4'>
+                    <section className='p-6 flex flex-col gap-4'>
                         <div className='relative'>
                             <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400' />
                             <input
                                 type='search'
                                 value={searchTerm}
                                 onChange={handleSearch}
-                                className='w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                                className='w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
                                 placeholder='Buscar por nombre o código...'
                             />
                         </div>
-                        <div className='flex gap-2 overflow-x-auto pb-1 scrollbar-none'>
+                        <div className='flex gap-1 bg-gray-100 rounded-lg p-1 w-fit'>
                             <button
                                 onClick={() => setActiveCategory('all')}
-                                className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer border whitespace-nowrap ${
+                                className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                     activeCategory === 'all'
-                                        ? 'bg-primary-600 text-white border-primary-600'
-                                        : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
+                                        ? 'bg-white shadow-xs text-primary-600'
+                                        : 'text-gray-500 hover:text-gray-700'
                                 }`}>
+                                <Layers className='w-4 h-4' />
                                 Todas
                             </button>
                             {categories.map((category) => (
@@ -472,53 +470,52 @@ export const Products = () => {
                                     onClick={() =>
                                         setActiveCategory(category.id)
                                     }
-                                    className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer border whitespace-nowrap ${
+                                    className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                         activeCategory === category.id
-                                            ? 'bg-primary-600 text-white border-primary-600'
-                                            : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
+                                            ? 'bg-white shadow-xs text-primary-600'
+                                            : 'text-gray-500 hover:text-gray-700'
                                     }`}>
+                                    <Tags className='w-4 h-4' />
                                     {category.name}
                                 </button>
                             ))}
                         </div>
                     </section>
-                    <section className='overflow-x-auto scrollbar-thin'>
-                        <table className='w-full text-left'>
+                    <div className='overflow-x-auto px-6 pb-2'>
+                        <table className='w-full text-sm overflow-hidden rounded-t-lg'>
                             <thead>
-                                <tr className='bg-gray-100 border-b border-gray-300'>
-                                    {/* Encabezados de la tabla */}
+                                <tr className='bg-gray-100 border-b border-gray-200 text-gray-500 uppercase text-xs tracking-wider'>
                                     {productsHeaders.map((header, index) => (
                                         <th
                                             key={index}
-                                            className='px-6 py-4 text-xs font-bold text-gray-600 uppercase tracking-wider'>
+                                            className={`py-3 px-4 font-medium ${header === 'Precio' || header === 'Acciones' ? 'text-right' : 'text-left'}`}>
                                             {header}
                                         </th>
                                     ))}
                                 </tr>
                             </thead>
-                            <tbody className='divide-y divide-gray-200'>
-                                {/* Filas de la tabla */}
+                            <tbody>
                                 {displayedProducts.map((product, index) => (
                                     <tr
                                         key={index}
-                                        className='hover:bg-gray-50 transition-colors text-sm'>
-                                        <td className='px-6 py-4 font-medium text-gray-900'>
+                                        className='border-b border-gray-100 hover:bg-gray-50'>
+                                        <td className='py-3 px-4 font-medium text-gray-900'>
                                             {product.sku}
                                         </td>
-                                        <td className='px-6 py-4 text-gray-700'>
+                                        <td className='py-3 px-4 text-gray-700'>
                                             {product.name}
                                         </td>
-                                        <td className='px-6 py-4 text-gray-500'>
+                                        <td className='py-3 px-4 text-gray-500'>
                                             {product.categories?.name ||
                                                 'Sin categoría'}
                                         </td>
-                                        <td className='px-6 py-4 text-gray-700 font-bold'>
+                                        <td className='py-3 px-4 text-gray-700 font-bold text-right'>
                                             $
                                             {new Intl.NumberFormat(
                                                 'es-CO',
                                             ).format(product.price)}
                                         </td>
-                                        <td className='px-6 py-4'>
+                                        <td className='py-3 px-4'>
                                             {product.is_active ? (
                                                 <span className='px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full'>
                                                     Activo
@@ -529,16 +526,15 @@ export const Products = () => {
                                                 </span>
                                             )}
                                         </td>
-                                        <td className='px-6 py-4'>
-                                            {/* Desktop action buttons */}
-                                            <section className='hidden sm:flex items-center gap-2'>
+                                        <td className='py-3 px-2 text-right whitespace-nowrap'>
+                                            <section className='hidden sm:flex items-center justify-end gap-1'>
                                                 <button
                                                     onClick={() =>
                                                         onEditProduct(
                                                             product.id,
                                                         )
                                                     }
-                                                    className='hover:bg-gray-200 p-2 rounded-sm cursor-pointer'
+                                                    className='hover:bg-gray-200 p-1.5 rounded-sm cursor-pointer'
                                                     title='Editar Producto'>
                                                     <Edit2 className='w-4 h-4 text-primary-600' />
                                                 </button>
@@ -548,12 +544,11 @@ export const Products = () => {
                                                             product.id,
                                                         )
                                                     }
-                                                    className='hover:bg-red-700 bg-red-600 text-white p-2 rounded-sm cursor-pointer'
+                                                    className='hover:bg-red-700 bg-red-600 text-white p-1.5 rounded-sm cursor-pointer'
                                                     title='Eliminar Producto'>
                                                     <Trash2 className='w-4 h-4' />
                                                 </button>
                                             </section>
-                                            {/* Mobile row 3-dots menu */}
                                             <section className='relative sm:hidden'>
                                                 <button
                                                     onClick={() =>
@@ -613,23 +608,17 @@ export const Products = () => {
                                 ))}
                             </tbody>
                         </table>
-                    </section>
-                    {/* Botón Cargar Más */}
+                    </div>
                     {visibleCount < filteredProducts.length && (
-                        <section className='p-6 bg-gray-50 border-t border-gray-200 flex justify-center'>
-                            <button
-                                onClick={handleLoadMore}
-                                className='px-6 py-2 bg-white text-gray-700 font-medium rounded-lg hover:bg-gray-100 transition border border-gray-300 shadow-sm'>
-                                Cargar más productos
-                            </button>
-                        </section>
+                        <button
+                            onClick={handleLoadMore}
+                            className='w-full mt-4 py-2 text-sm font-medium text-primary-600 hover:bg-primary-50 rounded-lg transition cursor-pointer px-6'>
+                            Cargar más ({filteredProducts.length - visibleCount} restantes)
+                        </button>
                     )}
                     {filteredProducts.length === 0 && (
-                        <div className='p-12 text-center'>
-                            <Package className='w-12 h-12 text-gray-300 mx-auto mb-4' />
-                            <p className='text-gray-500 font-medium'>
-                                No se encontraron productos
-                            </p>
+                        <div className='text-center text-gray-400 italic py-12 px-6'>
+                            No se encontraron productos
                         </div>
                     )}
                 </section>

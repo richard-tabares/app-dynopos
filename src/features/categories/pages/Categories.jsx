@@ -218,8 +218,7 @@ export const Categories = () => {
                         ya no necesites.
                     </p>
                 </section>
-                <section className='bg-white border border-gray-300 shadow-sm overflow-hidden rounded-lg'>
-                    {/* Titulo y boton de nueva categoría de la tabla */}
+                <section className='bg-white border border-gray-300 shadow-xs rounded-lg'>
                     <section className='border-b border-gray-300 flex justify-between items-center px-6 py-4 bg-gray-50/50'>
                         <h2 className='text-lg font-semibold flex items-center gap-2'>
                             <Tag className='w-5 h-5 text-primary-600' />
@@ -235,77 +234,73 @@ export const Categories = () => {
                             Nueva Categoría
                         </button>
                     </section>
-                    {/* Contenido de la tabla de categorías */}
-                    <section className='px-6 py-4 border-b border-gray-200'>
-                        <div className='relative'>
+                    <section className='p-6'>
+                        <div className='relative mb-4'>
                             <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400' />
                             <input
                                 type='search'
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className='w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                                className='w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
                                 placeholder='Buscar categorías...'
                             />
                         </div>
-                    </section>
-                    <section className='overflow-x-auto scrollbar-thin'>
-                        <table className='w-full text-left'>
-                            <thead>
-                                <tr className='bg-gray-100 border-b border-gray-300'>
-                                    <th className='px-6 py-4 text-xs font-bold text-gray-600 uppercase tracking-wider'>
-                                        Nombre
-                                    </th>
-                                    <th className='px-6 py-4 text-xs font-bold text-gray-600 uppercase tracking-wider text-right'>
-                                        Acciones
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody className='divide-y divide-gray-200'>
-                                {filteredCategories.map((category) => (
-                                    <tr
-                                        key={category.id}
-                                        className='hover:bg-gray-50 transition-colors text-sm'>
-                                        <td className='px-6 py-4'>
-                                            <div className='flex items-center gap-2'>
-                                                <Tag className='w-4 h-4 text-primary-600' />
-                                                <span className='font-medium text-gray-900'>
-                                                    {category.name}
-                                                </span>
-                                            </div>
-                                        </td>
-                                        <td className='px-6 py-4 text-right'>
-                                            <section className='flex items-center justify-end gap-2'>
-                                                <button
-                                                    onClick={() =>
-                                                        openEditModal(category)
-                                                    }
-                                                    className='hover:bg-gray-200 p-2 rounded-sm cursor-pointer'
-                                                    title='Editar Categoría'>
-                                                    <Edit2 className='w-4 h-4 text-primary-600' />
-                                                </button>
-                                                <button
-                                                    onClick={() =>
-                                                        setShowDeleteConfirm(
-                                                            category,
-                                                        )
-                                                    }
-                                                    className='hover:bg-red-700 bg-red-600 text-white p-2 rounded-sm cursor-pointer'
-                                                    title='Eliminar Categoría'>
-                                                    <Trash2 className='w-4 h-4' />
-                                                </button>
-                                            </section>
-                                        </td>
+                        <div className='overflow-x-auto'>
+                            <table className='w-full text-sm overflow-hidden rounded-t-lg'>
+                                <thead>
+                                    <tr className='bg-gray-100 border-b border-gray-200 text-gray-500 uppercase text-xs tracking-wider'>
+                                        <th className='text-left py-3 px-4 font-medium'>
+                                            Nombre
+                                        </th>
+                                        <th className='text-right py-3 px-4 font-medium'>
+                                            Acciones
+                                        </th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {filteredCategories.map((category) => (
+                                        <tr
+                                            key={category.id}
+                                            className='border-b border-gray-100 hover:bg-gray-50'>
+                                            <td className='py-3 px-4'>
+                                                <div className='flex items-center gap-2'>
+                                                    <Tag className='w-4 h-4 text-primary-600' />
+                                                    <span className='font-medium text-gray-900'>
+                                                        {category.name}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td className='py-3 px-4 text-right'>
+                                                <section className='flex items-center justify-end gap-2'>
+                                                    <button
+                                                        onClick={() =>
+                                                            openEditModal(category)
+                                                        }
+                                                        className='hover:bg-gray-200 p-2 rounded-sm cursor-pointer'
+                                                        title='Editar Categoría'>
+                                                        <Edit2 className='w-4 h-4 text-primary-600' />
+                                                    </button>
+                                                    <button
+                                                        onClick={() =>
+                                                            setShowDeleteConfirm(
+                                                                category,
+                                                            )
+                                                        }
+                                                        className='hover:bg-red-700 bg-red-600 text-white p-2 rounded-sm cursor-pointer'
+                                                        title='Eliminar Categoría'>
+                                                        <Trash2 className='w-4 h-4' />
+                                                    </button>
+                                                </section>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </section>
                     {filteredCategories.length === 0 && (
-                        <div className='p-12 text-center'>
-                            <Tag className='w-12 h-12 text-gray-300 mx-auto mb-4' />
-                            <p className='text-gray-500 font-medium'>
-                                No se encontraron categorías
-                            </p>
+                        <div className='text-center text-gray-400 italic py-12 px-6'>
+                            No se encontraron categorías
                         </div>
                     )}
                 </section>

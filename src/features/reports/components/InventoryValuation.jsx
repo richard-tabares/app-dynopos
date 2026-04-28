@@ -50,9 +50,9 @@ export const InventoryValuation = ({ data = [] }) => {
             <div className='overflow-x-auto'>
                 {visible.length > 0 ? (
                     <>
-                        <table className='w-full text-sm'>
+                        <table className='w-full text-sm overflow-hidden rounded-t-lg'>
                             <thead>
-                                <tr className='border-b border-gray-200 text-gray-500 uppercase text-xs tracking-wider'>
+                                <tr className='bg-gray-100 border-b border-gray-200 text-gray-500 uppercase text-xs tracking-wider'>
                                     <th className='text-left py-3 px-4 font-medium'>Producto</th>
                                     <th className='text-right py-3 px-4 font-medium'>Stock</th>
                                     <th className='text-right py-3 px-4 font-medium'>Precio Unit.</th>

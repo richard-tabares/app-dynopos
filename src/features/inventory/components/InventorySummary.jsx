@@ -43,7 +43,7 @@ export const InventorySummary = ({ products = [] }) => {
         <section className='flex flex-col gap-6'>
             {/* Panel de Alerta de Stock Bajo */}
             {lowStockCount > 0 && (
-                <section className='bg-orange-50 border border-orange-200 rounded-xl p-6'>
+                <section className='bg-orange-50 border border-orange-200 rounded-lg p-6'>
                     <div className='flex items-start gap-4'>
                         <div className='p-2 bg-orange-100 rounded-lg text-orange-600'>
                             <AlertCircle className='w-6 h-6' />
@@ -61,7 +61,7 @@ export const InventorySummary = ({ products = [] }) => {
             {/* Grid de Cards */}
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4'>
                 {cards.map((card, index) => (
-                    <div key={index} className='bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4 transition-all hover:shadow-md'>
+                    <div key={index} className='bg-white p-6 rounded-lg border border-gray-300 shadow-xs flex items-center gap-4'>
                         <div className={`p-3 rounded-xl ${card.iconBg}`}>
                             <card.icon className={`w-5 h-5 ${card.color.split(' ')[1]}`} />
                         </div>

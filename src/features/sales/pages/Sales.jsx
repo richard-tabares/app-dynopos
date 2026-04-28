@@ -163,7 +163,7 @@ export const Sales = () => {
             <div className='flex flex-col lg:flex-row gap-8'>
                 {/* Main Content: Search, Categories, Products */}
                 <div className='flex-1 flex flex-col gap-6 order-1 lg:order-1'>
-                    <section className='bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col gap-6'>
+                    <section className='bg-white p-6 rounded-lg border border-gray-300 shadow-xs flex flex-col gap-6'>
                         {/* Search Bar */}
                         <div className='relative'>
                             <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400' />
@@ -172,7 +172,7 @@ export const Sales = () => {
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 placeholder='Buscar por nombre o código...'
-                                className='w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                                className='w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
                             />
                         </div>
 
@@ -194,14 +194,12 @@ export const Sales = () => {
                                 <>
                                     <ProductGrid products={displayedProducts} />
                                     {visibleCount < filteredProducts.length && (
-                                        <div className='mt-6 flex justify-center'>
-                                            <button
-                                                onClick={handleLoadMore}
-                                                className='px-6 py-2 bg-gray-50 text-gray-700 font-medium rounded-lg hover:bg-gray-100 transition border border-gray-200 shadow-sm'
-                                            >
-                                                Cargar más productos
-                                            </button>
-                                        </div>
+                                        <button
+                                            onClick={handleLoadMore}
+                                            className='w-full mt-4 py-2 text-sm font-medium text-primary-600 hover:bg-primary-50 rounded-lg transition cursor-pointer'
+                                        >
+                                            Cargar más ({filteredProducts.length - visibleCount} restantes)
+                                        </button>
                                     )}
                                 </>
                             )}

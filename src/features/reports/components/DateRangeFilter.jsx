@@ -1,4 +1,12 @@
 import { useState } from 'react'
+import { Calendar, CalendarDays, CalendarRange, ArrowLeftRight } from 'lucide-react'
+
+const periodIcons = {
+    day: Calendar,
+    week: CalendarDays,
+    month: CalendarRange,
+    range: ArrowLeftRight,
+}
 
 const periods = [
     { value: 'day', label: 'Hoy' },
@@ -17,19 +25,23 @@ export const DateRangeFilter = ({ value: currentFilter = 'month', onChange, star
     return (
         <section className='bg-white border border-gray-300 p-4 shadow-xs rounded-lg flex flex-wrap items-end gap-3'>
             <div className='flex gap-1 bg-gray-100 rounded-lg p-1'>
-                {periods.map((p) => (
-                    <button
-                        key={p.value}
-                        onClick={() => handlePeriodChange(p.value)}
-                        className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer ${
-                            currentFilter === p.value
-                                ? 'bg-white text-primary-600 shadow-xs'
-                                : 'text-gray-500 hover:text-gray-700'
-                        }`}
-                    >
-                        {p.label}
-                    </button>
-                ))}
+                {periods.map((p) => {
+                    const Icon = periodIcons[p.value]
+                    return (
+                        <button
+                            key={p.value}
+                            onClick={() => handlePeriodChange(p.value)}
+                            className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer ${
+                                currentFilter === p.value
+                                    ? 'bg-white text-primary-600 shadow-xs'
+                                    : 'text-gray-500 hover:text-gray-700'
+                            }`}
+                        >
+                            <Icon className='w-4 h-4' />
+                            {p.label}
+                        </button>
+                    )
+                })}
             </div>
 
             {currentFilter === 'range' && (
