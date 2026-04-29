@@ -12,7 +12,7 @@ import { SalesHistoryCard } from '../components/SalesHistoryCard'
 import { createSale } from '../helpers/createSale'
 import { getSales } from '../helpers/getSales'
 import { returnSale } from '../helpers/returnSale'
-import { getDashboardData } from '../../dashboard/helpers/getDashboardData'
+import { getTodayRevenue } from '../helpers/getTodayRevenue'
 
 export const Sales = () => {
     const { user, products, setProducts, cart, clearCart, setTodayRevenue, categories, setCategories } = useStore()
@@ -132,14 +132,14 @@ export const Sales = () => {
             
             clearCart()
 
-            const [productsData, salesData, dashboardData] = await Promise.all([
+            const [productsData, salesData, revenueData] = await Promise.all([
                 getProducts(businessId),
                 getSales(businessId),
-                getDashboardData(businessId)
+                getTodayRevenue(businessId)
             ])
             setProducts(productsData)
             setSalesList(salesData)
-            setTodayRevenue(dashboardData.metrics.todayRevenue)
+            setTodayRevenue(revenueData.todayRevenue)
             setShowConfirmationModal(false)
             setSaleSummaryData(null)
         } catch (error) {
@@ -154,14 +154,14 @@ export const Sales = () => {
             await returnSale(sale.id, { reason, businessId, items })
             toast.success('Devolución procesada exitosamente')
 
-            const [salesData, productsData, dashboardData] = await Promise.all([
+            const [salesData, productsData, revenueData] = await Promise.all([
                 getSales(businessId),
                 getProducts(businessId),
-                getDashboardData(businessId)
+                getTodayRevenue(businessId)
             ])
             setSalesList(salesData)
             setProducts(productsData)
-            setTodayRevenue(dashboardData.metrics.todayRevenue)
+            setTodayRevenue(revenueData.todayRevenue)
         } catch (error) {
             toast.error(error.message || 'Error al procesar la devolución')
         }

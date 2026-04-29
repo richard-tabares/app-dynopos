@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Search, TrendingUp, Package } from 'lucide-react'
+import { useState, useRef, useEffect } from 'react'
+import { Search, TrendingUp, Package, X } from 'lucide-react'
 import { useStore } from '../../../app/providers/store'
 import { getReports } from '../helpers/getReports'
 
@@ -12,25 +12,33 @@ export const ProductPerformanceSearch = () => {
     const [search, setSearch] = useState('')
     const [results, setResults] = useState(null)
     const [loading, setLoading] = useState(false)
-    const [searched, setSearched] = useState(false)
+    const debounceRef = useRef(null)
 
-    const handleSearch = async () => {
-        if (!search.trim() || !businessId) return
-        try {
-            setLoading(true)
-            const result = await getReports(businessId, { section: 'product_performance', productSearch: search.trim() })
-            setResults(result.data)
-            setSearched(true)
-        } catch (err) {
-            console.error(err)
-        } finally {
-            setLoading(false)
+    const doSearch = (term) => {
+        if (!term || term.length < 2 || !businessId) return
+        setLoading(true)
+        getReports(businessId, { section: 'product_performance', productSearch: term })
+            .then(r => setResults(r.data))
+            .catch(console.error)
+            .finally(() => setLoading(false))
+    }
+
+    useEffect(() => {
+        if (debounceRef.current) clearTimeout(debounceRef.current)
+        if (search.trim().length >= 2) {
+            debounceRef.current = setTimeout(() => doSearch(search.trim()), 300)
+        }
+        return () => clearTimeout(debounceRef.current)
+    }, [search]) // eslint-disable-line react-hooks/exhaustive-deps
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            if (debounceRef.current) clearTimeout(debounceRef.current)
+            doSearch(search.trim())
         }
     }
 
-    const handleKeyDown = (e) => {
-        if (e.key === 'Enter') handleSearch()
-    }
+    const tooShort = search.trim().length === 1
 
     return (
         <section className='bg-white border border-gray-300 p-6 shadow-xs rounded-lg h-full flex flex-col'>
@@ -49,20 +57,28 @@ export const ProductPerformanceSearch = () => {
                     <input
                         type='text'
                         value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        onChange={(e) => {
+                            setSearch(e.target.value)
+                            if (e.target.value.trim().length < 2) setResults(null)
+                        }}
                         onKeyDown={handleKeyDown}
                         placeholder='Nombre o SKU...'
-                        className='w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
+                        className='w-full border border-gray-300 rounded-lg pl-10 pr-10 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
                     />
+                    {search && (
+                        <button
+                            onClick={() => { setSearch(''); setResults(null) }}
+                            className='absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer'
+                        >
+                            <X className='w-4 h-4' />
+                        </button>
+                    )}
                 </div>
-                <button
-                    onClick={handleSearch}
-                    disabled={loading || !search.trim()}
-                    className='px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 disabled:opacity-50 transition cursor-pointer'
-                >
-                    {loading ? 'Buscando...' : 'Buscar'}
-                </button>
             </div>
+
+            {tooShort && (
+                <p className='text-xs text-amber-600 -mt-2 mb-4'>Ingresa al menos 2 caracteres para buscar</p>
+            )}
 
             <div className='flex-1 space-y-3'>
                 {loading && (
@@ -73,7 +89,7 @@ export const ProductPerformanceSearch = () => {
                     </div>
                 )}
 
-                {!loading && searched && results && results.length === 0 && (
+                {!loading && results && results.length === 0 && (
                     <div className='text-center text-gray-400 italic py-8'>No se encontraron productos</div>
                 )}
 

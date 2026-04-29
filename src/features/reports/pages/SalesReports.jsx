@@ -7,6 +7,7 @@ import { CategorySalesTable } from '../components/CategorySalesTable'
 import { TopBottomProducts } from '../components/TopBottomProducts'
 import { ProductPerformanceSearch } from '../components/ProductPerformanceSearch'
 import { AvgTicketCard } from '../components/AvgTicketCard'
+import { RecentSalesCard } from '../../dashboard/components/RecentSalesCard'
 import { ReportSkeletons } from '../components/ReportsSkeletons'
 import { getReports } from '../helpers/getReports'
 import { useStore } from '../../../app/providers/store'
@@ -47,14 +48,37 @@ export const SalesReports = () => {
         try {
             setLoading(true)
             setError(null)
-            const dates = filter === 'range' ? { startDate: rangeStart, endDate: rangeEnd } : computeDates(filter)
+            const dates =
+                filter === 'range'
+                    ? { startDate: rangeStart, endDate: rangeEnd }
+                    : computeDates(filter)
 
-            const [salesResult, perfResult] = await Promise.all([
-                getReports(businessId, { section: 'sales', filter, startDate: dates.startDate, endDate: dates.endDate }),
-                getReports(businessId, { section: 'performance', filter, startDate: dates.startDate, endDate: dates.endDate }),
+            const [salesResult, perfResult, recentResult] = await Promise.all([
+                getReports(businessId, {
+                    section: 'sales',
+                    filter,
+                    startDate: dates.startDate,
+                    endDate: dates.endDate,
+                }),
+                getReports(businessId, {
+                    section: 'performance',
+                    filter,
+                    startDate: dates.startDate,
+                    endDate: dates.endDate,
+                }),
+                getReports(businessId, {
+                    section: 'recent_sales',
+                    filter,
+                    startDate: dates.startDate,
+                    endDate: dates.endDate,
+                }),
             ])
 
-            setData({ ...salesResult.data, ...perfResult.data })
+            setData({
+                ...salesResult.data,
+                ...perfResult.data,
+                recentSales: recentResult.data,
+            })
         } catch (err) {
             setError(err.message)
         } finally {
@@ -91,9 +115,16 @@ export const SalesReports = () => {
         return (
             <section className='space-y-6 pb-12'>
                 <div className='flex items-center justify-between'>
-                    <h2 className='text-2xl font-bold text-gray-900'>Reporte de Ventas</h2>
+                    <h2 className='text-2xl font-bold text-gray-900'>
+                        Reporte de Ventas
+                    </h2>
                 </div>
-                <DateRangeFilter value={filter} onChange={handleFilterChange} startDate={rangeStart} endDate={rangeEnd} />
+                <DateRangeFilter
+                    value={filter}
+                    onChange={handleFilterChange}
+                    startDate={rangeStart}
+                    endDate={rangeEnd}
+                />
                 <div className='text-center text-gray-400 italic py-12'>
                     Selecciona una fecha de inicio y fin para ver los resultados
                 </div>
@@ -102,38 +133,72 @@ export const SalesReports = () => {
     }
 
     if (loading) return <ReportSkeletons type='sales' />
-    if (error) return <div className='bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg'>{error}</div>
+    if (error)
+        return (
+            <div className='bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg'>
+                {error}
+            </div>
+        )
 
     return (
         <section className='space-y-6 pb-12'>
             <div className='flex items-center justify-between'>
-                <h2 className='text-2xl font-bold text-gray-900'>Reporte de Ventas</h2>
+                <h2 className='text-2xl font-bold text-gray-900'>
+                    Reporte de Ventas
+                </h2>
             </div>
 
-            <DateRangeFilter value={filter} onChange={handleFilterChange} startDate={rangeStart} endDate={rangeEnd} />
+            <DateRangeFilter
+                value={filter}
+                onChange={handleFilterChange}
+                startDate={rangeStart}
+                endDate={rangeEnd}
+            />
 
-            <SalesLineChart data={data?.dailySales || []} showDayNames={filter === 'week'} />
+            <SalesLineChart
+                data={data?.dailySales || []}
+                showDayNames={filter === 'week'}
+            />
 
             <div className='grid grid-cols-3 max-xl:grid-cols-1 gap-6'>
                 <div className='col-span-1 max-xl:col-span-1'>
-                    <TopBottomProducts data={data?.topProducts || []} type='top' />
+                    <TopBottomProducts
+                        data={data?.topProducts || []}
+                        type='top'
+                    />
                 </div>
                 <div className='col-span-2 max-xl:col-span-1 space-y-6'>
-                    <SalesCountChart data={data?.dailySales || []} showDayNames={filter === 'week'} />
+                    <SalesCountChart
+                        data={data?.dailySales || []}
+                        showDayNames={filter === 'week'}
+                    />
                     <PaymentPieChart data={data?.salesByPayment || []} />
                 </div>
             </div>
 
-            <div className='grid grid-cols-3 max-xl:grid-cols-1 gap-6'>
-                <div className='col-span-1 max-xl:col-span-1'>
-                    <ProductPerformanceSearch />
+            <div className='flex flex-col lg:flex-row gap-6'>
+                <div className='w-full lg:w-1/3'>
+                    <RecentSalesCard sales={data?.recentSales || []} />
                 </div>
-                <div className='col-span-2 max-xl:col-span-1'>
-                    <CategorySalesTable data={data?.salesByCategory || []} />
+                <div className='w-full lg:w-2/3 space-y-6'>
+                    <div className=''>
+                        <ProductPerformanceSearch />
+                    </div>
+                    <div className='h-full'>
+                        <CategorySalesTable
+                            data={data?.salesByCategory || []}
+                        />
+                    </div>
                 </div>
             </div>
 
-            <AvgTicketCard overallAvgTicket={data?.overallAvgTicket || 0} tickets={data?.avgTickets || []} showDayNames={filter === 'week'} />
+            <div>
+                <AvgTicketCard
+                    overallAvgTicket={data?.overallAvgTicket || 0}
+                    tickets={data?.avgTickets || []}
+                    showDayNames={filter === 'week'}
+                />
+            </div>
         </section>
     )
 }
