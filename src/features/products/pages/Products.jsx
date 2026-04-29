@@ -548,7 +548,7 @@ export const Products = () => {
                                             : 'text-gray-500 hover:text-gray-700'
                                     }`}>
                                     <PackageCheck className='w-4 h-4' />
-                                    Con stock
+                                    Con control
                                 </button>
                                 <button
                                     onClick={() => { setActiveStock('without'); setVisibleCount(20) }}
@@ -558,7 +558,7 @@ export const Products = () => {
                                             : 'text-gray-500 hover:text-gray-700'
                                     }`}>
                                     <PackageX className='w-4 h-4' />
-                                    Sin stock
+                                    Sin control
                                 </button>
                             </div>
                         </div>
