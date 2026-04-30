@@ -104,7 +104,7 @@ export const Inventory = () => {
             <section className='flex flex-col gap-6'>
                 <section>
                     <h1 className='text-2xl font-bold'>Inventario</h1>
-                    <p className='text-gray-600'>
+                    <p className='text-on-body'>
                         Controla las existencias de tus productos y configura
                         alertas de stock bajo.
                     </p>
@@ -112,8 +112,8 @@ export const Inventory = () => {
 
                 <InventorySummary products={activeProducts} />
 
-                <section className='bg-white border border-gray-300 shadow-xs rounded-lg'>
-                    <section className='border-b border-gray-300 flex justify-between items-center px-6 py-4 bg-gray-50/50'>
+                <section className='bg-surface border border-outline shadow-xs rounded-lg'>
+                    <section className='border-b border-outline flex justify-between items-center px-6 py-4 bg-subtle'>
                         <h2 className='text-lg font-semibold flex items-center gap-2'>
                             <Package className='w-5 h-5 text-primary-600' />
                             Control de Stock
@@ -122,7 +122,7 @@ export const Inventory = () => {
 
                     <section className='p-6 flex flex-col gap-4'>
                         <div className='relative'>
-                            <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400' />
+                            <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-faint' />
                             <input
                                 type='search'
                                 value={searchTerm}
@@ -130,17 +130,17 @@ export const Inventory = () => {
                                     setSearchTerm(e.target.value)
                                     setVisibleCount(20)
                                 }}
-                                className='w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
+                                className='w-full border border-outline rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
                                 placeholder='Buscar por nombre o código de barras...'
                             />
                         </div>
-                        <div className='flex gap-1 bg-gray-100 rounded-lg p-1 w-fit max-w-full overflow-x-auto scrollbar-none'>
+                        <div className='flex gap-2 bg-subtle dark:bg-gray-900 rounded-lg p-1 w-fit max-w-full overflow-x-auto scrollbar-none'>
                             <button
                                 onClick={() => setFilterStatus('all')}
                                 className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer ${
                                     filterStatus === 'all'
-                                        ? 'bg-white shadow-xs text-gray-900'
-                                        : 'text-gray-500 hover:text-gray-700'
+                                        ? 'bg-surface shadow-xs text-on-surface'
+                                        : 'text-muted hover:text-on-body hover:bg-hover'
                                 }`}>
                                 <Layers className='w-4 h-4 text-primary-600' />
                                 Todos
@@ -149,8 +149,8 @@ export const Inventory = () => {
                                 onClick={() => setFilterStatus('lowStock')}
                                 className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer ${
                                     filterStatus === 'lowStock'
-                                        ? 'bg-white shadow-xs text-gray-900'
-                                        : 'text-gray-500 hover:text-gray-700'
+                                        ? 'bg-surface shadow-xs text-on-surface'
+                                        : 'text-muted hover:text-on-body hover:bg-hover'
                                 }`}>
                                 <AlertTriangle className='w-4 h-4 text-red-500' />
                                 Stock Bajo
@@ -159,8 +159,8 @@ export const Inventory = () => {
                                 onClick={() => setFilterStatus('withStock')}
                                 className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer ${
                                     filterStatus === 'withStock'
-                                        ? 'bg-white shadow-xs text-gray-900'
-                                        : 'text-gray-500 hover:text-gray-700'
+                                        ? 'bg-surface shadow-xs text-on-surface'
+                                        : 'text-muted hover:text-on-body hover:bg-hover'
                                 }`}>
                                 <PackageCheck className='w-4 h-4 text-emerald-500' />
                                 Con Stock
@@ -169,10 +169,10 @@ export const Inventory = () => {
                                 onClick={() => setFilterStatus('noStockControl')}
                                 className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer ${
                                     filterStatus === 'noStockControl'
-                                        ? 'bg-white shadow-xs text-gray-900'
-                                        : 'text-gray-500 hover:text-gray-700'
+                                        ? 'bg-surface shadow-xs text-on-surface'
+                                        : 'text-muted hover:text-on-body hover:bg-hover'
                                 }`}>
-                                <Package className='w-4 h-4 text-gray-500' />
+                                <Package className='w-4 h-4 text-muted' />
                                 Sin control
                             </button>
                         </div>
@@ -181,7 +181,7 @@ export const Inventory = () => {
                     <div className='overflow-x-auto px-6 pb-2'>
                         <table className='w-full text-sm overflow-hidden rounded-t-lg'>
                             <thead>
-                                <tr className='bg-gray-100 border-b border-gray-200 text-gray-500 uppercase text-xs tracking-wider'>
+                                <tr className='bg-subtle border-b border-divider text-muted uppercase text-xs tracking-wider'>
                                     {headers.map((header) => (
                                         <th
                                             key={header}
@@ -202,14 +202,14 @@ export const Inventory = () => {
                                     return filterStatus === 'noStockControl' ? (
                                         <tr
                                             key={product.id}
-                                            className='border-b border-gray-100 hover:bg-gray-50'>
-                                            <td className='py-3 px-4 font-medium text-gray-900'>
+                                            className='border-b border-divider-light hover:bg-hover'>
+                                            <td className='py-3 px-4 font-medium text-on-surface'>
                                                 {product.sku}
                                             </td>
-                                            <td className='py-3 px-4 text-gray-700'>
+                                            <td className='py-3 px-4 text-on-body'>
                                                 {product.name}
                                             </td>
-                                            <td className='py-3 px-4 text-gray-500'>
+                                            <td className='py-3 px-4 text-muted'>
                                                 {product.categories?.name ||
                                                     'Sin categoría'}
                                             </td>
@@ -217,22 +217,22 @@ export const Inventory = () => {
                                     ) : (
                                         <tr
                                             key={product.id}
-                                            className='border-b border-gray-100 hover:bg-gray-50'>
-                                            <td className='py-3 px-4 font-medium text-gray-900'>
+                                            className='border-b border-divider-light hover:bg-hover'>
+                                            <td className='py-3 px-4 font-medium text-on-surface'>
                                                 {product.sku}
                                             </td>
-                                            <td className='py-3 px-4 text-gray-700'>
+                                            <td className='py-3 px-4 text-on-body'>
                                                 {product.name}
                                             </td>
-                                            <td className='py-3 px-4 text-gray-500'>
+                                            <td className='py-3 px-4 text-muted'>
                                                 {product.categories?.name ||
                                                     'Sin categoría'}
                                             </td>
                                             <td
-                                                className={`py-3 px-4 text-right font-bold ${isLowStock ? 'text-red-600' : 'text-gray-700'}`}>
+                                                className={`py-3 px-4 text-right font-bold ${isLowStock ? 'text-red-600' : 'text-on-body'}`}>
                                                 {stock}
                                             </td>
-                                            <td className='py-3 px-4 text-right text-gray-500'>
+                                            <td className='py-3 px-4 text-right text-muted'>
                                                 {minStock}
                                             </td>
                                             <td className='py-3 px-4'>
@@ -252,7 +252,7 @@ export const Inventory = () => {
                                                     onClick={() =>
                                                         handleOpenModal(product)
                                                     }
-                                                    className='hover:bg-gray-200 p-1.5 rounded-sm cursor-pointer text-primary-600'
+                                                    className='hover:bg-hover-icon p-1.5 rounded-sm cursor-pointer text-primary-600'
                                                     title='Ajustar Inventario'>
                                                     <Settings2 className='w-4 h-4' />
                                                 </button>
@@ -274,12 +274,12 @@ export const Inventory = () => {
 
                     {filterStatus === 'noStockControl' ? (
                         noStockControlProducts.length === 0 && (
-                            <div className='text-center text-gray-400 italic py-12 px-6'>
+                            <div className='text-center text-faint italic py-12 px-6'>
                                 No hay productos sin control de stock
                             </div>
                         )
                     ) : filteredProducts.length === 0 && (
-                        <div className='text-center text-gray-400 italic py-12 px-6'>
+                        <div className='text-center text-faint italic py-12 px-6'>
                             No se encontraron productos
                         </div>
                     )}

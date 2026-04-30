@@ -19,22 +19,20 @@ export const ReturnsTable = ({ data = [], onReturnClick }) => {
     const visible = filtered.slice(0, visibleCount)
 
     return (
-        <section className='bg-white border border-gray-300 p-6 shadow-xs rounded-lg'>
-            <div className='flex items-center gap-2 mb-4'>
-                <div className='p-2 rounded-lg bg-red-50'>
-                    <Undo2 className='w-5 h-5 text-red-500' />
-                </div>
-                <h3 className='text-lg font-semibold text-gray-900'>Historial de Devoluciones</h3>
+        <section className='bg-surface border border-outline p-6 shadow-xs rounded-lg'>
+            <div className='flex items-center gap-2 text-red-500 mb-4'>
+                <Undo2 className='w-5 h-5' />
+                <h3 className='text-lg font-semibold text-on-surface'>Historial de Devoluciones</h3>
             </div>
 
             <div className='relative mb-4'>
-                <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400' />
+                <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-faint' />
                 <input
                     type='text'
                     value={search}
                     onChange={(e) => { setSearch(e.target.value); setVisibleCount(10) }}
                     placeholder='Buscar por # de devolución...'
-                    className='w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
+                    className='w-full border border-outline rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
                 />
             </div>
 
@@ -43,7 +41,7 @@ export const ReturnsTable = ({ data = [], onReturnClick }) => {
                     <>
                         <table className='w-full text-sm overflow-hidden rounded-t-lg'>
                             <thead>
-                                <tr className='bg-gray-100 border-b border-gray-200 text-gray-500 uppercase text-xs tracking-wider'>
+                                <tr className='bg-subtle border-b border-divider text-muted uppercase text-xs tracking-wider'>
                                     <th className='text-left py-3 px-4 font-medium whitespace-nowrap w-1'># Devolución</th>
                                     <th className='text-right py-3 px-4 font-medium'>Cant. Devuelta</th>
                                     <th className='text-right py-3 px-4 font-medium'>Fecha</th>
@@ -54,10 +52,10 @@ export const ReturnsTable = ({ data = [], onReturnClick }) => {
                                 {visible.map((item, i) => (
                                     <tr
                                         key={i}
-                                        className='border-b border-gray-100 hover:bg-red-50 cursor-pointer transition'
+                                        className='border-b border-divider-light hover:bg-hover cursor-pointer transition'
                                         onClick={() => onReturnClick && onReturnClick(item)}
                                     >
-                                        <td className='py-3 px-4 font-medium text-gray-900'>#{String(item.return_id || item.id || '').padStart(4, '0')}</td>
+                                        <td className='py-3 px-4 font-medium text-on-surface'>#{String(item.return_id || item.id || '').padStart(4, '0')}</td>
                                         <td className='py-3 px-4 text-right'>{item.total_items_returned}</td>
                                         <td className='py-3 px-4 text-right'>{item.return_date}</td>
                                         <td className='py-3 px-4 text-right font-medium text-red-600'>{formatCurrency(item.total_amount)}</td>
@@ -75,7 +73,7 @@ export const ReturnsTable = ({ data = [], onReturnClick }) => {
                         )}
                     </>
                 ) : (
-                    <div className='text-center text-gray-400 italic py-12'>Sin devoluciones</div>
+                    <div className='text-center text-faint italic py-12'>Sin devoluciones</div>
                 )}
             </div>
         </section>

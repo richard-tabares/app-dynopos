@@ -29,13 +29,13 @@ export const Metrics = ({ data }) => {
     ]
 
     return (
-        <section className='grid grid-cols-4 max-md:grid-cols-1 max-lg:grid-cols-2 gap-4'>
+        <section className='grid grid-cols-4 max-lg:grid-cols-2 max-md:grid-cols-1 gap-4'>
             {metrics.map((metric, index) => (
-                <section key={index} className='flex gap-4 justify-between items-center bg-white border border-gray-300 shadow-xs p-6 rounded-lg'>
+                <section key={index} className='flex gap-4 justify-between items-center bg-surface border border-outline shadow-xs p-6 rounded-lg'>
                     <section className=''>
                         <section className='space-y-2'>
-                            <h2 className='text-sm text-gray-500 uppercase font-medium tracking-wider'>{metric.title}</h2>
-                            <p className='text-3xl font-bold text-gray-900'>{metric.value}</p>
+                            <h2 className='text-sm text-muted uppercase font-medium tracking-wider'>{metric.title}</h2>
+                            <p className='text-3xl font-bold text-on-surface'>{metric.value}</p>
                         </section>
                     </section>
                     <section>

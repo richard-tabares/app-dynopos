@@ -21,10 +21,10 @@ export const ReturnDetailModal = ({ isOpen, onClose, data }) => {
 
     return (
         <section
-            className='fixed inset-0 bg-gray-900/50 w-full h-full flex flex-col items-center justify-center z-[70]'
+            className='fixed inset-0 bg-overlay w-full h-full flex flex-col items-center justify-center z-[70]'
             onClick={onClose}>
             <section
-                className='bg-white rounded-lg shadow-2xl w-full max-w-sm relative max-h-[90vh] overflow-y-auto'
+                className='bg-surface rounded-lg shadow-2xl w-full max-w-sm relative max-h-[90vh] overflow-y-auto'
                 onClick={(e) => e.stopPropagation()}>
                 <div className='bg-red-600 p-4 text-white flex justify-between items-center sticky top-0'>
                     <div className='flex items-center gap-2'>
@@ -37,27 +37,27 @@ export const ReturnDetailModal = ({ isOpen, onClose, data }) => {
                 </div>
 
                 <div className='p-6'>
-                    <div className='text-center mb-4 border-b border-dashed border-gray-300 pb-3'>
+                    <div className='text-center mb-4 border-b border-dashed border-outline pb-3'>
                         <h2 className='text-lg font-bold uppercase'>{business?.business_name}</h2>
-                        <p className='text-xs text-gray-500'>Devolución #{String(header.id).padStart(4, '0')}</p>
+                        <p className='text-xs text-muted'>Devolución #{String(header.id).padStart(4, '0')}</p>
                     </div>
 
                     <div className='space-y-1 mb-4 text-sm'>
                         <div className='flex justify-between'>
-                            <span className='text-gray-500'>Fecha:</span>
+                            <span className='text-muted'>Fecha:</span>
                             <span className='font-medium'>{header.created_at}</span>
                         </div>
                         {header.reason && (
                             <div className='flex justify-between'>
-                                <span className='text-gray-500'>Razón:</span>
+                                <span className='text-muted'>Razón:</span>
                                 <span className='font-medium text-right max-w-[60%]'>{header.reason}</span>
                             </div>
                         )}
                     </div>
 
                     {itemsByReturn.length > 0 && (
-                        <div className='border-t border-b border-dashed border-gray-300 py-3 my-3'>
-                            <div className='flex justify-between font-bold text-xs uppercase mb-2 text-gray-500'>
+                        <div className='border-t border-b border-dashed border-outline py-3 my-3'>
+                            <div className='flex justify-between font-bold text-xs uppercase mb-2 text-muted'>
                                 <span>Producto</span>
                                 <span>Subtotal</span>
                             </div>
@@ -65,10 +65,10 @@ export const ReturnDetailModal = ({ isOpen, onClose, data }) => {
                                 {itemsByReturn.map((item, index) => (
                                     <div key={index} className='flex justify-between items-start gap-2'>
                                         <div className='flex-1 min-w-0'>
-                                            <p className='text-sm font-bold text-gray-900 uppercase truncate'>
+                                            <p className='text-sm font-bold text-on-surface uppercase truncate'>
                                                 {item.products?.name || 'Producto eliminado'}
                                             </p>
-                                            <p className='text-xs text-gray-500'>{item.quantity}x {formatCurrency(item.unit_price)}</p>
+                                            <p className='text-xs text-muted'>{item.quantity}x {formatCurrency(item.unit_price)}</p>
                                         </div>
                                         <span className='text-sm font-bold shrink-0'>{formatCurrency(item.subtotal)}</span>
                                     </div>
@@ -77,7 +77,7 @@ export const ReturnDetailModal = ({ isOpen, onClose, data }) => {
                         </div>
                     )}
 
-                    <div className='flex justify-between text-base font-bold text-gray-900'>
+                    <div className='flex justify-between text-base font-bold text-on-surface'>
                         <span>TOTAL</span>
                         <span>{formatCurrency(header.total_amount)}</span>
                     </div>

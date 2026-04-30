@@ -22,8 +22,10 @@ export const useStore = create(
         (set) => ({
             user: {},
             token: null,
-            isMobile: false,
-            products:[],
+    isCollapsed: false,
+    isMobile: false,
+    isDarkMode: false,
+    products:[],
             cart: [],
             todayRevenue: 0,
             categories: [],
@@ -34,6 +36,7 @@ export const useStore = create(
                 user: { ...state.user, business: { ...state.user.business, ...payload } }
             })),
             setIsMobile: (payload) => set({ isMobile: payload }),
+            toggleDarkMode: () => set((state) => ({ isDarkMode: !state.isDarkMode })),
             setIsCollapsed: (payload) => set({ isCollapsed: payload }),
             setProducts: (payload) => set({ products: payload }),
             addToCart: (product) => set((state) => {

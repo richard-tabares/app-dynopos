@@ -170,18 +170,18 @@ export const Sales = () => {
     return (
         <section className='flex flex-col gap-6'>
             <div className='flex flex-col lg:flex-row gap-8'>
-                {/* Main Content: Search, Categories, Products */}
-                <div className='flex-1 flex flex-col gap-6 order-1 lg:order-1'>
-                    <section className='bg-white p-6 rounded-lg border border-gray-300 shadow-xs flex flex-col gap-6'>
+                {/* Left column */}
+                <div className='flex-1 flex flex-col gap-6 min-w-0'>
+                    <section className='bg-surface p-6 rounded-lg border border-outline shadow-xs flex flex-col gap-6'>
                         {/* Search Bar */}
                         <div className='relative'>
-                            <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400' />
+                            <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-faint' />
                             <input
                                 type='search'
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 placeholder='Buscar por nombre o código...'
-                                className='w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
+                                className='w-full border border-outline rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
                             />
                         </div>
 
@@ -195,13 +195,13 @@ export const Sales = () => {
                         {/* Product Grid */}
                         <div className='min-h-100'>
                             {!showProducts ? (
-                                <div className='flex flex-col items-center justify-center py-20 text-gray-400'>
+                                <div className='flex flex-col items-center justify-center py-20 text-faint'>
                                     <Search className='w-12 h-12 opacity-20 mb-4' />
                                     <p className='text-lg font-medium'>Busca productos o selecciona una categoría</p>
-                                    <p className='text-sm text-gray-400 mt-1'>Los productos aparecerán aquí</p>
+                                    <p className='text-sm text-faint mt-1'>Los productos aparecerán aquí</p>
                                 </div>
                             ) : filteredProducts.length === 0 ? (
-                                <div className='flex flex-col items-center justify-center py-20 text-gray-400'>
+                                <div className='flex flex-col items-center justify-center py-20 text-faint'>
                                     <Search className='w-12 h-12 opacity-20 mb-4' />
                                     <p className='text-lg font-medium'>No se encontraron productos</p>
                                 </div>
@@ -221,15 +221,23 @@ export const Sales = () => {
                         </div>
                     </section>
 
-                    <SalesHistoryCard
-                        sales={salesList}
-                        onReturn={handleReturnSale}
-                    />
+                    <div className='hidden lg:block'>
+                        <SalesHistoryCard
+                            sales={salesList}
+                            onReturn={handleReturnSale}
+                        />
+                    </div>
                 </div>
 
                 {/* Sidebar: Current Order */}
-                <div className='w-full lg:w-100 order-2 lg:order-2'>
+                <div className='w-full lg:w-100 shrink-0 flex flex-col gap-6'>
                     <OrderSidebar onProcessSale={handleProcessSale} />
+                    <div className='lg:hidden'>
+                        <SalesHistoryCard
+                            sales={salesList}
+                            onReturn={handleReturnSale}
+                        />
+                    </div>
                 </div>
             </div>
 

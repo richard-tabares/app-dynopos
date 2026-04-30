@@ -37,19 +37,19 @@ export const AdjustmentModal = ({
     }
 
     return (
-        <section className='fixed inset-0 bg-gray-900/50 w-full h-full flex flex-col items-center justify-center z-50'>
+        <section className='fixed inset-0 bg-overlay w-full h-full flex flex-col items-center justify-center z-50'>
             <section
-                className='bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative'
+                className='bg-surface rounded-lg shadow-lg p-6 w-full max-w-md relative'
                 onClick={(e) => e.stopPropagation()}>
                 <button
-                    className='absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition mb-4'
+                    className='absolute top-4 right-4 text-faint hover:text-on-body transition mb-4'
                     onClick={handleClose}>
                     <X className='w-6 h-6' />
                 </button>
                 <h2 className='text-xl font-bold'>Ajuste de Inventario</h2>
-                <p className='text-sm text-gray-500 mt-1'>
+                <p className='text-sm text-muted mt-1'>
                     Producto:{' '}
-                    <span className='font-semibold text-gray-700'>
+                    <span className='font-semibold text-on-body'>
                         {product.name}
                     </span>
                 </p>
@@ -58,7 +58,7 @@ export const AdjustmentModal = ({
                     className='flex flex-col gap-4 mt-6'
                     onSubmit={onFormSubmit}>
                     <section>
-                        <label className='block text-sm font-medium text-gray-700 mb-1'>
+                        <label className='block text-sm font-medium text-on-body mb-1'>
                             Stock Actual
                         </label>
                         <input
@@ -67,13 +67,13 @@ export const AdjustmentModal = ({
                             value={formData.stock}
                             onChange={handleChange}
                             autoFocus
-                            className='w-full px-4 py-2 border border-gray-300 rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                            className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
                             placeholder='0'
                         />
                     </section>
 
                     <section>
-                        <label className='block text-sm font-medium text-gray-700 mb-1'>
+                        <label className='block text-sm font-medium text-on-body mb-1'>
                             Stock Mínimo (Alerta)
                         </label>
                         <input
@@ -81,7 +81,7 @@ export const AdjustmentModal = ({
                             name='min_stock'
                             value={formData.min_stock}
                             onChange={handleChange}
-                            className='w-full px-4 py-2 border border-gray-300 rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                            className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
                             placeholder='0'
                         />
                     </section>
@@ -89,7 +89,7 @@ export const AdjustmentModal = ({
                     <section className='flex justify-end gap-4 mt-4'>
                         <button
                             type='button'
-                            className='px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300 transition cursor-pointer'
+                            className='px-4 py-2 bg-hover-icon text-on-body font-medium rounded-lg hover:bg-gray-300 transition cursor-pointer'
                             onClick={handleClose}>
                             Cancelar
                         </button>

@@ -100,9 +100,9 @@ export const AdminReports = () => {
     if (!shouldFetch && filter !== 'month') {
         return (
             <section className='space-y-6 pb-12'>
-                <h2 className='text-2xl font-bold text-gray-900'>Reporte Administrativo</h2>
-                <DateRangeFilter value={filter} onChange={handleFilterChange} startDate={rangeStart} endDate={rangeEnd} />
-                <div className='text-center text-gray-400 italic py-12'>
+                <h2 className='text-2xl font-bold text-on-surface'>Reporte Administrativo</h2>
+            <DateRangeFilter compact value={filter} onChange={handleFilterChange} startDate={rangeStart} endDate={rangeEnd} />
+                <div className='text-center text-faint italic py-12'>
                     Selecciona una fecha de inicio y fin para ver los resultados
                 </div>
             </section>
@@ -114,19 +114,19 @@ export const AdminReports = () => {
 
     return (
         <section className='space-y-6 pb-12'>
-            <h2 className='text-2xl font-bold text-gray-900'>Reporte Administrativo</h2>
+            <h2 className='text-2xl font-bold text-on-surface'>Reporte Administrativo</h2>
 
-            <DateRangeFilter value={filter} onChange={handleFilterChange} startDate={rangeStart} endDate={rangeEnd} />
+            <DateRangeFilter compact value={filter} onChange={handleFilterChange} startDate={rangeStart} endDate={rangeEnd} />
 
             <ReturnsChart data={data?.chart || []} showDayNames={filter === 'week'} />
 
             <ReturnsTable data={data?.list || []} onReturnClick={handleReturnClick} />
 
             {detailLoading && (
-                <div className='fixed inset-0 bg-gray-900/50 flex items-center justify-center z-[70]'>
-                    <div className='bg-white p-6 rounded-lg shadow-lg'>
+                <div className='fixed inset-0 bg-overlay flex items-center justify-center z-[70]'>
+                    <div className='bg-surface p-6 rounded-lg shadow-lg'>
                         <div className='animate-spin w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full mx-auto' />
-                        <p className='text-sm text-gray-500 mt-3'>Cargando detalle...</p>
+                        <p className='text-sm text-muted mt-3'>Cargando detalle...</p>
                     </div>
                 </div>
             )}

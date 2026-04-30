@@ -258,25 +258,25 @@ export const Products = () => {
             {/* Modal crear categoría */}
             {showCategoryModal && (
                 <section
-                    className='fixed inset-0 bg-gray-900/50 w-full h-full flex items-center justify-center z-[70]'
+                    className='fixed inset-0 bg-overlay w-full h-full flex items-center justify-center z-[70]'
                     onClick={() => {
                         setCategoryName('')
                     }}>
                     <section
-                        className='bg-white rounded-lg shadow-2xl w-full max-w-md relative overflow-hidden'
+                        className='bg-surface rounded-lg shadow-2xl w-full max-w-md relative overflow-hidden'
                         onClick={(e) => e.stopPropagation()}>
                     <button
-                    className='absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition mb-4'
+                    className='absolute top-4 right-4 text-muted hover:text-on-body transition mb-4'
                     onClick={() => setShowCategoryModal(false)}>
                     <X className='w-6 h-6' />
                 </button>
-                        <div className='p-6 border-b border-gray-100'>
-                            <h3 className='text-lg font-bold text-gray-900'>
+                        <div className='p-6 border-b border-divider-light'>
+                            <h3 className='text-lg font-bold text-on-surface'>
                                 Nueva Categoría
                             </h3>
                         </div>
                         <div className='p-6'>
-                            <label className='block text-sm font-medium text-gray-700 mb-2'>
+                            <label className='block text-sm font-medium text-on-body mb-2'>
                                 Nombre
                             </label>
                             <input
@@ -292,7 +292,7 @@ export const Products = () => {
                                     }
                                 }}
                                 placeholder='Nombre de la categoría'
-                                className='w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400'
+                                className='w-full border border-outline rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400'
                                 autoFocus
                             />
                         </div>
@@ -302,7 +302,7 @@ export const Products = () => {
                                     setShowCategoryModal(false)
                                     setCategoryName('')
                                 }}
-                                className='flex-1 py-2.5 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition text-sm cursor-pointer'>
+                                className='flex-1 py-2.5 border border-outline text-on-body rounded-lg font-medium hover:bg-hover transition text-sm cursor-pointer'>
                                 Cancelar
                             </button>
                             <button
@@ -322,19 +322,19 @@ export const Products = () => {
                 {/* Titulo de la sección productos */}
                 <section>
                     <h1 className='text-2xl font-bold'>Gestión de Productos</h1>
-                    <p className='text-gray-600'>
+                    <p className='text-on-body'>
                         Aquí puedes gestionar tus productos, agregar nuevos,
                         editar los existentes y eliminar los que ya no
                         necesites.
                     </p>
                 </section>
-                <section className='bg-white border border-gray-300 shadow-xs rounded-lg'>
-                    <section className='border-b border-gray-300 flex justify-between items-center px-6 py-4 bg-gray-50/50'>
+                <section className='bg-surface border border-outline shadow-xs rounded-lg'>
+                    <section className='border-b border-outline flex justify-between items-center px-6 py-4 bg-subtle'>
                         <section className='flex items-center gap-2'>
                             <Package className='w-5 h-5 text-primary-600' />
                             <h2 className='text-lg font-semibold flex flex-col'>
                                 Lista de Productos
-                            <span className='text-sm text-gray-500 font-medium'>
+                            <span className='text-sm text-muted font-medium'>
                                 Total ({filteredProducts.length})
                             </span>
                             </h2>
@@ -348,7 +348,7 @@ export const Products = () => {
                                                 !showCategoryDropdown,
                                             )
                                         }
-                                        className='flex items-center font-medium px-4 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-100 transition cursor-pointer'>
+                                        className='flex items-center font-medium px-4 py-2 border border-outline text-on-body text-sm rounded-lg hover:bg-hover-strong transition cursor-pointer'>
                                         <Tags className='w-4 h-5 mr-2' />
                                         Categorías
                                         <ChevronDown className='w-4 h-4 ml-1' />
@@ -362,13 +362,13 @@ export const Products = () => {
                                         />
                                     )}
                                     <section
-                                        className={`absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50 ${showCategoryDropdown ? 'block' : 'hidden'}`}>
+                                        className={`absolute right-0 mt-2 w-56 bg-surface border border-divider rounded-lg shadow-lg z-50 ${showCategoryDropdown ? 'block' : 'hidden'}`}>
                                         <button
                                             onClick={() => {
                                                 setShowCategoryModal(true)
                                                 setShowCategoryDropdown(false)
                                             }}
-                                            className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg cursor-pointer'>
+                                            className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-on-body hover:bg-hover rounded-t-lg cursor-pointer'>
                                             <Plus className='w-4 h-4' />
                                             Crear categoría
                                         </button>
@@ -377,7 +377,7 @@ export const Products = () => {
                                                 navigate('/categories')
                                                 setShowCategoryDropdown(false)
                                             }}
-                                            className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 rounded-b-lg cursor-pointer'>
+                                            className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-on-body hover:bg-hover rounded-b-lg cursor-pointer'>
                                             <Tags className='w-4 h-4' />
                                             Gestionar categorías
                                         </button>
@@ -385,7 +385,7 @@ export const Products = () => {
                                 </section>
                                 <button
                                     onClick={() => navigate('/inventory')}
-                                    className='flex items-center font-medium px-4 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-100 transition cursor-pointer'>
+                                    className='flex items-center font-medium px-4 py-2 border border-outline text-on-body text-sm rounded-lg hover:bg-hover-strong transition cursor-pointer'>
                                     <ClipboardList className='w-4 h-5 mr-2' />
                                     Inventario
                                 </button>
@@ -405,7 +405,7 @@ export const Products = () => {
                                                 : 'header',
                                         )
                                     }
-                                    className='p-2 text-gray-700 hover:bg-gray-100 rounded-lg transition cursor-pointer'>
+                                    className='p-2 text-on-body hover:bg-hover-strong rounded-lg transition cursor-pointer'>
                                     <EllipsisVertical className='w-6 h-6' />
                                 </button>
                                 {showMobileActions === 'header' && (
@@ -417,13 +417,13 @@ export const Products = () => {
                                     />
                                 )}
                                 <section
-                                    className={`absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50 ${showMobileActions === 'header' ? 'block' : 'hidden'}`}>
+                                    className={`absolute right-0 mt-2 w-56 bg-surface border border-divider rounded-lg shadow-lg z-50 ${showMobileActions === 'header' ? 'block' : 'hidden'}`}>
                                     <button
                                         onClick={() => {
                                             handleOpenModal()
                                             setShowMobileActions(null)
                                         }}
-                                        className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg cursor-pointer'>
+                                        className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-on-body hover:bg-hover rounded-t-lg cursor-pointer'>
                                         <Package className='w-4 h-4' />
                                         Nuevo Producto
                                     </button>
@@ -432,7 +432,7 @@ export const Products = () => {
                                             setShowCategoryModal(true)
                                             setShowMobileActions(null)
                                         }}
-                                        className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer'>
+                                        className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-on-body hover:bg-hover cursor-pointer'>
                                         <Plus className='w-4 h-4' />
                                         Nueva categoría
                                     </button>
@@ -441,7 +441,7 @@ export const Products = () => {
                                             navigate('/categories')
                                             setShowMobileActions(null)
                                         }}
-                                        className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer'>
+                                        className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-on-body hover:bg-hover cursor-pointer'>
                                         <Tags className='w-4 h-4' />
                                         Gestionar categorías
                                     </button>
@@ -450,7 +450,7 @@ export const Products = () => {
                                             navigate('/inventory')
                                             setShowMobileActions(null)
                                         }}
-                                        className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 rounded-b-lg cursor-pointer'>
+                                        className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-on-body hover:bg-hover rounded-b-lg cursor-pointer'>
                                         <ClipboardList className='w-4 h-4' />
                                         Inventario
                                     </button>
@@ -460,23 +460,23 @@ export const Products = () => {
                     </section>
                     <section className='p-6 flex flex-col gap-4'>
                         <div className='relative'>
-                            <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400' />
+                            <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-faint' />
                             <input
                                 type='search'
                                 value={searchTerm}
                                 onChange={handleSearch}
-                                className='w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
+                                className='w-full border border-outline rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
                                 placeholder='Buscar por nombre o código...'
                             />
                         </div>
                         <div className='flex flex-wrap items-center gap-2 max-w-full overflow-x-auto scrollbar-none'>
-                            <div className='flex gap-1 bg-gray-100 rounded-lg p-1 w-fit'>
+                            <div className='flex gap-1 bg-subtle dark:bg-gray-900 rounded-lg p-1 w-fit'>
                                 <button
                                     onClick={() => setActiveCategory('all')}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                         activeCategory === 'all'
-                                            ? 'bg-white shadow-xs text-primary-600'
-                                            : 'text-gray-500 hover:text-gray-700'
+                                            ? 'bg-surface shadow-xs text-primary-600'
+                                            : 'text-muted hover:text-on-body hover:bg-hover'
                                     }`}>
                                     <Layers className='w-4 h-4' />
                                     Todas
@@ -489,21 +489,21 @@ export const Products = () => {
                                         }
                                         className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                             activeCategory === category.id
-                                                ? 'bg-white shadow-xs text-primary-600'
-                                                : 'text-gray-500 hover:text-gray-700'
+                                                ? 'bg-surface shadow-xs text-primary-600'
+                                                : 'text-muted hover:text-on-body hover:bg-hover'
                                         }`}>
                                         <Tags className='w-4 h-4' />
                                         {category.name}
                                     </button>
                                 ))}
                             </div>
-                            <div className='flex gap-1 bg-gray-100 rounded-lg p-1 w-fit ml-0 xl:ml-4'>
+                            <div className='flex gap-1 bg-subtle dark:bg-gray-900 rounded-lg p-1 w-fit ml-0 xl:ml-4'>
                                 <button
                                     onClick={() => { setActiveStatus('all'); setVisibleCount(20) }}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                         activeStatus === 'all'
-                                            ? 'bg-white shadow-xs text-primary-600'
-                                            : 'text-gray-500 hover:text-gray-700'
+                                            ? 'bg-surface shadow-xs text-primary-600'
+                                            : 'text-muted hover:text-on-body hover:bg-hover'
                                     }`}>
                                     <CheckCircle2 className='w-4 h-4' />
                                     Todos
@@ -512,8 +512,8 @@ export const Products = () => {
                                     onClick={() => { setActiveStatus('active'); setVisibleCount(20) }}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                         activeStatus === 'active'
-                                            ? 'bg-white shadow-xs text-primary-600'
-                                            : 'text-gray-500 hover:text-gray-700'
+                                            ? 'bg-surface shadow-xs text-primary-600'
+                                            : 'text-muted hover:text-on-body hover:bg-hover'
                                     }`}>
                                     <CheckCircle className='w-4 h-4' />
                                     Activo
@@ -522,20 +522,20 @@ export const Products = () => {
                                     onClick={() => { setActiveStatus('inactive'); setVisibleCount(20) }}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                         activeStatus === 'inactive'
-                                            ? 'bg-white shadow-xs text-primary-600'
-                                            : 'text-gray-500 hover:text-gray-700'
+                                            ? 'bg-surface shadow-xs text-primary-600'
+                                            : 'text-muted hover:text-on-body hover:bg-hover'
                                     }`}>
                                     <XCircle className='w-4 h-4' />
                                     Inactivo
                                 </button>
                             </div>
-                            <div className='flex gap-1 bg-gray-100 rounded-lg p-1 w-fit'>
+                            <div className='flex gap-1 bg-subtle dark:bg-gray-900 rounded-lg p-1 w-fit'>
                                 <button
                                     onClick={() => { setActiveStock('all'); setVisibleCount(20) }}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                         activeStock === 'all'
-                                            ? 'bg-white shadow-xs text-primary-600'
-                                            : 'text-gray-500 hover:text-gray-700'
+                                            ? 'bg-surface shadow-xs text-primary-600'
+                                            : 'text-muted hover:text-on-body hover:bg-hover'
                                     }`}>
                                     <Layers className='w-4 h-4' />
                                     Todos
@@ -544,8 +544,8 @@ export const Products = () => {
                                     onClick={() => { setActiveStock('with'); setVisibleCount(20) }}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                         activeStock === 'with'
-                                            ? 'bg-white shadow-xs text-primary-600'
-                                            : 'text-gray-500 hover:text-gray-700'
+                                            ? 'bg-surface shadow-xs text-primary-600'
+                                            : 'text-muted hover:text-on-body hover:bg-hover'
                                     }`}>
                                     <PackageCheck className='w-4 h-4' />
                                     Con control
@@ -554,8 +554,8 @@ export const Products = () => {
                                     onClick={() => { setActiveStock('without'); setVisibleCount(20) }}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                         activeStock === 'without'
-                                            ? 'bg-white shadow-xs text-primary-600'
-                                            : 'text-gray-500 hover:text-gray-700'
+                                            ? 'bg-surface shadow-xs text-primary-600'
+                                            : 'text-muted hover:text-on-body hover:bg-hover'
                                     }`}>
                                     <PackageX className='w-4 h-4' />
                                     Sin control
@@ -566,7 +566,7 @@ export const Products = () => {
                     <div className='overflow-x-auto px-6 pb-2'>
                         <table className='text-sm overflow-hidden rounded-t-lg w-full'>
                             <thead>
-                                <tr className='bg-gray-100 border-b border-gray-200 text-gray-500 uppercase text-xs tracking-wider'>
+                                <tr className='bg-subtle border-b border-divider text-muted uppercase text-xs tracking-wider'>
                                     {productsHeaders.map((header, index) => (
                                         <th
                                             key={index}
@@ -580,18 +580,18 @@ export const Products = () => {
                                 {displayedProducts.map((product, index) => (
                                     <tr
                                         key={index}
-                                        className='border-b border-gray-100 hover:bg-gray-50'>
-                                        <td className='py-3 px-4 font-medium text-gray-900'>
+                                        className='border-b border-divider-light hover:bg-hover'>
+                                        <td className='py-3 px-4 font-medium text-on-surface'>
                                             {product.sku}
                                         </td>
-                                        <td className='py-3 px-4 text-gray-700'>
+                                        <td className='py-3 px-4 text-on-body'>
                                             {product.name}
                                         </td>
-                                        <td className='py-3 px-4 text-gray-500'>
+                                        <td className='py-3 px-4 text-muted'>
                                             {product.categories?.name ||
                                                 'Sin categoría'}
                                         </td>
-                                        <td className='py-3 px-4 text-gray-700 font-bold text-right'>
+                                        <td className='py-3 px-4 text-on-body font-bold text-right'>
                                             $
                                             {new Intl.NumberFormat(
                                                 'es-CO',
@@ -603,7 +603,7 @@ export const Products = () => {
                                                     Sí
                                                 </span>
                                             ) : (
-                                                <span className='px-2.5 py-0.5 text-xs font-medium bg-gray-100 text-gray-500 rounded-full whitespace-nowrap'>
+                                                <span className='px-2.5 py-0.5 text-xs font-medium bg-subtle text-muted rounded-full whitespace-nowrap'>
                                                     No
                                                 </span>
                                             )}
@@ -627,7 +627,7 @@ export const Products = () => {
                                                             product.id,
                                                         )
                                                     }
-                                                    className='hover:bg-gray-200 p-1.5 rounded-sm cursor-pointer'
+                                                    className='hover:bg-hover-icon p-1.5 rounded-sm cursor-pointer'
                                                     title='Editar Producto'>
                                                     <Edit2 className='w-4 h-4 text-primary-600' />
                                                 </button>
@@ -652,7 +652,7 @@ export const Products = () => {
                                                                 : product.id,
                                                         )
                                                     }
-                                                    className='p-1 text-gray-700 hover:bg-gray-100 rounded-lg transition cursor-pointer'>
+                                                    className='p-1 text-on-body hover:bg-hover-strong rounded-lg transition cursor-pointer'>
                                                     <EllipsisVertical className='w-5 h-5' />
                                                 </button>
                                                 {showMobileActions ===
@@ -667,7 +667,7 @@ export const Products = () => {
                                                     />
                                                 )}
                                                 <section
-                                                    className={`absolute right-0 mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-50 ${showMobileActions === product.id ? 'block' : 'hidden'}`}>
+                                                    className={`absolute right-0 mt-1 w-40 bg-surface border border-divider rounded-lg shadow-lg z-50 ${showMobileActions === product.id ? 'block' : 'hidden'}`}>
                                                     <button
                                                         onClick={() => {
                                                             onEditProduct(
@@ -677,7 +677,7 @@ export const Products = () => {
                                                                 null,
                                                             )
                                                         }}
-                                                        className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg cursor-pointer'>
+                                                        className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-on-body hover:bg-hover rounded-t-lg cursor-pointer'>
                                                         <Edit2 className='w-4 h-4 text-primary-600' />
                                                         Editar
                                                     </button>
@@ -690,7 +690,7 @@ export const Products = () => {
                                                                 null,
                                                             )
                                                         }}
-                                                        className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-red-600 hover:bg-gray-50 rounded-b-lg cursor-pointer'>
+                                                        className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-red-600 hover:bg-hover rounded-b-lg cursor-pointer'>
                                                         <Trash2 className='w-4 h-4' />
                                                         Eliminar
                                                     </button>
@@ -710,7 +710,7 @@ export const Products = () => {
                         </button>
                     )}
                     {filteredProducts.length === 0 && (
-                        <div className='text-center text-gray-400 italic py-12 px-6'>
+                        <div className='text-center text-faint italic py-12 px-6'>
                             No se encontraron productos
                         </div>
                     )}

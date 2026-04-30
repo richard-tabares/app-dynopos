@@ -10,7 +10,7 @@ const stockFilters = [
     { value: 'all', label: 'Todos', icon: Layers, color: 'text-primary-600', bg: 'bg-primary-50' },
     { value: 'stock_bajo', label: 'Stock Bajo', icon: AlertTriangle, color: 'text-red-500', bg: 'bg-red-50' },
     { value: 'con_stock', label: 'Con Stock', icon: PackageCheck, color: 'text-emerald-500', bg: 'bg-emerald-50' },
-    { value: 'sin_control', label: 'Sin Control', icon: Package, color: 'text-gray-500', bg: 'bg-gray-50' },
+    { value: 'sin_control', label: 'Sin Control', icon: Package, color: 'text-muted', bg: 'bg-body' },
 ]
 
 export const InventoryReports = () => {
@@ -43,9 +43,9 @@ export const InventoryReports = () => {
 
     return (
         <section className='space-y-6 pb-12'>
-            <h2 className='text-2xl font-bold text-gray-900'>Reporte de Inventario</h2>
+            <h2 className='text-2xl font-bold text-on-surface'>Reporte de Inventario</h2>
 
-            <div className='flex gap-2 bg-gray-100 rounded-lg p-1 w-fit max-w-full overflow-x-auto scrollbar-none'>
+            <div className='flex gap-2 bg-subtle rounded-lg p-1 w-fit max-w-full overflow-x-auto scrollbar-none'>
                 {stockFilters.map((f) => {
                     const Icon = f.icon
                     return (
@@ -54,8 +54,8 @@ export const InventoryReports = () => {
                             onClick={() => setStockFilter(f.value)}
                             className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer ${
                                 stockFilter === f.value
-                                    ? 'bg-white shadow-xs text-gray-900'
-                                    : 'text-gray-500 hover:text-gray-700'
+                                    ? 'bg-surface shadow-xs text-on-surface'
+                                    : 'text-muted hover:text-on-body hover:bg-hover'
                             }`}
                         >
                             <Icon className={`w-4 h-4 ${f.color}`} />

@@ -1,8 +1,8 @@
 @import 'tailwindcss';
 
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-
     --color-primary-50: #f0f9ff;
     --color-primary-100: #e0f2fe;
     --color-primary-200: #bae6fd;
@@ -18,21 +18,71 @@
     --color-danger-500: #ef4444;
     --color-danger-600: #dc2626;
 
+    --color-surface: var(--surface);
+    --color-body: var(--body);
+    --color-subtle: var(--subtle);
+    --color-overlay: var(--overlay);
+    --color-on-surface: var(--on-surface);
+    --color-on-body: var(--on-body);
+    --color-muted: var(--muted);
+    --color-faint: var(--faint);
+    --color-outline: var(--outline);
+    --color-divider: var(--divider);
+    --color-divider-light: var(--divider-light);
+    --color-hover: var(--hover);
+    --color-hover-strong: var(--hover-strong);
+    --color-hover-icon: var(--hover-icon);
 }
-@layer base {
-  body {
-    @apply bg-gray-50 text-gray-800 antialiased;
-  }
-  
-  * {
-    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2;
-  }
 
-  .scrollbar-none {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  .scrollbar-none::-webkit-scrollbar {
-    display: none;
-  }
+@layer base {
+    :root {
+        --surface: #ffffff;
+        --body: #f9fafb;
+        --subtle: #f9fafb;
+        --overlay: rgba(17, 24, 39, 0.5);
+        --on-surface: #111827;
+        --on-body: #374151;
+        --muted: #6b7280;
+        --faint: #9ca3af;
+        --outline: #d1d5db;
+        --divider: #e5e7eb;
+        --divider-light: #f3f4f6;
+        --hover: #f9fafb;
+        --hover-strong: #f3f4f6;
+        --hover-icon: #e5e7eb;
+    }
+
+    .dark {
+        --surface: #1f2937;
+        --body: #030712;
+        --subtle: rgba(31, 41, 55, 0.5);
+        --overlay: rgba(0, 0, 0, 0.6);
+        --on-surface: #f9fafb;
+        --on-body: #e5e7eb;
+        --muted: #d1d5db;
+        --faint: #9ca3af;
+        --outline: #4b5563;
+        --divider: #374151;
+        --divider-light: #374151;
+        --hover: #374151;
+        --hover-strong: #4b5563;
+        --hover-icon: #6b7280;
+    }
+
+    body {
+        @apply bg-body text-on-body antialiased;
+    }
+
+    * {
+        @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2;
+    }
+
+    .scrollbar-none {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .scrollbar-none::-webkit-scrollbar {
+        display: none;
+    }
 }

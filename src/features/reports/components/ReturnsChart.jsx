@@ -20,19 +20,17 @@ export const ReturnsChart = ({ data = [], showDayNames = false }) => {
     }
 
     return (
-        <section className='bg-white border border-gray-300 p-6 shadow-xs rounded-lg'>
+        <section className='bg-surface border border-outline p-6 shadow-xs rounded-lg'>
             <div className='flex items-start justify-between mb-6'>
                 <div className='flex items-center gap-3'>
-                    <div className='p-2 rounded-lg bg-red-50'>
-                        <Undo2 className='w-5 h-5 text-red-500' />
-                    </div>
+                    <Undo2 className='w-5 h-5 text-red-500' />
                     <div>
-                        <h3 className='text-lg font-semibold text-gray-900'>Devoluciones</h3>
-                        <p className='text-sm text-gray-500'>Período seleccionado</p>
+                        <h3 className='text-lg font-semibold text-on-surface'>Devoluciones</h3>
+                        <p className='text-sm text-muted'>Período seleccionado</p>
                     </div>
                 </div>
                 <div className='text-right'>
-                    <p className='text-xs text-gray-500'>Total devuelto</p>
+                    <p className='text-xs text-muted'>Total devuelto</p>
                     <p className='text-lg font-bold text-red-600'>{formatCurrency(totalReturns)}</p>
                 </div>
             </div>
@@ -47,22 +45,22 @@ export const ReturnsChart = ({ data = [], showDayNames = false }) => {
                                     <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
                                 </linearGradient>
                             </defs>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--divider)" />
                             <XAxis
                                 dataKey="return_date"
                                 axisLine={false}
                                 tickLine={false}
-                                tick={{ fontSize: 12, fill: '#6b7280' }}
+                                tick={{ fontSize: 12, fill: 'var(--muted)' }}
                                 tickFormatter={formatTick}
                             />
                             <YAxis
                                 axisLine={false}
                                 tickLine={false}
-                                tick={{ fontSize: 12, fill: '#6b7280' }}
+                                tick={{ fontSize: 12, fill: 'var(--muted)' }}
                                 tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
                             />
                             <Tooltip
-                                contentStyle={{ backgroundColor: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px' }}
+                                contentStyle={{ backgroundColor: 'var(--surface)', border: '1px solid var(--outline)', borderRadius: '8px' }}
                                 formatter={(value) => [formatCurrency(value), 'Devoluciones']}
                                 labelFormatter={(label) => `Fecha: ${label}`}
                             />
@@ -77,7 +75,7 @@ export const ReturnsChart = ({ data = [], showDayNames = false }) => {
                         </AreaChart>
                     </ResponsiveContainer>
                 ) : (
-                    <div className='h-full flex items-center justify-center text-gray-400 italic'>Sin devoluciones en este período</div>
+                    <div className='h-full flex items-center justify-center text-faint italic'>Sin devoluciones en este período</div>
                 )}
             </div>
         </section>

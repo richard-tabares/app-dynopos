@@ -8,12 +8,10 @@ const COLORS = ['#0ea5e9', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'
 
 export const PaymentPieChart = ({ data = [] }) => {
     return (
-        <section className='bg-white border border-gray-300 p-6 shadow-xs rounded-lg'>
-            <div className='flex items-center gap-2 mb-6'>
-                <div className='p-2 rounded-lg bg-blue-50'>
-                    <CreditCard className='w-5 h-5 text-blue-600' />
-                </div>
-                <h3 className='text-lg font-semibold text-gray-900'>Ventas por Método de Pago</h3>
+        <section className='bg-surface border border-outline p-6 shadow-xs rounded-lg'>
+            <div className='flex items-center gap-2 text-primary-600 mb-6'>
+                <CreditCard className='w-5 h-5' />
+                <h3 className='text-lg font-semibold text-on-surface'>Ventas por Método de Pago</h3>
             </div>
             <div className='h-[300px] w-full' style={{ position: 'relative', overflow: 'hidden' }}>
                 {data.length > 0 ? (
@@ -34,16 +32,16 @@ export const PaymentPieChart = ({ data = [] }) => {
                                 ))}
                             </Pie>
                             <Tooltip
-                                contentStyle={{ backgroundColor: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px' }}
+                                contentStyle={{ backgroundColor: 'var(--surface)', border: '1px solid var(--outline)', borderRadius: '8px' }}
                                 formatter={(value) => [formatCurrency(value), 'Total']}
                             />
                             <Legend
-                                formatter={(value) => <span className='text-sm text-gray-600'>{value}</span>}
+                                formatter={(value) => <span className='text-sm text-on-body'>{value}</span>}
                             />
                         </PieChart>
                     </ResponsiveContainer>
                 ) : (
-                    <div className='h-full flex items-center justify-center text-gray-400 italic'>Sin datos de métodos de pago</div>
+                    <div className='h-full flex items-center justify-center text-faint italic'>Sin datos de métodos de pago</div>
                 )}
             </div>
         </section>

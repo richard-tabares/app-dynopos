@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ShoppingBag, RotateCcw } from 'lucide-react'
+import { ReceiptText, RotateCcw, History } from 'lucide-react'
 import { SaleTicketModal } from '../../../shared/components/SaleTicketModal'
 import { ReturnModal } from './ReturnModal'
 
@@ -11,27 +11,26 @@ export const SalesHistoryCard = ({ sales = [], onReturn }) => {
 
     return (
         <>
-            <section className='bg-white border border-gray-300 p-6 shadow-xs rounded-lg flex flex-col'>
-                <h3 className='text-lg font-semibold text-gray-900 mb-6'>
-                    Historial de Ventas
-                </h3>
+            <section className='bg-surface border border-outline p-6 shadow-xs rounded-lg flex flex-col'>
+                <div className='flex items-center gap-2 text-primary-600 mb-6'>
+                    <History className='w-5 h-5' />
+                    <h3 className='text-lg font-semibold text-on-surface'>Historial de Ventas</h3>
+                </div>
 
                 <div className='space-y-1'>
                     {displayedSales.length > 0 ? (
                         displayedSales.map((sale) => (
                             <div
                                 key={sale.id}
-                                className='flex items-center gap-4 p-3 hover:bg-primary-50 rounded-lg transition-colors border-b border-gray-100 last:border-0 cursor-pointer'
+                                className='flex items-center gap-4 p-3 hover:bg-hover rounded-lg transition-colors border-b border-divider-light last:border-0 cursor-pointer'
                                 onClick={() => setSelectedSale(sale)}>
                                 <div className='flex items-center gap-4 flex-1 min-w-0'>
-                                    <div className='p-2 bg-blue-50 text-blue-600 rounded-lg'>
-                                        <ShoppingBag className='w-5 h-5' />
-                                    </div>
+                                    <ReceiptText className='w-5 h-5 text-primary-600 shrink-0' />
                                     <div className='flex-1 min-w-0'>
-                                        <p className='text-sm font-semibold text-gray-900'>
+                                        <p className='text-sm font-semibold text-on-surface'>
                                             #{String(sale.id).padStart(4, '0')}
                                         </p>
-                                        <p className='text-xs text-gray-500'>
+                                        <p className='text-xs text-muted'>
                                             {sale.date} • {sale.itemsCount}{' '}
                                             {sale.itemsCount === 1
                                                 ? 'item'
@@ -39,7 +38,7 @@ export const SalesHistoryCard = ({ sales = [], onReturn }) => {
                                         </p>
                                     </div>
                                     <div className='text-right'>
-                                        <p className='text-sm font-bold text-gray-900'>
+                                        <p className='text-sm font-bold text-on-surface'>
                                             $
                                             {new Intl.NumberFormat('es-CO', {
                                                 maximumFractionDigits: 0,
@@ -62,7 +61,7 @@ export const SalesHistoryCard = ({ sales = [], onReturn }) => {
                             </div>
                         ))
                     ) : (
-                        <div className='py-12 text-center text-gray-400 italic text-sm'>
+                        <div className='py-12 text-center text-faint italic text-sm'>
                             No hay ventas registradas
                         </div>
                     )}

@@ -61,15 +61,15 @@ export const InventorySummary = ({ products = [] }) => {
             {/* Grid de Cards */}
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4'>
                 {cards.map((card, index) => (
-                    <div key={index} className='bg-white p-6 rounded-lg border border-gray-300 shadow-xs flex items-center gap-4'>
+                    <div key={index} className='bg-surface p-6 rounded-lg border border-outline shadow-xs flex items-center gap-4'>
                         <div className={`p-3 rounded-xl ${card.iconBg}`}>
                             <card.icon className={`w-5 h-5 ${card.color.split(' ')[1]}`} />
                         </div>
                         <div>
-                            <p className='text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider truncate'>
+                            <p className='text-[10px] sm:text-xs font-medium text-muted uppercase tracking-wider truncate'>
                                 {card.title}
                             </p>
-                            <p className='text-sm sm:text-lg lg:text-2xl font-bold text-gray-900 mt-1 truncate'>
+                            <p className='text-sm sm:text-lg lg:text-2xl font-bold text-on-surface mt-1 truncate'>
                                 {card.value}
                             </p>
                         </div>

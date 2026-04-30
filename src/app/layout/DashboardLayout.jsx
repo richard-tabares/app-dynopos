@@ -30,7 +30,7 @@ export const DashboardLayout = () => {
     }, [businessId, location.pathname, setTodayRevenue])
 
     return (
-        <section className='bg-gray-50'>
+        <section className='bg-body'>
             <SideBar />
             <Header todayRevenue={todayRevenue} />
             <main className={`p-6 mt-16 transition-all duration-300 ${isCollapsed ? 'ml-20' : 'ml-64'} max-lg:ml-0`}>

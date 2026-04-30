@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router'
 import { Dashboard } from '../features/dashboard/pages/Dashboard'
 import { DashboardLayout } from './layout/DashboardLayout'
@@ -22,10 +23,15 @@ import 'react-toastify/dist/ReactToastify.css'
 
 export const App = () => {
     const user = useStore((state) => state.user)
+    const isDarkMode = useStore((state) => state.isDarkMode)
+
+    useEffect(() => {
+        document.documentElement.classList.toggle('dark', isDarkMode)
+    }, [isDarkMode])
 
     return (
         <BrowserRouter>
-            <section className='bg-gray-50'>
+            <section className='bg-body'>
                 <Routes>
                     {/* Rutas Publicas */}
                     <Route
@@ -115,7 +121,7 @@ export const App = () => {
                 pauseOnFocusLoss
                 draggable
                 pauseOnHover
-                theme='light'
+                theme={isDarkMode ? 'dark' : 'light'}
             />
         </BrowserRouter>
     )

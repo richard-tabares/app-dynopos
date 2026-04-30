@@ -115,17 +115,17 @@ export const SalesReports = () => {
         return (
             <section className='space-y-6 pb-12'>
                 <div className='flex items-center justify-between'>
-                    <h2 className='text-2xl font-bold text-gray-900'>
+                        <h2 className='text-2xl font-bold text-on-surface'>
                         Reporte de Ventas
                     </h2>
                 </div>
-                <DateRangeFilter
+                <DateRangeFilter compact
                     value={filter}
                     onChange={handleFilterChange}
                     startDate={rangeStart}
                     endDate={rangeEnd}
                 />
-                <div className='text-center text-gray-400 italic py-12'>
+                <div className='text-center text-faint italic py-12'>
                     Selecciona una fecha de inicio y fin para ver los resultados
                 </div>
             </section>
@@ -143,12 +143,12 @@ export const SalesReports = () => {
     return (
         <section className='space-y-6 pb-12'>
             <div className='flex items-center justify-between'>
-                <h2 className='text-2xl font-bold text-gray-900'>
+                <h2 className='text-2xl font-bold text-on-surface'>
                     Reporte de Ventas
                 </h2>
             </div>
 
-            <DateRangeFilter
+            <DateRangeFilter compact
                 value={filter}
                 onChange={handleFilterChange}
                 startDate={rangeStart}

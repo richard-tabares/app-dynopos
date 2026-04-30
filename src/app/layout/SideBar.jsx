@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
     LayoutDashboard,
     ShoppingCart,
@@ -22,12 +22,23 @@ import { logout } from '../../features/auth/helpers/logout'
 export const SideBar = () => {
     const isMobile = useStore((state) => state.isMobile)
     const setIsMobile = useStore((state) => state.setIsMobile)
-    const isCollapsed = useStore((state) => state.isCollapsed)
+    const rawCollapsed = useStore((state) => state.isCollapsed)
     const setIsCollapsed = useStore((state) => state.setIsCollapsed)
+    const isCollapsed = isMobile ? false : rawCollapsed
 
     const user = useStore((state) => state.user)
     const navigate = useNavigate()
     const location = useLocation()
+
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth >= 1024 && isMobile) {
+                setIsMobile(false)
+            }
+        }
+        window.addEventListener('resize', handleResize)
+        return () => window.removeEventListener('resize', handleResize)
+    }, [isMobile, setIsMobile])
 
     const [reportsOpen, setReportsOpen] = useState(location.pathname.startsWith('/reports'))
 
@@ -100,15 +111,15 @@ export const SideBar = () => {
         <>
             {isMobile && (
                 <section
-                    className='fixed inset-0 bg-gray-800 opacity-45 z-20 lg:hidden'
+                    className='fixed inset-0 bg-overlay opacity-100 z-20 lg:hidden'
                     onClick={() => setIsMobile(false)}></section>
             )}
             <aside
-                className={`fixed flex flex-col left-0 top-0 border-r justify-between border-gray-300 h-screen bg-white z-30 transition-all duration-300 
+                className={`fixed flex flex-col left-0 top-0 border-r justify-between border-outline h-screen bg-surface z-30 transition-all duration-300 
                 ${isMobile ? 'max-lg:translate-x-0 w-64' : 'max-lg:-translate-x-64'}
                 ${isCollapsed ? 'w-20' : 'w-64'}
                 `}>
-                <section className={`h-16 border-b border-gray-300 flex items-center gap-2 px-3 
+                <section className={`h-16 border-b border-outline flex items-center gap-2 px-3 
                     ${isCollapsed ? 'justify-center' : 'justify-between'}
                 `}>
                     {user?.business?.business_logo ? (
@@ -121,12 +132,12 @@ export const SideBar = () => {
                         {user?.business.business_name || 'Dyno POS'}
                     </span>
                     <button
-                        className={'p-2 rounded-lg cursor-pointer hover:bg-gray-200 hidden lg:block'}
+                        className={'p-2 rounded-lg cursor-pointer hover:bg-hover-icon hidden lg:block'}
                         onClick={() => setIsCollapsed(!isCollapsed)}>
                         {isCollapsed ? <PanelLeftOpen className='w-5 h-5' /> : <PanelLeftClose className='w-5 h-5' />}
                     </button>
                     <button
-                        className='p-2 rounded-lg cursor-pointer hover:bg-gray-200 hidden max-lg:block'
+                        className='p-2 rounded-lg cursor-pointer hover:bg-hover-icon hidden max-lg:block'
                         onClick={() => setIsMobile(false)}>
                         <X className='w-5 h-5' />
                     </button>
@@ -141,18 +152,18 @@ export const SideBar = () => {
                                     <li key={item.id}>
                                         <button
                                             onClick={() => {
-                                                if (!isCollapsed) {
-                                                    setReportsOpen(!reportsOpen)
+                                                if (isCollapsed) {
+                                                    setIsCollapsed(false)
+                                                    setReportsOpen(true)
                                                 } else {
-                                                    navigate('/reports')
+                                                    setReportsOpen(!reportsOpen)
                                                 }
-                                                setIsMobile(false)
                                             }}
                                             className={`w-full flex items-center text-sm font-semibold px-3 py-2 rounded-lg transition-colors cursor-pointer
                                                 ${isCollapsed ? 'justify-center' : 'justify-between'}
                                                 ${isActiveParent(item)
                                                     ? 'bg-primary-50 text-primary-600'
-                                                    : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                                                    : 'text-on-body hover:bg-hover-strong hover:text-on-surface'
                                                 }`}
                                         >
                                             <div className={`flex items-center ${isCollapsed ? '' : ''}`}>
@@ -175,7 +186,7 @@ export const SideBar = () => {
                                                                 className={`flex items-center text-sm font-medium px-3 py-2 rounded-lg transition-colors
                                                                     ${isActiveSub(sub.path)
                                                                         ? 'bg-primary-50 text-primary-600'
-                                                                        : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
+                                                                        : 'text-muted hover:bg-hover-strong hover:text-on-surface'
                                                                     }`}
                                                             >
                                                                 <SubIcon className='w-4 h-4 mr-2' />
@@ -196,12 +207,12 @@ export const SideBar = () => {
                                     <NavLink
                                         to={item.path}
                                         className={({ isActive}) =>
-                                            `flex items-center text-gray-600 text-sm font-semibold px-3 py-2 rounded-lg
+                                            `flex items-center text-on-body text-sm font-semibold px-3 py-2 rounded-lg
                                             ${isCollapsed ? 'justify-center' : 'justify-start'}
                                             ${
                                                 isActive
                                                     ? 'bg-primary-50 text-primary-600'
-                                                    : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                                                    : 'text-on-body hover:bg-hover-strong hover:text-on-surface'
                                             }`
                                         }>
                                         <Icon className={`w-5 h-5 ${isCollapsed ? 'mr-0' : 'mr-2'}`} />
@@ -218,14 +229,14 @@ export const SideBar = () => {
                         </li>
                     </ul>
                 </nav>
-                <section className={`border-t border-gray-300 p-4 relative ${isCollapsed ? 'flex justify-center' : ''}`}>
+                <section className={`border-t border-outline p-4 relative ${isCollapsed ? 'flex justify-center' : ''}`}>
                     <section className={`flex items-center ${isCollapsed ? 'flex-col gap-y-2' : 'gap-x-3'}`}>
-                        <section className='flex items-center place-content-center w-10 h-10 bg-gray-200 rounded-full shrink-0'>
+                        <section className='flex items-center place-content-center w-10 h-10 bg-hover-strong rounded-full shrink-0'>
                             <span>AD</span>
                         </section>
                         <section className={`flex flex-col text-left ${isCollapsed ? 'hidden' : 'block'}`}>
                             <span className='text-sm font-medium first-letter:uppercase'>{ user.profile.role }</span>
-                            <span className='text-xs text-gray-500'>
+                            <span className='text-xs text-muted'>
                                 {
                                     user && user.business.owner_name || 'Usuario'
                                 }

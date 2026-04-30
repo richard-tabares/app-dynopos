@@ -16,8 +16,8 @@ export const OrderSidebar = ({ onProcessSale }) => {
     ]
 
     return (
-        <section className='bg-white rounded-lg border border-gray-300 shadow-xs flex flex-col h-[calc(100vh-140px)] sticky top-20'>
-            <div className='p-6 border-b border-gray-100'>
+        <section className='bg-surface rounded-lg border border-outline shadow-xs flex flex-col lg:h-[calc(100vh-140px)] lg:sticky lg:top-20'>
+            <div className='p-6 border-b border-divider-light'>
                 <div className='flex items-center justify-between'>
                     <h2 className='text-xl font-bold flex items-center gap-2'>
                         <ShoppingCart className='w-5 h-5 text-primary-600' />
@@ -33,22 +33,22 @@ export const OrderSidebar = ({ onProcessSale }) => {
                         </button>
                     )}
                 </div>
-                <p className='text-sm text-gray-500 mt-1'>
+                <p className='text-sm text-muted mt-1'>
                     {cart?.length} {cart?.length === 1 ? 'item' : 'items'}
                 </p>
             </div>
 
             <div className='flex-1 overflow-y-auto p-6 flex flex-col gap-4 scrollbar-thin'>
                 {!cart?.length ? (
-                    <div className='flex-1 flex flex-col items-center justify-center text-gray-400 gap-2'>
+                    <div className='flex-1 flex flex-col items-center justify-center text-faint gap-2'>
                         <ShoppingCart className='w-12 h-12 opacity-20' />
                         <p className='font-medium'>Tu carrito está vacío</p>
                     </div>
                 ) : (
                     cart?.map((item) => (
-                        <div key={item.id} className='flex items-center gap-4 bg-gray-50 p-3 rounded-lg border border-gray-100'>
+                        <div key={item.id} className='flex items-center gap-4 bg-subtle p-3 rounded-lg border border-divider-light'>
                             <div className='flex-1'>
-                                <h4 className='font-bold text-sm text-gray-900 truncate max-w-30'>
+                                <h4 className='font-bold text-sm text-on-surface truncate max-w-30'>
                                     {item.name}
                                 </h4>
                                 <p className='text-primary-600 font-bold text-xs'>
@@ -57,10 +57,10 @@ export const OrderSidebar = ({ onProcessSale }) => {
                             </div>
                             
                             <div className='flex items-center gap-2'>
-                                <div className='flex items-center bg-white border border-gray-200 rounded-md overflow-hidden'>
+                                <div className='flex items-center bg-surface border border-divider rounded-md overflow-hidden'>
                                     <button
                                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                                        className='p-1 hover:bg-gray-100 text-gray-500 cursor-pointer disabled:opacity-30'
+                                        className='p-1 hover:bg-hover-strong text-muted cursor-pointer disabled:opacity-30'
                                         disabled={item.quantity <= 1}
                                     >
                                         <Minus className='w-3 h-3' />
@@ -70,7 +70,7 @@ export const OrderSidebar = ({ onProcessSale }) => {
                                     </span>
                                     <button
                                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                        className='p-1 hover:bg-gray-100 text-gray-500 cursor-pointer disabled:opacity-30'
+                                        className='p-1 hover:bg-hover-strong text-muted cursor-pointer disabled:opacity-30'
                                         disabled={item.track_stock !== false && item.quantity >= (item.inventory?.[0]?.stock || 0)}
                                     >
                                         <Plus className='w-3 h-3' />
@@ -88,13 +88,13 @@ export const OrderSidebar = ({ onProcessSale }) => {
                 )}
             </div>
 
-            <div className='p-6 bg-gray-50/50 border-t border-gray-100'>
+            <div className='p-6 bg-subtle border-t border-divider-light'>
                 <div className='flex flex-col gap-2 mb-6'>
-                    <div className='flex justify-between text-sm text-gray-600'>
+                    <div className='flex justify-between text-sm text-on-body'>
                         <span>Subtotal</span>
                         <span>${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(total)}</span>
                     </div>
-                    <div className='flex justify-between text-xl font-bold text-gray-900 mt-2 pt-2 border-t border-gray-200'>
+                    <div className='flex justify-between text-xl font-bold text-on-surface mt-2 pt-2 border-t border-divider'>
                         <span>Total</span>
                         <span className='text-primary-600'>${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(total)}</span>
                     </div>
@@ -102,7 +102,7 @@ export const OrderSidebar = ({ onProcessSale }) => {
 
                 {/* Payment Methods */}
                 <div className='mb-6'>
-                    <h3 className='text-sm font-medium text-gray-700 mb-2'>Método de Pago</h3>
+                    <h3 className='text-sm font-medium text-on-body mb-2'>Método de Pago</h3>
                     <div className='grid grid-cols-3 gap-2'>
                         {paymentMethods.map((method) => {
                             const Icon = method.icon
@@ -112,8 +112,8 @@ export const OrderSidebar = ({ onProcessSale }) => {
                                     onClick={() => setPaymentMethod(method.id)}
                                     className={`flex flex-col items-center justify-center p-3 border rounded-lg transition-colors ${
                                         paymentMethod === method.id
-                                            ? 'border-primary-600 bg-primary-50 text-primary-600'
-                                            : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'
+                                            ? 'border-primary-300 bg-hover text-on-body'
+                                            : 'border-divider bg-surface text-on-body hover:bg-hover'
                                     }`}
                                 >
                                     <Icon className='w-5 h-5 mb-1' />

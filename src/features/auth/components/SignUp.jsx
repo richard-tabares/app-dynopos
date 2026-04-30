@@ -133,12 +133,12 @@ export const SignUp = () => {
     }
 
     return (
-        <section className='w-full flex flex-col items-center justify-center bg-gray-100 px-4 py-8'>
-            <section className='w-2/4 max-lg:w-2/3 max-md:w-full bg-white border border-gray-300 p-10'>
-                <h1 className='text-2xl font-bold text-center text-gray-800 mb-2'>
+        <section className='w-full flex flex-col items-center justify-center bg-surface px-4 py-8'>
+            <section className='w-2/4 max-lg:w-2/3 max-md:w-full p-6 md:p-10'>
+                <h1 className='text-2xl font-bold text-center text-on-surface mb-2'>
                     Crear Cuenta
                 </h1>
-                <p className=' text-gray-600 text-center mb-8'>
+                <p className=' text-on-body text-center mb-8'>
                     Completa los datos para registrarse
                 </p>
 
@@ -149,7 +149,7 @@ export const SignUp = () => {
                     <section className='flex flex-col gap-2'>
                         <label
                             htmlFor='businessName'
-                            className=' font-semibold text-gray-900'>
+                            className=' font-semibold text-on-surface'>
                             Empresa{' '}
                             <span className='text-red-500 font-bold'>*</span>
                         </label>
@@ -164,7 +164,7 @@ export const SignUp = () => {
                             className={`px-4 py-3 border rounded-lg transition-all duration-300 focus:outline-none ${
                                 touched.business_name && errors.business_name
                                     ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-                                    : 'border-gray-200 focus:border-primary-300 focus:ring-2 focus:ring-primary-300'
+                                    : 'border-divider focus:border-primary-300 focus:ring-2 focus:ring-primary-300'
                             }`}
                         />
                         {touched.business_name && errors.business_name && (
@@ -178,7 +178,7 @@ export const SignUp = () => {
                     <section className='flex flex-col gap-2'>
                         <label
                             htmlFor='ownerName'
-                            className=' font-semibold text-gray-900'>
+                            className=' font-semibold text-on-surface'>
                             Nombres y Apellidos{' '}
                             <span className='text-red-500 font-bold'>*</span>
                         </label>
@@ -193,7 +193,7 @@ export const SignUp = () => {
                             className={`px-4 py-3 border rounded-lg  transition-all duration-300 focus:outline-none ${
                                 touched.owner_name && errors.owner_name
                                     ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-                                    : 'border-gray-200 focus:border-primary-300 focus:ring-2 focus:ring-primary-300'
+                                    : 'border-divider focus:border-primary-300 focus:ring-2 focus:ring-primary-300'
                             }`}
                         />
                         {touched.owner_name && errors.owner_name && (
@@ -207,7 +207,7 @@ export const SignUp = () => {
                     <section className='flex flex-col gap-2'>
                         <label
                             htmlFor='email'
-                            className=' font-semibold text-gray-900'>
+                            className=' font-semibold text-on-surface'>
                             Email{' '}
                             <span className='text-red-500 font-bold'>*</span>
                         </label>
@@ -222,7 +222,7 @@ export const SignUp = () => {
                             className={`px-4 py-3 border rounded-lg  transition-all duration-300 focus:outline-none ${
                                 touched.email && errors.email
                                     ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-                                    : 'border-gray-200 focus:border-primary-300 focus:ring-2 focus:ring-primary-300'
+                                    : 'border-divider focus:border-primary-300 focus:ring-2 focus:ring-primary-300'
                             }`}
                         />
                         {touched.email && errors.email && (
@@ -236,7 +236,7 @@ export const SignUp = () => {
                     <section className='flex flex-col gap-2'>
                         <label
                             htmlFor='password'
-                            className=' font-semibold text-gray-900'>
+                            className=' font-semibold text-on-surface'>
                             Contraseña{' '}
                             <span className='text-red-500 font-bold'>*</span>
                         </label>
@@ -252,7 +252,7 @@ export const SignUp = () => {
                                 className={`w-full px-4 py-3 pr-10 border rounded-lg  transition-all duration-300 focus:outline-none ${
                                     touched.password && errors.password
                                         ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-                                        : 'border-gray-200 focus:border-primary-300 focus:ring-2 focus:ring-primary-300'
+                                        : 'border-divider focus:border-primary-300 focus:ring-2 focus:ring-primary-300'
                                 }`}
                             />
                             <button
@@ -268,20 +268,20 @@ export const SignUp = () => {
                             </p>
                         )}
                         {formData.password && !errors.password && (
-                            <section className='bg-gray-100 border-l-4 border-primary-600 p-3 rounded flex flex-col gap-1.5'>
-                                <p className='text-xs font-semibold text-gray-900'>
+                            <section className='bg-body border-l-4 border-primary-600 p-3 rounded flex flex-col gap-1.5'>
+                                <p className='text-xs font-semibold text-on-surface'>
                                     Requisitos cumplidos:
                                 </p>
                                 <section
-                                    className={`text-xs transition-colors duration-300 ${/[a-zA-Z]/.test(formData.password) ? 'text-green-600 font-semibold' : 'text-gray-500'}`}>
+                                    className={`text-xs transition-colors duration-300 ${/[a-zA-Z]/.test(formData.password) ? 'text-green-600 font-semibold' : 'text-muted'}`}>
                                     ✓ Contiene letras
                                 </section>
                                 <section
-                                    className={`text-xs transition-colors duration-300 ${/[0-9]/.test(formData.password) ? 'text-green-600 font-semibold' : 'text-gray-500'}`}>
+                                    className={`text-xs transition-colors duration-300 ${/[0-9]/.test(formData.password) ? 'text-green-600 font-semibold' : 'text-muted'}`}>
                                     ✓ Contiene números
                                 </section>
                                 <section
-                                    className={`text-xs transition-colors duration-300 ${formData.password.length >= 8 ? 'text-green-600 font-semibold' : 'text-gray-500'}`}>
+                                    className={`text-xs transition-colors duration-300 ${formData.password.length >= 8 ? 'text-green-600 font-semibold' : 'text-muted'}`}>
                                     ✓ Mínimo 8 caracteres
                                 </section>
                             </section>
@@ -292,7 +292,7 @@ export const SignUp = () => {
                     <section className='flex flex-col gap-2'>
                         <label
                             htmlFor='confirmPassword'
-                            className=' font-semibold text-gray-900'>
+                            className=' font-semibold text-on-surface'>
                             Confirmar Contraseña{' '}
                             <span className='text-red-500 font-bold'>*</span>
                         </label>
@@ -309,7 +309,7 @@ export const SignUp = () => {
                                     touched.confirmPassword &&
                                     errors.confirmPassword
                                         ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-                                        : 'border-gray-200 focus:border-primary-300 focus:ring-2 focus:ring-primary-300'
+                                        : 'border-divider focus:border-primary-300 focus:ring-2 focus:ring-primary-300'
                                 }`}
                             />
                             <button
@@ -339,7 +339,7 @@ export const SignUp = () => {
                     <section className='flex flex-col gap-2'>
                         <label
                             htmlFor='phone'
-                            className=' font-semibold text-gray-900'>
+                            className=' font-semibold text-on-surface'>
                             Teléfono{' '}
                             <span className='text-red-500 font-bold'>*</span>
                         </label>
@@ -354,7 +354,7 @@ export const SignUp = () => {
                             className={`px-4 py-3 border rounded-lg  transition-all duration-300 focus:outline-none ${
                                 touched.phone && errors.phone
                                     ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-                                    : 'border-gray-200 focus:border-primary-300 focus:ring-2 focus:ring-primary-300'
+                                    : 'border-divider focus:border-primary-300 focus:ring-2 focus:ring-primary-300'
                             }`}
                         />
                         {touched.phone && errors.phone && (
@@ -370,7 +370,7 @@ export const SignUp = () => {
                         Crear Cuenta
                     </button>
 
-                    <p className='text-center text-gray-600 m-0'>
+                    <p className='text-center text-on-body m-0'>
                         ¿Ya tienes cuenta?{' '}
                         <NavLink
                             to='/login'

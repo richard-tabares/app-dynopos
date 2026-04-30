@@ -26,15 +26,13 @@ export const AvgTicketCard = ({ overallAvgTicket = 0, tickets = [], showDayNames
     }
 
     return (
-        <section className='bg-white border border-gray-300 p-6 shadow-xs rounded-lg'>
+        <section className='bg-surface border border-outline p-6 shadow-xs rounded-lg'>
             <div className='flex items-start justify-between mb-6'>
                 <div className='flex items-center gap-3'>
-                    <div className='p-2 rounded-lg bg-blue-50'>
-                        <Receipt className='w-5 h-5 text-blue-600' />
-                    </div>
+                    <Receipt className='w-5 h-5 text-primary-600' />
                     <div>
-                        <h3 className='text-lg font-semibold text-gray-900'>Ticket Promedio</h3>
-                        <p className='text-sm text-gray-500'>Período seleccionado</p>
+                        <h3 className='text-lg font-semibold text-on-surface'>Ticket Promedio</h3>
+                        <p className='text-sm text-muted'>Período seleccionado</p>
                     </div>
                 </div>
                 <div className='text-right'>
@@ -52,15 +50,15 @@ export const AvgTicketCard = ({ overallAvgTicket = 0, tickets = [], showDayNames
                                     <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
                                 </linearGradient>
                             </defs>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-                            <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#6b7280' }}
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--divider)" />
+                            <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--muted)' }}
                                 tickFormatter={formatTick}
                             />
-                            <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#6b7280' }}
+                            <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--muted)' }}
                                 tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
                             />
                             <Tooltip
-                                contentStyle={{ backgroundColor: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px' }}
+                                contentStyle={{ backgroundColor: 'var(--surface)', border: '1px solid var(--outline)', borderRadius: '8px' }}
                                 formatter={(value) => [formatCurrency(value), 'Ticket Prom.']}
                             />
                             <Area type="monotone" dataKey="ticket" stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#colorTicket)" />

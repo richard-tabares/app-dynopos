@@ -110,10 +110,10 @@ export const Categories = () => {
         <>
             {/* Create/Edit Modal */}
             {showModal && (
-                <section className='fixed inset-0 bg-gray-900/50 w-full h-full flex items-center justify-center z-[70]'>
-                    <section className='bg-white rounded-lg shadow-2xl w-full max-w-md relative overflow-hidden'>
-                        <div className='p-6 border-b border-gray-100 flex items-center justify-between'>
-                            <h3 className='text-lg font-bold text-gray-900'>
+                <section className='fixed inset-0 bg-overlay w-full h-full flex items-center justify-center z-[70]'>
+                    <section className='bg-surface rounded-lg shadow-2xl w-full max-w-md relative overflow-hidden'>
+                        <div className='p-6 border-b border-divider-light flex items-center justify-between'>
+                            <h3 className='text-lg font-bold text-on-surface'>
                                 {editingCategory
                                     ? 'Editar Categoría'
                                     : 'Nueva Categoría'}
@@ -124,12 +124,12 @@ export const Categories = () => {
                                     setEditingCategory(null)
                                     setCategoryName('')
                                 }}
-                                className='p-1 hover:bg-gray-100 rounded-lg transition cursor-pointer'>
-                                <X className='w-5 h-5 text-gray-500' />
+                                className='p-1 hover:bg-hover-strong rounded-lg transition cursor-pointer'>
+                                <X className='w-5 h-5 text-muted' />
                             </button>
                         </div>
                         <div className='p-6'>
-                            <label className='block text-sm font-medium text-gray-700 mb-2'>
+                            <label className='block text-sm font-medium text-on-body mb-2'>
                                 Nombre
                             </label>
                             <input
@@ -145,7 +145,7 @@ export const Categories = () => {
                                     }
                                 }}
                                 placeholder='Nombre de la categoría'
-                                className='w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400'
+                                className='w-full border border-outline rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400'
                                 autoFocus
                             />
                         </div>
@@ -156,7 +156,7 @@ export const Categories = () => {
                                     setEditingCategory(null)
                                     setCategoryName('')
                                 }}
-                                className='flex-1 py-2.5 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition text-sm cursor-pointer'>
+                                className='flex-1 py-2.5 border border-outline text-on-body rounded-lg font-medium hover:bg-hover transition text-sm cursor-pointer'>
                                 Cancelar
                             </button>
                             <button
@@ -173,19 +173,19 @@ export const Categories = () => {
             {/* Delete Confirmation */}
             {showDeleteConfirm && (
                 <section
-                    className='fixed inset-0 bg-gray-900/50 w-full h-full flex items-center justify-center z-[70]'
+                    className='fixed inset-0 bg-overlay w-full h-full flex items-center justify-center z-[70]'
                     onClick={() => setShowDeleteConfirm(null)}>
                     <section
-                        className='bg-white rounded-lg shadow-2xl w-full max-w-sm relative overflow-hidden'
+                        className='bg-surface rounded-lg shadow-2xl w-full max-w-sm relative overflow-hidden'
                         onClick={(e) => e.stopPropagation()}>
                         <div className='p-6 text-center'>
                             <div className='mx-auto w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-4'>
                                 <Trash2 className='w-6 h-6 text-red-600' />
                             </div>
-                            <h3 className='text-lg font-bold text-gray-900 mb-2'>
+                            <h3 className='text-lg font-bold text-on-surface mb-2'>
                                 Eliminar Categoría
                             </h3>
-                            <p className='text-sm text-gray-500'>
+                            <p className='text-sm text-muted'>
                                 ¿Estás seguro de eliminar{' '}
                                 <strong>{showDeleteConfirm.name}</strong>? Esta
                                 acción no se puede deshacer.
@@ -194,7 +194,7 @@ export const Categories = () => {
                         <div className='px-6 pb-6 flex gap-3'>
                             <button
                                 onClick={() => setShowDeleteConfirm(null)}
-                                className='flex-1 py-2.5 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition text-sm cursor-pointer'>
+                                className='flex-1 py-2.5 border border-outline text-on-body rounded-lg font-medium hover:bg-hover transition text-sm cursor-pointer'>
                                 Cancelar
                             </button>
                             <button
@@ -212,43 +212,45 @@ export const Categories = () => {
                 {/* Titulo de la sección categorías */}
                 <section>
                     <h1 className='text-2xl font-bold'>Categorías</h1>
-                    <p className='text-gray-600'>
+                    <p className='text-on-body'>
                         Aquí puedes gestionar las categorías de tus productos,
                         agregar nuevas, editar las existentes y eliminar las que
                         ya no necesites.
                     </p>
                 </section>
-                <section className='bg-white border border-gray-300 shadow-xs rounded-lg'>
-                    <section className='border-b border-gray-300 flex justify-between items-center px-6 py-4 bg-gray-50/50'>
+                <section className='bg-surface border border-outline shadow-xs rounded-lg'>
+                    <section className='border-b border-outline flex justify-between items-center px-6 py-4 bg-subtle'>
                         <h2 className='text-lg font-semibold flex items-center gap-2'>
                             <Tag className='w-5 h-5 text-primary-600' />
-                            Lista de Categorías
-                            <span className='text-sm text-gray-500 font-medium'>
-                                Total ({filteredCategories.length})
+                            <span className='flex flex-col'>
+                                Lista de Categorías
+                                <span className='text-sm text-muted font-medium'>
+                                    Total ({filteredCategories.length})
+                                </span>
                             </span>
                         </h2>
                         <button
-                            className='flex items-center font-medium px-4 py-2 bg-primary-600 text-white text-sm rounded-lg hover:bg-primary-700 transition cursor-pointer'
-                            onClick={openCreateModal}>
-                            <Plus className='w-4 h-4 lg:w-5 lg:h-5 lg:mr-2' />
-                            Nueva Categoría
+                            className='flex items-center justify-center p-2 bg-primary-600 text-white text-sm rounded-lg hover:bg-primary-700 transition cursor-pointer'
+                            onClick={openCreateModal}
+                            title='Nueva Categoría'>
+                            <Plus className='w-5 h-5' />
                         </button>
                     </section>
                     <section className='p-6'>
                         <div className='relative mb-4'>
-                            <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400' />
+                            <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-faint' />
                             <input
                                 type='search'
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className='w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
+                                className='w-full border border-outline rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
                                 placeholder='Buscar categorías...'
                             />
                         </div>
                         <div className='overflow-x-auto'>
                             <table className='w-full text-sm overflow-hidden rounded-t-lg'>
                                 <thead>
-                                    <tr className='bg-gray-100 border-b border-gray-200 text-gray-500 uppercase text-xs tracking-wider'>
+                                    <tr className='bg-subtle border-b border-divider text-muted uppercase text-xs tracking-wider'>
                                         <th className='text-left py-3 px-4 font-medium'>
                                             Nombre
                                         </th>
@@ -261,11 +263,11 @@ export const Categories = () => {
                                     {filteredCategories.map((category) => (
                                         <tr
                                             key={category.id}
-                                            className='border-b border-gray-100 hover:bg-gray-50'>
+                                            className='border-b border-divider-light hover:bg-hover'>
                                             <td className='py-3 px-4'>
                                                 <div className='flex items-center gap-2'>
                                                     <Tag className='w-4 h-4 text-primary-600' />
-                                                    <span className='font-medium text-gray-900'>
+                                                    <span className='font-medium text-on-surface'>
                                                         {category.name}
                                                     </span>
                                                 </div>
@@ -276,7 +278,7 @@ export const Categories = () => {
                                                         onClick={() =>
                                                             openEditModal(category)
                                                         }
-                                                        className='hover:bg-gray-200 p-2 rounded-sm cursor-pointer'
+                                                        className='hover:bg-hover-icon p-2 rounded-sm cursor-pointer'
                                                         title='Editar Categoría'>
                                                         <Edit2 className='w-4 h-4 text-primary-600' />
                                                     </button>
@@ -299,7 +301,7 @@ export const Categories = () => {
                         </div>
                     </section>
                     {filteredCategories.length === 0 && (
-                        <div className='text-center text-gray-400 italic py-12 px-6'>
+                        <div className='text-center text-faint italic py-12 px-6'>
                             No se encontraron categorías
                         </div>
                     )}

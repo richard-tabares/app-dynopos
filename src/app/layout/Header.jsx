@@ -1,4 +1,4 @@
-import { Bell, Menu } from 'lucide-react'
+import { Bell, Menu, Sun, Moon } from 'lucide-react'
 import { useStore } from '../providers/store'
 import { useLocation } from 'react-router'
 
@@ -15,6 +15,8 @@ const pageInfo = [
 export const Header = ({ todayRevenue = 0 }) => {
     const setIsMobile = useStore((state) => state.setIsMobile)
     const isCollapsed = useStore((state) => state.isCollapsed)
+    const isDarkMode = useStore((state) => state.isDarkMode)
+    const toggleDarkMode = useStore((state) => state.toggleDarkMode)
     const location = useLocation()
 
     const currentPage = pageInfo.find(info => location.pathname.startsWith(info.path))
@@ -27,12 +29,12 @@ export const Header = ({ todayRevenue = 0 }) => {
         }).format(value)
 
     return (
-        <header className={`fixed bg-white top-0 h-16 border-b border-gray-300 right-0 z-50 transition-all duration-300 
+        <header className={`fixed bg-surface top-0 h-16 border-b border-outline right-0 z-50 transition-all duration-300 
             ${isCollapsed ? 'left-20' : 'left-64'}
             max-lg:left-0 max-lg:w-full`}>
             <section className='flex items-center h-full justify-between px-4 gap-4'>
                 <button
-                    className='p-2 rounded-lg cursor-pointer hidden max-lg:block hover:bg-gray-200'
+                    className='p-2 rounded-lg cursor-pointer hidden max-lg:block hover:bg-hover-icon'
                     onClick={() => setIsMobile(true)}>
                     <Menu className='w-5 h-5 visible' />
                 </button>
@@ -40,7 +42,7 @@ export const Header = ({ todayRevenue = 0 }) => {
                 {/* Page title and description */}
                 <section className='flex-1'>
                     <h1 className='text-xl font-bold'>{title}</h1>
-                    <p className='text-gray-500 text-sm max-sm:hidden'>
+                    <p className='text-muted text-sm max-sm:hidden'>
                         {description}
                     </p>
                 </section>
@@ -48,13 +50,16 @@ export const Header = ({ todayRevenue = 0 }) => {
                 <section className='flex items-center gap-6'>
                     {/* stats */}
                     <section className='text-right max-sm:hidden'>
-                        <p className='text-xs text-gray-500'>Ventas hoy</p>
+                        <p className='text-xs text-muted'>Ventas hoy</p>
                         <p className='text-lg font-bold text-green-600'>${formatCurrency(todayRevenue)}</p>
                     </section>
 
                     {/* notifications */}
-                    <section className='p-2 text-gray-600 hover:bg-gray-200 rounded-lg cursor-pointer'>
+                    <section className='p-2 text-on-body hover:bg-hover-icon rounded-lg cursor-pointer hidden'>
                         <Bell className='w-5 h-5' />
+                    </section>
+                    <section className='p-2 text-on-body hover:bg-hover-icon rounded-lg cursor-pointer' onClick={toggleDarkMode}>
+                        {isDarkMode ? <Sun className='w-5 h-5' /> : <Moon className='w-5 h-5' />}
                     </section>
                 </section>
             </section>

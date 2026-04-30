@@ -13,18 +13,18 @@ export const ProductCard = ({ product }) => {
         <button
             onClick={() => addToCart(product)}
             disabled={!noStockControl && availableStock <= 0}
-            className={`bg-white p-4 rounded-lg border transition-all flex items-center justify-between group ${
+            className={`bg-surface p-4 rounded-lg border transition-all flex items-center justify-between group ${
                 !noStockControl && availableStock <= 0
-                    ? 'border-gray-200 opacity-50 cursor-not-allowed bg-gray-50 grayscale' 
-                    : 'border-gray-200 hover:border-primary-400 cursor-pointer'
+                    ? 'border-divider opacity-50 cursor-not-allowed bg-subtle grayscale' 
+                    : 'border-divider hover:border-primary-400 cursor-pointer'
             }`}
         >
             <div className='flex items-center gap-4'>
                 <div className='text-left'>
-                    <h3 className='font-semibold text-gray-900 text-base group-hover:text-primary-600 transition-colors line-clamp-1'>
+                    <h3 className='font-semibold text-on-surface text-base group-hover:text-primary-600 transition-colors line-clamp-1'>
                         {product.name}
                     </h3>
-                    <p className='text-xs text-gray-500 mt-0.5'>
+                    <p className='text-xs text-muted mt-0.5'>
                         {product.categories?.name || 'Sin categoría'}
                     </p>
                 </div>
@@ -32,7 +32,7 @@ export const ProductCard = ({ product }) => {
             
             <div className='flex items-center gap-4'>
                 <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-                    noStockControl ? 'bg-gray-100 text-gray-600' : availableStock <= 0 ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
+                    noStockControl ? 'bg-subtle text-on-body' : availableStock <= 0 ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
                 }`}>
                     {noStockControl ? 'Sin control' : availableStock <= 0 ? 'Sin Stock' : `Stock: ${availableStock}`}
                 </span>

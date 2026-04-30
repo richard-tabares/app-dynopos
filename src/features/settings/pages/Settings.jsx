@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { Store, Shield, Receipt, Bell, Save, Loader } from 'lucide-react'
+import { Store, Shield, Receipt, Bell, Save, Loader, Palette } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { useStore } from '../../../app/providers/store'
 import { updateBusiness } from '../helpers/updateBusiness'
@@ -8,7 +8,7 @@ import { uploadLogo } from '../helpers/uploadLogo'
 import { changePassword } from '../helpers/changePassword'
 
 export const Settings = () => {
-    const { user, setBusiness, setLogOut } = useStore()
+    const { user, setBusiness, setLogOut, isDarkMode, toggleDarkMode } = useStore()
     const navigate = useNavigate()
     const businessId = user?.data?.user?.id
 
@@ -45,6 +45,10 @@ export const Settings = () => {
             setLogoPreview(b.business_logo || '')
         }
     }, [user?.business])
+
+    useEffect(() => {
+        document.documentElement.classList.toggle('dark', isDarkMode)
+    }, [isDarkMode])
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target
@@ -141,12 +145,12 @@ export const Settings = () => {
         <section className='flex flex-col gap-6'>
             <section>
                 <h1 className='text-2xl font-bold'>Configuraciones</h1>
-                <p className='text-gray-600'>Ajusta la configuración de tu negocio</p>
+                <p className='text-on-body'>Ajusta la configuración de tu negocio</p>
             </section>
 
             {/* Card 1: Información de la Tienda */}
-            <section className='bg-white border border-gray-300 shadow-sm rounded-lg'>
-                <div className='px-6 py-4 border-b border-gray-200 bg-gray-50/50'>
+            <section className='bg-surface border border-outline shadow-sm rounded-lg'>
+                <div className='px-6 py-4 border-b border-divider bg-body/50'>
                     <h2 className='text-lg font-semibold flex items-center gap-2'>
                         <Store className='w-5 h-5 text-primary-600' />
                         Información de la Tienda
@@ -154,17 +158,17 @@ export const Settings = () => {
                 </div>
                 <div className='p-6'>
                     <div className='flex items-center gap-6 mb-6'>
-                        <div className='relative w-20 h-20 rounded-full overflow-hidden bg-gray-100 border border-gray-300 flex-shrink-0'>
+                        <div className='relative w-20 h-20 rounded-full overflow-hidden bg-subtle border border-outline flex-shrink-0'>
                             {logoPreview ? (
                                 <img src={logoPreview} alt='Logo' className='w-full h-full object-cover' />
                             ) : (
-                                <div className='w-full h-full flex items-center justify-center text-gray-400'>
+                                <div className='w-full h-full flex items-center justify-center text-faint'>
                                     <Store className='w-8 h-8' />
                                 </div>
                             )}
                         </div>
                         <div>
-                            <label className='cursor-pointer inline-flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition font-medium'>
+                            <label className='cursor-pointer inline-flex items-center gap-2 px-4 py-2 border border-outline text-on-body text-sm rounded-lg hover:bg-hover transition font-medium'>
                                 <input
                                     type='file'
                                     accept='image/*'
@@ -173,49 +177,49 @@ export const Settings = () => {
                                 />
                                 {uploadingLogo ? 'Subiendo...' : 'Cambiar Logo'}
                             </label>
-                            <p className='text-xs text-gray-500 mt-1'>PNG, JPG. Tamaño recomendado: 256x256px</p>
+                            <p className='text-xs text-muted mt-1'>PNG, JPG. Tamaño recomendado: 256x256px</p>
                         </div>
                     </div>
                     <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                         <section>
-                            <label className='block text-sm font-medium text-gray-700 mb-1'>Nombre del Negocio</label>
+                            <label className='block text-sm font-medium text-on-body mb-1'>Nombre del Negocio</label>
                             <input
                                 type='text'
                                 name='business_name'
                                 value={formData.business_name}
                                 onChange={handleChange}
-                                className='w-full px-4 py-2 border border-gray-300 rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                                className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
                             />
                         </section>
                         <section>
-                            <label className='block text-sm font-medium text-gray-700 mb-1'>Dueño / Propietario</label>
+                            <label className='block text-sm font-medium text-on-body mb-1'>Dueño / Propietario</label>
                             <input
                                 type='text'
                                 name='owner_name'
                                 value={formData.owner_name}
                                 onChange={handleChange}
-                                className='w-full px-4 py-2 border border-gray-300 rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                                className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
                             />
                         </section>
                         <section>
-                            <label className='block text-sm font-medium text-gray-700 mb-1'>Correo Electrónico</label>
+                            <label className='block text-sm font-medium text-on-body mb-1'>Correo Electrónico</label>
                             <input
                                 type='email'
                                 name='email'
                                 value={formData.email}
                                 onChange={handleChange}
                                 disabled
-                                className='w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                                className='w-full px-4 py-2 border border-outline rounded-lg bg-body text-muted cursor-not-allowed duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
                             />
                         </section>
                         <section>
-                            <label className='block text-sm font-medium text-gray-700 mb-1'>Teléfono</label>
+                            <label className='block text-sm font-medium text-on-body mb-1'>Teléfono</label>
                             <input
                                 type='tel'
                                 name='phone'
                                 value={formData.phone}
                                 onChange={handleChange}
-                                className='w-full px-4 py-2 border border-gray-300 rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                                className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
                             />
                         </section>
                     </div>
@@ -223,8 +227,8 @@ export const Settings = () => {
             </section>
 
             {/* Card 2: Seguridad */}
-            <section className='bg-white border border-gray-300 shadow-sm rounded-lg'>
-                <div className='px-6 py-4 border-b border-gray-200 bg-gray-50/50'>
+            <section className='bg-surface border border-outline shadow-sm rounded-lg'>
+                <div className='px-6 py-4 border-b border-divider bg-body/50'>
                     <h2 className='text-lg font-semibold flex items-center gap-2'>
                         <Shield className='w-5 h-5 text-primary-600' />
                         Seguridad
@@ -233,36 +237,36 @@ export const Settings = () => {
                 <div className='p-6'>
                     <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
                         <section>
-                            <label className='block text-sm font-medium text-gray-700 mb-1'>Contraseña Actual</label>
+                            <label className='block text-sm font-medium text-on-body mb-1'>Contraseña Actual</label>
                             <input
                                 type='password'
                                 name='currentPassword'
                                 value={passwordData.currentPassword}
                                 onChange={handlePasswordChange}
                                 placeholder='••••••••'
-                                className='w-full px-4 py-2 border border-gray-300 rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                                className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
                             />
                         </section>
                         <section>
-                            <label className='block text-sm font-medium text-gray-700 mb-1'>Nueva Contraseña</label>
+                            <label className='block text-sm font-medium text-on-body mb-1'>Nueva Contraseña</label>
                             <input
                                 type='password'
                                 name='newPassword'
                                 value={passwordData.newPassword}
                                 onChange={handlePasswordChange}
                                 placeholder='••••••••'
-                                className='w-full px-4 py-2 border border-gray-300 rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                                className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
                             />
                         </section>
                         <section>
-                            <label className='block text-sm font-medium text-gray-700 mb-1'>Confirmar Contraseña</label>
+                            <label className='block text-sm font-medium text-on-body mb-1'>Confirmar Contraseña</label>
                             <input
                                 type='password'
                                 name='confirmPassword'
                                 value={passwordData.confirmPassword}
                                 onChange={handlePasswordChange}
                                 placeholder='••••••••'
-                                className='w-full px-4 py-2 border border-gray-300 rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                                className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
                             />
                         </section>
                     </div>
@@ -278,31 +282,60 @@ export const Settings = () => {
                 </div>
             </section>
 
-            {/* Card 3: Recibos */}
-            <section className='bg-white border border-gray-300 shadow-sm rounded-lg'>
-                <div className='px-6 py-4 border-b border-gray-200 bg-gray-50/50'>
-                    <h2 className='text-lg font-semibold flex items-center gap-2'>
-                        <Receipt className='w-5 h-5 text-primary-600' />
-                        Recibos
-                    </h2>
-                </div>
-                <div className='p-6'>
-                    <label className='block text-sm font-medium text-gray-700 mb-1'>Mensaje de pie de página del ticket</label>
-                    <textarea
-                        name='ticket_footer'
-                        value={formData.ticket_footer}
-                        onChange={handleChange}
-                        rows={3}
-                        placeholder='¡Gracias por tu compra!'
-                        className='w-full px-4 py-2 border border-gray-300 rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0 resize-none'
-                    />
-                    <p className='text-xs text-gray-500 mt-1'>Este mensaje aparecerá al final de cada ticket de venta.</p>
-                </div>
-            </section>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                {/* Card: Apariencia */}
+                <section className='bg-surface border border-outline shadow-sm rounded-lg'>
+                    <div className='px-6 py-4 border-b border-divider bg-body/50'>
+                        <h2 className='text-lg font-semibold flex items-center gap-2'>
+                            <Palette className='w-5 h-5 text-primary-600' />
+                            Apariencia
+                        </h2>
+                    </div>
+                    <div className='p-6'>
+                        <div className='flex items-center justify-between'>
+                            <div>
+                                <p className='text-on-body font-medium'>Modo Oscuro</p>
+                                <p className='text-muted text-sm'>Activa el modo oscuro para reducir la fatiga visual</p>
+                            </div>
+                            <label className='relative inline-flex items-center cursor-pointer'>
+                                <input
+                                    type='checkbox'
+                                    className='sr-only peer'
+                                    checked={isDarkMode}
+                                    onChange={toggleDarkMode}
+                                />
+                                <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
+                            </label>
+                        </div>
+                    </div>
+                </section>
 
-            {/* Card 4: Notificaciones */}
-            <section className='bg-white border border-gray-300 shadow-sm rounded-lg'>
-                <div className='px-6 py-4 border-b border-gray-200 bg-gray-50/50'>
+                {/* Card 3: Recibos */}
+                <section className='bg-surface border border-outline shadow-sm rounded-lg'>
+                    <div className='px-6 py-4 border-b border-divider bg-body/50'>
+                        <h2 className='text-lg font-semibold flex items-center gap-2'>
+                            <Receipt className='w-5 h-5 text-primary-600' />
+                            Recibos
+                        </h2>
+                    </div>
+                    <div className='p-6'>
+                        <label className='block text-sm font-medium text-on-body mb-1'>Mensaje de pie de página del ticket</label>
+                        <textarea
+                            name='ticket_footer'
+                            value={formData.ticket_footer}
+                            onChange={handleChange}
+                            rows={3}
+                            placeholder='¡Gracias por tu compra!'
+                            className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0 resize-none'
+                        />
+                        <p className='text-xs text-muted mt-1'>Este mensaje aparecerá al final de cada ticket de venta.</p>
+                    </div>
+                </section>
+            </div>
+
+            {/* Card: Notificaciones */}
+            <section className='bg-surface border border-outline shadow-sm rounded-lg'>
+                <div className='px-6 py-4 border-b border-divider bg-body/50'>
                     <h2 className='text-lg font-semibold flex items-center gap-2'>
                         <Bell className='w-5 h-5 text-primary-600' />
                         Notificaciones
@@ -315,9 +348,9 @@ export const Settings = () => {
                             name='low_stock_notifications'
                             checked={formData.low_stock_notifications}
                             onChange={handleChange}
-                            className='w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500 cursor-pointer'
+                            className='w-4 h-4 text-primary-600 border-outline rounded focus:ring-primary-500 cursor-pointer'
                         />
-                        <span className='text-sm text-gray-700'>
+                        <span className='text-sm text-on-body'>
                             Activar correo de notificación cuando un producto tenga stock bajo
                         </span>
                     </label>
