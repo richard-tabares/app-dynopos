@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Search, TrendingUp, Package, X } from 'lucide-react'
+import { Search, TrendingUp, Package } from 'lucide-react'
 import { useStore } from '../../../app/providers/store'
 import { getReports } from '../helpers/getReports'
 
@@ -53,7 +53,7 @@ export const ProductPerformanceSearch = () => {
                 <div className='relative flex-1'>
                     <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-faint' />
                     <input
-                        type='text'
+                        type='search'
                         value={search}
                         onChange={(e) => {
                             setSearch(e.target.value)
@@ -61,16 +61,8 @@ export const ProductPerformanceSearch = () => {
                         }}
                         onKeyDown={handleKeyDown}
                         placeholder='Nombre o SKU...'
-                        className='w-full border border-outline rounded-lg pl-10 pr-10 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
+                        className='w-full border border-outline rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
                     />
-                    {search && (
-                        <button
-                            onClick={() => { setSearch(''); setResults(null) }}
-                            className='absolute right-3 top-1/2 -translate-y-1/2 text-faint hover:text-on-body cursor-pointer'
-                        >
-                            <X className='w-4 h-4' />
-                        </button>
-                    )}
                 </div>
             </div>
 
