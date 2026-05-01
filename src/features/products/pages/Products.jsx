@@ -620,14 +620,14 @@ export const Products = () => {
                                             )}
                                         </td>
                                         <td className='py-3 px-2 text-right whitespace-nowrap'>
-                                            <section className='hidden sm:flex items-center justify-end gap-1'>
+                                            <section className='hidden sm:flex items-center justify-end gap-3'>
                                                 <button
                                                     onClick={() =>
                                                         onEditProduct(
                                                             product.id,
                                                         )
                                                     }
-                                                    className='hover:bg-hover-icon p-1.5 rounded-sm cursor-pointer'
+                                                    className='bg-gray-100 dark:bg-gray-700 hover:bg-hover-strong p-1.5 rounded-sm cursor-pointer'
                                                     title='Editar Producto'>
                                                     <Edit2 className='w-4 h-4 text-primary-600' />
                                                 </button>
@@ -637,7 +637,7 @@ export const Products = () => {
                                                             product.id,
                                                         )
                                                     }
-                                                    className='hover:bg-red-700 bg-red-600 text-white p-1.5 rounded-sm cursor-pointer'
+                                                    className='hover:bg-red-500 bg-red-400 text-white p-1.5 rounded-sm cursor-pointer'
                                                     title='Eliminar Producto'>
                                                     <Trash2 className='w-4 h-4' />
                                                 </button>
