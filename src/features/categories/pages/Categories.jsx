@@ -273,12 +273,12 @@ export const Categories = () => {
                                                 </div>
                                             </td>
                                             <td className='py-3 px-4 text-right'>
-                                                <section className='flex items-center justify-end gap-2'>
+                                                <section className='flex items-center justify-end gap-3'>
                                                     <button
                                                         onClick={() =>
                                                             openEditModal(category)
                                                         }
-                                                        className='bg-gray-100 dark:bg-gray-700 hover:bg-hover-icon p-2 rounded-sm cursor-pointer'
+                                                        className='bg-gray-100 dark:bg-gray-700 hover:bg-hover-strong p-1.5 rounded-sm cursor-pointer'
                                                         title='Editar Categoría'>
                                                         <Edit2 className='w-4 h-4 text-primary-600' />
                                                     </button>
@@ -288,7 +288,7 @@ export const Categories = () => {
                                                                 category,
                                                             )
                                                         }
-                                                        className='hover:bg-red-500 bg-red-400 text-white p-2 rounded-sm cursor-pointer'
+                                                        className='hover:bg-red-500 bg-red-400 text-white p-1.5 rounded-sm cursor-pointer'
                                                         title='Eliminar Categoría'>
                                                         <Trash2 className='w-4 h-4' />
                                                     </button>
