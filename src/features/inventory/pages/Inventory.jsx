@@ -252,9 +252,9 @@ export const Inventory = () => {
                                                     onClick={() =>
                                                         handleOpenModal(product)
                                                     }
-                                                    className='hover:bg-hover-icon p-1.5 rounded-sm cursor-pointer text-primary-600'
+                                                    className='bg-gray-100 dark:bg-gray-700 hover:bg-hover-strong p-1.5 rounded-sm cursor-pointer'
                                                     title='Ajustar Inventario'>
-                                                    <Settings2 className='w-4 h-4' />
+                                                    <Settings2 className='w-4 h-4 text-primary-600' />
                                                 </button>
                                             </td>
                                         </tr>
