@@ -16,6 +16,5 @@ Con base en los cambios detectados:
 2. Genera un mensaje en español siguiendo el formato: `tipo: descripción breve en minúsculas`
 3. Usa `git log --oneline -5` como referencia del estilo de commits del proyecto
 4. AGREGA todos los archivos al staging con `git add .`
-5. Haz un solo commit con resumen de los cambios
 5. HAZ el commit con `git commit -m "mensaje"`
 6. NO hagas push bajo ninguna circunstancia
