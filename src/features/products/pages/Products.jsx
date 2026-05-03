@@ -26,7 +26,7 @@ import { useStore } from '../../../app/providers/store'
 import { useNavigate } from 'react-router'
 import { deleteProduct } from '../helpers/deleteProduct'
 import { editProduct } from '../helpers/editProduct'
-import { getProductById } from '../helpers/getProductById'
+
 import { getCategories } from '../../categories/helpers/getCategories'
 import { createCategory } from '../../categories/helpers/createCategory'
 import { useEscape } from '../../../shared/helpers/useEscape'
@@ -193,12 +193,10 @@ export const Products = () => {
             setProductToDelete(null)
         }
     }
-    const onEditProduct = async (productId) => {
-        // Lógica para editar el producto
-        const product = await getProductById(productId)
-        setEditProductData(product)
+    const onEditProduct = (productId) => {
+        const product = products.find(p => p.id === productId)
         if (product) {
-            // setFormData(product)
+            setEditProductData(product)
             setOpenModal(true)
         }
     }

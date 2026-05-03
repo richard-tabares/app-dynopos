@@ -24,6 +24,7 @@ export const Modal = ({
     })
 
     const isFormValid = formData.sku.trim() && formData.name.trim() && Number(formData.price) > 0
+    const [submitting, setSubmitting] = useState(false)
 
     useEscape(handleOpenModal)
 
@@ -39,8 +40,9 @@ export const Modal = ({
         }))
     }
 
-    const handleFormSubmit = (e) => {
+    const handleFormSubmit = async (e) => {
         e.preventDefault()
+        setSubmitting(true)
 
         const skuDuplicate = products.some(
             (p) =>
@@ -50,16 +52,18 @@ export const Modal = ({
 
         if (skuDuplicate) {
             toast.error('Ya existe un producto con este SKU')
+            setSubmitting(false)
             return
         }
 
         const businessId = JSON.parse(localStorage.getItem('dynopos-store'))
             .state.user.data.user.id
-        handleSubmit({
+        await handleSubmit({
             ...formData,
             business_id: businessId,
             id: editProductData.id || undefined,
         })
+        setSubmitting(false)
     }
 
     return (
@@ -178,9 +182,11 @@ export const Modal = ({
                         </button>
                         <button
                             type='submit'
-                            disabled={!isFormValid}
+                            disabled={!isFormValid || submitting}
                             className='px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'>
-                            {editProductData.id ? 'Actualizar' : 'Guardar'}
+                            {submitting
+                                ? editProductData.id ? 'Actualizando...' : 'Guardando...'
+                                : editProductData.id ? 'Actualizar' : 'Guardar'}
                         </button>
                     </section>
                 </form>

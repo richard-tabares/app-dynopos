@@ -30,9 +30,13 @@ export const Inventory = () => {
         loadInventory()
     }, [businessId, setProducts])
 
-    const activeProducts = products.filter(p => p.is_active !== false && p.track_stock !== false)
+    const activeProducts = products.filter(p => p.is_active !== false)
 
-    const noStockControlProducts = products.filter(p => p.is_active !== false && p.track_stock === false)
+    const getStockStatus = (stock, minStock) => {
+        if (stock <= 0) return { label: 'Sin Stock', cls: 'text-red-600 bg-red-100', icon: true }
+        if (minStock > 0 && stock < minStock) return { label: 'Bajo', cls: 'text-orange-600 bg-orange-100', icon: true }
+        return { label: 'Normal', cls: 'text-green-600 bg-green-100', icon: false }
+    }
 
     const filteredProducts = activeProducts.filter((product) => {
         const matchesSearch =
@@ -43,12 +47,14 @@ export const Inventory = () => {
         const minStock = product.inventory?.[0]?.min_stock || 0
 
         let matchesFilter = true
-        if (filterStatus === 'lowStock') {
-            matchesFilter = stock <= minStock
+        if (filterStatus === 'noStockControl') {
+            matchesFilter = product.track_stock === false
         } else if (filterStatus === 'noStock') {
-            matchesFilter = stock === 0
+            matchesFilter = product.track_stock !== false && stock === 0
+        } else if (filterStatus === 'lowStock') {
+            matchesFilter = product.track_stock !== false && stock > 0 && minStock > 0 && stock < minStock
         } else if (filterStatus === 'withStock') {
-            matchesFilter = stock > 0
+            matchesFilter = product.track_stock !== false && stock > 0 && (minStock === 0 || stock >= minStock)
         }
 
         return matchesSearch && matchesFilter
@@ -89,9 +95,7 @@ export const Inventory = () => {
         setVisibleCount((prev) => prev + 10)
     }
 
-    const headers = filterStatus === 'noStockControl'
-        ? ['Código', 'Producto', 'Categoría']
-        : ['Código', 'Producto', 'Categoría', 'Stock', 'Mínimo', 'Estado', 'Acciones']
+    const headers = ['Código', 'Producto', 'Categoría', 'Stock', 'Mínimo', 'Estado', 'Acciones']
 
     return (
         <>
@@ -204,29 +208,15 @@ export const Inventory = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {(filterStatus === 'noStockControl' ? noStockControlProducts : displayedProducts).map((product) => {
+                                {displayedProducts.map((product) => {
                                     const stock =
                                         product.inventory?.[0]?.stock || 0
                                     const minStock =
                                         product.inventory?.[0]?.min_stock || 0
-                                    const isLowStock = stock <= minStock
+                                    const isUntracked = product.track_stock === false
+                                    const status = getStockStatus(stock, minStock)
 
-                                    return filterStatus === 'noStockControl' ? (
-                                        <tr
-                                            key={product.id}
-                                            className='border-b border-divider-light hover:bg-hover'>
-                                            <td className='py-3 px-4 font-medium text-on-surface'>
-                                                {product.sku}
-                                            </td>
-                                            <td className='py-3 px-4 text-on-body'>
-                                                {product.name}
-                                            </td>
-                                            <td className='py-3 px-4 text-muted'>
-                                                {product.categories?.name ||
-                                                    'Sin categoría'}
-                                            </td>
-                                        </tr>
-                                    ) : (
+                                    return (
                                         <tr
                                             key={product.id}
                                             className='border-b border-divider-light hover:bg-hover'>
@@ -241,33 +231,35 @@ export const Inventory = () => {
                                                     'Sin categoría'}
                                             </td>
                                             <td
-                                                className={`py-3 px-4 text-right font-bold ${isLowStock ? 'text-red-600' : 'text-on-body'}`}>
-                                                {stock}
+                                                className={`py-3 px-4 text-right font-bold ${isUntracked ? 'text-muted' : status.label === 'Normal' ? 'text-on-body' : 'text-red-600'}`}>
+                                                {isUntracked ? '—' : stock}
                                             </td>
                                             <td className='py-3 px-4 text-right text-muted'>
-                                                {minStock}
+                                                {isUntracked ? '—' : minStock}
                                             </td>
                                             <td className='py-3 px-4'>
-                                                {isLowStock ? (
-                                                    <span className='inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800'>
-                                                        <AlertCircle className='w-3 h-3' />
-                                                        Bajo
+                                                {isUntracked ? (
+                                                    <span className='inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-body text-muted'>
+                                                        Sin Control
                                                     </span>
                                                 ) : (
-                                                    <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800'>
-                                                        Normal
+                                                    <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${status.cls}`}>
+                                                        {status.icon && <AlertCircle className='w-3 h-3' />}
+                                                        {status.label}
                                                     </span>
                                                 )}
                                             </td>
                                             <td className='py-3 px-2 text-right whitespace-nowrap'>
-                                                <button
-                                                    onClick={() =>
-                                                        handleOpenModal(product)
-                                                    }
-                                                    className='bg-gray-100 dark:bg-gray-700 hover:bg-hover-strong p-1.5 rounded-sm cursor-pointer'
-                                                    title='Ajustar Inventario'>
-                                                    <Settings2 className='w-4 h-4 text-primary-600' />
-                                                </button>
+                                                {!isUntracked && (
+                                                    <button
+                                                        onClick={() =>
+                                                            handleOpenModal(product)
+                                                        }
+                                                        className='bg-gray-100 dark:bg-gray-700 hover:bg-hover-strong p-1.5 rounded-sm cursor-pointer'
+                                                        title='Ajustar Inventario'>
+                                                        <Settings2 className='w-4 h-4 text-primary-600' />
+                                                    </button>
+                                                )}
                                             </td>
                                         </tr>
                                     )
@@ -276,7 +268,7 @@ export const Inventory = () => {
                         </table>
                     </div>
 
-                    {filterStatus !== 'noStockControl' && visibleCount < filteredProducts.length && (
+                    {visibleCount < filteredProducts.length && (
                         <button
                             onClick={handleLoadMore}
                             className='w-full mt-4 py-2 text-sm font-medium text-primary-600 hover:bg-primary-50 rounded-lg transition cursor-pointer px-6'>
@@ -284,13 +276,7 @@ export const Inventory = () => {
                         </button>
                     )}
 
-                    {filterStatus === 'noStockControl' ? (
-                        noStockControlProducts.length === 0 && (
-                            <div className='text-center text-faint italic py-12 px-6'>
-                                No hay productos sin control de stock
-                            </div>
-                        )
-                    ) : filteredProducts.length === 0 && (
+                    {filteredProducts.length === 0 && (
                         <div className='text-center text-faint italic py-12 px-6'>
                             No se encontraron productos
                         </div>

@@ -1,9 +1,10 @@
 import { useState, useMemo } from 'react'
-import { Search, AlertTriangle, PackageCheck, Package, ClipboardList } from 'lucide-react'
+import { Search, AlertTriangle, PackageCheck, Package, PackageX, ClipboardList } from 'lucide-react'
 
 const statusConfig = {
-    stock_bajo: { label: 'Stock Bajo', color: 'text-red-600', bg: 'bg-red-50' },
-    con_stock: { label: 'Con Stock', color: 'text-emerald-600', bg: 'bg-emerald-50' },
+    sin_stock: { label: 'Sin Stock', color: 'text-red-600', bg: 'bg-red-50' },
+    stock_bajo: { label: 'Bajo', color: 'text-orange-600', bg: 'bg-orange-50' },
+    con_stock: { label: 'Normal', color: 'text-emerald-600', bg: 'bg-emerald-50' },
     sin_control: { label: 'Sin Control', color: 'text-on-body', bg: 'bg-body' },
 }
 
