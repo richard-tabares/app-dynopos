@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Package, Search, AlertCircle, Settings2, AlertTriangle, PackageCheck, Layers } from 'lucide-react'
+import { Package, Search, AlertCircle, Settings2, AlertTriangle, PackageCheck, PackageX, Layers } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { useStore } from '../../../app/providers/store'
 import { getProducts } from '../../products/helpers/getProducts'
@@ -45,6 +45,8 @@ export const Inventory = () => {
         let matchesFilter = true
         if (filterStatus === 'lowStock') {
             matchesFilter = stock <= minStock
+        } else if (filterStatus === 'noStock') {
+            matchesFilter = stock === 0
         } else if (filterStatus === 'withStock') {
             matchesFilter = stock > 0
         }
@@ -144,6 +146,16 @@ export const Inventory = () => {
                                 }`}>
                                 <Layers className='w-4 h-4 text-primary-600' />
                                 Todos
+                            </button>
+                            <button
+                                onClick={() => setFilterStatus('noStock')}
+                                className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer ${
+                                    filterStatus === 'noStock'
+                                        ? 'bg-surface shadow-xs text-on-surface'
+                                        : 'text-muted hover:text-on-body hover:bg-hover'
+                                }`}>
+                                <PackageX className='w-4 h-4 text-red-500' />
+                                Sin Stock
                             </button>
                             <button
                                 onClick={() => setFilterStatus('lowStock')}
