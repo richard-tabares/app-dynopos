@@ -19,10 +19,9 @@ export const Sales = () => {
     const [searchTerm, setSearchTerm] = useState('')
     const [activeCategory, setActiveCategory] = useState('all')
     const [loading, setLoading] = useState(false)
+    const [, setLastSaleTicket] = useState(null)
     const [showConfirmationModal, setShowConfirmationModal] = useState(false)
     const [saleSummaryData, setSaleSummaryData] = useState(null)
-    const [lastSaleTicket, setLastSaleTicket] = useState(null)
-    const [showTicketModal, setShowTicketModal] = useState(false)
 
     const [salesList, setSalesList] = useState([])
 

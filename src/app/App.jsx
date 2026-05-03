@@ -6,9 +6,9 @@ import { Sales } from '../features/sales/pages/Sales'
 import { Categories } from '../features/categories/pages/Categories'
 import { Inventory } from '../features/inventory/pages/Inventory'
 import { Reports } from '../features/reports/pages/Reports'
-import { SalesReports } from '../features/reports/pages/SalesReports'
-import { InventoryReports } from '../features/reports/pages/InventoryReports'
-import { AdminReports } from '../features/reports/pages/AdminReports'
+import { SalesReports } from '../features/reports/ventas/pages/SalesReports'
+import { InventoryReports } from '../features/reports/inventario/pages/InventoryReports'
+import { DevolucionesReports } from '../features/reports/devoluciones/pages/DevolucionesReports'
 import { Settings } from '../features/settings/pages/Settings'
 import { Login } from '../features/auth/components/Login'
 import { SignUp } from '../features/auth/components/SignUp'
@@ -91,7 +91,7 @@ export const App = () => {
                                 <Route index element={<Navigate to='ventas' replace />} />
                                 <Route path='ventas' element={<SalesReports />} />
                                 <Route path='inventario' element={<InventoryReports />} />
-                                <Route path='administrativos' element={<AdminReports />} />
+                                <Route path='devoluciones' element={<DevolucionesReports />} />
                             </Route>
                             <Route
                                 path='/settings'

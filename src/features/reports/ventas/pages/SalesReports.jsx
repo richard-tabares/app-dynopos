@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
-import { DateRangeFilter } from '../components/DateRangeFilter'
+import { DateRangeFilter } from '../../shared/components/DateRangeFilter'
 import { SalesLineChart } from '../components/SalesLineChart'
 import { SalesCountChart } from '../components/SalesCountChart'
 import { PaymentPieChart } from '../components/PaymentPieChart'
@@ -7,10 +7,10 @@ import { CategorySalesTable } from '../components/CategorySalesTable'
 import { TopBottomProducts } from '../components/TopBottomProducts'
 import { ProductPerformanceSearch } from '../components/ProductPerformanceSearch'
 import { AvgTicketCard } from '../components/AvgTicketCard'
-import { RecentSalesCard } from '../../dashboard/components/RecentSalesCard'
-import { ReportSkeletons } from '../components/ReportsSkeletons'
-import { getReports } from '../helpers/getReports'
-import { useStore } from '../../../app/providers/store'
+import { RecentSalesCard } from '../../../dashboard/components/RecentSalesCard'
+import { ReportSkeletons } from '../../shared/components/ReportsSkeletons'
+import { getReports } from '../../shared/helpers/getReports'
+import { useStore } from '../../../../app/providers/store'
 
 const computeDates = (filter) => {
     const now = new Date()

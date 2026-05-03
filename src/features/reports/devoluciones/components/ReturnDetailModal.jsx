@@ -1,6 +1,6 @@
 import { X, Undo2 } from 'lucide-react'
-import { useStore } from '../../../app/providers/store'
-import { useEscape } from '../../../shared/helpers/useEscape'
+import { useStore } from '../../../../app/providers/store'
+import { useEscape } from '../../../../shared/helpers/useEscape'
 
 const formatCurrency = (value) =>
     new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(value)

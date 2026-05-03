@@ -94,7 +94,7 @@ export const Products = () => {
                 setProducts(products)
                 const categories = await getCategories(businessId)
                 setCategories(categories)
-            } catch (error) {
+            } catch {
                 setProducts([])
                 setCategories([])
             }

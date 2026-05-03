@@ -12,7 +12,7 @@ import {
     PanelLeftOpen,
     PanelLeftClose,
     ChevronDown,
-    FileText,
+    Undo2,
     Warehouse
 } from 'lucide-react'
 import { useNavigate, NavLink, useLocation } from 'react-router'
@@ -45,7 +45,7 @@ export const SideBar = () => {
     const reportSubItems = [
         { id: 'ventas', label: 'Ventas', icon: ShoppingCart, path: '/reports/ventas' },
         { id: 'inventario', label: 'Inventario', icon: Warehouse, path: '/reports/inventario' },
-        { id: 'administrativos', label: 'Administrativos', icon: FileText, path: '/reports/administrativos' },
+        { id: 'devoluciones', label: 'Devoluciones', icon: Undo2, path: '/reports/devoluciones' },
     ]
 
     const menuItems = [

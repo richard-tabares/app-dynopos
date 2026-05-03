@@ -1,12 +1,12 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
-import { DateRangeFilter } from '../components/DateRangeFilter'
+import { DateRangeFilter } from '../../shared/components/DateRangeFilter'
 import { ReturnsChart } from '../components/ReturnsChart'
 import { ReturnsTable } from '../components/ReturnsTable'
 import { ReturnDetailModal } from '../components/ReturnDetailModal'
-import { ReportSkeletons } from '../components/ReportsSkeletons'
-import { getReports } from '../helpers/getReports'
-import { apiFetch } from '../../../shared/helpers/apiFetch'
-import { useStore } from '../../../app/providers/store'
+import { ReportSkeletons } from '../../shared/components/ReportsSkeletons'
+import { getReports } from '../../shared/helpers/getReports'
+import { apiFetch } from '../../../../shared/helpers/apiFetch'
+import { useStore } from '../../../../app/providers/store'
 
 const computeDates = (filter) => {
     const now = new Date()
@@ -27,7 +27,7 @@ const computeDates = (filter) => {
     return { startDate: '', endDate: '' }
 }
 
-export const AdminReports = () => {
+export const DevolucionesReports = () => {
     const { user } = useStore()
     const businessId = user?.data?.user?.id
     const [data, setData] = useState(null)
@@ -100,7 +100,7 @@ export const AdminReports = () => {
     if (!shouldFetch && filter !== 'month') {
         return (
             <section className='space-y-6 pb-12'>
-                <h2 className='text-2xl font-bold text-on-surface'>Reporte Administrativo</h2>
+                <h2 className='text-2xl font-bold text-on-surface'>Reporte de Devoluciones</h2>
             <DateRangeFilter compact value={filter} onChange={handleFilterChange} startDate={rangeStart} endDate={rangeEnd} />
                 <div className='text-center text-faint italic py-12'>
                     Selecciona una fecha de inicio y fin para ver los resultados
@@ -114,7 +114,7 @@ export const AdminReports = () => {
 
     return (
         <section className='space-y-6 pb-12'>
-            <h2 className='text-2xl font-bold text-on-surface'>Reporte Administrativo</h2>
+            <h2 className='text-2xl font-bold text-on-surface'>Reporte de Devoluciones</h2>
 
             <DateRangeFilter compact value={filter} onChange={handleFilterChange} startDate={rangeStart} endDate={rangeEnd} />
 

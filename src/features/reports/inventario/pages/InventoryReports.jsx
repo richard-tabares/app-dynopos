@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { StockTable } from '../components/StockTable'
 import { InventoryValuation } from '../components/InventoryValuation'
-import { ReportSkeletons } from '../components/ReportsSkeletons'
-import { getReports } from '../helpers/getReports'
-import { useStore } from '../../../app/providers/store'
+import { ReportSkeletons } from '../../shared/components/ReportsSkeletons'
+import { getReports } from '../../shared/helpers/getReports'
+import { useStore } from '../../../../app/providers/store'
 import { AlertTriangle, PackageCheck, Package, Layers } from 'lucide-react'
 
 const stockFilters = [

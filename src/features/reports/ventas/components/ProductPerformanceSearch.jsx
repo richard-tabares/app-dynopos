@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Search, TrendingUp, Package } from 'lucide-react'
-import { useStore } from '../../../app/providers/store'
-import { getReports } from '../helpers/getReports'
+import { useStore } from '../../../../app/providers/store'
+import { getReports } from '../../shared/helpers/getReports'
 
 const formatCurrency = (value) =>
     new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(value)
@@ -29,7 +29,7 @@ export const ProductPerformanceSearch = () => {
             debounceRef.current = setTimeout(() => doSearch(search.trim()), 300)
         }
         return () => clearTimeout(debounceRef.current)
-    }, [search]) // eslint-disable-line react-hooks/exhaustive-deps
+    }, [search])
 
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {

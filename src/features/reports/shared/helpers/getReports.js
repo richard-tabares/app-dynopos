@@ -1,4 +1,4 @@
-import { apiFetch } from '../../../shared/helpers/apiFetch'
+import { apiFetch } from '../../../../shared/helpers/apiFetch'
 
 export const getReports = async (businessId, { section = 'sales', filter = 'month', startDate, endDate, categoryId, productSearch } = {}) => {
     const API_URL = import.meta.env.VITE_API_URL

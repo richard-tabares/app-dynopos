@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router'
-import { BarChart3 } from 'lucide-react'
 
 export const Reports = () => {
     const location = useLocation()
