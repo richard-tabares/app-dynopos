@@ -50,6 +50,7 @@ export const StockTable = ({ data = [], filter = 'stock_bajo' }) => {
                             <thead>
                                 <tr className='bg-subtle border-b border-divider text-muted uppercase text-xs tracking-wider'>
                                     <th className='text-left py-3 px-4 font-medium'>Producto</th>
+                                    <th className='text-left py-3 px-4 font-medium'>Categoría</th>
                                     <th className='text-right py-3 px-4 font-medium'>Stock Actual</th>
                                     <th className='text-right py-3 px-4 font-medium'>Stock Mín.</th>
                                     <th className='text-right py-3 px-4 font-medium'>Estado</th>
@@ -59,8 +60,9 @@ export const StockTable = ({ data = [], filter = 'stock_bajo' }) => {
                                 {visible.map((item, i) => (
                                     <tr key={i} className='border-b border-divider-light hover:bg-hover'>
                                         <td className='py-3 px-4 font-medium text-on-surface'>{item.product_name}</td>
-                                        <td className='py-3 px-4 text-right'>{item.current_stock}</td>
-                                        <td className='py-3 px-4 text-right'>{item.min_stock}</td>
+                                        <td className='py-3 px-4 text-muted'>{item.category_name || 'Sin categoría'}</td>
+                                        <td className='py-3 px-4 text-right'>{item.stock_status === 'sin_control' ? '—' : item.current_stock}</td>
+                                        <td className='py-3 px-4 text-right'>{item.stock_status === 'sin_control' ? '—' : item.min_stock}</td>
                                         <td className='py-3 px-4 text-right'>
                                             <span className={`text-xs font-medium px-2 py-1 rounded-full ${getStatusConfig(item.stock_status).bg} ${getStatusConfig(item.stock_status).color}`}>
                                                 {getStatusConfig(item.stock_status).label}
