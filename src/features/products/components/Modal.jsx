@@ -18,7 +18,7 @@ export const Modal = ({
         name: editProductData.name || '',
         category_id:
             editProductData.categories?.id || generalCategory?.id || '',
-        price: editProductData.price || 0,
+        price: editProductData.price ?? '',
         is_active: editProductData.is_active ?? true,
         track_stock: editProductData.track_stock ?? true,
     })
@@ -34,6 +34,7 @@ export const Modal = ({
     // El handleChange se encarga de actualizar el estado del formulario cada vez que el usuario ingresa o modifica un valor en los campos del formulario. Utiliza la función setFormData para actualizar el estado, asegurándose de mantener los valores anteriores y solo cambiar el campo específico que se ha modificado.
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target
+        if (type === 'number' && value !== '' && Number(value) < 0) return
         setFormData((prev) => ({
             ...prev,
             [name]: type === 'checkbox' ? checked : value,
@@ -139,6 +140,7 @@ export const Modal = ({
                             name='price'
                             value={formData.price}
                             onChange={handleChange}
+                            min='0'
                             className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
                             placeholder='Ingrese el precio del producto'
                         />

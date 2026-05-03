@@ -9,17 +9,20 @@ export const AdjustmentModal = ({
 }) => {
     const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState({
-        stock: product.inventory?.[0]?.stock || 0,
-        min_stock: product.inventory?.[0]?.min_stock || 0,
+        stock: product.inventory?.[0]?.stock ?? '',
+        min_stock: product.inventory?.[0]?.min_stock ?? '',
     })
+
+    const isFormValid = formData.stock !== '' && formData.min_stock !== ''
 
     useEscape(handleClose)
 
     const handleChange = (e) => {
         const { name, value } = e.target
+        if (value !== '' && parseInt(value) < 0) return
         setFormData((prev) => ({
             ...prev,
-            [name]: parseInt(value) || 0,
+            [name]: value === '' ? '' : parseInt(value) || 0,
         }))
     }
 
@@ -66,9 +69,10 @@ export const AdjustmentModal = ({
                             name='stock'
                             value={formData.stock}
                             onChange={handleChange}
+                            min='0'
                             autoFocus
                             className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
-                            placeholder='0'
+                            placeholder='Ingrese el stock actual del producto'
                         />
                     </section>
 
@@ -81,8 +85,9 @@ export const AdjustmentModal = ({
                             name='min_stock'
                             value={formData.min_stock}
                             onChange={handleChange}
+                            min='0'
                             className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
-                            placeholder='0'
+                            placeholder='Ingrese el stock mínimo del producto'
                         />
                     </section>
 
@@ -95,7 +100,7 @@ export const AdjustmentModal = ({
                         </button>
                         <button
                             type='submit'
-                            disabled={loading}
+                            disabled={loading || !isFormValid}
                             className='px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'>
                             {loading ? 'Guardando...' : 'Guardar Cambios'}
                         </button>
