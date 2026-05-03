@@ -7,13 +7,16 @@ const migrateToken = () => {
         if (raw) {
             const parsed = JSON.parse(raw)
             const state = parsed?.state
-            if (
-                state &&
-                !state.token &&
-                state.user?.data?.session?.access_token
-            ) {
-                state.token = state.user.data.session.access_token
-                localStorage.setItem('dynopos-store', JSON.stringify(parsed))
+            if (state?.user?.data?.session) {
+                if (!state.token && state.user.data.session.access_token) {
+                    state.token = state.user.data.session.access_token
+                }
+                if (!state.refreshToken && state.user.data.session.refresh_token) {
+                    state.refreshToken = state.user.data.session.refresh_token
+                }
+                if (state.token || state.refreshToken) {
+                    localStorage.setItem('dynopos-store', JSON.stringify(parsed))
+                }
             }
         }
     } catch {
@@ -28,6 +31,7 @@ export const useStore = create(
         (set) => ({
             user: {},
             token: null,
+            refreshToken: null,
             isCollapsed: false,
             isMobile: false,
             isDarkMode: false,
@@ -36,9 +40,14 @@ export const useStore = create(
             todayRevenue: 0,
             categories: [],
             setLogin: (payload) =>
-                set({ user: payload, token: payload?.access_token || null }),
-            setLogOut: () => set({ user: '', token: null, cart: [] }),
+                set({
+                    user: payload,
+                    token: payload?.access_token || null,
+                    refreshToken: payload?.data?.session?.refresh_token || null,
+                }),
+            setLogOut: () => set({ user: '', token: null, refreshToken: null, cart: [] }),
             setToken: (token) => set({ token }),
+            setRefreshToken: (refreshToken) => set({ refreshToken }),
             setBusiness: (payload) =>
                 set((state) => ({
                     user: {
