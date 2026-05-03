@@ -7,7 +7,7 @@ import { CategorySalesTable } from '../components/CategorySalesTable'
 import { TopBottomProducts } from '../components/TopBottomProducts'
 import { ProductPerformanceSearch } from '../components/ProductPerformanceSearch'
 import { AvgTicketCard } from '../components/AvgTicketCard'
-import { RecentSalesCard } from '../../../dashboard/components/RecentSalesCard'
+import { RecentSalesTable } from '../components/RecentSalesTable'
 import { ReportSkeletons } from '../../shared/components/ReportsSkeletons'
 import { getReports } from '../../shared/helpers/getReports'
 import { useStore } from '../../../../app/providers/store'
@@ -178,19 +178,16 @@ export const SalesReports = () => {
 
             <div className='flex flex-col lg:flex-row gap-6'>
                 <div className='w-full lg:w-1/3'>
-                    <RecentSalesCard sales={data?.recentSales || []} />
+                    <ProductPerformanceSearch />
                 </div>
-                <div className='w-full lg:w-2/3 space-y-6'>
-                    <div className=''>
-                        <ProductPerformanceSearch />
-                    </div>
-                    <div className='h-full'>
-                        <CategorySalesTable
-                            data={data?.salesByCategory || []}
-                        />
-                    </div>
+                <div className='w-full lg:w-2/3'>
+                    <CategorySalesTable
+                        data={data?.salesByCategory || []}
+                    />
                 </div>
             </div>
+
+            <RecentSalesTable sales={data?.recentSales || []} />
 
             <div>
                 <AvgTicketCard
