@@ -177,10 +177,10 @@ export const SalesReports = () => {
             </div>
 
             <div className='flex flex-col lg:flex-row gap-6'>
-                <div className='w-full lg:w-1/3'>
+                <div className='w-full lg:w-1/2'>
                     <ProductPerformanceSearch />
                 </div>
-                <div className='w-full lg:w-2/3'>
+                <div className='w-full lg:w-1/2'>
                     <CategorySalesTable
                         data={data?.salesByCategory || []}
                     />

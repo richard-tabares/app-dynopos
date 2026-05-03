@@ -7,6 +7,8 @@ const formatCurrency = (value) =>
 const COLORS = ['#0ea5e9', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316']
 
 export const PaymentPieChart = ({ data = [] }) => {
+    const total = data.reduce((sum, item) => sum + item.total_amount, 0)
+
     return (
         <section className='bg-surface border border-outline p-6 shadow-xs rounded-lg'>
             <div className='flex items-center gap-2 text-primary-600 mb-6'>
@@ -33,10 +35,17 @@ export const PaymentPieChart = ({ data = [] }) => {
                             </Pie>
                             <Tooltip
                                 contentStyle={{ backgroundColor: 'var(--surface)', border: '1px solid var(--outline)', borderRadius: '8px' }}
-                                formatter={(value) => [formatCurrency(value), 'Total']}
+                                formatter={(value) => {
+                                    const pct = total > 0 ? ((value / total) * 100).toFixed(1) : 0
+                                    return [`${formatCurrency(value)} (${pct}%)`, 'Total']
+                                }}
                             />
                             <Legend
-                                formatter={(value) => <span className='text-sm text-on-body'>{value}</span>}
+                                formatter={(value) => {
+                                    const item = data.find(d => d.payment_method === value)
+                                    const pct = item && total > 0 ? ((item.total_amount / total) * 100).toFixed(1) : 0
+                                    return <span className='text-sm text-on-body'>{`${value} (${pct}%)`}</span>
+                                }}
                             />
                         </PieChart>
                     </ResponsiveContainer>
