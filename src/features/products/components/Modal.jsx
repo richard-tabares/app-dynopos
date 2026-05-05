@@ -19,6 +19,7 @@ export const Modal = ({
         category_id:
             editProductData.categories?.id || generalCategory?.id || '',
         price: editProductData.price ?? '',
+        unit_cost: editProductData.unit_cost ?? '',
         is_active: editProductData.is_active ?? true,
         track_stock: editProductData.track_stock ?? true,
     })
@@ -143,6 +144,20 @@ export const Modal = ({
                             min='0'
                             className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
                             placeholder='Ingrese el precio del producto'
+                        />
+                    </section>
+                    <section>
+                        <label className='block text-sm font-medium text-on-body mb-1'>
+                            Costo Unitario
+                        </label>
+                        <input
+                            type='number'
+                            name='unit_cost'
+                            value={formData.unit_cost}
+                            onChange={handleChange}
+                            min='0'
+                            className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                            placeholder='Ingrese el costo del producto (opcional)'
                         />
                     </section>
                     <section className='flex items-center justify-between'>

@@ -7,9 +7,13 @@ export const createSale = async (saleData) => {
             method: 'POST',
             body: JSON.stringify(saleData),
         })
+        if (!response.ok) {
+            const err = await response.json()
+            throw new Error(err.error || 'Error al procesar la venta')
+        }
         return await response.json()
     } catch (error) {
-        console.error('Error:', error.message)
+        console.error('Error creating sale:', error.message)
         throw error
     }
 }

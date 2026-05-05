@@ -95,7 +95,7 @@ export const Inventory = () => {
         setVisibleCount((prev) => prev + 10)
     }
 
-    const headers = ['Código', 'Producto', 'Categoría', 'Stock', 'Mínimo', 'Estado', 'Acciones']
+    const headers = ['Código', 'Producto', 'Categoría', 'Stock', 'Mínimo', 'Costo Unit.', 'Valor Total', 'Estado', 'Acciones']
 
     return (
         <>
@@ -236,6 +236,20 @@ export const Inventory = () => {
                                             </td>
                                             <td className='py-3 px-4 text-right text-muted'>
                                                 {isUntracked ? '—' : minStock}
+                                            </td>
+                                            <td className='py-3 px-4 text-right'>
+                                                {product.unit_cost != null ? (
+                                                    <span className='text-on-body font-medium'>
+                                                        ${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(product.unit_cost)}
+                                                    </span>
+                                                ) : (
+                                                    <span className='text-faint italic'>—</span>
+                                                )}
+                                            </td>
+                                            <td className='py-3 px-4 text-right font-bold text-on-surface'>
+                                                {!isUntracked && product.unit_cost != null
+                                                    ? `$${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(stock * product.unit_cost)}`
+                                                    : '—'}
                                             </td>
                                             <td className='py-3 px-4'>
                                                 {isUntracked ? (

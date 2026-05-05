@@ -80,6 +80,8 @@ export const Products = () => {
         'Nombre',
         'Categoría',
         'Precio',
+        'Costo',
+        'Margen',
         'Maneja Stock',
         'Estado',
         'Acciones',
@@ -594,6 +596,31 @@ export const Products = () => {
                                             {new Intl.NumberFormat(
                                                 'es-CO',
                                             ).format(product.price)}
+                                        </td>
+                                        <td className='py-3 px-4 text-right'>
+                                            {product.unit_cost != null ? (
+                                                <span className='font-medium text-on-body'>
+                                                    ${new Intl.NumberFormat('es-CO').format(product.unit_cost)}
+                                                </span>
+                                            ) : (
+                                                <span className='text-faint italic'>—</span>
+                                            )}
+                                        </td>
+                                        <td className='py-3 px-4 text-right'>
+                                            {product.unit_cost != null && product.price > 0 ? (() => {
+                                                const margin = Math.round(((product.price - product.unit_cost) / product.price) * 100)
+                                                return (
+                                                    <span className={`px-2.5 py-0.5 text-xs font-medium rounded-full ${
+                                                        margin >= 30 ? 'bg-green-100 text-green-800' :
+                                                        margin >= 10 ? 'bg-amber-100 text-amber-800' :
+                                                        'bg-red-100 text-red-800'
+                                                    }`}>
+                                                        {margin}%
+                                                    </span>
+                                                )
+                                            })() : (
+                                                <span className='text-faint italic'>—</span>
+                                            )}
                                         </td>
                                         <td className='py-3 px-4 whitespace-nowrap'>
                                             {product.track_stock !== false ? (

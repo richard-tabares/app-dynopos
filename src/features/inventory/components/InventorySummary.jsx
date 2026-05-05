@@ -6,7 +6,7 @@ export const InventorySummary = ({ products = [] }) => {
     const stockTotal = products.reduce((acc, p) => acc + (p.inventory?.[0]?.stock || 0), 0)
     const lowStockProducts = products.filter(p => p.track_stock !== false && (p.inventory?.[0]?.stock || 0) <= (p.inventory?.[0]?.min_stock || 0))
     const lowStockCount = lowStockProducts.length
-    const inventoryValue = products.reduce((acc, p) => acc + ((p.inventory?.[0]?.stock || 0) * (p.price || 0)), 0)
+    const inventoryValue = products.reduce((acc, p) => acc + ((p.inventory?.[0]?.stock || 0) * (p.unit_cost || 0)), 0)
 
     const cards = [
         {

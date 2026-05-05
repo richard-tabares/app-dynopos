@@ -75,6 +75,7 @@ export const SalesHistoryCard = ({ sales = [], onReturn }) => {
             />
 
             <ReturnModal
+                key={returnTarget?.id || 'closed'}
                 isOpen={!!returnTarget}
                 sale={returnTarget}
                 onClose={() => setReturnTarget(null)}
