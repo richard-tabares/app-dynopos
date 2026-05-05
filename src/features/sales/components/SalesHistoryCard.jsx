@@ -79,8 +79,8 @@ export const SalesHistoryCard = ({ sales = [], onReturn }) => {
                 isOpen={!!returnTarget}
                 sale={returnTarget}
                 onClose={() => setReturnTarget(null)}
-                onConfirm={(reason, items) => {
-                    onReturn(returnTarget, reason, items)
+                onConfirm={async (reason, items) => {
+                    await onReturn(returnTarget, reason, items)
                     setReturnTarget(null)
                 }}
             />

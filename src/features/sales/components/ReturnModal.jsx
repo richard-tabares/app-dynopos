@@ -8,6 +8,7 @@ const initialItemSelections = (items) =>
 export const ReturnModal = ({ isOpen, sale, onClose, onConfirm }) => {
     const [selectedItems, setSelectedItems] = useState([])
     const [returnReason, setReturnReason] = useState('')
+    const [isReturning, setIsReturning] = useState(false)
 
     useEscape(onClose)
 
@@ -22,22 +23,24 @@ export const ReturnModal = ({ isOpen, sale, onClose, onConfirm }) => {
 
     const toggleItem = (itemId) => {
         setSelectedItems((prev) =>
-            prev.map((item) =>
-                item.id === itemId
-                    ? {
-                          ...item,
-                          returnQuantity:
-                              item.returnQuantity > 0 ? 0 : item.quantity,
-                      }
-                    : item,
-            ),
+            prev.map((item) => {
+                if (item.id !== itemId) return item
+                const remaining = item.quantity - (item.already_returned || 0)
+                if (remaining <= 0) return item
+                return {
+                    ...item,
+                    returnQuantity:
+                        item.returnQuantity > 0 ? 0 : remaining,
+                }
+            }),
         )
     }
 
     const updateQuantity = (itemId, quantity) => {
         const item = selectedItems.find((i) => i.id === itemId)
         if (!item) return
-        const clamped = Math.max(0, Math.min(quantity, item.quantity))
+        const remaining = item.quantity - (item.already_returned || 0)
+        const clamped = Math.max(0, Math.min(quantity, remaining))
         setSelectedItems((prev) =>
             prev.map((i) =>
                 i.id === itemId ? { ...i, returnQuantity: clamped } : i,
@@ -51,8 +54,8 @@ export const ReturnModal = ({ isOpen, sale, onClose, onConfirm }) => {
         0,
     )
 
-    const handleConfirm = () => {
-        if (!returnReason.trim() || !hasSelectedItems) return
+    const handleConfirm = async () => {
+        if (!returnReason.trim() || !hasSelectedItems || isReturning) return
 
         const itemsToReturn = selectedItems
             .filter((i) => i.returnQuantity > 0)
@@ -63,8 +66,15 @@ export const ReturnModal = ({ isOpen, sale, onClose, onConfirm }) => {
                 subtotal: i.returnQuantity * i.price,
             }))
 
-        onConfirm(returnReason.trim(), itemsToReturn)
-        setReturnReason('')
+        setIsReturning(true)
+        try {
+            await onConfirm(returnReason.trim(), itemsToReturn)
+            setReturnReason('')
+        } catch {
+            // error ya manejado por el padre (toast)
+        } finally {
+            setIsReturning(false)
+        }
     }
 
     return (
@@ -89,79 +99,93 @@ export const ReturnModal = ({ isOpen, sale, onClose, onConfirm }) => {
                         Selecciona los productos a devolver:
                     </p>
                     <div className='space-y-3'>
-                        {selectedItems.map((item) => (
-                            <div
-                                key={item.id}
-                                className='flex items-center gap-3 p-3 border border-divider rounded-lg'>
-                                <input
-                                    type='checkbox'
-                                    checked={item.returnQuantity > 0}
-                                    onChange={() => toggleItem(item.id)}
-                                    className='w-4 h-4 accent-red-600'
-                                />
+                        {selectedItems.map((item) => {
+                            const alreadyReturned = item.already_returned || 0
+                            const remaining = item.quantity - alreadyReturned
+                            const isFullyReturned = remaining <= 0
 
-                                <div className='flex-1 min-w-0'>
-                                    <p className='text-sm font-bold text-on-surface'>
-                                        $
-                                        {new Intl.NumberFormat(
-                                            'es-CO',
-                                            {
-                                                maximumFractionDigits: 0,
-                                            },
-                                        ).format(
-                                            item.returnQuantity *
-                                                item.price,
-                                        )}
-                                    </p>
-                                    <p className='text-sm font-medium text-on-surface truncate'>
-                                        {item.name}
-                                    </p>
-                                    <div className='flex'>
-                                        <p className='text-xs text-muted'>
-                                            Cant:{' '}
-                                            {`${item.quantity} x $ ${new Intl.NumberFormat(
+                            return (
+                                <div
+                                    key={item.id}
+                                    className={`flex items-center gap-3 p-3 border rounded-lg ${isFullyReturned ? 'border-divider opacity-50 bg-gray-50' : 'border-divider'}`}>
+                                    <input
+                                        type='checkbox'
+                                        checked={item.returnQuantity > 0}
+                                        onChange={() => toggleItem(item.id)}
+                                        disabled={isFullyReturned}
+                                        className='w-4 h-4 accent-red-600'
+                                    />
+
+                                    <div className='flex-1 min-w-0'>
+                                        <p className='text-sm font-bold text-on-surface'>
+                                            $
+                                            {new Intl.NumberFormat(
                                                 'es-CO',
                                                 {
                                                     maximumFractionDigits: 0,
                                                 },
-                                            ).format(item.price)} c/u`}
+                                            ).format(
+                                                item.returnQuantity *
+                                                    item.price,
+                                            )}
                                         </p>
+                                        <p className='text-sm font-medium text-on-surface truncate'>
+                                            {item.name}
+                                        </p>
+                                        <div className='flex flex-wrap gap-x-2'>
+                                            <p className='text-xs text-muted'>
+                                                Cant:{' '}
+                                                {`${item.quantity} x $ ${new Intl.NumberFormat(
+                                                    'es-CO',
+                                                    {
+                                                        maximumFractionDigits: 0,
+                                                    },
+                                                ).format(item.price)} c/u`}
+                                            </p>
+                                            {alreadyReturned > 0 && (
+                                                <p className='text-xs text-red-500 font-medium'>
+                                                    {isFullyReturned
+                                                        ? 'Devuelto completamente'
+                                                        : `Devuelto: ${alreadyReturned} de ${item.quantity}`}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className='flex items-center gap-1'>
+                                        <button
+                                            onClick={() =>
+                                                updateQuantity(
+                                                    item.id,
+                                                    item.returnQuantity - 1,
+                                                )
+                                            }
+                                            className='w-7 h-7 rounded border border-outline flex items-center justify-center text-on-body hover:bg-hover-strong text-sm font-bold'
+                                            disabled={
+                                                item.returnQuantity <= 0 || isFullyReturned
+                                            }>
+                                            -
+                                        </button>
+                                        <span className='w-8 text-center text-sm font-bold tabular-nums'>
+                                            {item.returnQuantity}
+                                        </span>
+                                        <button
+                                            onClick={() =>
+                                                updateQuantity(
+                                                    item.id,
+                                                    item.returnQuantity + 1,
+                                                )
+                                            }
+                                            className='w-7 h-7 rounded border border-outline flex items-center justify-center text-on-body hover:bg-hover-strong text-sm font-bold'
+                                            disabled={
+                                                item.returnQuantity >=
+                                                    remaining || isFullyReturned
+                                            }>
+                                            +
+                                        </button>
                                     </div>
                                 </div>
-                                <div className='flex items-center gap-1'>
-                                    <button
-                                        onClick={() =>
-                                            updateQuantity(
-                                                item.id,
-                                                item.returnQuantity - 1,
-                                            )
-                                        }
-                                        className='w-7 h-7 rounded border border-outline flex items-center justify-center text-on-body hover:bg-hover-strong text-sm font-bold'
-                                        disabled={
-                                            item.returnQuantity <= 0
-                                        }>
-                                        -
-                                    </button>
-                                    <span className='w-8 text-center text-sm font-bold tabular-nums'>
-                                        {item.returnQuantity}
-                                    </span>
-                                    <button
-                                        onClick={() =>
-                                            updateQuantity(
-                                                item.id,
-                                                item.returnQuantity + 1,
-                                            )
-                                        }
-                                        className='w-7 h-7 rounded border border-outline flex items-center justify-center text-on-body hover:bg-hover-strong text-sm font-bold'
-                                        disabled={
-                                            item.returnQuantity >=
-                                            item.quantity
-                                        }>
-                                        +
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
+                            )
+                        })}
                     </div>
 
                     {totalReturn > 0 && (
@@ -198,13 +222,11 @@ export const ReturnModal = ({ isOpen, sale, onClose, onConfirm }) => {
                         onClick={handleConfirm}
                         className='flex-1 py-2.5 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 transition text-sm disabled:opacity-50'
                         disabled={
-                            !returnReason.trim() || !hasSelectedItems
+                            !returnReason.trim() || !hasSelectedItems || isReturning
                         }>
-                        Devolver ($
-                        {new Intl.NumberFormat('es-CO', {
+                        {isReturning ? 'Devolviendo...' : `Devolver ($${new Intl.NumberFormat('es-CO', {
                             maximumFractionDigits: 0,
-                        }).format(totalReturn)}
-                        )
+                        }).format(totalReturn)})`}
                     </button>
                 </div>
             </section>

@@ -163,6 +163,7 @@ export const Sales = () => {
             setTodayRevenue(revenueData.todayRevenue)
         } catch (error) {
             toast.error(error.message || 'Error al procesar la devolución')
+            throw error
         }
     }
 
