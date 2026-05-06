@@ -107,7 +107,7 @@ export const ReturnModal = ({ isOpen, sale, onClose, onConfirm }) => {
                             return (
                                 <div
                                     key={item.id}
-                                    className={`flex items-center gap-3 p-3 border rounded-lg ${isFullyReturned ? 'border-divider opacity-50 bg-gray-50' : 'border-divider'}`}>
+                                    className={`flex items-center gap-3 p-3 border rounded-lg ${isFullyReturned ? 'border-divider bg-disabled' : 'border-divider'}`}>
                                     <input
                                         type='checkbox'
                                         checked={item.returnQuantity > 0}
