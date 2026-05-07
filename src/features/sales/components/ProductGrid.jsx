@@ -13,15 +13,15 @@ export const ProductCard = ({ product }) => {
         <button
             onClick={() => addToCart(product)}
             disabled={!noStockControl && availableStock <= 0}
-            className={`bg-surface p-4 rounded-lg border transition-all flex items-center justify-between group ${
+            className={`bg-surface p-4 rounded-lg border transition-all duration-200 flex items-center justify-between group ${
                 !noStockControl && availableStock <= 0
                     ? 'border-divider opacity-50 cursor-not-allowed bg-subtle grayscale' 
-                    : 'border-divider hover:border-primary-400 cursor-pointer'
+                    : 'border-divider hover:border-primary-400 hover:bg-hover cursor-pointer'
             }`}
         >
             <div className='flex items-center gap-4'>
                 <div className='text-left'>
-                    <h3 className='font-semibold text-on-surface text-base group-hover:text-primary-600 transition-colors line-clamp-1'>
+                    <h3 className='font-semibold text-on-surface text-base transition-colors line-clamp-1'>
                         {product.name}
                     </h3>
                     <p className='text-xs text-muted mt-0.5'>

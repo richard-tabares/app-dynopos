@@ -493,13 +493,13 @@ export const Products = () => {
                                     </button>
                                 ))}
                             </div> */}
-                            <div className='flex gap-1 bg-subtle dark:bg-gray-900 rounded-lg p-1 w-fit ml-0 xl:ml-4'>
+                            <div className='flex gap-1 bg-disabled rounded-lg p-1 w-fit ml-0 xl:ml-4'>
                                 <button
                                     onClick={() => { setActiveStatus('all'); setVisibleCount(20) }}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                         activeStatus === 'all'
                                             ? 'bg-surface shadow-xs text-primary-600'
-                                            : 'text-muted hover:text-on-body hover:bg-hover'
+                                            : 'text-muted hover:text-on-body hover:bg-surface'
                                     }`}>
                                     <CheckCircle2 className='w-4 h-4' />
                                     Todos
@@ -509,7 +509,7 @@ export const Products = () => {
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                         activeStatus === 'active'
                                             ? 'bg-surface shadow-xs text-primary-600'
-                                            : 'text-muted hover:text-on-body hover:bg-hover'
+                                            : 'text-muted hover:text-on-body hover:bg-surface'
                                     }`}>
                                     <CheckCircle className='w-4 h-4' />
                                     Activo
@@ -519,19 +519,19 @@ export const Products = () => {
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                         activeStatus === 'inactive'
                                             ? 'bg-surface shadow-xs text-primary-600'
-                                            : 'text-muted hover:text-on-body hover:bg-hover'
+                                            : 'text-muted hover:text-on-body hover:bg-surface'
                                     }`}>
                                     <XCircle className='w-4 h-4' />
                                     Inactivo
                                 </button>
                             </div>
-                            <div className='flex gap-1 bg-subtle dark:bg-gray-900 rounded-lg p-1 w-fit'>
+                            <div className='flex gap-1 bg-disabled rounded-lg p-1 w-fit'>
                                 <button
                                     onClick={() => { setActiveStock('all'); setVisibleCount(20) }}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                         activeStock === 'all'
                                             ? 'bg-surface shadow-xs text-primary-600'
-                                            : 'text-muted hover:text-on-body hover:bg-hover'
+                                            : 'text-muted hover:text-on-body hover:bg-surface'
                                     }`}>
                                     <Layers className='w-4 h-4' />
                                     Todos
@@ -541,7 +541,7 @@ export const Products = () => {
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                         activeStock === 'with'
                                             ? 'bg-surface shadow-xs text-primary-600'
-                                            : 'text-muted hover:text-on-body hover:bg-hover'
+                                            : 'text-muted hover:text-on-body hover:bg-surface'
                                     }`}>
                                     <PackageCheck className='w-4 h-4' />
                                     Con control
@@ -551,7 +551,7 @@ export const Products = () => {
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                         activeStock === 'without'
                                             ? 'bg-surface shadow-xs text-primary-600'
-                                            : 'text-muted hover:text-on-body hover:bg-hover'
+                                            : 'text-muted hover:text-on-body hover:bg-surface'
                                     }`}>
                                     <PackageX className='w-4 h-4' />
                                     Sin control

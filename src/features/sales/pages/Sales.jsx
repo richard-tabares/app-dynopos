@@ -198,7 +198,7 @@ export const Sales = () => {
                             {searchTerm.trim() && (
                                 <button
                                     onClick={() => { setSearchTerm(''); setVisibleCount(10) }}
-                                    className='flex items-center gap-2 px-3 py-1.5 bg-gray-200 dark:bg-hover self-start text-sm font-medium rounded-md transition-colors cursor-pointer text-muted hover:text-on-body hover:bg-gray-300'
+                                    className='flex items-center gap-2 px-3 py-1.5 bg-disabled self-start text-sm font-medium rounded-md transition-colors cursor-pointer text-muted hover:text-on-body hover:bg-gray-200 dark:hover:bg-gray-900'
                                 >
                                     <X className='w-4 h-4' />
                                     Limpiar búsqueda
