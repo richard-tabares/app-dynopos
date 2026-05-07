@@ -14,8 +14,7 @@ import {
     ChevronDown,
     Undo2,
     Warehouse,
-    TrendingUp,
-    History
+    TrendingUp
 } from 'lucide-react'
 import { useNavigate, NavLink, useLocation } from 'react-router'
 import { useStore } from '../providers/store'
@@ -48,7 +47,6 @@ export const SideBar = () => {
         { id: 'ventas', label: 'Ventas', icon: ShoppingCart, path: '/reports/ventas' },
         { id: 'inventario', label: 'Inventario', icon: Warehouse, path: '/reports/inventario' },
         { id: 'ganancias', label: 'Ganancias', icon: TrendingUp, path: '/reports/ganancias' },
-        { id: 'movimientos', label: 'Movimientos', icon: History, path: '/reports/movimientos' },
         { id: 'devoluciones', label: 'Devoluciones', icon: Undo2, path: '/reports/devoluciones' },
     ]
 

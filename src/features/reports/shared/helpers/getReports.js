@@ -1,6 +1,6 @@
 import { apiFetch } from '../../../../shared/helpers/apiFetch'
 
-export const getReports = async (businessId, { section = 'sales', filter = 'month', startDate, endDate, categoryId, productSearch } = {}) => {
+export const getReports = async (businessId, { section = 'sales', filter = 'month', startDate, endDate, categoryId, productSearch, type } = {}) => {
     const API_URL = import.meta.env.VITE_API_URL
     try {
         const params = new URLSearchParams({ section, filter })
@@ -8,6 +8,7 @@ export const getReports = async (businessId, { section = 'sales', filter = 'mont
         if (endDate) params.append('endDate', endDate)
         if (categoryId) params.append('categoryId', categoryId)
         if (productSearch) params.append('productSearch', productSearch)
+        if (type) params.append('type', type)
 
         const response = await apiFetch(`${API_URL}/api/reports/${businessId}?${params}`)
         return await response.json()

@@ -1,8 +1,11 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
-import { History, Search, ArrowDownCircle, ArrowUpCircle, ShoppingCart, Undo2, List } from 'lucide-react'
+import { useEffect, useState, useCallback, useRef } from 'react'
+import { StockTable } from '../components/StockTable'
+import { InventoryValuation } from '../components/InventoryValuation'
 import { DateRangeFilter } from '../../shared/components/DateRangeFilter'
+import { ReportSkeletons } from '../../shared/components/ReportsSkeletons'
 import { getReports } from '../../shared/helpers/getReports'
 import { useStore } from '../../../../app/providers/store'
+import { History, Search, ArrowDownCircle, ArrowUpCircle, ShoppingCart, Undo2, List } from 'lucide-react'
 
 const typeConfig = {
     entry: { label: 'Entrada', icon: ArrowDownCircle, cls: 'bg-emerald-100 text-emerald-700' },
@@ -10,6 +13,14 @@ const typeConfig = {
     sale: { label: 'Venta', icon: ShoppingCart, cls: 'bg-blue-100 text-blue-700' },
     return: { label: 'Devolución', icon: Undo2, cls: 'bg-purple-100 text-purple-700' },
 }
+
+const typeOptions = [
+    { value: '', label: 'Todos', icon: List },
+    { value: 'entry', label: 'Entradas', icon: ArrowDownCircle },
+    { value: 'exit', label: 'Salidas', icon: ArrowUpCircle },
+    { value: 'sale', label: 'Ventas', icon: ShoppingCart },
+    { value: 'return', label: 'Devoluciones', icon: Undo2 },
+]
 
 const computeDates = (filter) => {
     const now = new Date()
@@ -30,23 +41,49 @@ const computeDates = (filter) => {
     return { startDate: '', endDate: '' }
 }
 
-export const MovimientosReports = () => {
+export const InventoryMovements = () => {
     const { user } = useStore()
     const businessId = user?.data?.user?.id
 
     const [filter, setFilter] = useState('month')
     const [rangeStart, setRangeStart] = useState('')
     const [rangeEnd, setRangeEnd] = useState('')
-    const [shouldFetch, setShouldFetch] = useState(true)
-    const [loading, setLoading] = useState(true)
-    const [data, setData] = useState([])
+    const [shouldFetch, setShouldFetch] = useState(false)
+
+    const [inventoryData, setInventoryData] = useState(null)
+    const [movementsData, setMovementsData] = useState([])
+
+    const [invLoading, setInvLoading] = useState(true)
+    const [invError, setInvError] = useState(null)
+    const [movLoading, setMovLoading] = useState(false)
+    const [movError, setMovError] = useState(null)
+
     const [typeFilter, setTypeFilter] = useState('')
     const [searchTerm, setSearchTerm] = useState('')
+    const [movVisibleCount, setMovVisibleCount] = useState(10)
+
     const initialLoad = useRef(true)
 
-    const fetchData = useCallback(async () => {
+    useEffect(() => {
+        if (!businessId) return
+        const loadInventory = async () => {
+            try {
+                setInvLoading(true)
+                const result = await getReports(businessId, { section: 'inventory' })
+                setInventoryData(result.data)
+                setInvLoading(false)
+            } catch (err) {
+                setInvError(err.message)
+                setInvLoading(false)
+            }
+        }
+        loadInventory()
+    }, [businessId])
+
+    const fetchMovements = useCallback(async () => {
         if (!businessId || !shouldFetch) return
-        setLoading(true)
+        setMovLoading(true)
+        setMovError(null)
         try {
             const dates = filter === 'range' ? { startDate: rangeStart, endDate: rangeEnd } : computeDates(filter)
             const result = await getReports(businessId, {
@@ -56,11 +93,11 @@ export const MovimientosReports = () => {
                 endDate: dates.endDate,
                 type: typeFilter || undefined,
             })
-            setData(result.data || [])
-        } catch (error) {
-            console.error('Error loading movements:', error)
+            setMovementsData(result.data || [])
+        } catch (err) {
+            setMovError(err.message)
         } finally {
-            setLoading(false)
+            setMovLoading(false)
         }
     }, [businessId, filter, rangeStart, rangeEnd, shouldFetch, typeFilter])
 
@@ -69,8 +106,8 @@ export const MovimientosReports = () => {
             initialLoad.current = false
             setShouldFetch(true)
         }
-        fetchData()
-    }, [fetchData])
+        if (shouldFetch) fetchMovements()
+    }, [fetchMovements, shouldFetch])
 
     const handleFilterChange = ({ filter: newFilter, startDate, endDate }) => {
         setFilter(newFilter)
@@ -89,7 +126,7 @@ export const MovimientosReports = () => {
         }
     }
 
-    const filtered = data.filter(m => {
+    const filteredMovements = movementsData.filter(m => {
         if (!searchTerm) return true
         const term = searchTerm.toLowerCase()
         return (
@@ -99,55 +136,28 @@ export const MovimientosReports = () => {
         )
     })
 
-    const typeOptions = [
-        { value: '', label: 'Todos', icon: List },
-        { value: 'entry', label: 'Entradas', icon: ArrowDownCircle },
-        { value: 'exit', label: 'Salidas', icon: ArrowUpCircle },
-        { value: 'sale', label: 'Ventas', icon: ShoppingCart },
-        { value: 'return', label: 'Devoluciones', icon: Undo2 },
-    ]
-
-    if (!shouldFetch && filter !== 'month') {
-        return (
-            <section className='space-y-6 pb-12'>
-                <h2 className='text-2xl font-bold text-on-surface'>Movimientos de Inventario</h2>
-                <DateRangeFilter compact value={filter} onChange={handleFilterChange} startDate={rangeStart} endDate={rangeEnd} />
-                <div className='text-center text-faint italic py-12'>
-                    Selecciona una fecha de inicio y fin para ver los resultados
-                </div>
-            </section>
-        )
-    }
+    const visibleMovements = filteredMovements.slice(0, movVisibleCount)
+    const canShowMovements = shouldFetch || filter === 'month'
 
     return (
-        <section className='space-y-6'>
+        <section className='space-y-6 pb-12'>
             <section>
-                <h1 className='text-2xl font-bold'>Movimientos de Inventario</h1>
-                <p className='text-on-body'>Historial de entradas, salidas, ventas y devoluciones</p>
+                <h1 className='text-2xl font-bold'>Inventario y Movimientos</h1>
+                <p className='text-on-body'>Estado del stock, valorización e historial de movimientos</p>
             </section>
+
+            {invLoading ? (
+                <ReportSkeletons type='inventory' />
+            ) : invError ? (
+                <div className='bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg'>{invError}</div>
+            ) : (
+                <>
+                    <StockTable data={inventoryData?.stockStatus || []} />
+                    <InventoryValuation data={inventoryData?.inventoryValuation || []} />
+                </>
+            )}
 
             <DateRangeFilter compact value={filter} onChange={handleFilterChange} startDate={rangeStart} endDate={rangeEnd} />
-
-            <section className='flex flex-wrap items-center gap-3'>
-                <div className='flex gap-1 bg-subtle rounded-lg p-1'>
-                    {typeOptions.map(opt => {
-                        const Icon = opt.icon
-                        return (
-                        <button
-                            key={opt.value}
-                            onClick={() => setTypeFilter(opt.value)}
-                            className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer ${
-                                typeFilter === opt.value
-                                    ? 'bg-surface shadow-xs text-primary-600'
-                                    : 'text-muted hover:text-on-body hover:bg-hover'
-                            }`}>
-                            <Icon className='w-4 h-4' />
-                            {opt.label}
-                        </button>
-                        )
-                    })}
-                </div>
-            </section>
 
             <section className='bg-surface border border-outline p-6 shadow-xs rounded-lg'>
                 <div className='flex items-center gap-2 text-primary-600 mb-4'>
@@ -165,13 +175,38 @@ export const MovimientosReports = () => {
                         placeholder='Buscar producto...'
                     />
                 </div>
-                {loading ? (
+                <div className='flex gap-1 bg-subtle rounded-lg p-1 mb-4'>
+                    {typeOptions.map(opt => {
+                        const Icon = opt.icon
+                        return (
+                            <button
+                                key={opt.value}
+                                onClick={() => setTypeFilter(opt.value)}
+                                className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer ${
+                                    typeFilter === opt.value
+                                        ? 'bg-surface shadow-xs text-primary-600'
+                                        : 'text-muted hover:text-on-body hover:bg-hover'
+                                }`}>
+                                <Icon className='w-4 h-4' />
+                                {opt.label}
+                            </button>
+                        )
+                    })}
+                </div>
+
+                {!canShowMovements ? (
+                    <div className='text-center text-faint italic py-12'>
+                        Selecciona una fecha de inicio y fin para ver los resultados
+                    </div>
+                ) : movLoading ? (
                     <div className='p-8 space-y-4'>
                         {[1, 2, 3, 4, 5].map(i => (
                             <div key={i} className='h-16 bg-gray-100 rounded animate-pulse' />
                         ))}
                     </div>
-                ) : filtered.length > 0 ? (
+                ) : movError ? (
+                    <div className='text-center text-red-600 py-12'>{movError}</div>
+                ) : visibleMovements.length > 0 ? (
                     <div className='overflow-x-auto'>
                         <table className='w-full text-sm'>
                             <thead>
@@ -184,7 +219,7 @@ export const MovimientosReports = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {filtered.map((m) => {
+                                {visibleMovements.map((m) => {
                                     const config = typeConfig[m.type] || { label: m.type, icon: History, cls: 'bg-gray-100 text-gray-700' }
                                     const Icon = config.icon
                                     return (
@@ -207,11 +242,17 @@ export const MovimientosReports = () => {
                                 })}
                             </tbody>
                         </table>
+                        {movVisibleCount < filteredMovements.length && (
+                            <button
+                                onClick={() => setMovVisibleCount(prev => prev + 10)}
+                                className='w-full mt-4 py-2 text-sm font-medium text-primary-600 hover:bg-primary-50 rounded-lg transition cursor-pointer'
+                            >
+                                Cargar más ({filteredMovements.length - movVisibleCount} restantes)
+                            </button>
+                        )}
                     </div>
                 ) : (
-                    <div className='text-center text-faint italic py-12'>
-                        No se encontraron movimientos
-                    </div>
+                    <div className='text-center text-faint italic py-12'>No se encontraron movimientos</div>
                 )}
             </section>
         </section>

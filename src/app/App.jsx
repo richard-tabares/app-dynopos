@@ -7,10 +7,9 @@ import { Categories } from '../features/categories/pages/Categories'
 import { Inventory } from '../features/inventory/pages/Inventory'
 import { Reports } from '../features/reports/pages/Reports'
 import { SalesReports } from '../features/reports/ventas/pages/SalesReports'
-import { InventoryReports } from '../features/reports/inventario/pages/InventoryReports'
+import { InventoryMovements } from '../features/reports/inventario/pages/InventoryMovements'
 import { DevolucionesReports } from '../features/reports/devoluciones/pages/DevolucionesReports'
 import { GananciasReports } from '../features/reports/ganancias/pages/GananciasReports'
-import { MovimientosReports } from '../features/reports/movimientos/pages/MovimientosReports'
 import { Settings } from '../features/settings/pages/Settings'
 import { Login } from '../features/auth/components/Login'
 import { SignUp } from '../features/auth/components/SignUp'
@@ -92,10 +91,9 @@ export const App = () => {
                             <Route path='/reports' element={<Reports />}>
                                 <Route index element={<Navigate to='ventas' replace />} />
                                 <Route path='ventas' element={<SalesReports />} />
-                                <Route path='inventario' element={<InventoryReports />} />
+                                <Route path='inventario' element={<InventoryMovements />} />
                                 <Route path='devoluciones' element={<DevolucionesReports />} />
                                 <Route path='ganancias' element={<GananciasReports />} />
-                                <Route path='movimientos' element={<MovimientosReports />} />
                             </Route>
                             <Route
                                 path='/settings'

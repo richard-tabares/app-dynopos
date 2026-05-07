@@ -1,32 +1,54 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { TrendingUp, DollarSign, Package, Percent, BarChart4, ArrowUpDown } from 'lucide-react'
 import { DateRangeFilter } from '../../shared/components/DateRangeFilter'
 import { getReports } from '../../shared/helpers/getReports'
 import { useStore } from '../../../../app/providers/store'
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend } from 'recharts'
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, Legend } from 'recharts'
 
 const formatCurrency = (value) =>
     new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(value)
+
+const computeDates = (filter) => {
+    const now = new Date()
+    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+    if (filter === 'day') return { startDate: today, endDate: today }
+    if (filter === 'week') {
+        const weekAgo = new Date()
+        weekAgo.setDate(weekAgo.getDate() - 7)
+        const s = `${weekAgo.getFullYear()}-${String(weekAgo.getMonth() + 1).padStart(2, '0')}-${String(weekAgo.getDate()).padStart(2, '0')}`
+        return { startDate: s, endDate: today }
+    }
+    if (filter === 'month') {
+        const monthAgo = new Date()
+        monthAgo.setMonth(monthAgo.getMonth() - 1)
+        const s = `${monthAgo.getFullYear()}-${String(monthAgo.getMonth() + 1).padStart(2, '0')}-${String(monthAgo.getDate()).padStart(2, '0')}`
+        return { startDate: s, endDate: today }
+    }
+    return { startDate: '', endDate: '' }
+}
 
 export const GananciasReports = () => {
     const { user } = useStore()
     const businessId = user?.data?.user?.id
 
     const [filter, setFilter] = useState('month')
-    const [startDate, setStartDate] = useState('')
-    const [endDate, setEndDate] = useState('')
+    const [rangeStart, setRangeStart] = useState('')
+    const [rangeEnd, setRangeEnd] = useState('')
+    const [shouldFetch, setShouldFetch] = useState(true)
     const [loading, setLoading] = useState(true)
     const [data, setData] = useState(null)
+    const initialLoad = useRef(true)
 
-    const loadData = useCallback(async () => {
-        if (!businessId) return
+    const fetchData = useCallback(async () => {
+        if (!businessId || !shouldFetch) return
         setLoading(true)
         try {
+            const dates = filter === 'range' ? { startDate: rangeStart, endDate: rangeEnd } : computeDates(filter)
             const result = await getReports(businessId, {
                 section: 'profitability',
                 filter,
-                startDate: filter === 'range' ? startDate : undefined,
-                endDate: filter === 'range' ? endDate : undefined,
+                startDate: dates.startDate,
+                endDate: dates.endDate,
             })
             setData(result.data)
         } catch (error) {
@@ -34,21 +56,48 @@ export const GananciasReports = () => {
         } finally {
             setLoading(false)
         }
-    }, [businessId, filter, startDate, endDate])
+    }, [businessId, filter, rangeStart, rangeEnd, shouldFetch])
 
     useEffect(() => {
-        loadData()
-    }, [loadData])
+        if (initialLoad.current) {
+            initialLoad.current = false
+            setShouldFetch(true)
+        }
+        fetchData()
+    }, [fetchData])
 
-    const handleFilterChange = ({ filter: newFilter, startDate: newStart, endDate: newEnd }) => {
+    const handleFilterChange = ({ filter: newFilter, startDate, endDate }) => {
         setFilter(newFilter)
-        setStartDate(newStart || '')
-        setEndDate(newEnd || '')
+        if (newFilter === 'range') {
+            if (startDate) setRangeStart(startDate)
+            if (endDate) {
+                setRangeEnd(endDate)
+                setShouldFetch(true)
+            } else {
+                setShouldFetch(false)
+            }
+        } else {
+            setRangeStart('')
+            setRangeEnd('')
+            setShouldFetch(true)
+        }
     }
 
     const summary = data?.summary
     const dailyProfit = data?.dailyProfit || []
     const productMargins = data?.productMargins || []
+
+    if (!shouldFetch && filter !== 'month') {
+        return (
+            <section className='space-y-6 pb-12'>
+                <h2 className='text-2xl font-bold text-on-surface'>Rentabilidad</h2>
+                <DateRangeFilter compact value={filter} onChange={handleFilterChange} startDate={rangeStart} endDate={rangeEnd} />
+                <div className='text-center text-faint italic py-12'>
+                    Selecciona una fecha de inicio y fin para ver los resultados
+                </div>
+            </section>
+        )
+    }
 
     return (
         <section className='space-y-6'>
@@ -60,8 +109,8 @@ export const GananciasReports = () => {
             <DateRangeFilter
                 value={filter}
                 onChange={handleFilterChange}
-                startDate={startDate}
-                endDate={endDate}
+                startDate={rangeStart}
+                endDate={rangeEnd}
                 compact
             />
 
@@ -75,7 +124,7 @@ export const GananciasReports = () => {
                     ))}
                 </div>
             ) : (
-                <>
+                    <>
                     <section className='grid grid-cols-4 max-lg:grid-cols-2 gap-4'>
                         <section className='bg-surface border border-outline p-6 rounded-lg shadow-xs flex items-center gap-4'>
                             <div className='p-3 bg-green-100 rounded-xl'>
@@ -118,20 +167,20 @@ export const GananciasReports = () => {
                     <section className='bg-surface border border-outline p-6 rounded-lg shadow-xs'>
                         <div className='flex items-center gap-2 text-primary-600 mb-6'>
                             <BarChart4 className='w-5 h-5' />
-                            <h3 className='text-lg font-semibold text-on-surface'>Ingresos vs Costos vs Ganancia</h3>
+                            <h3 className='text-lg font-semibold text-on-surface'>Costo vs Ingresos vs Ganancia</h3>
                         </div>
                         {dailyProfit.length > 0 ? (
                             <ResponsiveContainer width='100%' height={300}>
-                                <BarChart data={dailyProfit}>
+                                <LineChart data={dailyProfit}>
                                     <CartesianGrid strokeDasharray='3 3' />
                                     <XAxis dataKey='date' tick={{ fontSize: 12 }} />
                                     <YAxis tick={{ fontSize: 12 }} />
                                     <Tooltip formatter={(value) => formatCurrency(value)} />
                                     <Legend />
-                                    <Bar dataKey='revenue' name='Ingresos' fill='#22c55e' radius={[4, 4, 0, 0]} />
-                                    <Bar dataKey='cost' name='Costos' fill='#f97316' radius={[4, 4, 0, 0]} />
-                                    <Bar dataKey='profit' name='Ganancia' fill='#10b981' radius={[4, 4, 0, 0]} />
-                                </BarChart>
+                                    {/* <Line type='monotone' dataKey='cost' name='Costos' stroke='#f97316' strokeWidth={2} dot={false} /> */}
+                                    <Line type='monotone' dataKey='revenue' name='Ingresos' stroke='#0ea5e9' strokeWidth={2} dot={false} />
+                                    <Line type='monotone' dataKey='profit' name='Ganancia' stroke='#10b981' strokeWidth={2} dot={false} />
+                                </LineChart>
                             </ResponsiveContainer>
                         ) : (
                             <div className='text-center text-faint italic py-12'>
@@ -152,6 +201,7 @@ export const GananciasReports = () => {
                                         <tr className='bg-subtle border-b border-divider text-muted uppercase text-xs tracking-wider'>
                                             <th className='text-left py-3 px-4 font-medium'>Producto</th>
                                             <th className='text-right py-3 px-4 font-medium'>Unidades Vendidas</th>
+                                            <th className='text-right py-3 px-4 font-medium'>Costo Total</th>
                                             <th className='text-right py-3 px-4 font-medium'>Ingresos</th>
                                             <th className='text-right py-3 px-4 font-medium'>Margen</th>
                                         </tr>
@@ -161,6 +211,7 @@ export const GananciasReports = () => {
                                             <tr key={i} className='border-b border-divider-light hover:bg-hover'>
                                                 <td className='py-3 px-4 font-medium text-on-surface'>{p.name}</td>
                                                 <td className='py-3 px-4 text-right text-on-body'>{p.totalQuantity}</td>
+                                                <td className='py-3 px-4 text-right text-on-body'>{formatCurrency(p.totalCost)}</td>
                                                 <td className='py-3 px-4 text-right text-on-body'>{formatCurrency(p.totalRevenue)}</td>
                                                 <td className='py-3 px-4 text-right'>
                                                     <span className={`px-2.5 py-0.5 text-xs font-medium rounded-full ${
@@ -183,18 +234,7 @@ export const GananciasReports = () => {
                         )}
                     </section>
 
-                    <section className='bg-surface border border-outline p-6 rounded-lg shadow-xs'>
-                        <div className='flex items-center gap-2 text-primary-600 mb-6'>
-                            <Package className='w-5 h-5' />
-                            <h3 className='text-lg font-semibold text-on-surface'>Valoración de Inventario</h3>
-                        </div>
-                        <p className='text-3xl font-bold text-on-surface'>
-                            {formatCurrency(data?.inventoryValue || 0)}
-                        </p>
-                        <p className='text-sm text-muted mt-1'>
-                            Valor total del inventario basado en costo unitario × stock actual
-                        </p>
-                    </section>
+                   
                 </>
             )}
         </section>

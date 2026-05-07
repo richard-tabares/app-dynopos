@@ -1,5 +1,8 @@
 import { useState, useMemo } from 'react'
-import { Search, AlertTriangle, PackageCheck, Package, PackageX, ClipboardList } from 'lucide-react'
+import { Search, AlertTriangle, PackageCheck, Package, PackageX, Layers, ClipboardList } from 'lucide-react'
+
+const formatCurrency = (value) =>
+    new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(value)
 
 const statusConfig = {
     sin_stock: { label: 'Sin Stock', color: 'text-red-600', bg: 'bg-red-50' },
@@ -8,7 +11,16 @@ const statusConfig = {
     sin_control: { label: 'Sin Control', color: 'text-on-body', bg: 'bg-body' },
 }
 
-export const StockTable = ({ data = [], filter = 'stock_bajo' }) => {
+const stockFilters = [
+    { value: 'all', label: 'Todos', icon: Layers, color: 'text-primary-600', bg: 'bg-primary-50' },
+    { value: 'sin_stock', label: 'Sin Stock', icon: PackageX, color: 'text-red-500', bg: 'bg-red-50' },
+    { value: 'stock_bajo', label: 'Stock Bajo', icon: AlertTriangle, color: 'text-red-500', bg: 'bg-red-50' },
+    { value: 'con_stock', label: 'Con Stock', icon: PackageCheck, color: 'text-emerald-500', bg: 'bg-emerald-50' },
+    { value: 'sin_control', label: 'Sin Control', icon: Package, color: 'text-muted', bg: 'bg-body' },
+]
+
+export const StockTable = ({ data = [] }) => {
+    const [filter, setFilter] = useState('all')
     const [search, setSearch] = useState('')
     const [visibleCount, setVisibleCount] = useState(10)
 
@@ -32,6 +44,26 @@ export const StockTable = ({ data = [], filter = 'stock_bajo' }) => {
                 <h3 className='text-lg font-semibold text-on-surface'>Estado de Inventario</h3>
             </div>
 
+            <div className='flex gap-2 bg-subtle rounded-lg p-1 w-fit max-w-full overflow-x-auto scrollbar-none mb-4'>
+                {stockFilters.map((f) => {
+                    const Icon = f.icon
+                    return (
+                        <button
+                            key={f.value}
+                            onClick={() => setFilter(f.value)}
+                            className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer ${
+                                filter === f.value
+                                    ? 'bg-surface shadow-xs text-on-surface'
+                                    : 'text-muted hover:text-on-body hover:bg-hover'
+                            }`}
+                        >
+                            <Icon className={`w-4 h-4 ${f.color}`} />
+                            {f.label}
+                        </button>
+                    )
+                })}
+            </div>
+
             <div className='relative mb-4'>
                 <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-faint' />
                 <input
@@ -53,6 +85,7 @@ export const StockTable = ({ data = [], filter = 'stock_bajo' }) => {
                                     <th className='text-left py-3 px-4 font-medium'>Categoría</th>
                                     <th className='text-right py-3 px-4 font-medium'>Stock Actual</th>
                                     <th className='text-right py-3 px-4 font-medium'>Stock Mín.</th>
+                                    <th className='text-right py-3 px-4 font-medium'>Costo Unit.</th>
                                     <th className='text-right py-3 px-4 font-medium'>Estado</th>
                                 </tr>
                             </thead>
@@ -63,6 +96,7 @@ export const StockTable = ({ data = [], filter = 'stock_bajo' }) => {
                                         <td className='py-3 px-4 text-muted'>{item.category_name || 'Sin categoría'}</td>
                                         <td className='py-3 px-4 text-right'>{item.stock_status === 'sin_control' ? '—' : item.current_stock}</td>
                                         <td className='py-3 px-4 text-right'>{item.stock_status === 'sin_control' ? '—' : item.min_stock}</td>
+                                        <td className='py-3 px-4 text-right'>{item.unit_cost != null ? formatCurrency(item.unit_cost) : '—'}</td>
                                         <td className='py-3 px-4 text-right'>
                                             <span className={`text-xs font-medium px-2 py-1 rounded-full ${getStatusConfig(item.stock_status).bg} ${getStatusConfig(item.stock_status).color}`}>
                                                 {getStatusConfig(item.stock_status).label}

@@ -14,6 +14,7 @@ export const Login = () => {
     const [password, setPassword] = useState('')
     const [errors, setErrors] = useState({})
     const [touched, setTouched] = useState({})
+    const [loading, setLoading] = useState(false)
 
     const validateForm = () => {
         const newErrors = {}
@@ -49,6 +50,7 @@ export const Login = () => {
 
         if (Object.keys(newErrors).length === 0) {
             const user = { email, password }
+            setLoading(true)
             try {
                 const data = await login(user, setLogin)
                 if (data) {
@@ -59,6 +61,8 @@ export const Login = () => {
                 }
             } catch (error) {
                 toast.error(error.message || 'Error al iniciar sesión')
+            } finally {
+                setLoading(false)
             }
         } else {
             setErrors(newErrors)
@@ -110,8 +114,8 @@ export const Login = () => {
                             <p className='text-xs font-semibold text-red-500'>{errors.password}</p>
                         )}
                     </section>
-                    <button type="submit" className='py-3 px-6 font-semibold bg-primary-600 text-white rounded-md w-full cursor-pointer mb-2'>
-                        Iniciar Sesión
+                    <button type="submit" disabled={loading} className='py-3 px-6 font-semibold bg-primary-600 text-white rounded-md w-full cursor-pointer mb-2 disabled:opacity-60 disabled:cursor-not-allowed'>
+                        {loading ? 'Iniciando...' : 'Iniciar Sesión'}
                     </button>
                     <p className='text-center text-on-body text-xs mb-8'>
                         <NavLink

@@ -37,7 +37,6 @@ export const Products = () => {
     const [productToDelete, setProductToDelete] = useState(null)
     const [editProductData, setEditProductData] = useState({})
     const [searchTerm, setSearchTerm] = useState('')
-    const [activeCategory, setActiveCategory] = useState('all')
     const [activeStatus, setActiveStatus] = useState('all')
     const [activeStock, setActiveStock] = useState('all')
     const [visibleCount, setVisibleCount] = useState(20)
@@ -57,9 +56,6 @@ export const Products = () => {
             const matchesSearch =
                 product.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 product.sku?.toLowerCase().includes(searchTerm.toLowerCase())
-            const matchesCategory =
-                activeCategory === 'all' ||
-                product.categories?.id === activeCategory
             const matchesStatus =
                 activeStatus === 'all' ||
                 (activeStatus === 'active' && product.is_active !== false) ||
@@ -69,7 +65,7 @@ export const Products = () => {
                 (activeStock === 'with' && product.track_stock !== false) ||
                 (activeStock === 'without' && product.track_stock === false)
 
-            return matchesSearch && matchesCategory && matchesStatus && matchesStock
+            return matchesSearch && matchesStatus && matchesStock
         })
         .sort((a, b) => b.id - a.id)
 
@@ -470,7 +466,7 @@ export const Products = () => {
                             />
                         </div>
                         <div className='flex flex-wrap items-center gap-2 max-w-full overflow-x-auto scrollbar-none'>
-                            <div className='flex gap-1 bg-subtle dark:bg-gray-900 rounded-lg p-1 w-fit'>
+                            {/* <div className='flex gap-1 bg-subtle dark:bg-gray-900 rounded-lg p-1 w-fit'>
                                 <button
                                     onClick={() => setActiveCategory('all')}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
@@ -496,7 +492,7 @@ export const Products = () => {
                                         {category.name}
                                     </button>
                                 ))}
-                            </div>
+                            </div> */}
                             <div className='flex gap-1 bg-subtle dark:bg-gray-900 rounded-lg p-1 w-fit ml-0 xl:ml-4'>
                                 <button
                                     onClick={() => { setActiveStatus('all'); setVisibleCount(20) }}

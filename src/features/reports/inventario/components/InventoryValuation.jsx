@@ -53,7 +53,7 @@ export const InventoryValuation = ({ data = [] }) => {
                                 <tr className='bg-subtle border-b border-divider text-muted uppercase text-xs tracking-wider'>
                                     <th className='text-left py-3 px-4 font-medium'>Producto</th>
                                     <th className='text-right py-3 px-4 font-medium'>Stock</th>
-                                    <th className='text-right py-3 px-4 font-medium'>Precio Unit.</th>
+                                    <th className='text-right py-3 px-4 font-medium'>Costo Unit.</th>
                                     <th className='text-right py-3 px-4 font-medium'>Valor Total</th>
                                 </tr>
                             </thead>
@@ -62,7 +62,7 @@ export const InventoryValuation = ({ data = [] }) => {
                                     <tr key={i} className='border-b border-divider-light hover:bg-hover'>
                                         <td className='py-3 px-4 font-medium text-on-surface'>{item.product_name}</td>
                                         <td className='py-3 px-4 text-right'>{item.current_stock}</td>
-                                        <td className='py-3 px-4 text-right'>{formatCurrency(item.unit_price)}</td>
+                                        <td className='py-3 px-4 text-right'>{formatCurrency(item.unit_cost)}</td>
                                         <td className='py-3 px-4 text-right font-semibold'>{formatCurrency(item.total_value)}</td>
                                     </tr>
                                 ))}

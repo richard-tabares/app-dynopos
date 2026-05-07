@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react'
-import { Search, TrendingUp, DollarSign, Bell } from 'lucide-react'
+import { useEffect, useState, useMemo } from 'react'
+import { Search, TrendingUp, DollarSign, Bell, History, X } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { useStore } from '../../../app/providers/store'
 import { getProducts } from '../../products/helpers/getProducts'
 import { getCategories } from '../../categories/helpers/getCategories'
-import { CategoryTabs } from '../components/CategoryTabs'
+// import { CategoryTabs } from '../components/CategoryTabs'
 import { ProductGrid } from '../components/ProductGrid'
 import { OrderSidebar } from '../components/OrderSidebar'
 import { SaleConfirmationModal } from '../components/SaleConfirmationModal'
@@ -15,9 +15,8 @@ import { returnSale } from '../helpers/returnSale'
 import { getTodayRevenue } from '../helpers/getTodayRevenue'
 
 export const Sales = () => {
-    const { user, products, setProducts, cart, clearCart, setTodayRevenue, categories, setCategories } = useStore()
+    const { user, products, setProducts, cart, clearCart, setTodayRevenue, setCategories } = useStore()
     const [searchTerm, setSearchTerm] = useState('')
-    const [activeCategory, setActiveCategory] = useState('all')
     const [loading, setLoading] = useState(false)
     const [, setLastSaleTicket] = useState(null)
     const [showConfirmationModal, setShowConfirmationModal] = useState(false)
@@ -25,7 +24,6 @@ export const Sales = () => {
 
     const [salesList, setSalesList] = useState([])
 
-    const [showProducts, setShowProducts] = useState(false)
     const [visibleCount, setVisibleCount] = useState(10)
 
     const businessId = user?.data?.user?.id
@@ -54,10 +52,9 @@ export const Sales = () => {
         .filter((product) => {
             const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
                                  product.sku.toLowerCase().includes(searchTerm.toLowerCase())
-            const matchesCategory = activeCategory === 'all' || product.categories?.id === activeCategory
             const isActive = product.is_active !== false
 
-            return matchesSearch && matchesCategory && isActive
+            return matchesSearch && isActive
         })
         .sort((a, b) => {
             // Sort by ID descending (assuming larger ID = more recent, or use created_at if available)
@@ -69,13 +66,25 @@ export const Sales = () => {
 
     const displayedProducts = filteredProducts.slice(0, visibleCount)
 
-    useEffect(() => {
-        if (searchTerm.trim() || activeCategory !== 'all') {
-            setShowProducts(true)
-        } else {
-            setShowProducts(false)
+    const recentlySoldProducts = useMemo(() => {
+        const seen = new Set()
+        const result = []
+        for (const sale of salesList) {
+            if (!sale.items) continue
+            for (const item of sale.items) {
+                if (!seen.has(item.product_id)) {
+                    seen.add(item.product_id)
+                    const fullProduct = products.find(p => p.id === item.product_id)
+                    if (fullProduct) {
+                        result.push(fullProduct)
+                    }
+                    if (result.length >= 10) break
+                }
+            }
+            if (result.length >= 10) break
         }
-    }, [searchTerm, activeCategory])
+        return result
+    }, [salesList, products])
 
     const handleLoadMore = () => {
         setVisibleCount((prev) => prev + 10)
@@ -174,49 +183,71 @@ export const Sales = () => {
                 <div className='flex-1 flex flex-col gap-6 min-w-0'>
                     <section className='bg-surface p-6 rounded-lg border border-outline shadow-xs flex flex-col gap-6'>
                         {/* Search Bar */}
-                        <div className='relative'>
-                            <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-faint' />
-                            <input
-                                type='search'
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                placeholder='Buscar por nombre o código...'
-                                className='w-full border border-outline rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
-                            />
+                        <div className='flex flex-col gap-3'>
+                            <div className='relative'>
+                                <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-faint' />
+                                <input
+                                    type='search'
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    placeholder='Buscar por nombre o código...'
+                                    className='w-full border border-outline rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
+                                    autoFocus
+                                />
+                            </div>
+                            {searchTerm.trim() && (
+                                <button
+                                    onClick={() => { setSearchTerm(''); setVisibleCount(10) }}
+                                    className='flex items-center gap-2 px-3 py-1.5 bg-gray-200 dark:bg-hover self-start text-sm font-medium rounded-md transition-colors cursor-pointer text-muted hover:text-on-body hover:bg-gray-300'
+                                >
+                                    <X className='w-4 h-4' />
+                                    Limpiar búsqueda
+                                </button>
+                            )}
                         </div>
 
                         {/* Category Filters */}
-                        <CategoryTabs 
+                        {/* <CategoryTabs 
                             categories={categories} 
                             activeCategory={activeCategory} 
                             onSelectCategory={setActiveCategory} 
-                        />
+                        /> */}
 
                         {/* Product Grid */}
                         <div className='min-h-100'>
-                            {!showProducts ? (
-                                <div className='flex flex-col items-center justify-center py-20 text-faint'>
-                                    <Search className='w-12 h-12 opacity-20 mb-4' />
-                                    <p className='text-lg font-medium'>Busca productos o selecciona una categoría</p>
-                                    <p className='text-sm text-faint mt-1'>Los productos aparecerán aquí</p>
-                                </div>
-                            ) : filteredProducts.length === 0 ? (
-                                <div className='flex flex-col items-center justify-center py-20 text-faint'>
-                                    <Search className='w-12 h-12 opacity-20 mb-4' />
-                                    <p className='text-lg font-medium'>No se encontraron productos</p>
+                            {searchTerm.trim() ? (
+                                filteredProducts.length === 0 ? (
+                                    <div className='flex flex-col items-center justify-center py-20 text-faint'>
+                                        <Search className='w-12 h-12 opacity-20 mb-4' />
+                                        <p className='text-lg font-medium'>No se encontraron productos</p>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <ProductGrid products={displayedProducts} />
+                                        {visibleCount < filteredProducts.length && (
+                                            <button
+                                                onClick={handleLoadMore}
+                                                className='w-full mt-4 py-2 text-sm font-medium text-primary-600 hover:bg-primary-50 rounded-lg transition cursor-pointer'
+                                            >
+                                                Cargar más ({filteredProducts.length - visibleCount} restantes)
+                                            </button>
+                                        )}
+                                    </>
+                                )
+                            ) : recentlySoldProducts.length > 0 ? (
+                                <div className='flex flex-col gap-3'>
+                                    <div className='flex items-center gap-2 text-xs text-muted font-medium'>
+                                        <History className='w-3.5 h-3.5' />
+                                        Últimos productos vendidos
+                                    </div>
+                                    <ProductGrid products={recentlySoldProducts} />
                                 </div>
                             ) : (
-                                <>
-                                    <ProductGrid products={displayedProducts} />
-                                    {visibleCount < filteredProducts.length && (
-                                        <button
-                                            onClick={handleLoadMore}
-                                            className='w-full mt-4 py-2 text-sm font-medium text-primary-600 hover:bg-primary-50 rounded-lg transition cursor-pointer'
-                                        >
-                                            Cargar más ({filteredProducts.length - visibleCount} restantes)
-                                        </button>
-                                    )}
-                                </>
+                                <div className='flex flex-col items-center justify-center py-20 text-faint'>
+                                    <Search className='w-12 h-12 opacity-20 mb-4' />
+                                    <p className='text-lg font-medium'>Busca productos</p>
+                                    <p className='text-sm text-faint mt-1'>Los productos aparecerán aquí</p>
+                                </div>
                             )}
                         </div>
                     </section>
