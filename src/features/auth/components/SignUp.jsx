@@ -1,13 +1,11 @@
 import { useState } from 'react'
-import { Eye, EyeClosed } from 'lucide-react'
-import { signup as SignUpHelper } from '../helpers/signup'
+import { Eye, EyeClosed, ArrowRight } from 'lucide-react'
+import { initiateSignup } from '../helpers/initiateSignup'
 import { NavLink, useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 
 export const SignUp = () => {
-
     const navigate = useNavigate()
-    // Estado para el formulario
     const [formData, setFormData] = useState({
         business_name: '',
         owner_name: '',
@@ -21,8 +19,8 @@ export const SignUp = () => {
     const [touched, setTouched] = useState({})
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+    const [loading, setLoading] = useState(false)
 
-    // Validar que la contraseña cumpla con los requisitos
     const validatePassword = (password) => {
         const hasLetters = /[a-zA-Z]/.test(password)
         const hasNumbers = /[0-9]/.test(password)
@@ -30,13 +28,11 @@ export const SignUp = () => {
         return hasLetters && hasNumbers && isLongEnough
     }
 
-    // Validar email
     const validateEmail = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         return emailRegex.test(email)
     }
 
-    // Validar teléfono
     const validatePhone = (phone) => {
         const phoneRegex = /^\d{10,}$/
         return phoneRegex.test(phone.replace(/[^\d]/g, ''))
@@ -88,7 +84,6 @@ export const SignUp = () => {
             ...prev,
             [name]: value,
         }))
-        // Limpiar error del campo cuando el usuario empieza a escribir
         if (errors[name]) {
             setErrors((prev) => ({
                 ...prev,
@@ -110,17 +105,26 @@ export const SignUp = () => {
         const newErrors = validateForm()
 
         if (Object.keys(newErrors).length === 0) {
-            // enviamos datos al backend
+            setLoading(true)
             try {
-                await SignUpHelper(formData)
-                toast.success('Cuenta creada exitosamente. Revisa tu correo para confirmar.')
-                navigate('/emailConfirmation', { state: { email: formData.email }, replace: true })
+                const result = await initiateSignup(formData)
+                navigate('/signup/payment', {
+                    state: {
+                        signup_token: result.signup_token,
+                        acceptance_token: result.acceptance_token,
+                        personal_data_auth: result.personal_data_auth,
+                        plan: result.plan,
+                        email: formData.email,
+                    },
+                    replace: true,
+                })
             } catch (error) {
-                toast.error(error.message || 'Error al crear la cuenta')
+                toast.error(error.message || 'Error al iniciar el registro')
+            } finally {
+                setLoading(false)
             }
         } else {
             setErrors(newErrors)
-            // Marcar todos los campos como tocados para mostrar errores
             setTouched({
                 business_name: true,
                 owner_name: true,
@@ -135,21 +139,41 @@ export const SignUp = () => {
     return (
         <section className='w-full flex flex-col items-center justify-center bg-surface px-4 py-8'>
             <section className='w-2/4 max-lg:w-2/3 max-md:w-full p-6 md:p-10'>
+                {/* Step Indicator */}
+                <section className='flex items-center justify-center gap-3 mb-8'>
+                    <section className='flex items-center gap-2'>
+                        <span className='w-8 h-8 rounded-full bg-primary-600 text-white flex items-center justify-center text-sm font-bold'>
+                            1
+                        </span>
+                        <span className='text-sm font-semibold text-primary-600'>
+                            Datos
+                        </span>
+                    </section>
+                    <section className='w-12 h-0.5 bg-gray-300' />
+                    <section className='flex items-center gap-2'>
+                        <span className='w-8 h-8 rounded-full bg-gray-200 text-gray-400 flex items-center justify-center text-sm font-bold'>
+                            2
+                        </span>
+                        <span className='text-sm text-gray-400'>
+                            Pago
+                        </span>
+                    </section>
+                </section>
+
                 <h1 className='text-2xl font-bold text-center text-on-surface mb-2'>
                     Crear Cuenta
                 </h1>
-                <p className=' text-on-body text-center mb-8'>
-                    Completa los datos para registrarse
+                <p className='text-on-body text-center mb-8'>
+                    Paso 1: Datos de la empresa y del propietario
                 </p>
 
                 <form
                     onSubmit={handleSubmit}
                     className='space-y-5'>
-                    {/* Campo Empresa */}
                     <section className='flex flex-col gap-2'>
                         <label
                             htmlFor='businessName'
-                            className=' font-semibold text-on-surface'>
+                            className='font-semibold text-on-surface'>
                             Empresa{' '}
                             <span className='text-red-500 font-bold'>*</span>
                         </label>
@@ -174,11 +198,10 @@ export const SignUp = () => {
                         )}
                     </section>
 
-                    {/* Campo Nombres y Apellidos */}
                     <section className='flex flex-col gap-2'>
                         <label
                             htmlFor='ownerName'
-                            className=' font-semibold text-on-surface'>
+                            className='font-semibold text-on-surface'>
                             Nombres y Apellidos{' '}
                             <span className='text-red-500 font-bold'>*</span>
                         </label>
@@ -190,7 +213,7 @@ export const SignUp = () => {
                             onChange={handleChange}
                             onBlur={handleBlur}
                             placeholder='Tu nombre completo'
-                            className={`px-4 py-3 border rounded-lg  transition-all duration-300 focus:outline-none ${
+                            className={`px-4 py-3 border rounded-lg transition-all duration-300 focus:outline-none ${
                                 touched.owner_name && errors.owner_name
                                     ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-200'
                                     : 'border-divider focus:border-primary-300 focus:ring-2 focus:ring-primary-300'
@@ -203,11 +226,10 @@ export const SignUp = () => {
                         )}
                     </section>
 
-                    {/* Campo Email */}
                     <section className='flex flex-col gap-2'>
                         <label
                             htmlFor='email'
-                            className=' font-semibold text-on-surface'>
+                            className='font-semibold text-on-surface'>
                             Email{' '}
                             <span className='text-red-500 font-bold'>*</span>
                         </label>
@@ -219,7 +241,7 @@ export const SignUp = () => {
                             onChange={handleChange}
                             onBlur={handleBlur}
                             placeholder='tu@email.com'
-                            className={`px-4 py-3 border rounded-lg  transition-all duration-300 focus:outline-none ${
+                            className={`px-4 py-3 border rounded-lg transition-all duration-300 focus:outline-none ${
                                 touched.email && errors.email
                                     ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-200'
                                     : 'border-divider focus:border-primary-300 focus:ring-2 focus:ring-primary-300'
@@ -232,11 +254,10 @@ export const SignUp = () => {
                         )}
                     </section>
 
-                    {/* Campo Contraseña */}
                     <section className='flex flex-col gap-2'>
                         <label
                             htmlFor='password'
-                            className=' font-semibold text-on-surface'>
+                            className='font-semibold text-on-surface'>
                             Contraseña{' '}
                             <span className='text-red-500 font-bold'>*</span>
                         </label>
@@ -249,7 +270,7 @@ export const SignUp = () => {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 placeholder='Mínimo 8 caracteres (letras y números)'
-                                className={`w-full px-4 py-3 pr-10 border rounded-lg  transition-all duration-300 focus:outline-none ${
+                                className={`w-full px-4 py-3 pr-10 border rounded-lg transition-all duration-300 focus:outline-none ${
                                     touched.password && errors.password
                                         ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-200'
                                         : 'border-divider focus:border-primary-300 focus:ring-2 focus:ring-primary-300'
@@ -288,11 +309,10 @@ export const SignUp = () => {
                         )}
                     </section>
 
-                    {/* Campo Confirmar Contraseña */}
                     <section className='flex flex-col gap-2'>
                         <label
                             htmlFor='confirmPassword'
-                            className=' font-semibold text-on-surface'>
+                            className='font-semibold text-on-surface'>
                             Confirmar Contraseña{' '}
                             <span className='text-red-500 font-bold'>*</span>
                         </label>
@@ -305,7 +325,7 @@ export const SignUp = () => {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 placeholder='Confirma tu contraseña'
-                                className={`w-full px-4 py-3 pr-10 border rounded-lg  transition-all duration-300 focus:outline-none ${
+                                className={`w-full px-4 py-3 pr-10 border rounded-lg transition-all duration-300 focus:outline-none ${
                                     touched.confirmPassword &&
                                     errors.confirmPassword
                                         ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-200'
@@ -335,11 +355,10 @@ export const SignUp = () => {
                             )}
                     </section>
 
-                    {/* Campo Teléfono */}
                     <section className='flex flex-col gap-2'>
                         <label
                             htmlFor='phone'
-                            className=' font-semibold text-on-surface'>
+                            className='font-semibold text-on-surface'>
                             Teléfono{' '}
                             <span className='text-red-500 font-bold'>*</span>
                         </label>
@@ -351,7 +370,7 @@ export const SignUp = () => {
                             onChange={handleChange}
                             onBlur={handleBlur}
                             placeholder='10 dígitos mínimo'
-                            className={`px-4 py-3 border rounded-lg  transition-all duration-300 focus:outline-none ${
+                            className={`px-4 py-3 border rounded-lg transition-all duration-300 focus:outline-none ${
                                 touched.phone && errors.phone
                                     ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-200'
                                     : 'border-divider focus:border-primary-300 focus:ring-2 focus:ring-primary-300'
@@ -366,8 +385,16 @@ export const SignUp = () => {
 
                     <button
                         type='submit'
-                        className='w-full mt-4 px-6 py-3 bg-primary-600 text-white border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 hover:bg-primary-500'>
-                        Crear Cuenta
+                        disabled={loading}
+                        className='w-full mt-4 px-6 py-3 bg-primary-600 text-white border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 hover:bg-primary-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
+                        {loading ? (
+                            'Procesando...'
+                        ) : (
+                            <>
+                                Continuar al Pago
+                                <ArrowRight className='w-5 h-5' />
+                            </>
+                        )}
                     </button>
 
                     <p className='text-center text-on-body m-0'>
