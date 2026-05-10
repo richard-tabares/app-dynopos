@@ -34,6 +34,7 @@ dynopos-app/
 ```bash
 # Backend
 cd backend && npm run dev      # Express server on port 3000
+cd backend && npm start        # Production start (used by Render)
 cd backend && npm test         # npm test (no tests configured)
 
 # Frontend
@@ -159,10 +160,26 @@ defineConfig([
 ])
 ```
 
+### Deployment — Subdominios bykor.co
+
+| Subdominio | Plataforma | Descripción |
+|---|---|---|
+| `pos.bykor.co` | Netlify | Frontend React (DynoPOS) |
+| `api.bykor.co` | Render | Express API (Plan Starter $7/mes) |
+| `admin.bykor.co` | Netlify | Admin panel placeholder |
+
+**Variables de entorno por plataforma:**
+- **Netlify (pos.bykor.co)**: `VITE_API_URL=https://api.bykor.co`
+- **Render (api.bykor.co)**: `ALLOWED_ORIGINS=https://pos.bykor.co,https://admin.bykor.co`, `FRONTEND_URL=https://pos.bykor.co`, más credenciales Supabase/Wompi producción
+- **Netlify (admin.bykor.co)**: Ninguna (sitio estático)
+
+**Health check**: `GET /health` en backend (usado por Render).
+
+**CORS**: Controlado por variable `ALLOWED_ORIGINS`. Si no está definida, permite `localhost:5173` y `localhost:4173` (desarrollo local).
+
 ### Notes
 
 - **No tests exist** in either frontend or backend.
-- `index.html` has no favicon and title set to `"frontend"` (needs updating).
 - Reports feature is a placeholder (`<div>Reports</div>`).
 - Nunca hacer commit sin mi autorizacion antes
 - Los commit siempre en español
