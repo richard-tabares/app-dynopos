@@ -67,7 +67,8 @@ export const Products = () => {
 
             return matchesSearch && matchesStatus && matchesStock
         })
-        .sort((a, b) => b.id - a.id)
+        // Products come from API in default order
+        .sort((a, b) => (b.created_at || '').localeCompare(a.created_at || ''))
 
     const displayedProducts = filteredProducts.slice(0, visibleCount)
 

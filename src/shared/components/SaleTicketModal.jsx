@@ -74,7 +74,7 @@ export const SaleTicketModal = ({ isOpen, onClose, sale }) => {
                     <div className='space-y-1 mb-4 text-[11px]'>
                         <div className='flex justify-between gap-1'>
                             <span className='text-muted uppercase shrink-0'>Orden:</span>
-                            <span className='font-bold text-on-surface truncate'>#{String(sale.id).padStart(4, '0')}</span>
+                            <span className='font-bold text-on-surface truncate'>#{String(sale.ticketNumber || sale.id).padStart(4, '0')}</span>
                         </div>
                         <div className='flex justify-between gap-1'>
                             <span className='text-muted uppercase shrink-0'>Fecha:</span>
