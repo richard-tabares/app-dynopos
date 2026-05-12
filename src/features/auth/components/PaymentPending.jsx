@@ -1,43 +1,50 @@
-import { useEffect, useCallback } from 'react'
-import { useNavigate, useLocation } from 'react-router'
-import { Loader2, Banknote, Copy, Clock } from 'lucide-react'
+import { useEffect, useCallback, useState } from 'react'
+import { useNavigate, useLocation, NavLink } from 'react-router'
+import { Loader2, Banknote, Copy, Clock, CheckCircle, ExternalLink } from 'lucide-react'
 import { checkPaymentStatus } from '../helpers/checkPaymentStatus'
 import { toast } from 'react-toastify'
 
 export const PaymentPending = () => {
     const navigate = useNavigate()
     const location = useLocation()
+    const [status, setStatus] = useState('pending')
     const stateData = location.state
 
+    const signupToken = stateData?.signup_token || new URLSearchParams(location.search).get('token')
+
     const checkStatus = useCallback(async () => {
-        if (!stateData?.signup_token) return
+        if (!signupToken) return
         try {
-            const result = await checkPaymentStatus(stateData.signup_token)
-            if (result.status === 'completed') {
-                navigate('/signup/success', { replace: true })
+            const result = await checkPaymentStatus(signupToken)
+            setStatus(result.transaction_status || result.status)
+
+            if (result.status === 'completed' || result.transaction_status === 'approved') {
+                setTimeout(() => {
+                    navigate('/signup/success', { replace: true })
+                }, 1500)
             }
         } catch {
             // keep polling
         }
-    }, [stateData, navigate])
+    }, [signupToken, navigate])
 
     useEffect(() => {
-        if (!stateData?.signup_token) {
+        if (!signupToken) {
             navigate('/signup', { replace: true })
             return
         }
 
-        if (stateData.bank_info) {
+        if (stateData?.bank_info) {
             return
         }
 
         const interval = setInterval(checkStatus, 5000)
         return () => clearInterval(interval)
-    }, [stateData, navigate, checkStatus])
+    }, [signupToken, stateData, navigate, checkStatus])
 
-    if (!stateData) return null
+    if (!signupToken) return null
 
-    const { bank_info, reference, amount } = stateData
+    const { bank_info, reference, amount } = stateData || {}
     const formatPrice = (value) =>
         new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(value)
 
@@ -117,6 +124,22 @@ export const PaymentPending = () => {
                             </div>
                         </section>
                     </section>
+                </section>
+            </section>
+        )
+    }
+
+    if (status === 'approved' || status === 'completed') {
+        return (
+            <section className='w-full flex flex-col items-center justify-center bg-surface px-4 py-8'>
+                <section className='text-center'>
+                    <CheckCircle className='w-20 h-20 text-green-500 mx-auto mb-6' />
+                    <h1 className='text-2xl font-bold text-on-surface mb-2'>
+                        ¡Pago exitoso!
+                    </h1>
+                    <p className='text-on-body mb-8'>
+                        Tu cuenta está siendo creada. Redirigiendo...
+                    </p>
                 </section>
             </section>
         )

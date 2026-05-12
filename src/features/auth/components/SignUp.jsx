@@ -7,12 +7,12 @@ import { toast } from 'react-toastify'
 export const SignUp = () => {
     const navigate = useNavigate()
     const [formData, setFormData] = useState({
-        business_name: '',
-        owner_name: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        phone: '',
+        business_name: 'Bykor',
+        owner_name: 'Richard Tabares',
+        email: 'richardtabaresb@gmail.com',
+        password: '12345678j',
+        confirmPassword: '12345678j',
+        phone: '3001234567',
     })
 
     const [errors, setErrors] = useState({})

@@ -14,6 +14,7 @@ import { Settings } from '../features/settings/pages/Settings'
 import { Login } from '../features/auth/components/Login'
 import { SignUp } from '../features/auth/components/SignUp'
 import { PaymentStep } from '../features/auth/components/PaymentStep'
+import { CardPayment } from '../features/auth/components/CardPayment'
 import { PaymentPending } from '../features/auth/components/PaymentPending'
 import { PaymentSuccess } from '../features/auth/components/PaymentSuccess'
 import { EmailConfirmation } from '../features/auth/components/EmailConfirmation'
@@ -51,6 +52,11 @@ export const App = () => {
                     <Route
                         path='/signup/payment'
                         element={<PaymentStep />}
+                    />
+
+                    <Route
+                        path='/signup/card-payment'
+                        element={<CardPayment />}
                     />
 
                     <Route

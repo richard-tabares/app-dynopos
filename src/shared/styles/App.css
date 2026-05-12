@@ -89,3 +89,29 @@
         display: none;
     }
 }
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    .print-receipt,
+    .print-receipt * {
+        visibility: visible;
+    }
+    .print-receipt {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        transform: translateX(-50%);
+        width: 100%;
+        max-width: 480px;
+        margin-top: 0.5in;
+        padding: 0.3in;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+    }
+    .no-print {
+        display: none !important;
+    }
+}

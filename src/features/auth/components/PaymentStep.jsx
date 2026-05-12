@@ -37,7 +37,16 @@ export const PaymentStep = () => {
                 payment_method: paymentMethod,
             })
 
-            if (paymentMethod === 'transfer') {
+            if (paymentMethod === 'card') {
+                navigate('/signup/card-payment', {
+                    state: {
+                        signup_token: signupData.signup_token,
+                        billing_frequency: billingFrequency,
+                        plan: plan,
+                    },
+                    replace: true,
+                })
+            } else if (paymentMethod === 'transfer') {
                 navigate('/signup/pending', {
                     state: {
                         signup_token: signupData.signup_token,
