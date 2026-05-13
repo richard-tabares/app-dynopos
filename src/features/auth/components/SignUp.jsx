@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Eye, EyeClosed, ArrowRight } from 'lucide-react'
 import { initiateSignup } from '../helpers/initiateSignup'
+import { checkEmail } from '../helpers/checkEmail'
 import { NavLink, useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 
@@ -20,6 +21,9 @@ export const SignUp = () => {
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [emailExists, setEmailExists] = useState(null)
+    const [checkingEmail, setCheckingEmail] = useState(false)
+    const debounceRef = useRef(null)
 
     const validatePassword = (password) => {
         const hasLetters = /[a-zA-Z]/.test(password)
@@ -90,6 +94,25 @@ export const SignUp = () => {
                 [name]: '',
             }))
         }
+        if (name === 'email') {
+            setEmailExists(null)
+            if (debounceRef.current) clearTimeout(debounceRef.current)
+            if (value && validateEmail(value)) {
+                setCheckingEmail(true)
+                debounceRef.current = setTimeout(async () => {
+                    try {
+                        const result = await checkEmail(value)
+                        setEmailExists(result.exists)
+                    } catch {
+                        setEmailExists(null)
+                    } finally {
+                        setCheckingEmail(false)
+                    }
+                }, 500)
+            } else {
+                setCheckingEmail(false)
+            }
+        }
     }
 
     const handleBlur = (e) => {
@@ -135,6 +158,14 @@ export const SignUp = () => {
             })
         }
     }
+
+    const isFormValid = formData.business_name.trim()
+        && formData.owner_name.trim()
+        && formData.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
+        && formData.password && /[a-zA-Z]/.test(formData.password) && /[0-9]/.test(formData.password) && formData.password.length >= 8
+        && formData.confirmPassword && formData.password === formData.confirmPassword
+        && formData.phone && /^\d{10,}$/.test(formData.phone.replace(/[^\d]/g, ''))
+        && emailExists === false
 
     return (
         <section className='w-full flex flex-col items-center justify-center bg-surface px-4 py-8'>
@@ -250,6 +281,21 @@ export const SignUp = () => {
                         {touched.email && errors.email && (
                             <p className='text-xs font-semibold text-red-500'>
                                 {errors.email}
+                            </p>
+                        )}
+                        {checkingEmail && (
+                            <p className='text-xs font-semibold text-primary-500'>
+                                Verificando email...
+                            </p>
+                        )}
+                        {emailExists === true && !checkingEmail && (
+                            <p className='text-xs font-semibold text-red-500'>
+                                Este email ya está registrado
+                            </p>
+                        )}
+                        {emailExists === false && !checkingEmail && formData.email && !errors.email && (
+                            <p className='text-xs font-semibold text-green-600'>
+                                Email disponible
                             </p>
                         )}
                     </section>
@@ -385,7 +431,7 @@ export const SignUp = () => {
 
                     <button
                         type='submit'
-                        disabled={loading}
+                        disabled={loading || !isFormValid}
                         className='w-full mt-4 px-6 py-3 bg-primary-600 text-white border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 hover:bg-primary-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
                         {loading ? (
                             'Procesando...'
