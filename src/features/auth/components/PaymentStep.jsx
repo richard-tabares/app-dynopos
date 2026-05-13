@@ -65,16 +65,6 @@ export const PaymentStep = () => {
                     },
                     replace: true,
                 })
-            } else if (paymentMethod === 'transfer') {
-                navigate('/signup/pending', {
-                    state: {
-                        pending_signup_id,
-                        reference: result.reference,
-                        amount: result.amount,
-                        bank_info: result.bank_info,
-                    },
-                    replace: true,
-                })
             } else if (result.checkout_url) {
                 window.location.href = result.checkout_url
             } else {
@@ -229,10 +219,10 @@ export const PaymentStep = () => {
                 {/* Total */}
                 <section className='bg-subtle border border-divider rounded-lg p-4 mb-6'>
                     <section className='flex justify-between items-center'>
-                        <span className='text-sm text-primary-50 font-bold'>
+                        <span className='text-sm text-muted font-bold'>
                             {billingFrequency === 'annual' ? 'Total anual' : 'Total mensual'}
                         </span>
-                        <span className='text-2xl font-bold text-primary-50'>
+                        <span className='text-2xl font-bold text-muted'>
                             ${formatPrice(currentPrice)}
                         </span>
                     </section>
