@@ -36,13 +36,9 @@ export const CardPayment = () => {
             navigate('/signup', { replace: true })
             return
         }
-        const loadTokens = async () => {
+        const loadFormData = async () => {
             try {
                 const data = await getAcceptanceTokens(signupData.signup_token)
-                setTokens({
-                    acceptance_token: data.acceptance_token,
-                    personal_data_auth: data.personal_data_auth,
-                })
                 setForm(prev => ({
                     ...prev,
                     email: data.email || '',
@@ -54,7 +50,7 @@ export const CardPayment = () => {
                 navigate('/signup', { replace: true })
             }
         }
-        loadTokens()
+        loadFormData()
     }, [signupData, navigate])
 
     const handleChange = (e) => {
@@ -99,6 +95,12 @@ export const CardPayment = () => {
 
         setLoading(true)
         try {
+            const tokenData = await getAcceptanceTokens(signupData.signup_token)
+            setTokens({
+                acceptance_token: tokenData.acceptance_token,
+                personal_data_auth: tokenData.personal_data_auth,
+            })
+
             const cardNumber = form.card_number.replace(/\s/g, '')
 
             const tokenRes = await fetch(`${WOMPI_API}/tokens/cards`, {
@@ -121,9 +123,9 @@ export const CardPayment = () => {
                 throw new Error(err.error?.message || 'Error al validar la tarjeta')
             }
 
-            const tokenData = await tokenRes.json()
-            const cardToken = tokenData.data?.id
-            const cardLast4 = tokenData.data?.last_four || cardNumber.slice(-4)
+            const cardTokenRes = await tokenRes.json()
+            const cardToken = cardTokenRes.data?.id
+            const cardLast4 = cardTokenRes.data?.last_four || cardNumber.slice(-4)
 
             if (!cardToken) throw new Error('No se pudo tokenizar la tarjeta')
 
@@ -131,8 +133,8 @@ export const CardPayment = () => {
                 signup_token: signupData.signup_token,
                 card_token: cardToken,
                 card_last4: cardLast4,
-                acceptance_token: tokens.acceptance_token,
-                personal_data_auth: tokens.personal_data_auth,
+                acceptance_token: tokenData.acceptance_token,
+                personal_data_auth: tokenData.personal_data_auth,
                 customer_email: form.email,
                 billing_frequency: signupData.billing_frequency || 'monthly',
                 customer_data: {
@@ -171,11 +173,11 @@ export const CardPayment = () => {
                     replace: true,
                 })
             } else {
-                throw new Error(result.error || 'Error al procesar el pago')
+                toast.error(result.error || 'La transacción fue rechazada')
+                setLoading(false)
             }
         } catch (error) {
             toast.error(error.message || 'Error al procesar el pago')
-        } finally {
             setLoading(false)
         }
     }
@@ -184,7 +186,7 @@ export const CardPayment = () => {
         new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(value)
     const currentPrice = signupData?.billing_frequency === 'annual' ? 430920 : 39900
 
-    if (!tokens.acceptance_token) {
+    if (!form.email) {
         return (
             <section className='w-full flex flex-col items-center justify-center bg-surface px-4 py-8'>
                 <p className='text-on-body'>Cargando...</p>
