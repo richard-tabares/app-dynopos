@@ -5,9 +5,9 @@ export const processCardPayment = async (data) => {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(data),
     })
-    if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.error || `Error ${response.status}`)
+    const result = await response.json()
+    if (!response.ok && !Object.prototype.hasOwnProperty.call(result, 'success')) {
+        throw new Error(result.error || `Error ${response.status}`)
     }
-    return response.json()
+    return result
 }

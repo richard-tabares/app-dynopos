@@ -13,7 +13,7 @@ export const CardPayment = () => {
     const location = useLocation()
     const signupData = location.state
 
-    const [tokens, setTokens] = useState({ acceptance_token: null, personal_data_auth: null })
+    const [, setTokens] = useState({ acceptance_token: null, personal_data_auth: null })
     const [loading, setLoading] = useState(false)
     const [acceptedReglamento, setAcceptedReglamento] = useState(false)
     const [acceptedDatos, setAcceptedDatos] = useState(false)
