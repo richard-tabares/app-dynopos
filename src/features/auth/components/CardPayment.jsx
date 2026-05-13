@@ -229,15 +229,15 @@ export const CardPayment = () => {
                     <section className='grid grid-cols-2 gap-4'>
                         <section className='flex flex-col gap-2'>
                             <label className='font-semibold text-on-surface'>Correo <span className='text-red-500'>*</span></label>
-                            <input type='email' name='email' value={form.email} onChange={handleChange} placeholder='correo@ejemplo.com' className='w-full px-4 py-3 border border-divider rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-300 bg-gray-50' />
+                            <input type='email' name='email' value={form.email} onChange={handleChange} placeholder='correo@ejemplo.com' className='w-full px-4 py-3 border border-divider rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-300 bg-subtle' />
                         </section>
                         <section className='flex flex-col gap-2'>
                             <label className='font-semibold text-on-surface'>Teléfono <span className='text-red-500'>*</span></label>
-                            <input type='tel' name='phone' value={form.phone} onChange={handleChange} placeholder='3001234567' className='w-full px-4 py-3 border border-divider rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-300 bg-gray-50' />
+                            <input type='tel' name='phone' value={form.phone} onChange={handleChange} placeholder='3001234567' className='w-full px-4 py-3 border border-divider rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-300 bg-subtle' />
                         </section>
                     </section>
 
-                    <section className='border-t border-gray-200 pt-4'>
+                    <section className='border-t border-divider pt-4'>
                         <h3 className='font-semibold text-on-surface mb-3 flex items-center gap-2'><CreditCard className='w-5 h-5 text-primary-600' /> Datos de la tarjeta</h3>
 
                         <section className='flex flex-col gap-2 mb-3'>
@@ -266,7 +266,7 @@ export const CardPayment = () => {
                         </section>
                     </section>
 
-                    <section className='border-t border-gray-200 pt-4'>
+                    <section className='border-t border-divider pt-4'>
                         <h3 className='font-semibold text-on-surface mb-3 flex items-center gap-2'><ShieldCheck className='w-5 h-5 text-primary-600' /> Documento de identidad</h3>
                         <section className='grid grid-cols-3 gap-3'>
                             <section className='flex flex-col gap-2'>
@@ -286,7 +286,7 @@ export const CardPayment = () => {
                         </section>
                     </section>
 
-                    <section className='border-t border-gray-200 pt-4 space-y-3'>
+                    <section className='border-t border-divider pt-4 space-y-3'>
                         <label className='flex items-start gap-3 cursor-pointer'>
                             <input
                                 type='checkbox'
@@ -320,7 +320,7 @@ export const CardPayment = () => {
                         {loading ? 'Procesando pago...' : `Pagar $${formatPrice(currentPrice)}`}
                     </button>
 
-                    <p className='text-center text-xs text-gray-400 flex items-center justify-center gap-1'>
+                    <p className='text-center text-xs text-faint flex items-center justify-center gap-1'>
                         <Lock className='w-3 h-3' /> Tus datos están seguros. El pago es procesado de forma segura por Wompi.
                     </p>
                 </form>

@@ -180,12 +180,12 @@ export const SignUp = () => {
                             Datos
                         </span>
                     </section>
-                    <section className='w-12 h-0.5 bg-gray-300' />
+                    <section className='w-12 h-0.5 bg-subtle' />
                     <section className='flex items-center gap-2'>
-                        <span className='w-8 h-8 rounded-full bg-gray-200 text-gray-400 flex items-center justify-center text-sm font-bold'>
+                        <span className='w-8 h-8 rounded-full bg-subtle text-faint flex items-center justify-center text-sm font-bold'>
                             2
                         </span>
-                        <span className='text-sm text-gray-400'>
+                        <span className='text-sm text-faint'>
                             Pago
                         </span>
                     </section>
@@ -447,7 +447,7 @@ export const SignUp = () => {
                         ¿Ya tienes cuenta?{' '}
                         <NavLink
                             to='/login'
-                            className='text-primary-600 text-decoration-none font-semibold transition-all duration-300 hover:text-purple-600 hover:underline'>
+                            className='text-primary-600 text-decoration-none font-semibold transition-all duration-300 hover:text-primary-600 hover:underline'>
                             Inicia sesión aquí
                         </NavLink>
                     </p>

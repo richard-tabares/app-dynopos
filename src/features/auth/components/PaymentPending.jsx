@@ -68,42 +68,42 @@ export const PaymentPending = () => {
                         </p>
                     </section>
 
-                    <section className='bg-white border border-gray-200 rounded-lg p-6 shadow-xs space-y-4'>
-                        <section className='flex justify-between items-center py-2 border-b border-gray-100'>
-                            <span className='text-sm text-gray-500'>Banco</span>
+                    <section className='bg-surface border border-divider rounded-lg p-6 shadow-xs space-y-4'>
+                        <section className='flex justify-between items-center py-2 border-b border-divider-light'>
+                            <span className='text-sm text-muted'>Banco</span>
                             <span className='text-sm font-semibold text-on-surface'>{bank_info.bank}</span>
                         </section>
-                        <section className='flex justify-between items-center py-2 border-b border-gray-100'>
-                            <span className='text-sm text-gray-500'>Tipo de cuenta</span>
+                        <section className='flex justify-between items-center py-2 border-b border-divider-light'>
+                            <span className='text-sm text-muted'>Tipo de cuenta</span>
                             <span className='text-sm font-semibold text-on-surface'>{bank_info.account_type}</span>
                         </section>
-                        <section className='flex justify-between items-center py-2 border-b border-gray-100'>
-                            <span className='text-sm text-gray-500'>Número de cuenta</span>
+                        <section className='flex justify-between items-center py-2 border-b border-divider-light'>
+                            <span className='text-sm text-muted'>Número de cuenta</span>
                             <section className='flex items-center gap-2'>
                                 <span className='text-sm font-semibold text-on-surface'>{bank_info.account_number}</span>
                                 <button
                                     onClick={() => copyToClipboard(bank_info.account_number)}
-                                    className='bg-transparent border-none cursor-pointer p-1 hover:bg-gray-100 rounded transition'>
-                                    <Copy className='w-4 h-4 text-gray-400' />
+                                    className='bg-transparent border-none cursor-pointer p-1 hover:bg-hover-strong rounded transition'>
+                                    <Copy className='w-4 h-4 text-faint' />
                                 </button>
                             </section>
                         </section>
-                        <section className='flex justify-between items-center py-2 border-b border-gray-100'>
-                            <span className='text-sm text-gray-500'>Titular</span>
+                        <section className='flex justify-between items-center py-2 border-b border-divider-light'>
+                            <span className='text-sm text-muted'>Titular</span>
                             <span className='text-sm font-semibold text-on-surface'>{bank_info.holder}</span>
                         </section>
-                        <section className='flex justify-between items-center py-2 border-b border-gray-100'>
-                            <span className='text-sm text-gray-500'>NIT</span>
+                        <section className='flex justify-between items-center py-2 border-b border-divider-light'>
+                            <span className='text-sm text-muted'>NIT</span>
                             <span className='text-sm font-semibold text-on-surface'>{bank_info.nit}</span>
                         </section>
                         <section className='flex justify-between items-center py-2'>
-                            <span className='text-sm text-gray-500'>Referencia</span>
+                            <span className='text-sm text-muted'>Referencia</span>
                             <section className='flex items-center gap-2'>
                                 <span className='text-sm font-bold text-primary-600'>{reference}</span>
                                 <button
                                     onClick={() => copyToClipboard(reference)}
-                                    className='bg-transparent border-none cursor-pointer p-1 hover:bg-gray-100 rounded transition'>
-                                    <Copy className='w-4 h-4 text-gray-400' />
+                                    className='bg-transparent border-none cursor-pointer p-1 hover:bg-hover-strong rounded transition'>
+                                    <Copy className='w-4 h-4 text-faint' />
                                 </button>
                             </section>
                         </section>
@@ -155,7 +155,7 @@ export const PaymentPending = () => {
                 <p className='text-on-body mb-4'>
                     Estamos verificando el estado de tu transacción...
                 </p>
-                <section className='flex items-center justify-center gap-2 text-sm text-gray-500'>
+                <section className='flex items-center justify-center gap-2 text-sm text-muted'>
                     <Clock className='w-4 h-4' />
                     No cierres esta página
                 </section>
