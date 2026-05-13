@@ -4,6 +4,7 @@ import { Lock, Check, CreditCard, Calendar, ShieldCheck } from 'lucide-react'
 import { getAcceptanceTokens } from '../helpers/getAcceptanceTokens'
 import { processCardPayment } from '../helpers/processCardPayment'
 import { toast } from 'react-toastify'
+import { decryptData } from '../../../shared/helpers/crypto'
 
 const WOMPI_API = 'https://api-sandbox.wompi.co/v1'
 const WOMPI_PUB_KEY = import.meta.env.VITE_WOMPI_PUBLIC_KEY
@@ -11,7 +12,11 @@ const WOMPI_PUB_KEY = import.meta.env.VITE_WOMPI_PUBLIC_KEY
 export const CardPayment = () => {
     const navigate = useNavigate()
     const location = useLocation()
-    const signupData = location.state
+    const stateData = location.state
+    const storedRaw = localStorage.getItem('dynopos_signup')
+    const storedData = storedRaw ? JSON.parse(decryptData(storedRaw)) : null
+    const pending_signup_id = stateData?.pending_signup_id || storedData?.pending_signup_id
+    const signupData = storedData
 
     const [, setTokens] = useState({ acceptance_token: null, personal_data_auth: null })
     const [loading, setLoading] = useState(false)
@@ -32,13 +37,13 @@ export const CardPayment = () => {
     })
 
     useEffect(() => {
-        if (!signupData?.signup_token) {
+        if (!pending_signup_id || !signupData) {
             navigate('/signup', { replace: true })
             return
         }
         const loadFormData = async () => {
             try {
-                const data = await getAcceptanceTokens(signupData.signup_token)
+                const data = await getAcceptanceTokens(pending_signup_id)
                 setForm(prev => ({
                     ...prev,
                     email: data.email || '',
@@ -51,7 +56,7 @@ export const CardPayment = () => {
             }
         }
         loadFormData()
-    }, [signupData, navigate])
+    }, [pending_signup_id, signupData, navigate])
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -95,7 +100,7 @@ export const CardPayment = () => {
 
         setLoading(true)
         try {
-            const tokenData = await getAcceptanceTokens(signupData.signup_token)
+            const tokenData = await getAcceptanceTokens(pending_signup_id)
             setTokens({
                 acceptance_token: tokenData.acceptance_token,
                 personal_data_auth: tokenData.personal_data_auth,
@@ -130,19 +135,13 @@ export const CardPayment = () => {
             if (!cardToken) throw new Error('No se pudo tokenizar la tarjeta')
 
             const result = await processCardPayment({
-                signup_token: signupData.signup_token,
+                pending_signup_id,
                 card_token: cardToken,
                 card_last4: cardLast4,
                 acceptance_token: tokenData.acceptance_token,
                 personal_data_auth: tokenData.personal_data_auth,
                 customer_email: form.email,
-                billing_frequency: signupData.billing_frequency || 'monthly',
-                customer_data: {
-                    full_name: form.full_name,
-                    phone: form.phone,
-                    legal_id_type: form.legal_id_type,
-                    legal_id: form.legal_id,
-                },
+                billing_frequency: stateData?.billing_frequency || 'monthly',
             })
 
             if (result.success) {
@@ -157,6 +156,7 @@ export const CardPayment = () => {
                     owner_name: result.owner_name,
                     plan_name: 'Plan Emprendedor',
                 }))
+                localStorage.removeItem('dynopos_signup')
                 toast.success('¡Pago exitoso!')
                 navigate('/signup/success', {
                     state: {
@@ -184,7 +184,7 @@ export const CardPayment = () => {
 
     const formatPrice = (value) =>
         new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(value)
-    const currentPrice = signupData?.billing_frequency === 'annual' ? 430920 : 39900
+    const currentPrice = stateData?.billing_frequency === 'annual' ? 430920 : 39900
 
     if (!form.email) {
         return (

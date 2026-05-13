@@ -1,25 +1,31 @@
 import { useState, useEffect } from 'react'
-import { useNavigate, useLocation, NavLink } from 'react-router'
-import { CreditCard, Landmark, Banknote, ArrowLeft, Check, ChevronRight, Calendar, CalendarCheck } from 'lucide-react'
+import { useNavigate, useLocation } from 'react-router'
+import { CreditCard, Landmark, ArrowLeft, Check, Calendar, CalendarCheck } from 'lucide-react'
 import { createCheckout } from '../helpers/createCheckout'
 import { toast } from 'react-toastify'
+import { decryptData, encryptData } from '../../../shared/helpers/crypto'
 
 export const PaymentStep = () => {
     const navigate = useNavigate()
     const location = useLocation()
-    const signupData = location.state
+    const stateData = location.state
+
+    const storedRaw = localStorage.getItem('dynopos_signup')
+    const storedData = storedRaw ? JSON.parse(decryptData(storedRaw)) : null
+    const pending_signup_id = stateData?.pending_signup_id || storedData?.pending_signup_id
+    const signupData = storedData
 
     const [billingFrequency, setBillingFrequency] = useState('monthly')
     const [paymentMethod, setPaymentMethod] = useState(null)
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
-        if (!signupData?.signup_token) {
+        if (!pending_signup_id || !signupData) {
             navigate('/signup', { replace: true })
         }
-    }, [signupData, navigate])
+    }, [pending_signup_id, signupData, navigate])
 
-    if (!signupData) return null
+    if (!pending_signup_id || !signupData) return null
 
     const plan = signupData.plan
 
@@ -29,31 +35,43 @@ export const PaymentStep = () => {
             return
         }
 
+        if (!signupData?.email) {
+            toast.error('Datos de registro no encontrados. Vuelve a registrarte.')
+            navigate('/signup', { replace: true })
+            return
+        }
+
         setLoading(true)
         try {
             const result = await createCheckout({
-                signup_token: signupData.signup_token,
+                pending_signup_id,
                 billing_frequency: billingFrequency,
                 payment_method: paymentMethod,
             })
 
+            const signupDataUpdated = {
+                ...signupData,
+                billing_frequency: billingFrequency,
+            }
+            localStorage.setItem('dynopos_signup', encryptData(JSON.stringify(signupDataUpdated)))
+
             if (paymentMethod === 'card') {
                 navigate('/signup/card-payment', {
                     state: {
-                        signup_token: signupData.signup_token,
+                        pending_signup_id,
                         billing_frequency: billingFrequency,
                         plan: plan,
+                        email: signupData.email,
                     },
                     replace: true,
                 })
             } else if (paymentMethod === 'transfer') {
                 navigate('/signup/pending', {
                     state: {
-                        signup_token: signupData.signup_token,
-                        bank_info: result.bank_info,
+                        pending_signup_id,
                         reference: result.reference,
                         amount: result.amount,
-                        billing_frequency: billingFrequency,
+                        bank_info: result.bank_info,
                     },
                     replace: true,
                 })
@@ -179,7 +197,7 @@ export const PaymentStep = () => {
                     <h3 className='font-semibold text-on-surface mb-3'>
                         Método de pago
                     </h3>
-                    <section className='grid grid-cols-3 gap-3'>
+                    <section className='grid grid-cols-2 gap-3'>
                         <button
                             onClick={() => setPaymentMethod('card')}
                             className={`p-4 rounded-lg border-2 transition-all cursor-pointer text-center ${
@@ -203,19 +221,6 @@ export const PaymentStep = () => {
                             <Landmark className={`w-6 h-6 mx-auto mb-2 ${paymentMethod === 'pse' ? 'text-primary-300' : 'text-faint'}`} />
                             <p className={`text-sm font-medium ${paymentMethod === 'pse' ? 'text-primary-300' : 'text-muted'}`}>
                                 PSE
-                            </p>
-                        </button>
-
-                        <button
-                            onClick={() => setPaymentMethod('transfer')}
-                            className={`p-4 rounded-lg border-2 transition-all cursor-pointer text-center ${
-                                paymentMethod === 'transfer'
-                                    ? 'border-primary-300 bg-hover'
-                                    : 'border-divider hover:border-outline'
-                            }`}>
-                            <Banknote className={`w-6 h-6 mx-auto mb-2 ${paymentMethod === 'transfer' ? 'text-primary-300' : 'text-faint'}`} />
-                            <p className={`text-sm font-medium ${paymentMethod === 'transfer' ? 'text-primary-300' : 'text-muted'}`}>
-                                Transferencia
                             </p>
                         </button>
                     </section>

@@ -10,26 +10,28 @@ export const PaymentPending = () => {
     const [status, setStatus] = useState('pending')
     const stateData = location.state
 
-    const signupToken = stateData?.signup_token || new URLSearchParams(location.search).get('token')
+    const pending_signup_id = stateData?.pending_signup_id || new URLSearchParams(location.search).get('id')
+    const reference = stateData?.reference || new URLSearchParams(location.search).get('reference')
 
     const checkStatus = useCallback(async () => {
-        if (!signupToken) return
+        if (!pending_signup_id) return
         try {
-            const result = await checkPaymentStatus(signupToken)
+            const result = await checkPaymentStatus(pending_signup_id)
             setStatus(result.transaction_status || result.status)
 
             if (result.status === 'completed' || result.transaction_status === 'approved') {
                 setTimeout(() => {
+                    localStorage.removeItem('dynopos_signup')
                     navigate('/signup/success', { replace: true })
                 }, 1500)
             }
         } catch {
             // keep polling
         }
-    }, [signupToken, navigate])
+    }, [pending_signup_id, navigate])
 
     useEffect(() => {
-        if (!signupToken) {
+        if (!pending_signup_id && !reference) {
             navigate('/signup', { replace: true })
             return
         }
@@ -40,11 +42,11 @@ export const PaymentPending = () => {
 
         const interval = setInterval(checkStatus, 5000)
         return () => clearInterval(interval)
-    }, [signupToken, stateData, navigate, checkStatus])
+    }, [pending_signup_id, reference, stateData, navigate, checkStatus])
 
-    if (!signupToken) return null
+    if (!pending_signup_id && !reference) return null
 
-    const { bank_info, reference, amount } = stateData || {}
+    const { bank_info, amount } = stateData || {}
     const formatPrice = (value) =>
         new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(value)
 

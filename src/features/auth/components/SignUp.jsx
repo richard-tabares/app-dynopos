@@ -4,6 +4,7 @@ import { initiateSignup } from '../helpers/initiateSignup'
 import { checkEmail } from '../helpers/checkEmail'
 import { NavLink, useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
+import { encryptData } from '../../../shared/helpers/crypto'
 
 export const SignUp = () => {
     const navigate = useNavigate()
@@ -131,14 +132,22 @@ export const SignUp = () => {
             setLoading(true)
             try {
                 const result = await initiateSignup(formData)
+
+                const signupData = {
+                    pending_signup_id: result.id,
+                    encrypted_password: result.encrypted_password,
+                    business_name: formData.business_name,
+                    owner_name: formData.owner_name,
+                    email: formData.email,
+                    phone: formData.phone,
+                    acceptance_token: result.acceptance_token,
+                    personal_data_auth: result.personal_data_auth,
+                    plan: result.plan,
+                }
+                localStorage.setItem('dynopos_signup', encryptData(JSON.stringify(signupData)))
+
                 navigate('/signup/payment', {
-                    state: {
-                        signup_token: result.signup_token,
-                        acceptance_token: result.acceptance_token,
-                        personal_data_auth: result.personal_data_auth,
-                        plan: result.plan,
-                        email: formData.email,
-                    },
+                    state: { pending_signup_id: result.id },
                     replace: true,
                 })
             } catch (error) {
