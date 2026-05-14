@@ -319,7 +319,8 @@ export const CardPayment = () => {
                                 <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600" />
                             </label>
                             <span className='text-sm text-on-body'>
-                                Acepto haber leído el <a href='#' className='text-primary-600 underline'>reglamento</a>
+                                Acepto haber leído el{' '}
+                                <a href='https://wompi.com/assets/downloadble/reglamento-Usuarios-Colombia.pdf' target='_blank' rel='noopener noreferrer' className='text-primary-600 underline'>reglamento</a>
                             </span>
                         </label>
                         <label className='flex items-start gap-3 cursor-pointer'>
@@ -333,8 +334,10 @@ export const CardPayment = () => {
                                 <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600" />
                             </label>
                             <span className='text-sm text-on-body'>
-                                Acepto la autorización para la administración de datos personales y conozco la{' '}
-                                <a href='#' className='text-primary-600 underline'>política para el tratamiento de datos personales</a>
+                                Acepto la{' '}
+                                <a href='https://wompi.com/assets/downloadble/autorizacion-tratamiento-datos-personales.pdf' target='_blank' rel='noopener noreferrer' className='text-primary-600 underline'>autorización para la administración de datos personales</a>{' '}
+                                y conozco la{' '}
+                                <a href='https://wompi.com/es/co/politica-de-privacidad' target='_blank' rel='noopener noreferrer' className='text-primary-600 underline'>política de privacidad</a>
                             </span>
                         </label>
                     </section>
