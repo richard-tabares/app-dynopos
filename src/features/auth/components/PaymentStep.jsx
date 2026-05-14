@@ -196,7 +196,7 @@ export const PaymentStep = () => {
                     <h3 className='font-semibold text-on-surface mb-3'>
                         Método de pago
                     </h3>
-                    <section className='grid grid-cols-2 gap-3'>
+                    <section className='grid grid-cols-1 gap-3'>
                         <button
                             onClick={() => setPaymentMethod('card')}
                             className={`p-4 rounded-lg border-2 transition-all cursor-pointer text-center ${
@@ -210,7 +210,7 @@ export const PaymentStep = () => {
                             </p>
                         </button>
 
-                        <button
+                        {/* <button
                             onClick={() => setPaymentMethod('pse')}
                             className={`p-4 rounded-lg border-2 transition-all cursor-pointer text-center ${
                                 paymentMethod === 'pse'
@@ -221,7 +221,7 @@ export const PaymentStep = () => {
                             <p className={`text-sm font-medium ${paymentMethod === 'pse' ? 'text-primary-500' : 'text-muted'}`}>
                                 PSE
                             </p>
-                        </button>
+                        </button> */}
                     </section>
                 </section>
 
