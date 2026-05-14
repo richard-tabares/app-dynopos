@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router'
-import { CreditCard, Landmark, ArrowLeft, Check, Calendar, CalendarCheck } from 'lucide-react'
+import { CreditCard, Landmark, ArrowLeft, Check, Calendar, CalendarPlus, CalendarCheck } from 'lucide-react'
 import { createCheckout } from '../helpers/createCheckout'
 import { toast } from 'react-toastify'
 import { decryptData, encryptData } from '../../../shared/helpers/crypto'
@@ -23,6 +23,7 @@ export const PaymentStep = () => {
         if (!pending_signup_id || !signupData) {
             navigate('/signup', { replace: true })
         }
+        console.log(signupData)
     }, [pending_signup_id, signupData, navigate])
 
     if (!pending_signup_id || !signupData) return null
@@ -81,8 +82,9 @@ export const PaymentStep = () => {
         new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(value)
 
     const monthlyPrice = plan?.monthly_price || 39900
-    const annualPrice = plan?.annual_price || 430920
-    const currentPrice = billingFrequency === 'annual' ? annualPrice : monthlyPrice
+    const quarterlyPrice = monthlyPrice * 3
+    const annualPrice = Math.round(monthlyPrice * 12 * 0.9)
+    const currentPrice = billingFrequency === 'annual' ? annualPrice : billingFrequency === 'quarterly' ? quarterlyPrice : monthlyPrice
 
     return (
         <section className='w-full flex flex-col items-center justify-center bg-surface px-4 py-8'>
@@ -132,10 +134,10 @@ export const PaymentStep = () => {
                         {plan?.description || 'Perfecto para empezar tu negocio'}
                     </p>
 
-                    <section className='flex gap-3 mb-4'>
+                    <section className='grid grid-cols-3 gap-3 mb-4'>
                         <button
                             onClick={() => setBillingFrequency('monthly')}
-                            className={`flex-1 p-4 rounded-lg border-2 transition-all cursor-pointer text-left ${
+                            className={`p-4 rounded-lg border-2 transition-all cursor-pointer text-left ${
                                 billingFrequency === 'monthly'
                                     ? 'border-primary-500 bg-hover'
                                     : 'border-divider hover:border-outline'
@@ -150,8 +152,27 @@ export const PaymentStep = () => {
                         </button>
 
                         <button
+                            onClick={() => setBillingFrequency('quarterly')}
+                            className={`p-4 rounded-lg border-2 transition-all cursor-pointer text-left ${
+                                billingFrequency === 'quarterly'
+                                    ? 'border-primary-500 bg-hover'
+                                    : 'border-divider hover:border-outline'
+                            }`}>
+                            <CalendarPlus className={`w-5 h-5 mb-2 ${billingFrequency === 'quarterly' ? 'text-primary-500' : 'text-faint'}`} />
+                            <p className={`text-sm font-medium ${billingFrequency === 'quarterly' ? 'text-primary-500' : 'text-muted'}`}>
+                                Trimestral
+                            </p>
+                            <p className={`text-xl font-bold ${billingFrequency === 'quarterly' ? 'text-primary-500' : 'text-on-surface'}`}>
+                                ${formatPrice(quarterlyPrice)}
+                            </p>
+                            <p className='text-xs text-muted mt-1'>
+                                ${formatPrice(Math.round(quarterlyPrice / 3))}/mes
+                            </p>
+                        </button>
+
+                        <button
                             onClick={() => setBillingFrequency('annual')}
-                            className={`flex-1 p-4 rounded-lg border-2 transition-all cursor-pointer text-left relative ${
+                            className={`p-4 rounded-lg border-2 transition-all cursor-pointer text-left relative ${
                                 billingFrequency === 'annual'
                                     ? 'border-primary-500 bg-hover'
                                     : 'border-divider hover:border-outline'
@@ -229,7 +250,7 @@ export const PaymentStep = () => {
                 <section className='bg-subtle border border-divider rounded-lg p-4 mb-6'>
                     <section className='flex justify-between items-center'>
                         <span className='text-sm text-muted font-bold'>
-                            {billingFrequency === 'annual' ? 'Total anual' : 'Total mensual'}
+                            {billingFrequency === 'annual' ? 'Total anual' : billingFrequency === 'quarterly' ? 'Total trimestral' : 'Total mensual'}
                         </span>
                         <span className='text-2xl font-bold text-muted'>
                             ${formatPrice(currentPrice)}

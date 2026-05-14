@@ -50,7 +50,7 @@ export const PaymentModal = ({ isOpen, status, message, onClose }) => {
                     <button
                         onClick={handleClose}
                         className='mt-6 px-6 py-2.5 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-500 transition cursor-pointer'>
-                        {'Cerrar'}
+                        {status === 'success' ? 'Continuar' : 'Cerrar'}
                     </button>
                 )}
             </section>

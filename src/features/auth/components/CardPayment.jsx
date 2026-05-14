@@ -205,7 +205,10 @@ export const CardPayment = () => {
 
     const formatPrice = (value) =>
         new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(value)
-    const currentPrice = stateData?.billing_frequency === 'annual' ? 430920 : 39900
+    const monthlyPrice = 39900
+    const quarterlyPrice = monthlyPrice * 3
+    const annualPrice = Math.round(monthlyPrice * 12 * 0.9)
+    const currentPrice = stateData?.billing_frequency === 'annual' ? annualPrice : stateData?.billing_frequency === 'quarterly' ? quarterlyPrice : monthlyPrice
 
     if (!form.email) {
         return (
@@ -238,7 +241,7 @@ export const CardPayment = () => {
 
                 <h1 className='text-2xl font-bold text-center text-on-surface mb-2'>Pago con Tarjeta</h1>
                 <p className='text-on-body text-center mb-6'>
-                    Total a pagar: <strong>${formatPrice(currentPrice)}</strong> {signupData?.billing_frequency === 'annual' ? '/año' : '/mes'}
+                    Total a pagar: <strong>${formatPrice(currentPrice)}</strong> {stateData?.billing_frequency === 'annual' ? '/año' : stateData?.billing_frequency === 'quarterly' ? '/trimestre' : '/mes'}
                 </p>
 
                 <form onSubmit={handleSubmit} className='space-y-4'>

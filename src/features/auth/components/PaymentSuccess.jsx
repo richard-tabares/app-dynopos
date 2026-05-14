@@ -24,7 +24,7 @@ export const PaymentSuccess = () => {
     const formatPrice = (value) =>
         new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(value)
 
-    const frequencyLabel = data?.billing_frequency === 'annual' ? 'Anual' : 'Mensual'
+    const frequencyLabel = data?.billing_frequency === 'annual' ? 'Anual' : data?.billing_frequency === 'quarterly' ? 'Trimestral' : 'Mensual'
     const total = data?.amount || 39900
 
     const handlePrint = () => {
