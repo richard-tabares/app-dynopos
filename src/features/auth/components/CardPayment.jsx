@@ -33,9 +33,9 @@ export const CardPayment = () => {
     }, [modalStatus])
 
     const [form, setForm] = useState({
-        full_name: '',
-        email: '',
-        phone: '',
+        full_name: storedData?.owner_name || '',
+        email: stateData?.email || storedData?.email || '',
+        phone: storedData?.phone || '',
         card_number: '4242424242424242',
         exp_month: '11',
         exp_year: '33',
