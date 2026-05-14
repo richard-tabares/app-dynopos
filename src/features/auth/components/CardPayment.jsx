@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router'
 import { Lock, Check, CreditCard, Calendar, ShieldCheck } from 'lucide-react'
 import { getAcceptanceTokens } from '../helpers/getAcceptanceTokens'
 import { processCardPayment } from '../helpers/processCardPayment'
 import { toast } from 'react-toastify'
 import { decryptData } from '../../../shared/helpers/crypto'
+import { PaymentModal } from '../../../shared/components/PaymentModal'
 
 const WOMPI_API = 'https://api-sandbox.wompi.co/v1'
 const WOMPI_PUB_KEY = import.meta.env.VITE_WOMPI_PUBLIC_KEY
@@ -18,10 +19,18 @@ export const CardPayment = () => {
     const pending_signup_id = stateData?.pending_signup_id || storedData?.pending_signup_id
     const signupData = storedData
 
-    const [, setTokens] = useState({ acceptance_token: null, personal_data_auth: null })
     const [loading, setLoading] = useState(false)
     const [acceptedReglamento, setAcceptedReglamento] = useState(false)
     const [acceptedDatos, setAcceptedDatos] = useState(false)
+    const [modalStatus, setModalStatus] = useState(null)
+    const [modalMessage, setModalMessage] = useState('')
+    const tokensRef = useRef({ acceptance_token: null, personal_data_auth: null })
+    const modalStatusRef = useRef(null)
+    const paymentSummaryRef = useRef(null)
+
+    useEffect(() => {
+        modalStatusRef.current = modalStatus
+    }, [modalStatus])
 
     const [form, setForm] = useState({
         full_name: '',
@@ -44,6 +53,10 @@ export const CardPayment = () => {
         const loadFormData = async () => {
             try {
                 const data = await getAcceptanceTokens(pending_signup_id)
+                tokensRef.current = {
+                    acceptance_token: data.acceptance_token,
+                    personal_data_auth: data.personal_data_auth,
+                }
                 setForm(prev => ({
                     ...prev,
                     email: data.email || '',
@@ -51,8 +64,14 @@ export const CardPayment = () => {
                     full_name: data.owner_name || '',
                 }))
             } catch {
-                toast.error('Error al cargar datos de pago')
-                navigate('/signup', { replace: true })
+                const savedSummary = sessionStorage.getItem('payment_summary')
+                if (savedSummary) {
+                    const summary = JSON.parse(savedSummary)
+                    navigate('/signup/success', { state: summary, replace: true })
+                } else {
+                    toast.error('Error al cargar datos de pago')
+                    navigate('/signup', { replace: true })
+                }
             }
         }
         loadFormData()
@@ -99,12 +118,10 @@ export const CardPayment = () => {
         }
 
         setLoading(true)
+        setModalStatus('processing')
+        setModalMessage('Estamos procesando tu transacción, esto puede tomar unos segundos...')
         try {
-            const tokenData = await getAcceptanceTokens(pending_signup_id)
-            setTokens({
-                acceptance_token: tokenData.acceptance_token,
-                personal_data_auth: tokenData.personal_data_auth,
-            })
+            const { acceptance_token, personal_data_auth } = tokensRef.current
 
             const cardNumber = form.card_number.replace(/\s/g, '')
 
@@ -138,14 +155,14 @@ export const CardPayment = () => {
                 pending_signup_id,
                 card_token: cardToken,
                 card_last4: cardLast4,
-                acceptance_token: tokenData.acceptance_token,
-                personal_data_auth: tokenData.personal_data_auth,
+                acceptance_token,
+                personal_data_auth,
                 customer_email: form.email,
                 billing_frequency: stateData?.billing_frequency || 'monthly',
             })
 
             if (result.success) {
-                sessionStorage.setItem('payment_summary', JSON.stringify({
+                const summary = {
                     transaction_id: result.transaction_id,
                     reference: result.reference,
                     amount: result.amount,
@@ -155,30 +172,34 @@ export const CardPayment = () => {
                     email: result.email,
                     owner_name: result.owner_name,
                     plan_name: 'Plan Emprendedor',
-                }))
-                localStorage.removeItem('dynopos_signup')
-                toast.success('¡Pago exitoso!')
-                navigate('/signup/success', {
-                    state: {
-                        transaction_id: result.transaction_id,
-                        reference: result.reference,
-                        amount: result.amount,
-                        billing_frequency: result.billing_frequency,
-                        card_last4: result.card_last4,
-                        business_name: result.business_name,
-                        email: result.email,
-                        owner_name: result.owner_name,
-                        plan_name: 'Plan Emprendedor',
-                    },
-                    replace: true,
-                })
+                }
+                paymentSummaryRef.current = summary
+                sessionStorage.setItem('payment_summary', JSON.stringify(summary))
+                setModalStatus('success')
+                setModalMessage('Tu pago ha sido procesado exitosamente.')
+                setLoading(false)
             } else {
-                toast.error(result.error || 'La transacción fue rechazada')
+                setModalStatus('error')
+                setModalMessage(result.error || 'La transacción fue rechazada')
                 setLoading(false)
             }
         } catch (error) {
-            toast.error(error.message || 'Error al procesar el pago')
+            setModalStatus('error')
+            setModalMessage(error.message || 'Error al procesar el pago')
             setLoading(false)
+        }
+    }
+
+    const handleModalClose = () => {
+        if (modalStatusRef.current === 'success') {
+            localStorage.removeItem('dynopos_signup')
+            const summary = paymentSummaryRef.current
+            navigate('/signup/success', {
+                state: summary,
+                replace: true,
+            })
+        } else {
+            setModalStatus(null)
         }
     }
 
@@ -325,6 +346,12 @@ export const CardPayment = () => {
                     </p>
                 </form>
             </section>
+            <PaymentModal
+                isOpen={modalStatus !== null}
+                status={modalStatus}
+                message={modalMessage}
+                onClose={handleModalClose}
+            />
         </section>
     )
 }
