@@ -24,7 +24,6 @@ export const CardPayment = () => {
     const [acceptedDatos, setAcceptedDatos] = useState(false)
     const [modalStatus, setModalStatus] = useState(null)
     const [modalMessage, setModalMessage] = useState('')
-    const tokensRef = useRef({ acceptance_token: null, personal_data_auth: null })
     const modalStatusRef = useRef(null)
     const paymentSummaryRef = useRef(null)
 
@@ -48,33 +47,7 @@ export const CardPayment = () => {
     useEffect(() => {
         if (!pending_signup_id || !signupData) {
             navigate('/signup', { replace: true })
-            return
         }
-        const loadFormData = async () => {
-            try {
-                const data = await getAcceptanceTokens(pending_signup_id)
-                tokensRef.current = {
-                    acceptance_token: data.acceptance_token,
-                    personal_data_auth: data.personal_data_auth,
-                }
-                setForm(prev => ({
-                    ...prev,
-                    email: data.email || '',
-                    phone: data.phone || '',
-                    full_name: data.owner_name || '',
-                }))
-            } catch {
-                const savedSummary = sessionStorage.getItem('payment_summary')
-                if (savedSummary) {
-                    const summary = JSON.parse(savedSummary)
-                    navigate('/signup/success', { state: summary, replace: true })
-                } else {
-                    toast.error('Error al cargar datos de pago')
-                    navigate('/signup', { replace: true })
-                }
-            }
-        }
-        loadFormData()
     }, [pending_signup_id, signupData, navigate])
 
     const handleChange = (e) => {
@@ -121,7 +94,8 @@ export const CardPayment = () => {
         setModalStatus('processing')
         setModalMessage('Estamos procesando tu transacción, esto puede tomar unos segundos...')
         try {
-            const { acceptance_token, personal_data_auth } = tokensRef.current
+            const tokenData = await getAcceptanceTokens(pending_signup_id)
+            const { acceptance_token, personal_data_auth } = tokenData
 
             const cardNumber = form.card_number.replace(/\s/g, '')
 
