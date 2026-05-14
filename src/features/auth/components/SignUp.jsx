@@ -189,12 +189,21 @@ export const SignUp = () => {
                             Datos
                         </span>
                     </section>
-                    <section className='w-12 h-0.5 bg-subtle' />
+                    <section className='w-12 h-0.5 bg-divider' />
                     <section className='flex items-center gap-2'>
-                        <span className='w-8 h-8 rounded-full bg-subtle text-faint flex items-center justify-center text-sm font-bold'>
+                        <span className='w-8 h-8 rounded-full bg-disabled text-muted flex items-center justify-center text-sm font-bold'>
                             2
                         </span>
-                        <span className='text-sm text-faint'>
+                        <span className='text-sm text-muted'>
+                            Plan
+                        </span>
+                    </section>
+                    <section className='w-12 h-0.5 bg-divider' />
+                    <section className='flex items-center gap-2'>
+                        <span className='w-8 h-8 rounded-full bg-disabled text-muted flex items-center justify-center text-sm font-bold'>
+                            3
+                        </span>
+                        <span className='text-sm text-muted'>
                             Pago
                         </span>
                     </section>
@@ -446,7 +455,7 @@ export const SignUp = () => {
                             'Procesando...'
                         ) : (
                             <>
-                                Continuar al Pago
+                                Seleccionar Plan
                                 <ArrowRight className='w-5 h-5' />
                             </>
                         )}
