@@ -42,6 +42,25 @@ export const PaymentStep = () => {
             return
         }
 
+        const signupDataUpdated = {
+            ...signupData,
+            billing_frequency: billingFrequency,
+        }
+        localStorage.setItem('dynopos_signup', encryptData(JSON.stringify(signupDataUpdated)))
+
+        if (paymentMethod === 'card') {
+            navigate('/signup/card-payment', {
+                state: {
+                    pending_signup_id,
+                    billing_frequency: billingFrequency,
+                    plan: plan,
+                    email: signupData.email,
+                },
+                replace: true,
+            })
+            return
+        }
+
         setLoading(true)
         try {
             const result = await createCheckout({
@@ -50,23 +69,7 @@ export const PaymentStep = () => {
                 payment_method: paymentMethod,
             })
 
-            const signupDataUpdated = {
-                ...signupData,
-                billing_frequency: billingFrequency,
-            }
-            localStorage.setItem('dynopos_signup', encryptData(JSON.stringify(signupDataUpdated)))
-
-            if (paymentMethod === 'card') {
-                navigate('/signup/card-payment', {
-                    state: {
-                        pending_signup_id,
-                        billing_frequency: billingFrequency,
-                        plan: plan,
-                        email: signupData.email,
-                    },
-                    replace: true,
-                })
-            } else if (result.checkout_url) {
+            if (result.checkout_url) {
                 window.location.href = result.checkout_url
             } else {
                 toast.error('Error al iniciar el pago')
