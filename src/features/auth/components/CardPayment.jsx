@@ -309,23 +309,29 @@ export const CardPayment = () => {
 
                     <section className='border-t border-divider pt-4 space-y-3'>
                         <label className='flex items-start gap-3 cursor-pointer'>
-                            <input
-                                type='checkbox'
-                                checked={acceptedReglamento}
-                                onChange={(e) => setAcceptedReglamento(e.target.checked)}
-                                className='mt-1 w-4 h-4 accent-primary-600'
-                            />
+                            <label className='relative inline-flex items-center cursor-pointer mt-1'>
+                                <input
+                                    type='checkbox'
+                                    className='sr-only peer'
+                                    checked={acceptedReglamento}
+                                    onChange={(e) => setAcceptedReglamento(e.target.checked)}
+                                />
+                                <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600" />
+                            </label>
                             <span className='text-sm text-on-body'>
                                 Acepto haber leído el <a href='#' className='text-primary-600 underline'>reglamento</a>
                             </span>
                         </label>
                         <label className='flex items-start gap-3 cursor-pointer'>
-                            <input
-                                type='checkbox'
-                                checked={acceptedDatos}
-                                onChange={(e) => setAcceptedDatos(e.target.checked)}
-                                className='mt-1 w-4 h-4 accent-primary-600'
-                            />
+                            <label className='relative inline-flex items-center cursor-pointer mt-1'>
+                                <input
+                                    type='checkbox'
+                                    className='sr-only peer'
+                                    checked={acceptedDatos}
+                                    onChange={(e) => setAcceptedDatos(e.target.checked)}
+                                />
+                                <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600" />
+                            </label>
                             <span className='text-sm text-on-body'>
                                 Acepto la autorización para la administración de datos personales y conozco la{' '}
                                 <a href='#' className='text-primary-600 underline'>política para el tratamiento de datos personales</a>
