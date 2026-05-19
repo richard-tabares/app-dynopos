@@ -23,7 +23,7 @@ export const PaymentModal = ({ isOpen, status, message, onClose }) => {
         ? <CheckCircle className='w-16 h-16 text-green-500' />
         : status === 'error'
             ? <XCircle className='w-16 h-16 text-red-500' />
-            : <Loader2 className='w-16 h-16 text-primary-600 animate-spin' />
+            : <Loader2 className='w-16 h-16 text-accent animate-spin' />
 
     const title = status === 'success'
         ? '¡Pago exitoso!'
@@ -49,7 +49,7 @@ export const PaymentModal = ({ isOpen, status, message, onClose }) => {
                 {status !== 'processing' && (
                     <button
                         onClick={handleClose}
-                        className='mt-6 px-6 py-2.5 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-500 transition cursor-pointer'>
+                        className='mt-6 px-6 py-2.5 bg-accent text-white rounded-lg font-semibold hover:bg-primary-500 transition cursor-pointer'>
                         {status === 'success' ? 'Continuar' : 'Cerrar'}
                     </button>
                 )}

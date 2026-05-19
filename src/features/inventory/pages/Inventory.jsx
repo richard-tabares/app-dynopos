@@ -121,7 +121,7 @@ export const Inventory = () => {
                 <section className='bg-surface border border-outline shadow-xs rounded-lg'>
                     <section className='border-b border-outline flex justify-between items-center px-6 py-4 bg-subtle'>
                         <h2 className='text-lg font-semibold flex items-center gap-2'>
-                            <Package className='w-5 h-5 text-primary-600' />
+                            <Package className='w-5 h-5 text-accent' />
                             Control de Stock
                         </h2>
                     </section>
@@ -148,7 +148,7 @@ export const Inventory = () => {
                                         ? 'bg-surface shadow-xs text-on-surface'
                                         : 'text-muted hover:text-on-body hover:bg-hover'
                                 }`}>
-                                <Layers className='w-4 h-4 text-primary-600' />
+                                <Layers className='w-4 h-4 text-accent' />
                                 Todos
                             </button>
                             <button
@@ -269,9 +269,9 @@ export const Inventory = () => {
                                                         onClick={() =>
                                                             handleOpenModal(product)
                                                         }
-                                                        className='bg-gray-100 dark:bg-gray-700 hover:bg-hover-strong p-1.5 rounded-sm cursor-pointer'
+                                                        className='bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-800 p-1.5 rounded-sm cursor-pointer'
                                                         title='Ajustar Inventario'>
-                                                        <Settings2 className='w-4 h-4 text-primary-600' />
+                                                        <Settings2 className='w-4 h-4 text-accent' />
                                                     </button>
                                                 )}
                                             </td>
@@ -285,7 +285,7 @@ export const Inventory = () => {
                     {visibleCount < filteredProducts.length && (
                         <button
                             onClick={handleLoadMore}
-                            className='w-full mt-4 py-2 text-sm font-medium text-primary-600 hover:bg-primary-50 rounded-lg transition cursor-pointer px-6'>
+                            className='w-full mt-4 py-2 text-sm font-medium text-accent hover:bg-primary-50 rounded-lg transition cursor-pointer px-6'>
                             Cargar más ({filteredProducts.length - visibleCount} restantes)
                         </button>
                     )}

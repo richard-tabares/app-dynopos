@@ -38,7 +38,7 @@ export const DateRangeFilter = ({ value: currentFilter = 'month', onChange, star
                             onClick={() => handlePeriodChange(p.value)}
                             className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer ${
                                 currentFilter === p.value
-                                    ? 'bg-surface text-primary-600 shadow-xs'
+                                    ? 'bg-surface text-accent shadow-xs'
                                     : 'text-muted hover:text-on-body hover:bg-hover'
                             }`}
                         >

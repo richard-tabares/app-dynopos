@@ -16,7 +16,7 @@ export const ProductCard = ({ product }) => {
             className={`bg-surface p-4 rounded-lg border transition-all duration-200 flex items-center justify-between group ${
                 !noStockControl && availableStock <= 0
                     ? 'border-divider opacity-50 cursor-not-allowed bg-subtle grayscale' 
-                    : 'border-divider hover:border-primary-400 hover:bg-hover cursor-pointer'
+                    : 'border-divider hover:border-accent/85 hover:bg-hover cursor-pointer'
             }`}
         >
             <div className='flex items-center gap-4'>
@@ -36,7 +36,7 @@ export const ProductCard = ({ product }) => {
                 }`}>
                     {noStockControl ? 'Sin control' : availableStock <= 0 ? 'Sin Stock' : `Stock: ${availableStock}`}
                 </span>
-                <p className='text-lg font-bold text-primary-600'>
+                <p className='text-lg font-bold text-accent'>
                     ${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(product.price)}
                 </p>
             </div>

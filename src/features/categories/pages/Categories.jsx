@@ -124,8 +124,8 @@ export const Categories = () => {
                                     setEditingCategory(null)
                                     setCategoryName('')
                                 }}
-                                className='p-1 hover:bg-hover-strong rounded-lg transition cursor-pointer'>
-                                <X className='w-5 h-5 text-muted' />
+                                className='p-1 text-accent hover:text-accent/85  rounded-lg transition cursor-pointer'>
+                                <X className='w-5 h-5' />
                             </button>
                         </div>
                         <div className='p-6'>
@@ -162,7 +162,7 @@ export const Categories = () => {
                             <button
                                 onClick={handleSave}
                                 disabled={saving || !categoryName.trim()}
-                                className='flex-1 py-2.5 bg-primary-600 text-white rounded-lg font-bold hover:bg-primary-700 transition text-sm disabled:opacity-50 cursor-pointer'>
+                                className='flex-1 py-2.5 bg-accent text-surface rounded-lg font-bold hover:bg-accent/85 transition text-sm disabled:opacity-50 cursor-pointer'>
                                 {saving ? 'Guardando...' : 'Guardar'}
                             </button>
                         </div>
@@ -221,7 +221,7 @@ export const Categories = () => {
                 <section className='bg-surface border border-outline shadow-xs rounded-lg'>
                     <section className='border-b border-outline flex justify-between items-center px-6 py-4 bg-subtle'>
                         <h2 className='text-lg font-semibold flex items-center gap-2'>
-                            <Tag className='w-5 h-5 text-primary-600' />
+                            <Tag className='w-5 h-5 text-accent' />
                             <span className='flex flex-col'>
                                 Lista de Categorías
                                 <span className='text-sm text-muted font-medium'>
@@ -230,7 +230,7 @@ export const Categories = () => {
                             </span>
                         </h2>
                         <button
-                            className='flex items-center justify-center p-2 bg-primary-600 text-white text-sm rounded-lg hover:bg-primary-700 transition cursor-pointer'
+                            className='flex items-center justify-center p-2 bg-accent text-surface text-sm rounded-lg hover:bg-accent/85 transition cursor-pointer'
                             onClick={openCreateModal}
                             title='Nueva Categoría'>
                             <Plus className='w-5 h-5' />
@@ -266,7 +266,7 @@ export const Categories = () => {
                                             className='border-b border-divider-light hover:bg-hover'>
                                             <td className='py-3 px-4'>
                                                 <div className='flex items-center gap-2'>
-                                                    <Tag className='w-4 h-4 text-primary-600' />
+                                                    <Tag className='w-4 h-4 text-accent' />
                                                     <span className='font-medium text-on-surface'>
                                                         {category.name}
                                                     </span>
@@ -278,9 +278,9 @@ export const Categories = () => {
                                                         onClick={() =>
                                                             openEditModal(category)
                                                         }
-                                                        className='bg-gray-100 dark:bg-gray-700 hover:bg-hover-strong p-1.5 rounded-sm cursor-pointer'
+                                                        className='bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-800 p-1.5 rounded-sm cursor-pointer'
                                                         title='Editar Categoría'>
-                                                        <Edit2 className='w-4 h-4 text-primary-600' />
+                                                        <Edit2 className='w-4 h-4 text-accent' />
                                                     </button>
                                                     <button
                                                         onClick={() =>

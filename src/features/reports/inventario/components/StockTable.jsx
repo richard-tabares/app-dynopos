@@ -12,7 +12,7 @@ const statusConfig = {
 }
 
 const stockFilters = [
-    { value: 'all', label: 'Todos', icon: Layers, color: 'text-primary-600', bg: 'bg-primary-50' },
+    { value: 'all', label: 'Todos', icon: Layers, color: 'text-accent', bg: 'bg-primary-50' },
     { value: 'sin_stock', label: 'Sin Stock', icon: PackageX, color: 'text-red-500', bg: 'bg-red-50' },
     { value: 'stock_bajo', label: 'Stock Bajo', icon: AlertTriangle, color: 'text-red-500', bg: 'bg-red-50' },
     { value: 'con_stock', label: 'Con Stock', icon: PackageCheck, color: 'text-emerald-500', bg: 'bg-emerald-50' },
@@ -39,7 +39,7 @@ export const StockTable = ({ data = [] }) => {
 
     return (
         <section className='bg-surface border border-outline p-6 shadow-xs rounded-lg'>
-            <div className='flex items-center gap-2 text-primary-600 mb-4'>
+            <div className='flex items-center gap-2 text-accent mb-4'>
                 <ClipboardList className='w-5 h-5' />
                 <h3 className='text-lg font-semibold text-on-surface'>Estado de Inventario</h3>
             </div>
@@ -109,7 +109,7 @@ export const StockTable = ({ data = [] }) => {
                         {visibleCount < filtered.length && (
                             <button
                                 onClick={() => setVisibleCount(prev => prev + 10)}
-                                className='w-full mt-4 py-2 text-sm font-medium text-primary-600 hover:bg-primary-50 rounded-lg transition cursor-pointer'
+                                className='w-full mt-4 py-2 text-sm font-medium text-accent hover:bg-primary-50 rounded-lg transition cursor-pointer'
                             >
                                 Cargar más ({filtered.length - visibleCount} restantes)
                             </button>

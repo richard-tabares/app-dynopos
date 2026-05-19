@@ -101,12 +101,12 @@ export const PaymentStep = () => {
                             Datos
                         </span>
                     </section>
-                    <section className='w-12 h-0.5 bg-primary-600' />
+                    <section className='w-12 h-0.5 bg-accent' />
                     <section className='flex items-center gap-2'>
-                        <span className='w-8 h-8 rounded-full bg-primary-600 text-white flex items-center justify-center text-sm font-bold'>
+                        <span className='w-8 h-8 rounded-full bg-accent text-white flex items-center justify-center text-sm font-bold'>
                             2
                         </span>
-                        <span className='text-sm font-semibold text-primary-600'>
+                        <span className='text-sm font-semibold text-accent'>
                             Plan
                         </span>
                     </section>
@@ -264,14 +264,14 @@ export const PaymentStep = () => {
                 <button
                     onClick={handlePayment}
                     disabled={loading || !paymentMethod}
-                    className='w-full px-6 py-3 bg-primary-600 text-white border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 hover:bg-primary-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
+                    className='w-full px-6 py-3 bg-accent text-white border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 hover:bg-primary-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
                     {loading ? 'Procesando...' : 'Ir a Pagar'}
                 </button>
 
                 <p className='text-center text-on-body mt-4'>
                     <button
                         onClick={() => navigate('/signup', { replace: true })}
-                        className='bg-transparent border-none text-primary-600 font-semibold cursor-pointer transition-all duration-300 hover:text-primary-600 hover:underline flex items-center justify-center gap-1 mx-auto'>
+                        className='bg-transparent border-none text-accent font-semibold cursor-pointer transition-all duration-300 hover:text-accent hover:underline flex items-center justify-center gap-1 mx-auto'>
                         <ArrowLeft className='w-4 h-4' />
                         Volver a datos
                     </button>

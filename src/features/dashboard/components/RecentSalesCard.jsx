@@ -15,7 +15,7 @@ export const RecentSalesCard = ({ sales = [] }) => {
     return (
         <>
             <section className='bg-surface border border-outline p-6 shadow-xs rounded-lg flex flex-col'>
-                <div className='flex items-center gap-2 text-primary-600 mb-6'>
+                <div className='flex items-center gap-2 text-accent mb-6'>
                 <Clock className='w-5 h-5' />
                 <h3 className='text-lg font-semibold text-on-surface'>Ventas Recientes</h3>
             </div>
@@ -28,7 +28,7 @@ export const RecentSalesCard = ({ sales = [] }) => {
                                 className='flex items-center gap-4 p-3 hover:bg-hover cursor-pointer rounded-lg transition-colors border-b border-divider-light last:border-0'
                                 onClick={() => setSelectedSale(sale)}
                             >
-                                <ReceiptText className='w-5 h-5 text-primary-600 shrink-0' />
+                                <ReceiptText className='w-5 h-5 text-accent shrink-0' />
                                 <div className='flex-1 min-w-0'>
                                     <p className='text-sm font-semibold text-on-surface'>
                                         #{String(sale.id).padStart(4, '0')}
@@ -54,7 +54,7 @@ export const RecentSalesCard = ({ sales = [] }) => {
                 {visibleCount < sales.length && (
                     <button 
                         onClick={handleLoadMore}
-                        className='mt-6 w-full py-2 text-sm font-medium text-on-body hover:text-primary-600 hover:bg-hover transition-colors border-t border-divider-light'
+                        className='mt-6 w-full py-2 text-sm font-medium text-on-body hover:text-accent hover:bg-hover transition-colors border-t border-divider-light'
                     >
                         Cargar más
                     </button>

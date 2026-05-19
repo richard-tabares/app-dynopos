@@ -42,7 +42,7 @@ export const ProductPerformanceSearch = () => {
 
     return (
         <section className='bg-surface border border-outline p-6 shadow-xs rounded-lg h-full flex flex-col'>
-            <div className='flex items-center gap-2 text-primary-600 mb-4'>
+            <div className='flex items-center gap-2 text-accent mb-4'>
                 <Package className='w-5 h-5' />
                 <h3 className='text-lg font-semibold text-on-surface'>Rendimiento por Producto</h3>
             </div>

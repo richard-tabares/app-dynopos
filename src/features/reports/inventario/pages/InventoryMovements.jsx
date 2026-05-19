@@ -160,7 +160,7 @@ export const InventoryMovements = () => {
             <DateRangeFilter compact value={filter} onChange={handleFilterChange} startDate={rangeStart} endDate={rangeEnd} />
 
             <section className='bg-surface border border-outline p-6 shadow-xs rounded-lg'>
-                <div className='flex items-center gap-2 text-primary-600 mb-4'>
+                <div className='flex items-center gap-2 text-accent mb-4'>
                     <History className='w-5 h-5' />
                     <h3 className='text-lg font-semibold text-on-surface'>Historial de Movimientos</h3>
                 </div>
@@ -184,7 +184,7 @@ export const InventoryMovements = () => {
                                 onClick={() => setTypeFilter(opt.value)}
                                 className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer ${
                                     typeFilter === opt.value
-                                        ? 'bg-surface shadow-xs text-primary-600'
+                                        ? 'bg-surface shadow-xs text-accent'
                                         : 'text-muted hover:text-on-body hover:bg-hover'
                                 }`}>
                                 <Icon className='w-4 h-4' />
@@ -245,7 +245,7 @@ export const InventoryMovements = () => {
                         {movVisibleCount < filteredMovements.length && (
                             <button
                                 onClick={() => setMovVisibleCount(prev => prev + 10)}
-                                className='w-full mt-4 py-2 text-sm font-medium text-primary-600 hover:bg-primary-50 rounded-lg transition cursor-pointer'
+                                className='w-full mt-4 py-2 text-sm font-medium text-accent hover:bg-primary-50 rounded-lg transition cursor-pointer'
                             >
                                 Cargar más ({filteredMovements.length - movVisibleCount} restantes)
                             </button>

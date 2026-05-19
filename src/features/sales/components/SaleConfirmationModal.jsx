@@ -22,12 +22,12 @@ export const SaleConfirmationModal = ({
                 onClick={(e) => e.stopPropagation()}
                 onKeyDown={(e) => e.key === 'Enter' && !loading && onConfirm()}>
                 <button
-                    className='absolute top-4 right-4 text-faint hover:text-on-body transition mb-4'
+                    className='absolute top-4 right-4 text-accent hover:text-accent/85 transition mb-4 cursor-pointer'
                     onClick={onCancel}>
                     <X className='w-6 h-6' />
                 </button>
                 <h2 className='text-xl font-bold flex items-center gap-2 flex-shrink-0'>
-                    <CircleDollarSign className='w-6 h-6 text-primary-600' />
+                    <CircleDollarSign className='w-6 h-6 text-accent' />
                     Confirmar Venta
                 </h2>
                 <p className='text-sm text-muted mt-1 mb-4 flex-shrink-0'>
@@ -62,21 +62,21 @@ export const SaleConfirmationModal = ({
                     </div>
                     <div className='flex justify-between items-center pb-2 border-b border-divider'>
                         <span className='font-medium'>Total de la Orden:</span>
-                        <span className='text-xl font-bold text-primary-600'>${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(total)}</span>
+                        <span className='text-xl font-bold text-accent'>${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(total)}</span>
                     </div>
                 </div>
 
                 <div className='flex justify-end gap-4 mt-6 shrink'>
                     <button
                         type='button'
-                        className='px-6 py-3 bg-hover-icon text-on-body font-medium rounded-lg hover:bg-gray-300 transition cursor-pointer'
+                        className='px-6 py-3 border border-outline text-on-body hover:bg-hover font-medium rounded-lg  transition cursor-pointer'
                         onClick={onCancel}>
                         Cancelar
                     </button>
                     <button
                         type='button'
                         disabled={loading}
-                        className='px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium transition cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed'
+                        className='px-6 py-3 bg-accent text-surface rounded-lg hover:bg-accent/85 font-medium transition cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed'
                         onClick={onConfirm}>
                         {loading ? (
                             'Confirmando...'

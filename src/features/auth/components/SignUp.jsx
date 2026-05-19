@@ -182,10 +182,10 @@ export const SignUp = () => {
                 {/* Step Indicator */}
                 <section className='flex items-center justify-center gap-3 mb-8'>
                     <section className='flex items-center gap-2'>
-                        <span className='w-8 h-8 rounded-full bg-primary-600 text-white flex items-center justify-center text-sm font-bold'>
+                        <span className='w-8 h-8 rounded-full bg-accent text-white flex items-center justify-center text-sm font-bold'>
                             1
                         </span>
-                        <span className='text-sm font-semibold text-primary-600'>
+                        <span className='text-sm font-semibold text-accent'>
                             Datos
                         </span>
                     </section>
@@ -353,7 +353,7 @@ export const SignUp = () => {
                             </p>
                         )}
                         {formData.password && !errors.password && (
-                            <section className='bg-body border-l-4 border-primary-600 p-3 rounded flex flex-col gap-1.5'>
+                            <section className='bg-body border-l-4 border-accent p-3 rounded flex flex-col gap-1.5'>
                                 <p className='text-xs font-semibold text-on-surface'>
                                     Requisitos cumplidos:
                                 </p>
@@ -450,7 +450,7 @@ export const SignUp = () => {
                     <button
                         type='submit'
                         disabled={loading || !isFormValid}
-                        className='w-full mt-4 px-6 py-3 bg-primary-600 text-white border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 hover:bg-primary-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
+                        className='w-full mt-4 px-6 py-3 bg-accent text-white border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 hover:bg-primary-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
                         {loading ? (
                             'Procesando...'
                         ) : (
@@ -465,7 +465,7 @@ export const SignUp = () => {
                         ¿Ya tienes cuenta?{' '}
                         <NavLink
                             to='/login'
-                            className='text-primary-600 text-decoration-none font-semibold transition-all duration-300 hover:text-primary-600 hover:underline'>
+                            className='text-accent text-decoration-none font-semibold transition-all duration-300 hover:text-accent hover:underline'>
                             Inicia sesión aquí
                         </NavLink>
                     </p>

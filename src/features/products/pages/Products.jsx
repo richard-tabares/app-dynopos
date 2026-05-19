@@ -263,7 +263,7 @@ export const Products = () => {
                         className='bg-surface rounded-lg shadow-2xl w-full max-w-md relative overflow-hidden'
                         onClick={(e) => e.stopPropagation()}>
                     <button
-                    className='absolute top-4 right-4 text-muted hover:text-on-body transition mb-4'
+                    className='absolute top-4 right-4 text-accent hover:bg-accent/85 transition mb-4 cursor-pointer'
                     onClick={() => setShowCategoryModal(false)}>
                     <X className='w-6 h-6' />
                 </button>
@@ -299,7 +299,7 @@ export const Products = () => {
                                     setShowCategoryModal(false)
                                     setCategoryName('')
                                 }}
-                                className='flex-1 py-2.5 border border-outline text-on-body rounded-lg font-medium hover:bg-hover transition text-sm cursor-pointer'>
+                                className='flex-1 py-2.5 border border-outline text-on-body hover:bg-hover rounded-lg font-medium transition text-sm cursor-pointer'>
                                 Cancelar
                             </button>
                             <button
@@ -307,7 +307,7 @@ export const Products = () => {
                                 disabled={
                                     savingCategory || !categoryName.trim()
                                 }
-                                className='flex-1 py-2.5 bg-primary-600 text-white rounded-lg font-bold hover:bg-primary-700 transition text-sm disabled:opacity-50 cursor-pointer'>
+                                className='flex-1 py-2.5 bg-accent text-surface rounded-lg font-bold hover:bg-accent/85 transition text-sm disabled:opacity-50 cursor-pointer'>
                                 {savingCategory ? 'Guardando...' : 'Guardar'}
                             </button>
                         </div>
@@ -328,7 +328,7 @@ export const Products = () => {
                 <section className='bg-surface border border-outline shadow-xs rounded-lg'>
                     <section className='border-b border-outline flex justify-between items-center px-6 py-4 bg-subtle'>
                         <section className='flex items-center gap-2'>
-                            <Package className='w-5 h-5 text-primary-600' />
+                            <Package className='w-5 h-5 text-accent' />
                             <h2 className='text-lg font-semibold flex flex-col'>
                                 Lista de Productos
                             <span className='text-sm text-muted font-medium'>
@@ -387,7 +387,7 @@ export const Products = () => {
                                     Inventario
                                 </button>
                                 <button
-                                    className='flex items-center font-medium px-4 py-2 bg-primary-600 text-white text-sm rounded-lg hover:bg-primary-700 transition cursor-pointer'
+                                    className='flex items-center font-medium px-4 py-2 bg-accent text-surface text-sm rounded-lg hover:bg-accent/85 transition cursor-pointer'
                                     onClick={handleOpenModal}>
                                     <Package className='w-4 h-5 mr-2' />
                                     Nuevo Producto
@@ -472,7 +472,7 @@ export const Products = () => {
                                     onClick={() => setActiveCategory('all')}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                         activeCategory === 'all'
-                                            ? 'bg-surface shadow-xs text-primary-600'
+                                            ? 'bg-surface shadow-xs text-accent'
                                             : 'text-muted hover:text-on-body hover:bg-hover'
                                     }`}>
                                     <Layers className='w-4 h-4' />
@@ -486,7 +486,7 @@ export const Products = () => {
                                         }
                                         className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                             activeCategory === category.id
-                                                ? 'bg-surface shadow-xs text-primary-600'
+                                                ? 'bg-surface shadow-xs text-accent'
                                                 : 'text-muted hover:text-on-body hover:bg-hover'
                                         }`}>
                                         <Tags className='w-4 h-4' />
@@ -499,7 +499,7 @@ export const Products = () => {
                                     onClick={() => { setActiveStatus('all'); setVisibleCount(20) }}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                         activeStatus === 'all'
-                                            ? 'bg-surface shadow-xs text-primary-600'
+                                            ? 'bg-surface shadow-xs text-accent'
                                             : 'text-muted hover:text-on-body hover:bg-surface'
                                     }`}>
                                     <CheckCircle2 className='w-4 h-4' />
@@ -509,7 +509,7 @@ export const Products = () => {
                                     onClick={() => { setActiveStatus('active'); setVisibleCount(20) }}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                         activeStatus === 'active'
-                                            ? 'bg-surface shadow-xs text-primary-600'
+                                            ? 'bg-surface shadow-xs text-accent'
                                             : 'text-muted hover:text-on-body hover:bg-surface'
                                     }`}>
                                     <CheckCircle className='w-4 h-4' />
@@ -519,7 +519,7 @@ export const Products = () => {
                                     onClick={() => { setActiveStatus('inactive'); setVisibleCount(20) }}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                         activeStatus === 'inactive'
-                                            ? 'bg-surface shadow-xs text-primary-600'
+                                            ? 'bg-surface shadow-xs text-accent'
                                             : 'text-muted hover:text-on-body hover:bg-surface'
                                     }`}>
                                     <XCircle className='w-4 h-4' />
@@ -531,7 +531,7 @@ export const Products = () => {
                                     onClick={() => { setActiveStock('all'); setVisibleCount(20) }}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                         activeStock === 'all'
-                                            ? 'bg-surface shadow-xs text-primary-600'
+                                            ? 'bg-surface shadow-xs text-accent'
                                             : 'text-muted hover:text-on-body hover:bg-surface'
                                     }`}>
                                     <Layers className='w-4 h-4' />
@@ -541,7 +541,7 @@ export const Products = () => {
                                     onClick={() => { setActiveStock('with'); setVisibleCount(20) }}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                         activeStock === 'with'
-                                            ? 'bg-surface shadow-xs text-primary-600'
+                                            ? 'bg-surface shadow-xs text-accent'
                                             : 'text-muted hover:text-on-body hover:bg-surface'
                                     }`}>
                                     <PackageCheck className='w-4 h-4' />
@@ -551,7 +551,7 @@ export const Products = () => {
                                     onClick={() => { setActiveStock('without'); setVisibleCount(20) }}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                         activeStock === 'without'
-                                            ? 'bg-surface shadow-xs text-primary-600'
+                                            ? 'bg-surface shadow-xs text-accent'
                                             : 'text-muted hover:text-on-body hover:bg-surface'
                                     }`}>
                                     <PackageX className='w-4 h-4' />
@@ -649,9 +649,9 @@ export const Products = () => {
                                                             product.id,
                                                         )
                                                     }
-                                                    className='bg-gray-100 dark:bg-gray-700 hover:bg-hover-strong p-1.5 rounded-sm cursor-pointer'
+                                                    className='bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-800 p-1.5 rounded-sm cursor-pointer'
                                                     title='Editar Producto'>
-                                                    <Edit2 className='w-4 h-4 text-primary-600' />
+                                                    <Edit2 className='w-4 h-4 text-accent' />
                                                 </button>
                                                 <button
                                                     onClick={() =>
@@ -700,7 +700,7 @@ export const Products = () => {
                                                             )
                                                         }}
                                                         className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-on-body hover:bg-hover rounded-t-lg cursor-pointer'>
-                                                        <Edit2 className='w-4 h-4 text-primary-600' />
+                                                        <Edit2 className='w-4 h-4 text-accent' />
                                                         Editar
                                                     </button>
                                                     <button
@@ -727,7 +727,7 @@ export const Products = () => {
                     {visibleCount < filteredProducts.length && (
                         <button
                             onClick={handleLoadMore}
-                            className='w-full mt-4 py-2 text-sm font-medium text-primary-600 hover:bg-primary-50 rounded-lg transition cursor-pointer px-6'>
+                            className='w-full mt-4 py-2 text-sm font-medium text-accent hover:bg-primary-50 rounded-lg transition cursor-pointer px-6'>
                             Cargar más ({filteredProducts.length - visibleCount} restantes)
                         </button>
                     )}

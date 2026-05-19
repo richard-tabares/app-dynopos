@@ -55,7 +55,7 @@ export const SaleTicketModal = ({ isOpen, onClose, sale }) => {
                 onClick={(e) => e.stopPropagation()}
                 onKeyDown={(e) => e.key === 'Enter' && window.print()}>
                 
-                <div className='bg-primary-600 p-4 text-white flex justify-between items-center print:hidden'>
+                <div className='bg-accent p-4 text-white flex justify-between items-center print:hidden'>
                     <div className='flex items-center gap-2'>
                         <ReceiptText className='w-5 h-5' />
                         <span className='font-bold uppercase tracking-widest text-sm'>Ticket de Venta</span>
@@ -122,7 +122,7 @@ export const SaleTicketModal = ({ isOpen, onClose, sale }) => {
 
                 <div className='p-4 bg-subtle border-t border-divider-light flex gap-2 print:hidden'>
                     <button 
-                        className='flex-1 flex items-center justify-center gap-2 bg-primary-600 text-white py-2 rounded-lg font-bold hover:bg-primary-700 transition text-sm'
+                        className='flex-1 flex items-center justify-center gap-2 bg-accent text-white py-2 rounded-lg font-bold hover:bg-primary-700 transition text-sm'
                         onClick={() => window.print()}
                     >
                         <Printer className='w-4 h-4' />

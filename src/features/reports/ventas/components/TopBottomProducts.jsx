@@ -10,7 +10,7 @@ export const TopBottomProducts = ({ data = [], type = 'top' }) => {
 
     return (
         <section className='bg-surface border border-outline p-6 shadow-xs rounded-lg h-full flex flex-col'>
-            <div className={`flex items-center gap-2 mb-6 ${isTop ? 'text-primary-600' : 'text-red-600'}`}>
+            <div className={`flex items-center gap-2 mb-6 ${isTop ? 'text-accent' : 'text-red-600'}`}>
                 <Icon className='w-5 h-5' />
                 <h3 className='text-lg font-semibold text-on-surface'>{title}</h3>
             </div>

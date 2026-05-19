@@ -152,7 +152,7 @@ export const Settings = () => {
             <section className='bg-surface border border-outline shadow-sm rounded-lg'>
                 <div className='px-6 py-4 border-b border-divider bg-body/50'>
                     <h2 className='text-lg font-semibold flex items-center gap-2'>
-                        <Store className='w-5 h-5 text-primary-600' />
+                        <Store className='w-5 h-5 text-accent' />
                         Información de la Tienda
                     </h2>
                 </div>
@@ -230,7 +230,7 @@ export const Settings = () => {
             <section className='bg-surface border border-outline shadow-sm rounded-lg'>
                 <div className='px-6 py-4 border-b border-divider bg-body/50'>
                     <h2 className='text-lg font-semibold flex items-center gap-2'>
-                        <Shield className='w-5 h-5 text-primary-600' />
+                        <Shield className='w-5 h-5 text-accent' />
                         Seguridad
                     </h2>
                 </div>
@@ -274,7 +274,7 @@ export const Settings = () => {
                         <button
                             onClick={handleChangePassword}
                             disabled={changingPassword}
-                            className='flex items-center gap-2 px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition disabled:opacity-50 cursor-pointer'>
+                            className='flex items-center gap-2 px-4 py-2 bg-accent text-surface text-sm font-medium rounded-lg hover:bg-accent/85 transition disabled:opacity-50 cursor-pointer'>
                             {changingPassword ? <Loader className='w-4 h-4 animate-spin' /> : null}
                             Cambiar Contraseña
                         </button>
@@ -287,7 +287,7 @@ export const Settings = () => {
                 <section className='bg-surface border border-outline shadow-sm rounded-lg'>
                     <div className='px-6 py-4 border-b border-divider bg-body/50'>
                         <h2 className='text-lg font-semibold flex items-center gap-2'>
-                            <Palette className='w-5 h-5 text-primary-600' />
+                            <Palette className='w-5 h-5 text-accent' />
                             Apariencia
                         </h2>
                     </div>
@@ -304,7 +304,7 @@ export const Settings = () => {
                                     checked={isDarkMode}
                                     onChange={toggleDarkMode}
                                 />
-                                <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
+                                <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
                             </label>
                         </div>
                     </div>
@@ -314,7 +314,7 @@ export const Settings = () => {
                 <section className='bg-surface border border-outline shadow-sm rounded-lg'>
                     <div className='px-6 py-4 border-b border-divider bg-body/50'>
                         <h2 className='text-lg font-semibold flex items-center gap-2'>
-                            <Receipt className='w-5 h-5 text-primary-600' />
+                            <Receipt className='w-5 h-5 text-accent' />
                             Recibos
                         </h2>
                     </div>
@@ -337,7 +337,7 @@ export const Settings = () => {
             <section className='bg-surface border border-outline shadow-sm rounded-lg'>
                 <div className='px-6 py-4 border-b border-divider bg-body/50'>
                     <h2 className='text-lg font-semibold flex items-center gap-2'>
-                        <Bell className='w-5 h-5 text-primary-600' />
+                        <Bell className='w-5 h-5 text-accent' />
                         Notificaciones
                     </h2>
                 </div>
@@ -348,7 +348,7 @@ export const Settings = () => {
                             name='low_stock_notifications'
                             checked={formData.low_stock_notifications}
                             onChange={handleChange}
-                            className='w-4 h-4 text-primary-600 border-outline rounded focus:ring-primary-500 cursor-pointer'
+                            className='w-4 h-4 text-accent border-outline rounded focus:ring-primary-500 cursor-pointer'
                         />
                         <span className='text-sm text-on-body'>
                             Activar correo de notificación cuando un producto tenga stock bajo
@@ -362,7 +362,7 @@ export const Settings = () => {
                 <button
                     onClick={handleSave}
                     disabled={saving || uploadingLogo}
-                    className='flex items-center gap-2 px-6 py-2.5 bg-primary-600 text-white text-sm font-bold rounded-lg hover:bg-primary-700 transition disabled:opacity-50 cursor-pointer'>
+                    className='flex items-center gap-2 px-6 py-2.5 bg-accent text-surface text-sm font-bold rounded-lg hover:bg-accent/85 transition disabled:opacity-50 cursor-pointer'>
                     {saving || uploadingLogo ? (
                         <Loader className='w-4 h-4 animate-spin' />
                     ) : (

@@ -35,7 +35,7 @@ export const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message }) => 
                     <div className='flex gap-3 w-full'>
                         <button
                             type='button'
-                            className='flex-1 px-4 py-2 bg-subtle text-on-body font-semibold rounded-lg hover:bg-hover-icon transition cursor-pointer'
+                            className='flex-1 px-4 py-2 border border-outline text-on-body hover:bg-hover font-semibold rounded-lg transition cursor-pointer'
                             onClick={onClose}>
                             Cancelar
                         </button>

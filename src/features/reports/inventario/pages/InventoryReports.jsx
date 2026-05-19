@@ -7,7 +7,7 @@ import { useStore } from '../../../../app/providers/store'
 import { AlertTriangle, PackageCheck, Package, PackageX, Layers } from 'lucide-react'
 
 const stockFilters = [
-    { value: 'all', label: 'Todos', icon: Layers, color: 'text-primary-600', bg: 'bg-primary-50' },
+    { value: 'all', label: 'Todos', icon: Layers, color: 'text-accent', bg: 'bg-primary-50' },
     { value: 'sin_stock', label: 'Sin Stock', icon: PackageX, color: 'text-red-500', bg: 'bg-red-50' },
     { value: 'stock_bajo', label: 'Stock Bajo', icon: AlertTriangle, color: 'text-red-500', bg: 'bg-red-50' },
     { value: 'con_stock', label: 'Con Stock', icon: PackageCheck, color: 'text-emerald-500', bg: 'bg-emerald-50' },

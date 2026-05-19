@@ -60,7 +60,7 @@ export const PaymentPending = () => {
     return (
         <section className='w-full flex flex-col items-center justify-center bg-surface px-4 py-8'>
             <section className='text-center'>
-                <Loader2 className='w-16 h-16 text-primary-600 mx-auto mb-6 animate-spin' />
+                <Loader2 className='w-16 h-16 text-accent mx-auto mb-6 animate-spin' />
                 <h1 className='text-2xl font-bold text-on-surface mb-2'>
                     Confirmando tu pago
                 </h1>

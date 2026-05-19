@@ -114,13 +114,13 @@ export const Login = () => {
                             <p className='text-xs font-semibold text-red-500'>{errors.password}</p>
                         )}
                     </section>
-                    <button type="submit" disabled={loading} className='py-3 px-6 font-semibold bg-primary-600 text-white rounded-md w-full cursor-pointer mb-2 disabled:opacity-60 disabled:cursor-not-allowed'>
+                    <button type="submit" disabled={loading} className='py-3 px-6 font-semibold bg-accent text-white rounded-md w-full cursor-pointer mb-2 disabled:opacity-60 disabled:cursor-not-allowed'>
                         {loading ? 'Iniciando...' : 'Iniciar Sesión'}
                     </button>
                     <p className='text-center text-on-body text-xs mb-8'>
                         <NavLink
                             to='/forgot-password'
-                            className='text-primary-600 text-decoration-none font-semibold transition-all duration-300 hover:text-purple-600 hover:underline'>
+                            className='text-accent text-decoration-none font-semibold transition-all duration-300 hover:text-purple-600 hover:underline'>
                             Olvidaste tu contraseña
                         </NavLink>
                     </p>
@@ -128,7 +128,7 @@ export const Login = () => {
                         ¿Aún no tienes cuenta?{' '}
                         <NavLink
                             to='/signup'
-                            className='text-primary-600 text-decoration-none font-semibold transition-all duration-300 hover:text-purple-600 hover:underline'>
+                            className='text-accent text-decoration-none font-semibold transition-all duration-300 hover:text-purple-600 hover:underline'>
                             Registrate aquí
                         </NavLink>
                     </p>

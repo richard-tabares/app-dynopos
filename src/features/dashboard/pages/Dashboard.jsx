@@ -54,17 +54,17 @@ export const Dashboard = () => {
     return (
         <section className='space-y-6 pb-12'>
             {loading && (
-                <section className='bg-primary-600/80 text-white p-8 rounded-xl shadow-sm animate-pulse'>
+                <section className='bg-accent/90 text-surface p-8 rounded-xl shadow-sm animate-pulse'>
                     <div className='h-9 w-72 bg-white/20 rounded mb-2' />
                     <div className='h-5 w-56 bg-white/20 rounded' />
                 </section>
             )}
             {!loading && (
-                <section className='bg-primary-600 text-white p-8 rounded-xl shadow-sm'>
+                <section className='bg-accent/90 text-surface p-8 rounded-xl shadow-sm'>
                     <h1 className='text-3xl font-bold mb-2'>
                         ¡Bienvenido de vuelta! 👋
                     </h1>
-                    <p className='text-primary-100'>Aquí está el resumen de tu negocio hoy</p>
+                    <p className='text-surface'>Aquí está el resumen de tu negocio hoy</p>
                 </section>
             )}
 

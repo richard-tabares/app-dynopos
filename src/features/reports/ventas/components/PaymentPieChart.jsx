@@ -11,7 +11,7 @@ export const PaymentPieChart = ({ data = [] }) => {
 
     return (
         <section className='bg-surface border border-outline p-6 shadow-xs rounded-lg'>
-            <div className='flex items-center gap-2 text-primary-600 mb-6'>
+            <div className='flex items-center gap-2 text-accent mb-6'>
                 <CreditCard className='w-5 h-5' />
                 <h3 className='text-lg font-semibold text-on-surface'>Ventas por Método de Pago</h3>
             </div>

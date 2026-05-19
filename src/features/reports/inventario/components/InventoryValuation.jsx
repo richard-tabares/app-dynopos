@@ -25,12 +25,12 @@ export const InventoryValuation = ({ data = [] }) => {
 
     return (
         <section className='bg-surface border border-outline p-6 shadow-xs rounded-lg'>
-            <div className='flex items-center gap-2 text-primary-600 mb-4'>
+            <div className='flex items-center gap-2 text-accent mb-4'>
                 <DollarSign className='w-5 h-5' />
                 <h3 className='text-lg font-semibold text-on-surface'>Valorización de Inventario</h3>
                 <div className='ml-auto text-right'>
                     <p className='text-xs text-muted'>Valor Total</p>
-                    <p className='text-xl font-bold text-primary-600'>{formatCurrency(totalValuation)}</p>
+                    <p className='text-xl font-bold text-accent'>{formatCurrency(totalValuation)}</p>
                 </div>
             </div>
 
@@ -71,7 +71,7 @@ export const InventoryValuation = ({ data = [] }) => {
                         {visibleCount < filtered.length && (
                             <button
                                 onClick={() => setVisibleCount(prev => prev + 10)}
-                                className='w-full mt-4 py-2 text-sm font-medium text-primary-600 hover:bg-primary-50 rounded-lg transition cursor-pointer'
+                                className='w-full mt-4 py-2 text-sm font-medium text-accent hover:bg-primary-50 rounded-lg transition cursor-pointer'
                             >
                                 Cargar más ({filtered.length - visibleCount} restantes)
                             </button>

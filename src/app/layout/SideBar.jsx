@@ -164,7 +164,7 @@ export const SideBar = () => {
                                             className={`w-full flex items-center text-sm font-semibold px-3 py-2 rounded-lg transition-colors cursor-pointer
                                                 ${isCollapsed ? 'justify-center' : 'justify-between'}
                                                 ${isActiveParent(item)
-                                                    ? 'bg-primary-50 text-primary-600'
+                                                    ? 'bg-accent text-surface'
                                                     : 'text-on-body hover:bg-hover-strong hover:text-on-surface'
                                                 }`}
                                         >
@@ -187,7 +187,7 @@ export const SideBar = () => {
                                                                 onClick={() => setIsMobile(false)}
                                                                 className={`flex items-center text-sm font-medium px-3 py-2 rounded-lg transition-colors
                                                                     ${isActiveSub(sub.path)
-                                                                        ? 'bg-primary-50 text-primary-600'
+                                                                        ? 'bg-accent text-surface'
                                                                         : 'text-muted hover:bg-hover-strong hover:text-on-surface'
                                                                     }`}
                                                             >
@@ -213,7 +213,7 @@ export const SideBar = () => {
                                             ${isCollapsed ? 'justify-center' : 'justify-start'}
                                             ${
                                                 isActive
-                                                    ? 'bg-primary-50 text-primary-600'
+                                                    ? 'bg-accent text-surface'
                                                     : 'text-on-body hover:bg-hover-strong hover:text-on-surface'
                                             }`
                                         }>

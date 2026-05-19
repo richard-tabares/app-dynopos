@@ -74,7 +74,7 @@ export const Modal = ({
                 className='bg-surface rounded-lg shadow-lg p-6 w-full max-w-md relative'
                 onClick={(e) => e.stopPropagation()}>
                 <button
-                    className='absolute top-4 right-4 text-muted hover:text-on-body transition mb-4'
+                    className='absolute top-4 right-4 cursor-pointer text-accent hover:text-accent/85 transition mb-4'
                     onClick={handleOpenModal}>
                     <X className='w-6 h-6' />
                 </button>
@@ -172,7 +172,7 @@ export const Modal = ({
                                 onChange={handleChange}
                                 className='sr-only peer'
                             />
-                            <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
+                            <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
                         </label>
                     </section>
                     <section className='flex items-center justify-between'>
@@ -187,20 +187,20 @@ export const Modal = ({
                                 onChange={handleChange}
                                 className='sr-only peer'
                             />
-                            <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
+                            <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
                         </label>
                     </section>
                     <section className='flex justify-end gap-4 mt-4'>
                         <button
                             type='button'
-                            className='px-4 py-2 bg-hover-icon text-on-body font-medium rounded-lg hover:bg-gray-300 transition cursor-pointer'
+                            className='px-4 py-2 border border-outline text-on-body hover:bg-hover font-medium rounded-lg transition cursor-pointer'
                             onClick={handleOpenModal}>
                             Cancelar
                         </button>
                         <button
                             type='submit'
                             disabled={!isFormValid || submitting}
-                            className='px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'>
+                            className='px-4 py-2 bg-accent text-surface rounded-lg hover:bg-accent/85 font-medium transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'>
                             {submitting
                                 ? editProductData.id ? 'Actualizando...' : 'Guardando...'
                                 : editProductData.id ? 'Actualizar' : 'Guardar'}

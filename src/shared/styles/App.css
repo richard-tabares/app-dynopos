@@ -9,16 +9,10 @@
     --color-primary-300: #7dd3fc;
     --color-primary-400: #38bdf8;
     --color-primary-500: #0ea5e9;
-    --color-primary-600: #0284c7;
     --color-primary-700: #0369a1;
-    --color-primary-800: #075985;
-    --color-primary-900: #0c4a6e;
-    --color-accent-500: #10b981;
-    --color-accent-600: #059669;
-    --color-danger-500: #ef4444;
-    --color-danger-600: #dc2626;
 
     --color-surface: var(--surface);
+    --color-accent: var(--accent);
     --color-body: var(--body);
     --color-subtle: var(--subtle);
     --color-overlay: var(--overlay);
@@ -38,6 +32,7 @@
 @layer base {
     :root {
         --surface: #ffffff;
+        --accent: #3b7597ff;
         --body: #f9fafb;
         --subtle: #f9fafb;
         --overlay: rgba(17, 24, 39, 0.5);
@@ -56,6 +51,7 @@
 
     .dark {
         --surface: #1f2937;
+        --accent: #00ffffff;
         --body: #030712;
         --subtle: rgba(31, 41, 55, 0.5);
         --overlay: rgba(0, 0, 0, 0.6);

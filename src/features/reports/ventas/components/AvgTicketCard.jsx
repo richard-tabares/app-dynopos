@@ -29,14 +29,14 @@ export const AvgTicketCard = ({ overallAvgTicket = 0, tickets = [], showDayNames
         <section className='bg-surface border border-outline p-6 shadow-xs rounded-lg'>
             <div className='flex items-start justify-between mb-6'>
                 <div className='flex items-center gap-3'>
-                    <Receipt className='w-5 h-5 text-primary-600' />
+                    <Receipt className='w-5 h-5 text-accent' />
                     <div>
                         <h3 className='text-lg font-semibold text-on-surface'>Ticket Promedio</h3>
                         <p className='text-sm text-muted'>Período seleccionado</p>
                     </div>
                 </div>
                 <div className='text-right'>
-                    <p className='text-3xl font-bold text-primary-600'>{formatCurrency(overallAvgTicket)}</p>
+                    <p className='text-3xl font-bold text-accent'>{formatCurrency(overallAvgTicket)}</p>
                 </div>
             </div>
 

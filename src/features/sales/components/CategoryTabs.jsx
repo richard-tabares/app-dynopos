@@ -39,7 +39,7 @@ export const CategoryTabs = ({ categories = [], activeCategory, onSelectCategory
                         onClick={() => { onSelectCategory('all'); setIsOpen(false) }}
                         className={`w-full flex items-center gap-2 px-3 py-2 text-sm text-left cursor-pointer transition-colors ${
                             activeCategory === 'all'
-                                ? 'bg-primary-50 text-primary-600'
+                                ? 'bg-primary-50 text-accent'
                                 : 'text-on-surface hover:bg-hover'
                         }`}
                     >
@@ -52,7 +52,7 @@ export const CategoryTabs = ({ categories = [], activeCategory, onSelectCategory
                             onClick={() => { onSelectCategory(category.id); setIsOpen(false) }}
                             className={`w-full flex items-center gap-2 px-3 py-2 text-sm text-left cursor-pointer transition-colors ${
                                 activeCategory === category.id
-                                    ? 'bg-primary-50 text-primary-600'
+                                    ? 'bg-primary-50 text-accent'
                                     : 'text-on-surface hover:bg-hover'
                             }`}
                         >

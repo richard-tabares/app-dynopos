@@ -20,7 +20,7 @@ export const OrderSidebar = ({ onProcessSale }) => {
             <div className='p-6 border-b border-divider-light'>
                 <div className='flex items-center justify-between'>
                     <h2 className='text-xl font-bold flex items-center gap-2'>
-                        <ShoppingCart className='w-5 h-5 text-primary-600' />
+                        <ShoppingCart className='w-5 h-5 text-accent' />
                         Orden Actual
                     </h2>
                     {cart?.length > 0 && (
@@ -51,7 +51,7 @@ export const OrderSidebar = ({ onProcessSale }) => {
                                 <h4 className='font-bold text-sm text-on-surface truncate max-w-30'>
                                     {item.name}
                                 </h4>
-                                <p className='text-primary-600 font-bold text-xs'>
+                                <p className='text-accent font-bold text-xs'>
                                     ${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(item.price)}
                                 </p>
                             </div>
@@ -96,7 +96,7 @@ export const OrderSidebar = ({ onProcessSale }) => {
                     </div>
                     <div className='flex justify-between text-xl font-bold text-on-surface mt-2 pt-2 border-t border-divider'>
                         <span>Total</span>
-                        <span className='text-primary-600'>${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(total)}</span>
+                        <span className='text-accent'>${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(total)}</span>
                     </div>
                 </div>
 
@@ -110,9 +110,9 @@ export const OrderSidebar = ({ onProcessSale }) => {
                                 <button
                                     key={method.id}
                                     onClick={() => setPaymentMethod(method.id)}
-                                    className={`flex flex-col items-center justify-center p-3 border rounded-lg transition-colors ${
+                                    className={`flex flex-col items-center justify-center p-3 border rounded-lg transition-colors cursor-pointer ${
                                         paymentMethod === method.id
-                                            ? 'border-primary-300 bg-hover text-on-body'
+                                            ? 'border-accent bg-accent text-surface hover:bg-accent/85'
                                             : 'border-divider bg-surface text-on-body hover:bg-hover'
                                     }`}
                                 >
@@ -127,7 +127,7 @@ export const OrderSidebar = ({ onProcessSale }) => {
                 <button
                     onClick={() => onProcessSale(paymentMethod, total)}
                     disabled={!cart?.length}
-                    className='w-full py-4 bg-primary-600 text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-primary-700 transition-all shadow-lg shadow-primary-600/20 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer'
+                    className='w-full py-4 bg-accent text-surface rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-accent/85 transition-all shadow-lg shadow-accent/20 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer'
                 >
                     <ShoppingCart className='w-5 h-5' />
                     Procesar Venta

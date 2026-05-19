@@ -165,7 +165,7 @@ export const GananciasReports = () => {
                     </section>
 
                     <section className='bg-surface border border-outline p-6 rounded-lg shadow-xs'>
-                        <div className='flex items-center gap-2 text-primary-600 mb-6'>
+                        <div className='flex items-center gap-2 text-accent mb-6'>
                             <BarChart4 className='w-5 h-5' />
                             <h3 className='text-lg font-semibold text-on-surface'>Costo vs Ingresos vs Ganancia</h3>
                         </div>
@@ -190,7 +190,7 @@ export const GananciasReports = () => {
                     </section>
 
                     <section className='bg-surface border border-outline p-6 rounded-lg shadow-xs'>
-                        <div className='flex items-center gap-2 text-primary-600 mb-6'>
+                        <div className='flex items-center gap-2 text-accent mb-6'>
                             <ArrowUpDown className='w-5 h-5' />
                             <h3 className='text-lg font-semibold text-on-surface'>Márgenes por Producto</h3>
                         </div>

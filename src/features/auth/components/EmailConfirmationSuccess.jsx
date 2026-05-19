@@ -61,7 +61,7 @@ export const EmailConfirmationSuccess = () => {
             <section className='w-full min-h-screen flex flex-col items-center justify-center bg-body px-4'>
                 <section className='w-full max-w-md bg-surface border border-outline p-10 text-center'>
                     <div className='flex justify-center mb-6'>
-                        <Loader2 className='w-12 h-12 text-primary-600 animate-spin' />
+                        <Loader2 className='w-12 h-12 text-accent animate-spin' />
                     </div>
                     <h1 className='text-2xl font-bold text-on-surface mb-4'>
                         Verificando tu correo...
@@ -93,7 +93,7 @@ export const EmailConfirmationSuccess = () => {
                     </p>
                     <button
                         onClick={() => navigate('/signup', { replace: true })}
-                        className='w-full px-6 py-3 bg-primary-600 text-white rounded-lg text-base font-semibold transition-all duration-300 hover:bg-primary-500'>
+                        className='w-full px-6 py-3 bg-accent text-white rounded-lg text-base font-semibold transition-all duration-300 hover:bg-primary-500'>
                         Volver al registro
                     </button>
                 </section>
@@ -118,7 +118,7 @@ export const EmailConfirmationSuccess = () => {
                 </p>
                 <button
                     onClick={() => navigate('/login', { replace: true })}
-                    className='w-full px-6 py-3 bg-primary-600 text-white rounded-lg text-base font-semibold transition-all duration-300 hover:bg-primary-500'>
+                    className='w-full px-6 py-3 bg-accent text-white rounded-lg text-base font-semibold transition-all duration-300 hover:bg-primary-500'>
                     Ir al inicio de sesión
                 </button>
             </section>

@@ -84,7 +84,7 @@ export const ResetPassword = () => {
                     <p className='text-on-body mb-8'>El enlace para restablecer tu contraseña es inválido o ha expirado.</p>
                     <NavLink
                         to='/forgot-password'
-                        className='text-primary-600 text-decoration-none font-semibold transition-all duration-300 hover:text-purple-600 hover:underline'>
+                        className='text-accent text-decoration-none font-semibold transition-all duration-300 hover:text-purple-600 hover:underline'>
                         Solicitar nuevo enlace
                     </NavLink>
                 </section>
@@ -155,13 +155,13 @@ export const ResetPassword = () => {
                             <p className='text-xs font-semibold text-green-600'>✓ Las contraseñas coinciden</p>
                         )}
                     </section>
-                    <button type="submit" className='py-3 px-6 font-semibold bg-primary-600 text-white rounded-md w-full cursor-pointer mb-2'>
+                    <button type="submit" className='py-3 px-6 font-semibold bg-accent text-white rounded-md w-full cursor-pointer mb-2'>
                         Restablecer contraseña
                     </button>
                     <p className='text-center text-on-body'>
                         <NavLink
                             to='/login'
-                            className='text-primary-600 text-decoration-none font-semibold transition-all duration-300 hover:text-purple-600 hover:underline'>
+                            className='text-accent text-decoration-none font-semibold transition-all duration-300 hover:text-purple-600 hover:underline'>
                             Volver a Iniciar Sesión
                         </NavLink>
                     </p>

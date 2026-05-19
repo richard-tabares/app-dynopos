@@ -62,7 +62,7 @@ export const AdjustmentModal = ({
                 className='bg-surface rounded-lg shadow-lg p-6 w-full max-w-md relative'
                 onClick={(e) => e.stopPropagation()}>
                 <button
-                    className='absolute top-4 right-4 text-faint hover:text-on-body transition mb-4'
+                    className='absolute top-4 right-4 text-accent hover:text-accent/85 transition mb-4 cursor-pointer'
                     onClick={handleClose}>
                     <X className='w-6 h-6' />
                 </button>
@@ -175,14 +175,14 @@ export const AdjustmentModal = ({
                     <section className='flex justify-end gap-4 mt-4'>
                         <button
                             type='button'
-                            className='px-4 py-2 bg-hover-icon text-on-body font-medium rounded-lg hover:bg-gray-300 transition cursor-pointer'
+                            className='px-4 py-2 border border-outline text-on-body hover:bg-hover font-medium rounded-lg transition cursor-pointer'
                             onClick={handleClose}>
                             Cancelar
                         </button>
                         <button
                             type='submit'
                             disabled={loading || !isFormValid}
-                            className='px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'>
+                            className='px-4 py-2 bg-accent text-surface rounded-lg hover:bg-accent/85 font-medium transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'>
                             {loading ? 'Aplicando...' : 'Aplicar Ajuste'}
                         </button>
                     </section>

@@ -206,10 +206,10 @@ export const CardPayment = () => {
                         <span className='w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center text-sm font-bold'><Check className='w-4 h-4' /></span>
                         <span className='text-sm font-semibold text-green-600'>Plan</span>
                     </section>
-                    <section className='w-12 h-0.5 bg-primary-600' />
+                    <section className='w-12 h-0.5 bg-accent' />
                     <section className='flex items-center gap-2'>
-                        <span className='w-8 h-8 rounded-full bg-primary-600 text-white flex items-center justify-center text-sm font-bold'>3</span>
-                        <span className='text-sm font-semibold text-primary-600'>Pago</span>
+                        <span className='w-8 h-8 rounded-full bg-accent text-white flex items-center justify-center text-sm font-bold'>3</span>
+                        <span className='text-sm font-semibold text-accent'>Pago</span>
                     </section>
                 </section>
 
@@ -236,7 +236,7 @@ export const CardPayment = () => {
                     </section>
 
                     <section className='border-t border-divider pt-4'>
-                        <h3 className='font-semibold text-on-surface mb-3 flex items-center gap-2'><CreditCard className='w-5 h-5 text-primary-600' /> Datos de la tarjeta</h3>
+                        <h3 className='font-semibold text-on-surface mb-3 flex items-center gap-2'><CreditCard className='w-5 h-5 text-accent' /> Datos de la tarjeta</h3>
 
                         <section className='flex flex-col gap-2 mb-3'>
                             <label className='font-semibold text-on-surface'>Número de tarjeta <span className='text-red-500'>*</span></label>
@@ -265,7 +265,7 @@ export const CardPayment = () => {
                     </section>
 
                     <section className='border-t border-divider pt-4'>
-                        <h3 className='font-semibold text-on-surface mb-3 flex items-center gap-2'><ShieldCheck className='w-5 h-5 text-primary-600' /> Documento de identidad</h3>
+                        <h3 className='font-semibold text-on-surface mb-3 flex items-center gap-2'><ShieldCheck className='w-5 h-5 text-accent' /> Documento de identidad</h3>
                         <section className='grid grid-cols-3 gap-3'>
                             <section className='flex flex-col gap-2'>
                                 <label className='font-semibold text-on-surface'>Tipo <span className='text-red-500'>*</span></label>
@@ -293,11 +293,11 @@ export const CardPayment = () => {
                                     checked={acceptedReglamento}
                                     onChange={(e) => setAcceptedReglamento(e.target.checked)}
                                 />
-                                <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600" />
+                                <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent" />
                             </label>
                             <span className='text-sm text-on-body'>
                                 Acepto haber leído el{' '}
-                                <a href='https://wompi.com/assets/downloadble/reglamento-Usuarios-Colombia.pdf' target='_blank' rel='noopener noreferrer' className='text-primary-600 underline'>reglamento</a>
+                                <a href='https://wompi.com/assets/downloadble/reglamento-Usuarios-Colombia.pdf' target='_blank' rel='noopener noreferrer' className='text-accent underline'>reglamento</a>
                             </span>
                         </label>
                         <label className='flex items-start gap-3 cursor-pointer'>
@@ -308,13 +308,13 @@ export const CardPayment = () => {
                                     checked={acceptedDatos}
                                     onChange={(e) => setAcceptedDatos(e.target.checked)}
                                 />
-                                <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600" />
+                                <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent" />
                             </label>
                             <span className='text-sm text-on-body'>
                                 Acepto la{' '}
-                                <a href='https://wompi.com/assets/downloadble/autorizacion-tratamiento-datos-personales.pdf' target='_blank' rel='noopener noreferrer' className='text-primary-600 underline'>autorización para la administración de datos personales</a>{' '}
+                                <a href='https://wompi.com/assets/downloadble/autorizacion-tratamiento-datos-personales.pdf' target='_blank' rel='noopener noreferrer' className='text-accent underline'>autorización para la administración de datos personales</a>{' '}
                                 y conozco la{' '}
-                                <a href='https://wompi.com/es/co/politica-de-privacidad' target='_blank' rel='noopener noreferrer' className='text-primary-600 underline'>política de privacidad</a>
+                                <a href='https://wompi.com/es/co/politica-de-privacidad' target='_blank' rel='noopener noreferrer' className='text-accent underline'>política de privacidad</a>
                             </span>
                         </label>
                     </section>
@@ -322,7 +322,7 @@ export const CardPayment = () => {
                     <button
                         type='submit'
                         disabled={loading || !acceptedReglamento || !acceptedDatos}
-                        className='w-full mt-4 px-6 py-3 bg-primary-600 text-white border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 hover:bg-primary-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
+                        className='w-full mt-4 px-6 py-3 bg-accent text-white border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 hover:bg-primary-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
                         <Lock className='w-5 h-5' />
                         {loading ? 'Procesando pago...' : `Pagar $${formatPrice(currentPrice)}`}
                     </button>

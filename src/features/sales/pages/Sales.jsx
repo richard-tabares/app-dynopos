@@ -191,14 +191,14 @@ export const Sales = () => {
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                     placeholder='Buscar por nombre o código...'
-                                    className='w-full border border-outline rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
+                                    className='w-full border border-accent rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-accent'
                                     autoFocus
                                 />
                             </div>
                             {searchTerm.trim() && (
                                 <button
                                     onClick={() => { setSearchTerm(''); setVisibleCount(10) }}
-                                    className='flex items-center gap-2 px-3 py-1.5 bg-disabled self-start text-sm font-medium rounded-md transition-colors cursor-pointer text-muted hover:text-on-body hover:bg-gray-200 dark:hover:bg-gray-900'
+                                    className='flex items-center gap-2 px-3 py-1.5 bg-accent self-start text-sm font-medium rounded-md transition-colors cursor-pointer text-surface hover:bg-accent/85'
                                 >
                                     <X className='w-4 h-4' />
                                     Limpiar búsqueda
@@ -227,7 +227,7 @@ export const Sales = () => {
                                         {visibleCount < filteredProducts.length && (
                                             <button
                                                 onClick={handleLoadMore}
-                                                className='w-full mt-4 py-2 text-sm font-medium text-primary-600 hover:bg-primary-50 rounded-lg transition cursor-pointer'
+                                                className='w-full mt-4 py-2 text-sm font-medium text-accent hover:bg-accent/85 rounded-lg transition cursor-pointer'
                                             >
                                                 Cargar más ({filteredProducts.length - visibleCount} restantes)
                                             </button>
