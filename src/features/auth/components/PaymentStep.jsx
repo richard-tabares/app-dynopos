@@ -180,7 +180,7 @@ export const PaymentStep = () => {
                                     ? 'border-accent bg-hover'
                                     : 'border-divider hover:border-outline'
                             }`}>
-                            <span className='absolute -top-2.5 right-2 bg-accent-500 text-white text-xs font-bold px-2 py-0.5 rounded-full'>
+                            <span className='absolute top-2.5 right-2 bg-accent text-surface text-xs font-bold px-2 py-1 rounded-full'>
                                 -10%
                             </span>
                             <CalendarCheck className={`w-5 h-5 mb-2 ${billingFrequency === 'annual' ? 'text-accent' : 'text-faint'}`} />
