@@ -12,7 +12,7 @@ export const ReturnsTable = ({ data = [], onReturnClick }) => {
         if (!search.trim()) return data
         const term = search.toLowerCase()
         return data.filter(item =>
-            String(item.return_id || item.id || '').includes(term)
+            String(item.ticket_number ?? item.return_id ?? '').includes(term)
         )
     }, [data, search])
 
@@ -55,7 +55,7 @@ export const ReturnsTable = ({ data = [], onReturnClick }) => {
                                         className='border-b border-divider-light hover:bg-hover cursor-pointer transition'
                                         onClick={() => onReturnClick && onReturnClick(item)}
                                     >
-                                        <td className='py-3 px-4 font-medium text-on-surface'>#{String(item.return_id || item.id || '').padStart(4, '0')}</td>
+                                        <td className='py-3 px-4 font-medium text-on-surface'>#{String(item.ticket_number ?? item.return_id ?? '').padStart(4, '0')}</td>
                                         <td className='py-3 px-4 text-right'>{item.total_items_returned}</td>
                                         <td className='py-3 px-4 text-right'>{item.return_date}</td>
                                         <td className='py-3 px-4 text-right font-medium text-red-600'>{formatCurrency(item.total_amount)}</td>

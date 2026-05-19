@@ -90,7 +90,7 @@ export const ReturnModal = ({ isOpen, sale, onClose, onConfirm }) => {
                     </div>
                     <h3 className='text-lg font-bold text-on-surface mb-2'>
                         Devolver Venta #
-                        {String(sale.id).padStart(4, '0')}
+                        {String(sale.ticketNumber || sale.id).padStart(4, '0')}
                     </h3>
                 </div>
 

@@ -22,7 +22,7 @@ export const RecentSalesTable = ({ sales = [] }) => {
         if (!search.trim()) return sales
         const term = search.trim()
         return sales.filter(sale =>
-            String(sale.id).includes(term)
+            String(sale.ticketNumber ?? sale.id).includes(term)
         )
     }, [sales, search])
 
@@ -73,7 +73,7 @@ export const RecentSalesTable = ({ sales = [] }) => {
                                                 <td className='py-3 px-4 font-medium text-on-surface'>
                                                     <span className='flex items-center gap-2'>
                                                         <ReceiptText className='w-4 h-4 text-accent shrink-0' />
-                                                        #{String(sale.id).padStart(4, '0')}
+                                                        #{String(sale.ticketNumber ?? sale.id).padStart(4, '0')}
                                                     </span>
                                                 </td>
                                                 <td className='py-3 px-4 text-muted'>{sale.date}</td>

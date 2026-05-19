@@ -39,7 +39,7 @@ export const ReturnDetailModal = ({ isOpen, onClose, data }) => {
                 <div className='p-6'>
                     <div className='text-center mb-4 border-b border-dashed border-outline pb-3'>
                         <h2 className='text-lg font-bold uppercase'>{business?.business_name}</h2>
-                        <p className='text-xs text-muted'>Devolución #{String(header.id).padStart(4, '0')}</p>
+                        <p className='text-xs text-muted'>Devolución #{String(header.salesTickets?.ticket_number ?? header.id).padStart(4, '0')}</p>
                     </div>
 
                     <div className='space-y-1 mb-4 text-sm'>
