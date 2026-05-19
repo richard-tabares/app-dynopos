@@ -14,7 +14,7 @@ export const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message }) => 
                 className='bg-surface rounded-xl shadow-xl p-6 w-full max-w-sm relative'
                 onClick={(e) => e.stopPropagation()}>
                 <button
-                    className='absolute top-4 right-4 text-muted hover:text-on-body transition'
+                    className='absolute top-4 right-4 text-accent hover:text-accent/85 border border-disabled hover:border-accent rounded-md transition cursor-pointer'
                     onClick={onClose}>
                     <X className='w-5 h-5' />
                 </button>

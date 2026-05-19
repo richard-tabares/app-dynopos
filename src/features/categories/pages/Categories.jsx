@@ -124,7 +124,7 @@ export const Categories = () => {
                                     setEditingCategory(null)
                                     setCategoryName('')
                                 }}
-                                className='p-1 text-accent hover:text-accent/85  rounded-lg transition cursor-pointer'>
+                                className='p-1 text-accent hover:text-accent/85 border border-disabled hover:border-accent rounded-lg transition cursor-pointer'>
                                 <X className='w-5 h-5' />
                             </button>
                         </div>

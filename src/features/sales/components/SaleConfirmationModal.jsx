@@ -22,7 +22,7 @@ export const SaleConfirmationModal = ({
                 onClick={(e) => e.stopPropagation()}
                 onKeyDown={(e) => e.key === 'Enter' && !loading && onConfirm()}>
                 <button
-                    className='absolute top-4 right-4 text-accent hover:text-accent/85 transition mb-4 cursor-pointer'
+                    className='absolute top-4 right-4 text-accent hover:text-accent/85 border border-disabled hover:border-accent rounded-md transition mb-4 cursor-pointer'
                     onClick={onCancel}>
                     <X className='w-6 h-6' />
                 </button>

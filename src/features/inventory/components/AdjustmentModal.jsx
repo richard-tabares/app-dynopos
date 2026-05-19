@@ -62,7 +62,7 @@ export const AdjustmentModal = ({
                 className='bg-surface rounded-lg shadow-lg p-6 w-full max-w-md relative'
                 onClick={(e) => e.stopPropagation()}>
                 <button
-                    className='absolute top-4 right-4 text-accent hover:text-accent/85 transition mb-4 cursor-pointer'
+                    className='absolute top-4 right-4 text-accent hover:text-accent/85 border border-disabled hover:border-accent rounded-md transition mb-4 cursor-pointer'
                     onClick={handleClose}>
                     <X className='w-6 h-6' />
                 </button>

@@ -127,7 +127,7 @@ export const OrderSidebar = ({ onProcessSale }) => {
                 <button
                     onClick={() => onProcessSale(paymentMethod, total)}
                     disabled={!cart?.length}
-                    className='w-full py-4 bg-accent text-surface rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-accent/85 transition-all shadow-lg shadow-accent/20 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer'
+                    className='w-full py-4 bg-accent text-surface rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-accent/85 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer'
                 >
                     <ShoppingCart className='w-5 h-5' />
                     Procesar Venta
