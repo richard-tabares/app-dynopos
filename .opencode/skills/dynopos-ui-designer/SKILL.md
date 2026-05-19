@@ -40,7 +40,7 @@ Usado en: tablas de reportes, charts, tarjetas de dashboard, settings.
       Título
       <span className='text-sm text-gray-500 font-medium'>Total (X)</span>
     </h2>
-    <button className='flex items-center font-medium px-4 py-2 bg-primary-600 text-white text-sm rounded-lg hover:bg-primary-700 transition cursor-pointer'>
+    <button className='flex items-center font-medium px-4 py-2 bg-primary-600 text-white text-sm rounded-lg hover:bg-accent transition cursor-pointer'>
       <Plus className='w-4 h-4 lg:w-5 lg:h-5 lg:mr-2' />
       Acción
     </button>
@@ -150,7 +150,7 @@ Tipos de celdas:
 {visibleCount < filtered.length && (
   <button
     onClick={() => setVisibleCount(prev => prev + 10)}
-    className='w-full mt-4 py-2 text-sm font-medium text-primary-600 hover:bg-primary-50 rounded-lg transition cursor-pointer'
+    className='w-full mt-4 py-2 text-sm font-medium text-primary-600 hover:bg-surface rounded-lg transition cursor-pointer'
   >
     Cargar más ({filtered.length - visibleCount} restantes)
   </button>
@@ -185,7 +185,7 @@ Usado en: Sales.jsx (productos), OrderSidebar (carrito vacío).
     value={searchTerm}
     onChange={(e) => { setSearchTerm(e.target.value); setVisibleCount(10) }}
     placeholder='Buscar...'
-    className='w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
+    className='w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent'
   />
 </div>
 ```
@@ -254,14 +254,14 @@ Iconos por período:
 
 ### Botón primario (relleno)
 ```jsx
-<button className='px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium transition cursor-pointer disabled:opacity-50'>
+<button className='px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-accent font-medium transition cursor-pointer disabled:opacity-50'>
   Texto
 </button>
 ```
 
 ### Botón primario con icono (header de cards)
 ```jsx
-<button className='flex items-center font-medium px-4 py-2 bg-primary-600 text-white text-sm rounded-lg hover:bg-primary-700 transition cursor-pointer'>
+<button className='flex items-center font-medium px-4 py-2 bg-primary-600 text-white text-sm rounded-lg hover:bg-accent transition cursor-pointer'>
   <Icon className='w-4 h-5 mr-2' />
   Texto
 </button>
@@ -269,7 +269,7 @@ Iconos por período:
 
 ### Botón primario full-width (OrderSidebar)
 ```jsx
-<button className='w-full py-4 bg-primary-600 text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-primary-700 transition-all shadow-lg shadow-primary-600/20 disabled:opacity-50 cursor-pointer'>
+<button className='w-full py-4 bg-primary-600 text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-accent transition-all shadow-lg shadow-primary-600/20 disabled:opacity-50 cursor-pointer'>
   Texto
 </button>
 ```
@@ -315,7 +315,7 @@ Iconos por período:
 
 ### Botón "Cargar más" (load more)
 ```jsx
-<button className='w-full mt-4 py-2 text-sm font-medium text-primary-600 hover:bg-primary-50 rounded-lg transition cursor-pointer'>
+<button className='w-full mt-4 py-2 text-sm font-medium text-primary-600 hover:bg-surface rounded-lg transition cursor-pointer'>
   Cargar más (X restantes)
 </button>
 ```
@@ -354,7 +354,7 @@ Iconos por período:
       <button onClick={onClose} className='flex-1 py-2.5 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition text-sm cursor-pointer'>
         Cancelar
       </button>
-      <button onClick={onConfirm} className='flex-1 py-2.5 bg-primary-600 text-white rounded-lg font-bold hover:bg-primary-700 transition text-sm disabled:opacity-50 cursor-pointer'>
+      <button onClick={onConfirm} className='flex-1 py-2.5 bg-primary-600 text-white rounded-lg font-bold hover:bg-accent transition text-sm disabled:opacity-50 cursor-pointer'>
         Guardar
       </button>
     </div>
@@ -425,7 +425,7 @@ Iconos por período:
   value={value}
   onChange={onChange}
   placeholder='Placeholder'
-  className='w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400'
+  className='w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-accent'
 />
 ```
 
@@ -436,7 +436,7 @@ Iconos por período:
   value={value}
   onChange={onChange}
   placeholder='Placeholder'
-  className='w-full px-4 py-2 border border-gray-300 rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+  className='w-full px-4 py-2 border border-gray-300 rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-0'
 />
 ```
 
@@ -445,7 +445,7 @@ Iconos por período:
 <select
   value={value}
   onChange={onChange}
-  className='w-full px-4 py-2 border border-gray-300 rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+  className='w-full px-4 py-2 border border-gray-300 rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-0'
 >
   <option value=''>Seleccionar</option>
   {options.map(opt => <option key={opt.id} value={opt.id}>{opt.name}</option>)}
@@ -454,7 +454,7 @@ Iconos por período:
 
 ### Select compacto (DateRangeFilter)
 ```jsx
-<select className='border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'>
+<select className='border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-accent'>
 ```
 
 ### Date input (DateRangeFilter)
@@ -463,7 +463,7 @@ Iconos por período:
   type='date'
   value={value}
   onChange={onChange}
-  className='border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
+  className='border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-accent'
 />
 ```
 
@@ -473,7 +473,7 @@ Iconos por período:
   value={value}
   onChange={onChange}
   placeholder='Placeholder'
-  className='w-full px-4 py-2 border border-gray-300 rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0 resize-none'
+  className='w-full px-4 py-2 border border-gray-300 rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-0 resize-none'
   rows={3}
 />
 ```
@@ -491,7 +491,7 @@ Variante compacta (DateRangeFilter):
 ```jsx
 <label className='relative inline-flex items-center cursor-pointer'>
   <input type='checkbox' className='sr-only peer' />
-  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
+  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-0 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-surface after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-surface after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
 </label>
 ```
 
@@ -515,13 +515,13 @@ Colores disponibles:
 
 ### Icon wrapper en métricas (dashboard)
 ```jsx
-<div className='p-3 rounded-md bg-primary-100 text-primary-600'>
+<div className='p-3 rounded-md bg-surface text-primary-600'>
   <Icon className='w-5 h-5' />
 </div>
 ```
 | bg | text |
 |---|---|
-| `bg-primary-100` | `text-primary-600` |
+| `bg-surface` | `text-primary-600` |
 | `bg-green-100` | `text-green-600` |
 | `bg-purple-100` | `text-purple-600` |
 | `bg-orange-100` | `text-orange-600` |
@@ -551,7 +551,7 @@ Colores disponibles:
 ## 10. Tokens de Diseño
 
 ### Colores (del `@theme` en App.css)
-- `primary-50` a `primary-900`: gama sky blue (azul cielo)
+- `surface` a `primary-900`: gama sky blue (azul cielo)
 - `accent-500`: `#10b981` (emerald), `accent-600`: `#059669`
 - `danger-500`: `#ef4444`, `danger-600`: `#dc2626`
 
