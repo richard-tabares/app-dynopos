@@ -111,13 +111,13 @@ export const ResetPassword = () => {
                                 placeholder='Nueva contraseña'
                                 className={`w-full border rounded-md py-3 px-4 pr-10 transition-all duration-300 focus:outline-none ${
                                     touched.password && errors.password
-                                        ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-                                        : 'border-divider focus:border-primary-300 focus:ring-2 focus:ring-primary-300'
+                                        ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-0 focus:ring-red-200'
+                                        : 'border-divider focus:border-accent focus:ring-0'
                                 }`}
                             />
                             <button
                                 type='button'
-                                className='absolute right-3 bg-transparent border-none cursor-pointer text-lg p-1 text-primary-300 hover:scale-125 transition-transform duration-200'
+                                className='absolute right-3 bg-transparent border-none cursor-pointer text-lg p-1 text-accent hover:scale-125 transition-transform duration-200'
                                 onClick={() => setShowPassword(!showPassword)}>
                                 {showPassword ? <Eye /> : <EyeClosed />}
                             </button>
@@ -137,13 +137,13 @@ export const ResetPassword = () => {
                                 placeholder='Confirmar contraseña'
                                 className={`w-full border rounded-md py-3 px-4 pr-10 transition-all duration-300 focus:outline-none ${
                                     touched.confirmPassword && errors.confirmPassword
-                                        ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-                                        : 'border-divider focus:border-primary-300 focus:ring-2 focus:ring-primary-300'
+                                        ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-0 focus:ring-red-200'
+                                        : 'border-divider focus:border-accent focus:ring-0'
                                 }`}
                             />
                             <button
                                 type='button'
-                                className='absolute right-3 bg-transparent border-none cursor-pointer text-lg p-1 text-primary-300 hover:scale-125 transition-transform duration-200'
+                                className='absolute right-3 bg-transparent border-none cursor-pointer text-lg p-1 text-accent hover:scale-125 transition-transform duration-200'
                                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
                                 {showConfirmPassword ? <Eye /> : <EyeClosed />}
                             </button>

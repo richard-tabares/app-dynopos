@@ -171,11 +171,11 @@ export const InventoryMovements = () => {
                         type='text'
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className='w-full border border-outline rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
+                        className='w-full border border-divider rounded-md pl-10 pr-3 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                         placeholder='Buscar producto...'
                     />
                 </div>
-                <div className='flex gap-1 bg-subtle rounded-lg p-1 mb-4'>
+                <div className='flex gap-1 bg-disabled/70 w-fit rounded-lg p-1 mb-4'>
                     {typeOptions.map(opt => {
                         const Icon = opt.icon
                         return (
@@ -184,10 +184,10 @@ export const InventoryMovements = () => {
                                 onClick={() => setTypeFilter(opt.value)}
                                 className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer ${
                                     typeFilter === opt.value
-                                        ? 'bg-surface shadow-xs text-accent'
+                                        ? 'bg-surface shadow-xs text-on-surface'
                                         : 'text-muted hover:text-on-body hover:bg-hover'
                                 }`}>
-                                <Icon className='w-4 h-4' />
+                                <Icon className={`w-4 h-4 ${opt.cls}`} />
                                 {opt.label}
                             </button>
                         )

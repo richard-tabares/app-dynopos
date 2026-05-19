@@ -94,7 +94,7 @@ export const Modal = ({
                             value={formData.sku}
                             onChange={handleChange}
                             autoFocus
-                            className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                            className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
                             placeholder='Ingrese el SKU o código del producto'
                         />
                     </section>
@@ -107,7 +107,7 @@ export const Modal = ({
                             name='name'
                             value={formData.name}
                             onChange={handleChange}
-                            className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                            className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
                             placeholder='Ingrese el nombre del producto'
                         />
                     </section>
@@ -121,7 +121,7 @@ export const Modal = ({
                             id='category_id'
                             value={formData.category_id}
                             onChange={handleChange}
-                            className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0 text-on-surface'>
+                            className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0 text-on-surface'>
                             {categories.map((category) => (
                                 <option
                                     className='dark:text-gray-700'
@@ -142,7 +142,7 @@ export const Modal = ({
                             value={formData.price}
                             onChange={handleChange}
                             min='0'
-                            className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                            className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
                             placeholder='Ingrese el precio del producto'
                         />
                     </section>
@@ -156,7 +156,7 @@ export const Modal = ({
                             value={formData.unit_cost}
                             onChange={handleChange}
                             min='0'
-                            className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                            className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
                             placeholder='Ingrese el costo del producto (opcional)'
                         />
                     </section>
@@ -172,7 +172,7 @@ export const Modal = ({
                                 onChange={handleChange}
                                 className='sr-only peer'
                             />
-                            <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
+                            <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-0 peer-focus:ring-accent rounded-full peer-checked:after:translate-x-full peer-checked:after:border-surface after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-surface after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
                         </label>
                     </section>
                     <section className='flex items-center justify-between'>
@@ -187,7 +187,7 @@ export const Modal = ({
                                 onChange={handleChange}
                                 className='sr-only peer'
                             />
-                            <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
+                            <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-0 peer-focus:ring-accent rounded-full peer-checked:after:translate-x-full peer-checked:after:border-surface after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-surface after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
                         </label>
                     </section>
                     <section className='flex justify-end gap-4 mt-4'>

@@ -59,7 +59,7 @@ export const DateRangeFilter = ({ value: currentFilter = 'month', onChange, star
                             onChange={(e) => {
                                 onChange({ filter: 'range', startDate: e.target.value, endDate: propEndDate, categoryId: categoryId || undefined })
                             }}
-                            className='border border-outline rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
+                            className='border border-divider rounded-md px-4 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                         />
                     </div>
                     <div className='flex flex-col'>
@@ -70,7 +70,7 @@ export const DateRangeFilter = ({ value: currentFilter = 'month', onChange, star
                             onChange={(e) => {
                                 onChange({ filter: 'range', startDate: propStartDate, endDate: e.target.value, categoryId: categoryId || undefined })
                             }}
-                            className='border border-outline rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
+                            className='border border-divider rounded-md px-4 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                         />
                     </div>
                 </>
@@ -85,7 +85,7 @@ export const DateRangeFilter = ({ value: currentFilter = 'month', onChange, star
                             setCategoryId(e.target.value)
                             onChange({ filter: currentFilter, startDate: propStartDate, endDate: propEndDate, categoryId: e.target.value || undefined })
                         }}
-                        className='border border-outline rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
+                        className='border border-divider rounded-md px-4 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                     >
                         <option value=''>Todas las categorías</option>
                         {categories.map((cat) => (

@@ -32,7 +32,7 @@ export const ReturnsTable = ({ data = [], onReturnClick }) => {
                     value={search}
                     onChange={(e) => { setSearch(e.target.value); setVisibleCount(10) }}
                     placeholder='Buscar por # de devolución...'
-                    className='w-full border border-outline rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
+                    className='w-full border border-divider rounded-md pl-10 pr-3 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                 />
             </div>
 

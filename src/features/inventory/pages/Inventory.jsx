@@ -136,11 +136,11 @@ export const Inventory = () => {
                                     setSearchTerm(e.target.value)
                                     setVisibleCount(20)
                                 }}
-                                className='w-full border border-outline rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
+                                className='w-full border border-divider rounded-md pl-10 pr-3 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                                 placeholder='Buscar por nombre o código de barras...'
                             />
                         </div>
-                        <div className='flex gap-2 bg-subtle dark:bg-gray-900 rounded-lg p-1 w-fit max-w-full overflow-x-auto scrollbar-none'>
+                        <div className='flex gap-2 bg-disabled/70 rounded-lg p-1 w-fit max-w-full overflow-x-auto scrollbar-none'>
                             <button
                                 onClick={() => setFilterStatus('all')}
                                 className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer ${

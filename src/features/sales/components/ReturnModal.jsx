@@ -208,7 +208,7 @@ export const ReturnModal = ({ isOpen, sale, onClose, onConfirm }) => {
                             setReturnReason(e.target.value)
                         }
                         placeholder='Motivo de la devolución (obligatorio)'
-                        className='w-full border border-outline rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 resize-none h-20 mt-4'
+                        className='w-full border border-divider rounded-md py-3 px-4 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300 resize-none h-20 mt-4'
                     />
                 </div>
 

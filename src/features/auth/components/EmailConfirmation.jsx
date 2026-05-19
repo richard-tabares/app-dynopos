@@ -9,7 +9,7 @@ export const EmailConfirmation = () => {
         <section className='w-full min-h-screen flex flex-col items-center justify-center bg-body px-4'>
             <section className='w-full max-w-md bg-surface border border-outline p-10 text-center'>
                 <div className='flex justify-center mb-6'>
-                    <div className='w-20 h-20 bg-primary-100 rounded-full flex items-center justify-center'>
+                    <div className='w-20 h-20 bg-surface rounded-full flex items-center justify-center'>
                         <MailCheck className='w-10 h-10 text-accent' />
                     </div>
                 </div>
@@ -34,7 +34,7 @@ export const EmailConfirmation = () => {
 
                 <NavLink
                     to='/login'
-                    className='inline-block w-full px-6 py-3 bg-accent text-white rounded-lg text-base font-semibold text-center transition-all duration-300 hover:bg-primary-500'>
+                    className='inline-block w-full px-6 py-3 bg-accent text-surface rounded-lg text-base font-semibold text-center transition-all duration-300 hover:bg-accent/85'>
                     Ir al inicio de sesión
                 </NavLink>
             </section>

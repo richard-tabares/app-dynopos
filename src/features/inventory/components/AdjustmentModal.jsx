@@ -123,7 +123,7 @@ export const AdjustmentModal = ({
                             onChange={handleChange}
                             min='1'
                             autoFocus
-                            className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                            className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
                             placeholder='Ingrese la cantidad'
                         />
                     </section>
@@ -138,7 +138,7 @@ export const AdjustmentModal = ({
                             value={formData.unit_cost}
                             onChange={handleCostChange}
                             min='0'
-                            className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                            className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
                             placeholder='Costo actual del producto (opcional)'
                         />
                     </section>
@@ -153,7 +153,7 @@ export const AdjustmentModal = ({
                             value={formData.min_stock}
                             onChange={handleChange}
                             min='0'
-                            className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                            className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
                             placeholder='Stock mínimo para alertas'
                         />
                     </section>
@@ -167,7 +167,7 @@ export const AdjustmentModal = ({
                             name='notes'
                             value={formData.notes}
                             onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
-                            className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                            className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
                             placeholder='Ej: Ajuste por conteo físico'
                         />
                     </section>

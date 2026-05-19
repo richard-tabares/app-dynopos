@@ -289,7 +289,7 @@ export const Products = () => {
                                     }
                                 }}
                                 placeholder='Nombre de la categoría'
-                                className='w-full border border-outline rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400'
+                                className='w-full border border-divider rounded-md py-3 px-4 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                                 autoFocus
                             />
                         </div>
@@ -462,7 +462,7 @@ export const Products = () => {
                                 type='search'
                                 value={searchTerm}
                                 onChange={handleSearch}
-                                className='w-full border border-outline rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
+                                className='w-full border border-divider rounded-md pl-10 pr-3 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                                 placeholder='Buscar por nombre o código...'
                             />
                         </div>
@@ -494,7 +494,7 @@ export const Products = () => {
                                     </button>
                                 ))}
                             </div> */}
-                            <div className='flex gap-1 bg-disabled rounded-lg p-1 w-fit ml-0 xl:ml-4'>
+                            <div className='flex gap-1 bg-disabled/70 rounded-lg p-1 w-fit ml-0 xl:ml-4'>
                                 <button
                                     onClick={() => { setActiveStatus('all'); setVisibleCount(20) }}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
@@ -526,7 +526,7 @@ export const Products = () => {
                                     Inactivo
                                 </button>
                             </div>
-                            <div className='flex gap-1 bg-disabled rounded-lg p-1 w-fit'>
+                            <div className='flex gap-1 bg-disabled/70 rounded-lg p-1 w-fit'>
                                 <button
                                     onClick={() => { setActiveStock('all'); setVisibleCount(20) }}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${

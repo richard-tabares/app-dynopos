@@ -5,14 +5,14 @@ const formatCurrency = (value) =>
     new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(value)
 
 const statusConfig = {
-    sin_stock: { label: 'Sin Stock', color: 'text-red-600', bg: 'bg-red-50' },
+    sin_stock: { label: 'Sin Stock', color: 'text-red-600', bg: 'bg-disabled/70' },
     stock_bajo: { label: 'Bajo', color: 'text-orange-600', bg: 'bg-orange-50' },
     con_stock: { label: 'Normal', color: 'text-emerald-600', bg: 'bg-emerald-50' },
     sin_control: { label: 'Sin Control', color: 'text-on-body', bg: 'bg-body' },
 }
 
 const stockFilters = [
-    { value: 'all', label: 'Todos', icon: Layers, color: 'text-accent', bg: 'bg-primary-50' },
+    { value: 'all', label: 'Todos', icon: Layers, color: 'text-accent', bg: 'bg-red-800' },
     { value: 'sin_stock', label: 'Sin Stock', icon: PackageX, color: 'text-red-500', bg: 'bg-red-50' },
     { value: 'stock_bajo', label: 'Stock Bajo', icon: AlertTriangle, color: 'text-red-500', bg: 'bg-red-50' },
     { value: 'con_stock', label: 'Con Stock', icon: PackageCheck, color: 'text-emerald-500', bg: 'bg-emerald-50' },
@@ -44,7 +44,7 @@ export const StockTable = ({ data = [] }) => {
                 <h3 className='text-lg font-semibold text-on-surface'>Estado de Inventario</h3>
             </div>
 
-            <div className='flex gap-2 bg-subtle rounded-lg p-1 w-fit max-w-full overflow-x-auto scrollbar-none mb-4'>
+            <div className='flex gap-2 bg-disabled/70 rounded-lg p-1 w-fit max-w-full overflow-x-auto scrollbar-none mb-4'>
                 {stockFilters.map((f) => {
                     const Icon = f.icon
                     return (
@@ -71,7 +71,7 @@ export const StockTable = ({ data = [] }) => {
                     value={search}
                     onChange={(e) => { setSearch(e.target.value); setVisibleCount(10) }}
                     placeholder='Buscar producto...'
-                    className='w-full border border-outline rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
+                    className='w-full border border-divider rounded-md pl-10 pr-3 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                 />
             </div>
 

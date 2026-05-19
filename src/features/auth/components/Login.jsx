@@ -73,8 +73,8 @@ export const Login = () => {
     const inputClass = (field) =>
         `border rounded-md py-3 px-4 w-full transition-all duration-300 focus:outline-none ${
             touched[field] && errors[field]
-                ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-                : 'border-divider focus:border-primary-300 focus:ring-2 focus:ring-primary-300'
+                ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-0 focus:ring-red-200'
+                : 'border-divider focus:border-accent focus:ring-0 focus:ring-accent'
         }`
 
     return (
@@ -114,13 +114,13 @@ export const Login = () => {
                             <p className='text-xs font-semibold text-red-500'>{errors.password}</p>
                         )}
                     </section>
-                    <button type="submit" disabled={loading} className='py-3 px-6 font-semibold bg-accent text-white rounded-md w-full cursor-pointer mb-2 disabled:opacity-60 disabled:cursor-not-allowed'>
+                    <button type="submit" disabled={loading} className='py-3 px-6 font-semibold bg-accent text-surface hover:bg-accent/85 transition-all duration-300 rounded-md w-full cursor-pointer mb-2 disabled:opacity-60 disabled:cursor-not-allowed'>
                         {loading ? 'Iniciando...' : 'Iniciar Sesión'}
                     </button>
                     <p className='text-center text-on-body text-xs mb-8'>
                         <NavLink
                             to='/forgot-password'
-                            className='text-accent text-decoration-none font-semibold transition-all duration-300 hover:text-purple-600 hover:underline'>
+                            className='text-accent text-decoration-none font-semibold transition-all duration-300 hover:underline'>
                             Olvidaste tu contraseña
                         </NavLink>
                     </p>
@@ -128,7 +128,7 @@ export const Login = () => {
                         ¿Aún no tienes cuenta?{' '}
                         <NavLink
                             to='/signup'
-                            className='text-accent text-decoration-none font-semibold transition-all duration-300 hover:text-purple-600 hover:underline'>
+                            className='text-accent text-decoration-none font-semibold transition-all duration-300 hover:underline'>
                             Registrate aquí
                         </NavLink>
                     </p>

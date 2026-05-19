@@ -73,21 +73,21 @@ export const ForgotPassword = () => {
                             placeholder='Correo Electrónico'
                             className={`border rounded-md py-3 px-4 w-full transition-all duration-300 focus:outline-none ${
                                 touched.email && errors.email
-                                    ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-                                    : 'border-divider focus:border-primary-300 focus:ring-2 focus:ring-primary-300'
+                                    ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-0 focus:ring-red-200'
+                                    : 'border-divider focus:border-accent focus:ring-0 focus:ring-accent'
                             }`}
                         />
                         {touched.email && errors.email && (
                             <p className='text-xs font-semibold text-red-500'>{errors.email}</p>
                         )}
                     </section>
-                    <button type="submit" className='py-3 px-6 font-semibold bg-accent text-white rounded-md w-full cursor-pointer mb-2'>
+                    <button type="submit" className='py-3 px-6 font-semibold bg-accent text-surface rounded-md w-full cursor-pointer mb-2'>
                         Enviar enlace
                     </button>
                     <p className='text-center text-on-body'>
                         <NavLink
                             to='/login'
-                            className='text-accent text-decoration-none font-semibold transition-all duration-300 hover:text-purple-600 hover:underline'>
+                            className='text-accent text-decoration-none font-semibold transition-all duration-300 hover:underline'>
                             Volver a Iniciar Sesión
                         </NavLink>
                     </p>

@@ -182,7 +182,7 @@ export const SignUp = () => {
                 {/* Step Indicator */}
                 <section className='flex items-center justify-center gap-3 mb-8'>
                     <section className='flex items-center gap-2'>
-                        <span className='w-8 h-8 rounded-full bg-accent text-white flex items-center justify-center text-sm font-bold'>
+                        <span className='w-8 h-8 rounded-full bg-accent text-surface flex items-center justify-center text-sm font-bold'>
                             1
                         </span>
                         <span className='text-sm font-semibold text-accent'>
@@ -234,10 +234,10 @@ export const SignUp = () => {
                             onChange={handleChange}
                             onBlur={handleBlur}
                             placeholder='Nombre de tu empresa'
-                            className={`px-4 py-3 border rounded-lg transition-all duration-300 focus:outline-none ${
+                            className={`px-4 py-3 border rounded-md transition-all duration-300 focus:outline-none ${
                                 touched.business_name && errors.business_name
-                                    ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-                                    : 'border-divider focus:border-primary-300 focus:ring-2 focus:ring-primary-300'
+                                    ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-0 focus:ring-red-200'
+                                    : 'border-divider focus:border-accent focus:ring-0 focus:ring-accent'
                             }`}
                         />
                         {touched.business_name && errors.business_name && (
@@ -262,10 +262,10 @@ export const SignUp = () => {
                             onChange={handleChange}
                             onBlur={handleBlur}
                             placeholder='Tu nombre completo'
-                            className={`px-4 py-3 border rounded-lg transition-all duration-300 focus:outline-none ${
+                            className={`px-4 py-3 border rounded-md transition-all duration-300 focus:outline-none ${
                                 touched.owner_name && errors.owner_name
-                                    ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-                                    : 'border-divider focus:border-primary-300 focus:ring-2 focus:ring-primary-300'
+                                    ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-0 focus:ring-red-200'
+                                    : 'border-divider focus:border-accent focus:ring-0 focus:ring-accent'
                             }`}
                         />
                         {touched.owner_name && errors.owner_name && (
@@ -290,10 +290,10 @@ export const SignUp = () => {
                             onChange={handleChange}
                             onBlur={handleBlur}
                             placeholder='tu@email.com'
-                            className={`px-4 py-3 border rounded-lg transition-all duration-300 focus:outline-none ${
+                            className={`px-4 py-3 border rounded-md transition-all duration-300 focus:outline-none ${
                                 touched.email && errors.email
-                                    ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-                                    : 'border-divider focus:border-primary-300 focus:ring-2 focus:ring-primary-300'
+                                    ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-0 focus:ring-red-200'
+                                    : 'border-divider focus:border-accent focus:ring-0 focus:ring-accent'
                             }`}
                         />
                         {touched.email && errors.email && (
@@ -302,7 +302,7 @@ export const SignUp = () => {
                             </p>
                         )}
                         {checkingEmail && (
-                            <p className='text-xs font-semibold text-primary-500'>
+                            <p className='text-xs font-semibold text-accent'>
                                 Verificando email...
                             </p>
                         )}
@@ -334,15 +334,15 @@ export const SignUp = () => {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 placeholder='Mínimo 8 caracteres (letras y números)'
-                                className={`w-full px-4 py-3 pr-10 border rounded-lg transition-all duration-300 focus:outline-none ${
+                                className={`w-full px-4 py-3 pr-10 border rounded-md transition-all duration-300 focus:outline-none ${
                                     touched.password && errors.password
-                                        ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-                                        : 'border-divider focus:border-primary-300 focus:ring-2 focus:ring-primary-300'
+                                        ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-0 focus:ring-red-200'
+                                        : 'border-divider focus:border-accent focus:ring-0 focus:ring-accent'
                                 }`}
                             />
                             <button
                                 type='button'
-                                className='absolute right-3 bg-transparent border-none cursor-pointer text-lg p-1 text-primary-300 hover:scale-125 transition-transform duration-200'
+                                className='absolute right-3 bg-transparent border-none cursor-pointer text-lg p-1 text-accent hover:scale-110 transition-transform duration-200'
                                 onClick={() => setShowPassword(!showPassword)}>
                                 {showPassword ? <Eye /> : <EyeClosed />}
                             </button>
@@ -389,16 +389,16 @@ export const SignUp = () => {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 placeholder='Confirma tu contraseña'
-                                className={`w-full px-4 py-3 pr-10 border rounded-lg transition-all duration-300 focus:outline-none ${
+                                className={`w-full px-4 py-3 pr-10 border rounded-md transition-all duration-300 focus:outline-none ${
                                     touched.confirmPassword &&
                                     errors.confirmPassword
-                                        ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-                                        : 'border-divider focus:border-primary-300 focus:ring-2 focus:ring-primary-300'
+                                        ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-0 focus:ring-red-200'
+                                        : 'border-divider focus:border-accent focus:ring-0 focus:ring-accent'
                                 }`}
                             />
                             <button
                                 type='button'
-                                className='absolute right-3 bg-transparent border-none cursor-pointer text-lg p-1 text-primary-300 hover:scale-125 transition-transform duration-200'
+                                className='absolute right-3 bg-transparent border-none cursor-pointer text-lg p-1 text-accent hover:scale-125 transition-transform duration-200'
                                 onClick={() =>
                                     setShowConfirmPassword(!showConfirmPassword)
                                 }>
@@ -434,10 +434,10 @@ export const SignUp = () => {
                             onChange={handleChange}
                             onBlur={handleBlur}
                             placeholder='10 dígitos mínimo'
-                            className={`px-4 py-3 border rounded-lg transition-all duration-300 focus:outline-none ${
+                            className={`px-4 py-3 border rounded-md transition-all duration-300 focus:outline-none ${
                                 touched.phone && errors.phone
-                                    ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-                                    : 'border-divider focus:border-primary-300 focus:ring-2 focus:ring-primary-300'
+                                    ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-0 focus:ring-red-200'
+                                    : 'border-divider focus:border-accent focus:ring-0 focus:ring-accent'
                             }`}
                         />
                         {touched.phone && errors.phone && (
@@ -450,7 +450,7 @@ export const SignUp = () => {
                     <button
                         type='submit'
                         disabled={loading || !isFormValid}
-                        className='w-full mt-4 px-6 py-3 bg-accent text-white border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 hover:bg-primary-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
+                        className='w-full mt-4 px-6 py-3 bg-accent text-surface border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 hover:bg-accent/85 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
                         {loading ? (
                             'Procesando...'
                         ) : (

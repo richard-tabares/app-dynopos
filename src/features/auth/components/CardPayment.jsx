@@ -198,17 +198,17 @@ export const CardPayment = () => {
                 {/* Step indicator */}
                 <section className='flex items-center justify-center gap-3 mb-8'>
                     <section className='flex items-center gap-2'>
-                        <span className='w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center text-sm font-bold'><Check className='w-4 h-4' /></span>
+                        <span className='w-8 h-8 rounded-full bg-green-500 text-surface flex items-center justify-center text-sm font-bold'><Check className='w-4 h-4' /></span>
                         <span className='text-sm font-semibold text-green-600'>Datos</span>
                     </section>
                     <section className='w-12 h-0.5 bg-green-500' />
                     <section className='flex items-center gap-2'>
-                        <span className='w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center text-sm font-bold'><Check className='w-4 h-4' /></span>
+                        <span className='w-8 h-8 rounded-full bg-green-500 text-surface flex items-center justify-center text-sm font-bold'><Check className='w-4 h-4' /></span>
                         <span className='text-sm font-semibold text-green-600'>Plan</span>
                     </section>
                     <section className='w-12 h-0.5 bg-accent' />
                     <section className='flex items-center gap-2'>
-                        <span className='w-8 h-8 rounded-full bg-accent text-white flex items-center justify-center text-sm font-bold'>3</span>
+                        <span className='w-8 h-8 rounded-full bg-accent text-surface flex items-center justify-center text-sm font-bold'>3</span>
                         <span className='text-sm font-semibold text-accent'>Pago</span>
                     </section>
                 </section>
@@ -221,17 +221,17 @@ export const CardPayment = () => {
                 <form onSubmit={handleSubmit} className='space-y-4'>
                     <section className='flex flex-col gap-2'>
                         <label className='font-semibold text-on-surface'>Nombre del comprador <span className='text-red-500'>*</span></label>
-                        <input type='text' name='full_name' value={form.full_name} onChange={handleChange} placeholder='Nombre completo' className='w-full px-4 py-3 border border-divider rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-300' />
+                        <input type='text' name='full_name' value={form.full_name} onChange={handleChange} placeholder='Nombre completo' className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:ring-0 focus:ring-accent focus:border-accent' />
                     </section>
 
                     <section className='grid grid-cols-2 gap-4'>
                         <section className='flex flex-col gap-2'>
                             <label className='font-semibold text-on-surface'>Correo <span className='text-red-500'>*</span></label>
-                            <input type='email' name='email' value={form.email} onChange={handleChange} placeholder='correo@ejemplo.com' className='w-full px-4 py-3 border border-divider rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-300 bg-subtle' />
+                            <input type='email' name='email' value={form.email} onChange={handleChange} placeholder='correo@ejemplo.com' className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:ring-0 focus:ring-accent focus:border-accent' />
                         </section>
                         <section className='flex flex-col gap-2'>
                             <label className='font-semibold text-on-surface'>Teléfono <span className='text-red-500'>*</span></label>
-                            <input type='tel' name='phone' value={form.phone} onChange={handleChange} placeholder='3001234567' className='w-full px-4 py-3 border border-divider rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-300 bg-subtle' />
+                            <input type='tel' name='phone' value={form.phone} onChange={handleChange} placeholder='3001234567' className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:ring-0 focus:ring-accent focus:border-accent' />
                         </section>
                     </section>
 
@@ -240,27 +240,27 @@ export const CardPayment = () => {
 
                         <section className='flex flex-col gap-2 mb-3'>
                             <label className='font-semibold text-on-surface'>Número de tarjeta <span className='text-red-500'>*</span></label>
-                            <input type='text' name='card_number' value={form.card_number} onChange={handleChange} placeholder='4444 4444 4444 4444' maxLength={19} className='w-full px-4 py-3 border border-divider rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-300' />
+                            <input type='text' name='card_number' value={form.card_number} onChange={handleChange} placeholder='4444 4444 4444 4444' maxLength={19} className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:ring-0 focus:ring-accent focus:border-accent' />
                         </section>
 
                         <section className='grid grid-cols-3 gap-3 mb-3'>
                             <section className='flex flex-col gap-2'>
                                 <label className='font-semibold text-on-surface'>Mes <span className='text-red-500'>*</span></label>
-                                <input type='text' name='exp_month' value={form.exp_month} onChange={handleChange} placeholder='MM' maxLength={2} className='w-full px-4 py-3 border border-divider rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-300' />
+                                <input type='text' name='exp_month' value={form.exp_month} onChange={handleChange} placeholder='MM' maxLength={2} className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:ring-0 focus:ring-accent focus:border-accent' />
                             </section>
                             <section className='flex flex-col gap-2'>
                                 <label className='font-semibold text-on-surface'>Año <span className='text-red-500'>*</span></label>
-                                <input type='text' name='exp_year' value={form.exp_year} onChange={handleChange} placeholder='AA' maxLength={2} className='w-full px-4 py-3 border border-divider rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-300' />
+                                <input type='text' name='exp_year' value={form.exp_year} onChange={handleChange} placeholder='AA' maxLength={2} className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:ring-0 focus:ring-accent focus:border-accent' />
                             </section>
                             <section className='flex flex-col gap-2'>
                                 <label className='font-semibold text-on-surface'>CVV <span className='text-red-500'>*</span></label>
-                                <input type='password' name='cvc' value={form.cvc} onChange={handleChange} placeholder='123' maxLength={4} className='w-full px-4 py-3 border border-divider rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-300' />
+                                <input type='password' name='cvc' value={form.cvc} onChange={handleChange} placeholder='123' maxLength={4} className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:ring-0 focus:ring-accent focus:border-accent' />
                             </section>
                         </section>
 
                         <section className='flex flex-col gap-2 mb-3'>
                             <label className='font-semibold text-on-surface'>Nombre del titular <span className='text-red-500'>*</span></label>
-                            <input type='text' name='card_holder' value={form.card_holder} onChange={handleChange} placeholder='Como aparece en la tarjeta' className='w-full px-4 py-3 border border-divider rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-300' />
+                            <input type='text' name='card_holder' value={form.card_holder} onChange={handleChange} placeholder='Como aparece en la tarjeta' className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:ring-0 focus:ring-accent focus:border-accent' />
                         </section>
                     </section>
 
@@ -269,7 +269,7 @@ export const CardPayment = () => {
                         <section className='grid grid-cols-3 gap-3'>
                             <section className='flex flex-col gap-2'>
                                 <label className='font-semibold text-on-surface'>Tipo <span className='text-red-500'>*</span></label>
-                                <select name='legal_id_type' value={form.legal_id_type} onChange={handleChange} className='w-full px-4 py-3 border border-divider rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-300'>
+                                <select name='legal_id_type' value={form.legal_id_type} onChange={handleChange} className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:ring-0 focus:ring-accent focus:border-accent'>
                                     <option value='CC'>CC</option>
                                     <option value='CE'>CE</option>
                                     <option value='NIT'>NIT</option>
@@ -279,7 +279,7 @@ export const CardPayment = () => {
                             </section>
                             <section className='flex flex-col gap-2 col-span-2'>
                                 <label className='font-semibold text-on-surface'>Número <span className='text-red-500'>*</span></label>
-                                <input type='text' name='legal_id' value={form.legal_id} onChange={handleChange} placeholder='Número de documento' className='w-full px-4 py-3 border border-divider rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-300' />
+                                <input type='text' name='legal_id' value={form.legal_id} onChange={handleChange} placeholder='Número de documento' className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:ring-0 focus:ring-accent focus:border-accent' />
                             </section>
                         </section>
                     </section>
@@ -293,7 +293,7 @@ export const CardPayment = () => {
                                     checked={acceptedReglamento}
                                     onChange={(e) => setAcceptedReglamento(e.target.checked)}
                                 />
-                                <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent" />
+                                <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-0 peer-focus:ring-accent rounded-full peer-checked:after:translate-x-full peer-checked:after:border-surface after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-surface after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent" />
                             </label>
                             <span className='text-sm text-on-body'>
                                 Acepto haber leído el{' '}
@@ -308,7 +308,7 @@ export const CardPayment = () => {
                                     checked={acceptedDatos}
                                     onChange={(e) => setAcceptedDatos(e.target.checked)}
                                 />
-                                <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent" />
+                                <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-0 peer-focus:ring-accent rounded-full peer-checked:after:translate-x-full peer-checked:after:border-surface after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-surface after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent" />
                             </label>
                             <span className='text-sm text-on-body'>
                                 Acepto la{' '}
@@ -322,7 +322,7 @@ export const CardPayment = () => {
                     <button
                         type='submit'
                         disabled={loading || !acceptedReglamento || !acceptedDatos}
-                        className='w-full mt-4 px-6 py-3 bg-accent text-white border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 hover:bg-primary-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
+                        className='w-full mt-4 px-6 py-3 bg-accent text-surface border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 hover:bg-accent/85 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
                         <Lock className='w-5 h-5' />
                         {loading ? 'Procesando pago...' : `Pagar $${formatPrice(currentPrice)}`}
                     </button>

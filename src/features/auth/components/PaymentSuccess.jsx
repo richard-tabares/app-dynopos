@@ -13,7 +13,7 @@ export const PaymentSuccess = () => {
                     <h1 className='text-2xl font-bold text-on-surface mb-4'>No se encontró información de pago</h1>
                     <button
                         onClick={() => navigate('/login', { replace: true })}
-                        className='px-6 py-3 bg-accent text-white rounded-lg font-semibold hover:bg-primary-500 transition cursor-pointer'>
+                        className='px-6 py-3 bg-accent text-surface rounded-lg font-semibold hover:bg-accent/85 transition cursor-pointer'>
                         Ir al login
                     </button>
                 </section>
@@ -76,7 +76,7 @@ export const PaymentSuccess = () => {
                             </section>
                             <section className='flex justify-between py-2 border-b border-divider-light'>
                                 <span className='text-sm text-muted'>Monto</span>
-                                <span className='text-lg font-bold text-primary-700'>${formatPrice(total)}</span>
+                                <span className='text-lg font-bold text-accent'>${formatPrice(total)}</span>
                             </section>
                             <section className='flex justify-between py-2 border-b border-divider-light'>
                                 <span className='text-sm text-muted'>Método de pago</span>
@@ -118,7 +118,7 @@ export const PaymentSuccess = () => {
                         </button>
                         <button
                             onClick={() => navigate('/login', { replace: true })}
-                            className='flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-accent text-white rounded-lg font-semibold hover:bg-primary-500 transition cursor-pointer'>
+                            className='flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-accent text-surface rounded-lg font-semibold hover:bg-accent/85 transition cursor-pointer'>
                             Ir al login
                             <ArrowRight className='w-5 h-5' />
                         </button>

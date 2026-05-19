@@ -94,7 +94,7 @@ export const PaymentStep = () => {
             <section className='w-2/4 max-lg:w-2/3 max-md:w-full p-6 md:p-10'>
                 <section className='flex items-center justify-center gap-3 mb-8'>
                     <section className='flex items-center gap-2'>
-                        <span className='w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center text-sm font-bold'>
+                        <span className='w-8 h-8 rounded-full bg-green-500 text-surface flex items-center justify-center text-sm font-bold'>
                             <Check className='w-4 h-4' />
                         </span>
                         <span className='text-sm font-semibold text-green-600'>
@@ -103,7 +103,7 @@ export const PaymentStep = () => {
                     </section>
                     <section className='w-12 h-0.5 bg-accent' />
                     <section className='flex items-center gap-2'>
-                        <span className='w-8 h-8 rounded-full bg-accent text-white flex items-center justify-center text-sm font-bold'>
+                        <span className='w-8 h-8 rounded-full bg-accent text-surface flex items-center justify-center text-sm font-bold'>
                             2
                         </span>
                         <span className='text-sm font-semibold text-accent'>
@@ -129,8 +129,8 @@ export const PaymentStep = () => {
                 </p>
 
                 {/* Plan Card */}
-                <section className='bg-surface border border-primary-200 rounded-lg p-6 mb-6 shadow-xs'>
-                    <h2 className='text-lg font-bold text-primary-50 mb-1'>
+                <section className='bg-surface border border-accent/50 rounded-lg p-6 mb-6 shadow-xs'>
+                    <h2 className='text-lg font-bold text-accent mb-1'>
                         {plan?.name || 'Plan Emprendedor'}
                     </h2>
                     <p className='text-sm text-muted mb-4'>
@@ -140,32 +140,32 @@ export const PaymentStep = () => {
                     <section className='grid grid-cols-3 gap-3 mb-4'>
                         <button
                             onClick={() => setBillingFrequency('monthly')}
-                            className={`p-4 rounded-lg border-2 transition-all cursor-pointer text-left ${
+                            className={`p-4 rounded-lg border transition-all cursor-pointer text-left ${
                                 billingFrequency === 'monthly'
-                                    ? 'border-primary-500 bg-hover'
+                                    ? 'border-accent bg-hover'
                                     : 'border-divider hover:border-outline'
                             }`}>
-                            <Calendar className={`w-5 h-5 mb-2 ${billingFrequency === 'monthly' ? 'text-primary-500' : 'text-faint'}`} />
-                            <p className={`text-sm font-medium ${billingFrequency === 'monthly' ? 'text-primary-500' : 'text-muted'}`}>
+                            <Calendar className={`w-5 h-5 mb-2 ${billingFrequency === 'monthly' ? 'text-accent' : 'text-faint'}`} />
+                            <p className={`text-sm font-medium ${billingFrequency === 'monthly' ? 'text-accent' : 'text-muted'}`}>
                                 Mensual
                             </p>
-                            <p className={`text-xl font-bold ${billingFrequency === 'monthly' ? 'text-primary-500' : 'text-on-surface'}`}>
+                            <p className={`text-xl font-bold ${billingFrequency === 'monthly' ? 'text-accent' : 'text-on-surface'}`}>
                                 ${formatPrice(monthlyPrice)}/mes
                             </p>
                         </button>
 
                         <button
                             onClick={() => setBillingFrequency('quarterly')}
-                            className={`p-4 rounded-lg border-2 transition-all cursor-pointer text-left ${
+                            className={`p-4 rounded-lg border transition-all cursor-pointer text-left ${
                                 billingFrequency === 'quarterly'
-                                    ? 'border-primary-500 bg-hover'
+                                    ? 'border-accent bg-hover'
                                     : 'border-divider hover:border-outline'
                             }`}>
-                            <CalendarPlus className={`w-5 h-5 mb-2 ${billingFrequency === 'quarterly' ? 'text-primary-500' : 'text-faint'}`} />
-                            <p className={`text-sm font-medium ${billingFrequency === 'quarterly' ? 'text-primary-500' : 'text-muted'}`}>
+                            <CalendarPlus className={`w-5 h-5 mb-2 ${billingFrequency === 'quarterly' ? 'text-accent' : 'text-faint'}`} />
+                            <p className={`text-sm font-medium ${billingFrequency === 'quarterly' ? 'text-accent' : 'text-muted'}`}>
                                 Trimestral
                             </p>
-                            <p className={`text-xl font-bold ${billingFrequency === 'quarterly' ? 'text-primary-500' : 'text-on-surface'}`}>
+                            <p className={`text-xl font-bold ${billingFrequency === 'quarterly' ? 'text-accent' : 'text-on-surface'}`}>
                                 ${formatPrice(quarterlyPrice)}
                             </p>
                             <p className='text-xs text-muted mt-1'>
@@ -175,19 +175,19 @@ export const PaymentStep = () => {
 
                         <button
                             onClick={() => setBillingFrequency('annual')}
-                            className={`p-4 rounded-lg border-2 transition-all cursor-pointer text-left relative ${
+                            className={`p-4 rounded-lg border transition-all cursor-pointer text-left relative ${
                                 billingFrequency === 'annual'
-                                    ? 'border-primary-500 bg-hover'
+                                    ? 'border-accent bg-hover'
                                     : 'border-divider hover:border-outline'
                             }`}>
                             <span className='absolute -top-2.5 right-2 bg-accent-500 text-white text-xs font-bold px-2 py-0.5 rounded-full'>
                                 -10%
                             </span>
-                            <CalendarCheck className={`w-5 h-5 mb-2 ${billingFrequency === 'annual' ? 'text-primary-500' : 'text-faint'}`} />
-                            <p className={`text-sm font-medium ${billingFrequency === 'annual' ? 'text-primary-500' : 'text-muted'}`}>
+                            <CalendarCheck className={`w-5 h-5 mb-2 ${billingFrequency === 'annual' ? 'text-accent' : 'text-faint'}`} />
+                            <p className={`text-sm font-medium ${billingFrequency === 'annual' ? 'text-accent' : 'text-muted'}`}>
                                 Anual
                             </p>
-                            <p className={`text-xl font-bold ${billingFrequency === 'annual' ? 'text-primary-500' : 'text-muted'}`}>
+                            <p className={`text-xl font-bold ${billingFrequency === 'annual' ? 'text-accent' : 'text-muted'}`}>
                                 ${formatPrice(annualPrice)}
                             </p>
                             <p className='text-xs text-muted mt-1'>
@@ -223,13 +223,13 @@ export const PaymentStep = () => {
                     <section className='grid grid-cols-1 gap-3'>
                         <button
                             onClick={() => setPaymentMethod('card')}
-                            className={`p-4 rounded-lg border-2 transition-all cursor-pointer text-center ${
+                            className={`p-4 rounded-lg border transition-all cursor-pointer text-center ${
                                 paymentMethod === 'card'
-                                    ? 'border-primary-500 bg-hover'
-                                    : 'border-divider hover:border-outline'
+                                    ? 'border-accent bg-hover'
+                                    : 'border-divider hover:border-accent/50'
                             }`}>
-                            <CreditCard className={`w-6 h-6 mx-auto mb-2 ${paymentMethod === 'card' ? 'text-primary-500' : 'text-faint'}`} />
-                            <p className={`text-sm font-medium ${paymentMethod === 'card' ? 'text-primary-500' : 'text-muted'}`}>
+                            <CreditCard className={`w-6 h-6 mx-auto mb-2 ${paymentMethod === 'card' ? 'text-accent' : 'text-faint'}`} />
+                            <p className={`text-sm font-medium ${paymentMethod === 'card' ? 'text-accent' : 'text-muted'}`}>
                                 Tarjeta
                             </p>
                         </button>
@@ -238,11 +238,11 @@ export const PaymentStep = () => {
                             onClick={() => setPaymentMethod('pse')}
                             className={`p-4 rounded-lg border-2 transition-all cursor-pointer text-center ${
                                 paymentMethod === 'pse'
-                                    ? 'border-primary-500 bg-hover'
+                                    ? 'border-accent bg-hover'
                                     : 'border-divider hover:border-outline'
                             }`}>
-                            <Landmark className={`w-6 h-6 mx-auto mb-2 ${paymentMethod === 'pse' ? 'text-primary-500' : 'text-faint'}`} />
-                            <p className={`text-sm font-medium ${paymentMethod === 'pse' ? 'text-primary-500' : 'text-muted'}`}>
+                            <Landmark className={`w-6 h-6 mx-auto mb-2 ${paymentMethod === 'pse' ? 'text-accent' : 'text-faint'}`} />
+                            <p className={`text-sm font-medium ${paymentMethod === 'pse' ? 'text-accent' : 'text-muted'}`}>
                                 PSE
                             </p>
                         </button> */}
@@ -264,7 +264,7 @@ export const PaymentStep = () => {
                 <button
                     onClick={handlePayment}
                     disabled={loading || !paymentMethod}
-                    className='w-full px-6 py-3 bg-accent text-white border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 hover:bg-primary-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
+                    className='w-full px-6 py-3 bg-accent text-surface border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 hover:bg-accent/85 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
                     {loading ? 'Procesando...' : 'Ir a Pagar'}
                 </button>
 

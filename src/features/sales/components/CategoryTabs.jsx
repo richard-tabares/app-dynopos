@@ -26,7 +26,7 @@ export const CategoryTabs = ({ categories = [], activeCategory, onSelectCategory
         <div className='relative' ref={dropdownRef}>
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className='w-full flex items-center gap-2 border border-outline rounded-lg px-3 py-2 text-sm bg-surface cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500'
+                className='w-full flex items-center gap-2 border border-outline rounded-lg px-3 py-2 text-sm bg-surface cursor-pointer focus:outline-none focus:ring-0'
             >
                 <SelectedIcon className='w-4 h-4 text-faint shrink-0' />
                 <span className='flex-1 text-left text-on-surface'>{selectedName}</span>
@@ -39,7 +39,7 @@ export const CategoryTabs = ({ categories = [], activeCategory, onSelectCategory
                         onClick={() => { onSelectCategory('all'); setIsOpen(false) }}
                         className={`w-full flex items-center gap-2 px-3 py-2 text-sm text-left cursor-pointer transition-colors ${
                             activeCategory === 'all'
-                                ? 'bg-primary-50 text-accent'
+                                ? 'bg-surface text-accent'
                                 : 'text-on-surface hover:bg-hover'
                         }`}
                     >
@@ -52,7 +52,7 @@ export const CategoryTabs = ({ categories = [], activeCategory, onSelectCategory
                             onClick={() => { onSelectCategory(category.id); setIsOpen(false) }}
                             className={`w-full flex items-center gap-2 px-3 py-2 text-sm text-left cursor-pointer transition-colors ${
                                 activeCategory === category.id
-                                    ? 'bg-primary-50 text-accent'
+                                    ? 'bg-surface text-accent'
                                     : 'text-on-surface hover:bg-hover'
                             }`}
                         >

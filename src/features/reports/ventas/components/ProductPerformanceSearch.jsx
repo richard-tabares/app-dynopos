@@ -61,7 +61,7 @@ export const ProductPerformanceSearch = () => {
                         }}
                         onKeyDown={handleKeyDown}
                         placeholder='Nombre o SKU...'
-                        className='w-full border border-outline rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500'
+                        className='w-full border border-divider rounded-md pl-10 pr-3 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                     />
                 </div>
             </div>

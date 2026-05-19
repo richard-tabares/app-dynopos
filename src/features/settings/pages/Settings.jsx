@@ -188,7 +188,7 @@ export const Settings = () => {
                                 name='business_name'
                                 value={formData.business_name}
                                 onChange={handleChange}
-                                className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                                className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
                             />
                         </section>
                         <section>
@@ -198,7 +198,7 @@ export const Settings = () => {
                                 name='owner_name'
                                 value={formData.owner_name}
                                 onChange={handleChange}
-                                className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                                className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
                             />
                         </section>
                         <section>
@@ -209,7 +209,7 @@ export const Settings = () => {
                                 value={formData.email}
                                 onChange={handleChange}
                                 disabled
-                                className='w-full px-4 py-2 border border-outline rounded-lg bg-body text-muted cursor-not-allowed duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                                className='w-full px-4 py-3 border border-divider rounded-md bg-body text-muted cursor-not-allowed transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
                             />
                         </section>
                         <section>
@@ -219,7 +219,7 @@ export const Settings = () => {
                                 name='phone'
                                 value={formData.phone}
                                 onChange={handleChange}
-                                className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                                className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
                             />
                         </section>
                     </div>
@@ -244,7 +244,7 @@ export const Settings = () => {
                                 value={passwordData.currentPassword}
                                 onChange={handlePasswordChange}
                                 placeholder='••••••••'
-                                className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                                className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
                             />
                         </section>
                         <section>
@@ -255,7 +255,7 @@ export const Settings = () => {
                                 value={passwordData.newPassword}
                                 onChange={handlePasswordChange}
                                 placeholder='••••••••'
-                                className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                                className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
                             />
                         </section>
                         <section>
@@ -266,7 +266,7 @@ export const Settings = () => {
                                 value={passwordData.confirmPassword}
                                 onChange={handlePasswordChange}
                                 placeholder='••••••••'
-                                className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0'
+                                className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
                             />
                         </section>
                     </div>
@@ -304,7 +304,7 @@ export const Settings = () => {
                                     checked={isDarkMode}
                                     onChange={toggleDarkMode}
                                 />
-                                <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
+                                <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-0 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-surface after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-surface after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
                             </label>
                         </div>
                     </div>
@@ -326,7 +326,7 @@ export const Settings = () => {
                             onChange={handleChange}
                             rows={3}
                             placeholder='¡Gracias por tu compra!'
-                            className='w-full px-4 py-2 border border-outline rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-0 resize-none'
+                            className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0 resize-none'
                         />
                         <p className='text-xs text-muted mt-1'>Este mensaje aparecerá al final de cada ticket de venta.</p>
                     </div>
@@ -348,7 +348,7 @@ export const Settings = () => {
                             name='low_stock_notifications'
                             checked={formData.low_stock_notifications}
                             onChange={handleChange}
-                            className='w-4 h-4 text-accent border-outline rounded focus:ring-primary-500 cursor-pointer'
+                            className='w-4 h-4 text-accent border-divider rounded focus:ring-0 cursor-pointer'
                         />
                         <span className='text-sm text-on-body'>
                             Activar correo de notificación cuando un producto tenga stock bajo

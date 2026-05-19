@@ -49,7 +49,7 @@ export const PaymentModal = ({ isOpen, status, message, onClose }) => {
                 {status !== 'processing' && (
                     <button
                         onClick={handleClose}
-                        className='mt-6 px-6 py-2.5 bg-accent text-white rounded-lg font-semibold hover:bg-primary-500 transition cursor-pointer'>
+                        className='mt-6 px-6 py-2.5 bg-accent text-surface rounded-lg font-semibold hover:bg-accent/85 transition cursor-pointer'>
                         {status === 'success' ? 'Continuar' : 'Cerrar'}
                     </button>
                 )}
