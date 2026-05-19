@@ -15,11 +15,11 @@ const typeConfig = {
 }
 
 const typeOptions = [
-    { value: '', label: 'Todos', icon: List },
-    { value: 'entry', label: 'Entradas', icon: ArrowDownCircle },
-    { value: 'exit', label: 'Salidas', icon: ArrowUpCircle },
-    { value: 'sale', label: 'Ventas', icon: ShoppingCart },
-    { value: 'return', label: 'Devoluciones', icon: Undo2 },
+    { value: '', label: 'Todos', icon: List, cls: 'text-on-body' },
+    { value: 'entry', label: 'Entradas', icon: ArrowDownCircle, cls: 'text-emerald-700' },
+    { value: 'exit', label: 'Salidas', icon: ArrowUpCircle, cls: 'text-red-600' },
+    { value: 'sale', label: 'Ventas', icon: ShoppingCart, cls: 'text-blue-700' },
+    { value: 'return', label: 'Devoluciones', icon: Undo2, cls: 'text-red-600' },
 ]
 
 const computeDates = (filter) => {
