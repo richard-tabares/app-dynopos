@@ -71,7 +71,7 @@ export const InventoryValuation = ({ data = [] }) => {
                         {visibleCount < filtered.length && (
                             <button
                                 onClick={() => setVisibleCount(prev => prev + 10)}
-                                className='w-full mt-4 py-2 text-sm font-medium text-accent hover:bg-primary-50 rounded-lg transition cursor-pointer'
+                                className='w-full mt-4 py-2 text-sm font-medium text-on-surface hover:text-surface hover:bg-accent rounded-lg border border-accent transition-colors cursor-pointer'
                             >
                                 Cargar más ({filtered.length - visibleCount} restantes)
                             </button>

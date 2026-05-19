@@ -54,7 +54,7 @@ export const RecentSalesCard = ({ sales = [] }) => {
                 {visibleCount < sales.length && (
                     <button 
                         onClick={handleLoadMore}
-                        className='mt-6 w-full py-2 text-sm font-medium text-on-body hover:text-accent hover:bg-hover transition-colors border-t border-divider-light'
+                        className='mt-6 w-full py-2 text-sm font-medium text-on-surface hover:text-surface hover:bg-accent rounded-lg border border-accent transition-colors cursor-pointer'
                     >
                         Cargar más
                     </button>

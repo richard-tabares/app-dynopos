@@ -727,7 +727,7 @@ export const Products = () => {
                     {visibleCount < filteredProducts.length && (
                         <button
                             onClick={handleLoadMore}
-                            className='w-full mt-4 py-2 text-sm font-medium text-accent hover:bg-primary-50 rounded-lg transition cursor-pointer px-6'>
+                            className='w-full mt-4 py-2 text-sm font-medium text-on-surface hover:text-surface hover:bg-accent rounded-lg border border-accent transition-colors cursor-pointer px-6'>
                             Cargar más ({filteredProducts.length - visibleCount} restantes)
                         </button>
                     )}
