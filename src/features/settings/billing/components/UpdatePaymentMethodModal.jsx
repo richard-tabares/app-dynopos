@@ -85,13 +85,17 @@ export const UpdatePaymentMethodModal = ({ isOpen, onClose, businessId, customer
                 }),
             })
 
+            const result = await response.json()
+
             if (!response.ok) {
-                const err = await response.json().catch(() => ({}))
-                throw new Error(err.error || 'Error al actualizar el método de pago')
+                throw new Error(result.error || 'Error al actualizar el método de pago')
             }
 
-            toast.success('Método de pago actualizado exitosamente')
-            onSuccess()
+            const msg = result.renewed
+                ? 'Método de pago actualizado y suscripción renovada'
+                : 'Método de pago actualizado exitosamente'
+            toast.success(msg)
+            onSuccess(result)
             onClose()
         } catch (error) {
             toast.error(error.message || 'Error al actualizar el método de pago')

@@ -56,6 +56,20 @@ export const Billing = () => {
         }
     }, [subscription, businessId])
 
+    const refreshBillingData = useCallback(async () => {
+        if (!businessId) return
+        try {
+            const [subResult, txResult] = await Promise.all([
+                getSubscription(businessId),
+                getTransactions(businessId),
+            ])
+            setSubscription(subResult)
+            setTransactions(txResult || [])
+        } catch (error) {
+            console.error('Error refreshing billing data:', error)
+        }
+    }, [businessId])
+
     return (
         <section className='flex flex-col gap-6'>
             <section>
@@ -70,7 +84,7 @@ export const Billing = () => {
                 onToggle={handleToggleAutoRenew}
                 businessId={businessId}
                 customerEmail={user?.business?.email || user?.data?.user?.email}
-                onPaymentMethodUpdated={fetchData}
+                onPaymentMethodUpdated={refreshBillingData}
             />
 
             <PaymentHistoryTable transactions={transactions} loading={loadingTx} />

@@ -72,7 +72,9 @@ export const PaymentMethodCard = ({ isAutoRenew, onToggle, businessId, customerE
                 onClose={() => setModalOpen(false)}
                 businessId={businessId}
                 customerEmail={customerEmail}
-                onSuccess={onPaymentMethodUpdated}
+                onSuccess={(result) => {
+                    onPaymentMethodUpdated(result)
+                }}
             />
         </>
     )
