@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { RotateCcw } from 'lucide-react'
+import { X, RotateCcw, Loader } from 'lucide-react'
 import { useEscape } from '../../../shared/helpers/useEscape'
 
 const initialItemSelections = (items) =>
@@ -79,20 +79,20 @@ export const ReturnModal = ({ isOpen, sale, onClose, onConfirm }) => {
 
     return (
         <section
-            className='fixed inset-0 bg-overlay w-full h-full flex items-center justify-center z-[70]'
-            onClick={onClose}>
+            className='fixed inset-0 bg-overlay w-full h-full flex items-center justify-center z-50'>
             <section
-                className='bg-surface rounded-lg shadow-2xl w-full max-w-md relative overflow-hidden max-h-[90vh] flex flex-col'
+                className='bg-surface rounded-xl border border-outline shadow-lg w-full max-w-md relative overflow-hidden max-h-[90vh] flex flex-col'
                 onClick={(e) => e.stopPropagation()}>
-                <div className='p-6 text-center border-b border-divider-light'>
-                    <div className='mx-auto w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-4'>
-                        <RotateCcw className='w-6 h-6 text-red-600' />
-                    </div>
-                    <h3 className='text-lg font-bold text-on-surface mb-2'>
+                <section className='flex items-center justify-between px-6 py-4 border-b border-divider'>
+                    <h2 className='text-lg font-semibold flex items-center gap-2'>
+                        <RotateCcw className='w-5 h-5 text-red-600' />
                         Devolver Venta #
                         {String(sale.ticketNumber || sale.id).padStart(4, '0')}
-                    </h3>
-                </div>
+                    </h2>
+                    <button onClick={onClose} className='p-1 rounded-md text-accent hover:text-accent/85 border border-disabled hover:border-accent transition cursor-pointer'>
+                        <X className='w-6 h-6' />
+                    </button>
+                </section>
 
                 <div className='p-6 overflow-y-auto flex-1'>
                     <p className='text-sm font-semibold text-on-body mb-3'>
@@ -212,7 +212,7 @@ export const ReturnModal = ({ isOpen, sale, onClose, onConfirm }) => {
                     />
                 </div>
 
-                <div className='px-6 pb-6 flex gap-3 border-t border-divider-light pt-4'>
+                <div className='px-6 pb-6 flex gap-3 border-t border-divider pt-4'>
                     <button
                         onClick={onClose}
                         className='flex-1 py-2.5 border border-outline text-on-body rounded-lg font-medium hover:bg-hover transition text-sm'>
@@ -220,11 +220,11 @@ export const ReturnModal = ({ isOpen, sale, onClose, onConfirm }) => {
                     </button>
                     <button
                         onClick={handleConfirm}
-                        className='flex-1 py-2.5 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 transition text-sm disabled:opacity-50'
+                        className='flex-1 py-2.5 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 transition text-sm disabled:opacity-50 flex items-center justify-center gap-2'
                         disabled={
                             !returnReason.trim() || !hasSelectedItems || isReturning
                         }>
-                        {isReturning ? 'Devolviendo...' : `Devolver ($${new Intl.NumberFormat('es-CO', {
+                        {isReturning ? <><Loader className='w-5 h-5 animate-spin' /> Devolviendo...</> : `Devolver ($${new Intl.NumberFormat('es-CO', {
                             maximumFractionDigits: 0,
                         }).format(totalReturn)})`}
                     </button>

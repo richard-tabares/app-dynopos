@@ -1,4 +1,4 @@
-import { X, CheckCircle, CircleDollarSign } from 'lucide-react'
+import { X, CheckCircle, CircleDollarSign, Loader } from 'lucide-react'
 import { useStore } from '../../../app/providers/store'
 import { useEscape } from '../../../shared/helpers/useEscape'
 
@@ -15,22 +15,22 @@ export const SaleConfirmationModal = ({
 
     return (
         <section
-            className='fixed inset-0 bg-overlay w-full h-full flex flex-col items-center justify-center z-50'
-            onClick={onCancel}>
+            className='fixed inset-0 bg-overlay w-full h-full flex flex-col items-center justify-center z-50'>
             <section
-                className='bg-surface rounded-lg shadow-lg p-6 w-full max-w-md relative max-h-[90vh] flex flex-col'
+                className='bg-surface rounded-xl border border-outline shadow-lg w-full max-w-md relative max-h-[90vh] flex flex-col'
                 onClick={(e) => e.stopPropagation()}
                 onKeyDown={(e) => e.key === 'Enter' && !loading && onConfirm()}>
-                <button
-                    className='absolute top-4 right-4 text-accent hover:text-accent/85 border border-disabled hover:border-accent rounded-md transition mb-4 cursor-pointer'
-                    onClick={onCancel}>
-                    <X className='w-6 h-6' />
-                </button>
-                <h2 className='text-xl font-bold flex items-center gap-2 flex-shrink-0'>
-                    <CircleDollarSign className='w-6 h-6 text-accent' />
-                    Confirmar Venta
-                </h2>
-                <p className='text-sm text-muted mt-1 mb-4 flex-shrink-0'>
+                <section className='flex items-center justify-between px-6 py-4 border-b border-divider flex-shrink-0'>
+                    <h2 className='text-lg font-semibold flex items-center gap-2'>
+                        <CircleDollarSign className='w-5 h-5 text-accent' />
+                        Confirmar Venta
+                    </h2>
+                    <button onClick={onCancel} className='p-1 rounded-md text-accent hover:text-accent/85 border border-disabled hover:border-accent transition cursor-pointer'>
+                        <X className='w-6 h-6' />
+                    </button>
+                </section>
+                <div className='p-6 flex flex-col flex-1 overflow-y-auto'>
+                <p className='text-sm text-muted mb-4 flex-shrink-0'>
                     Revisa los detalles de la venta antes de confirmar.
                 </p>
 
@@ -66,10 +66,10 @@ export const SaleConfirmationModal = ({
                     </div>
                 </div>
 
-                <div className='flex justify-end gap-4 mt-6 shrink'>
+                <div className='flex justify-end gap-4 border-t border-divider pt-4 mt-4'>
                     <button
                         type='button'
-                        className='px-6 py-3 border border-outline text-on-body hover:bg-hover font-medium rounded-lg  transition cursor-pointer'
+                        className='px-6 py-3 border border-outline text-on-body hover:bg-hover font-medium rounded-lg transition cursor-pointer'
                         onClick={onCancel}>
                         Cancelar
                     </button>
@@ -79,14 +79,12 @@ export const SaleConfirmationModal = ({
                         className='px-6 py-3 bg-accent text-surface rounded-lg hover:bg-accent/85 font-medium transition cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed'
                         onClick={onConfirm}>
                         {loading ? (
-                            'Confirmando...'
+                            <><Loader className='w-5 h-5 animate-spin' /> Confirmando...</>
                         ) : (
-                            <>
-                                <CheckCircle className='w-5 h-5' />
-                                Confirmar Venta
-                            </>
+                            <><CheckCircle className='w-5 h-5' /> Confirmar Venta</>
                         )}
                     </button>
+                </div>
                 </div>
             </section>
         </section>

@@ -1,4 +1,4 @@
-import { X, ArrowDownCircle, ArrowUpCircle } from 'lucide-react'
+import { X, ArrowDownCircle, ArrowUpCircle, Loader, ArrowUpDown } from 'lucide-react'
 import { useState } from 'react'
 import { useEscape } from '../../../shared/helpers/useEscape'
 
@@ -59,28 +59,32 @@ export const AdjustmentModal = ({
     return (
         <section className='fixed inset-0 bg-overlay w-full h-full flex flex-col items-center justify-center z-50'>
             <section
-                className='bg-surface rounded-lg shadow-lg p-6 w-full max-w-md relative'
+                className='bg-surface rounded-xl border border-outline shadow-lg w-full max-w-md relative max-h-[90vh] overflow-y-auto'
                 onClick={(e) => e.stopPropagation()}>
-                <button
-                    className='absolute top-4 right-4 text-accent hover:text-accent/85 border border-disabled hover:border-accent rounded-md transition mb-4 cursor-pointer'
-                    onClick={handleClose}>
-                    <X className='w-6 h-6' />
-                </button>
-                <h2 className='text-xl font-bold'>Ajuste de Inventario</h2>
-                <p className='text-sm text-muted mt-1'>
-                    Producto:{' '}
-                    <span className='font-semibold text-on-body'>
-                        {product.name}
-                    </span>
-                </p>
-                <p className='text-sm text-muted'>
-                    Stock actual:{' '}
-                    <span className='font-semibold text-on-body'>{currentStock}</span>
-                </p>
+                <section className='flex items-center justify-between px-6 py-4 border-b border-divider'>
+                    <h2 className='text-lg font-semibold flex items-center gap-2'>
+                        <ArrowUpDown className='w-5 h-5 text-accent' />
+                        Ajuste de Inventario
+                    </h2>
+                    <button onClick={handleClose} className='p-1 rounded-md text-accent hover:text-accent/85 border border-disabled hover:border-accent transition cursor-pointer'>
+                        <X className='w-6 h-6' />
+                    </button>
+                </section>
+                <div className='p-6'>
+                    <p className='text-sm text-muted'>
+                        Producto:{' '}
+                        <span className='font-semibold text-on-body'>
+                            {product.name}
+                        </span>
+                    </p>
+                    <p className='text-sm text-muted'>
+                        Stock actual:{' '}
+                        <span className='font-semibold text-on-body'>{currentStock}</span>
+                    </p>
 
-                <form
-                    className='flex flex-col gap-4 mt-6'
-                    onSubmit={onFormSubmit}>
+                    <form
+                        className='flex flex-col gap-4'
+                        onSubmit={onFormSubmit}>
 
                     <section>
                         <label className='block text-sm font-medium text-on-body mb-2'>
@@ -172,7 +176,7 @@ export const AdjustmentModal = ({
                         />
                     </section>
 
-                    <section className='flex justify-end gap-4 mt-4'>
+                    <section className='flex justify-end gap-4 pt-4 border-t border-divider'>
                         <button
                             type='button'
                             className='px-4 py-2 border border-outline text-on-body hover:bg-hover font-medium rounded-lg transition cursor-pointer'
@@ -182,11 +186,12 @@ export const AdjustmentModal = ({
                         <button
                             type='submit'
                             disabled={loading || !isFormValid}
-                            className='px-4 py-2 bg-accent text-surface rounded-lg hover:bg-accent/85 font-medium transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'>
-                            {loading ? 'Aplicando...' : 'Aplicar Ajuste'}
+                            className='px-4 py-2 bg-accent text-surface rounded-lg hover:bg-accent/85 font-medium transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
+                            {loading ? <><Loader className='w-5 h-5 animate-spin' /> Aplicando...</> : 'Aplicar Ajuste'}
                         </button>
                     </section>
                 </form>
+                </div>
             </section>
         </section>
     )

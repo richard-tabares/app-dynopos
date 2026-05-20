@@ -1,4 +1,5 @@
 import { NavLink, useNavigate } from "react-router"
+import { Loader } from 'lucide-react'
 import { login } from '../helpers/login'
 import { useState } from "react"
 import { toast } from 'react-toastify'
@@ -114,8 +115,8 @@ export const Login = () => {
                             <p className='text-xs font-semibold text-red-500'>{errors.password}</p>
                         )}
                     </section>
-                    <button type="submit" disabled={loading} className='py-3 px-6 font-semibold bg-accent text-surface hover:bg-accent/85 transition-all duration-300 rounded-md w-full cursor-pointer mb-2 disabled:opacity-60 disabled:cursor-not-allowed'>
-                        {loading ? 'Iniciando...' : 'Iniciar Sesión'}
+                    <button type="submit" disabled={loading} className='py-3 px-6 font-semibold bg-accent text-surface hover:bg-accent/85 transition-all duration-300 rounded-md w-full cursor-pointer mb-2 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
+                        {loading ? <><Loader className='w-5 h-5 animate-spin' /> Iniciando...</> : 'Iniciar Sesión'}
                     </button>
                     <p className='text-center text-on-body text-xs mb-8'>
                         <NavLink

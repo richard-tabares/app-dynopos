@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router'
-import { Lock, Check, CreditCard, Calendar, ShieldCheck } from 'lucide-react'
+import { Lock, Check, CreditCard, Calendar, ShieldCheck, Loader } from 'lucide-react'
 import { getAcceptanceTokens } from '../helpers/getAcceptanceTokens'
 import { processCardPayment } from '../helpers/processCardPayment'
 import { toast } from 'react-toastify'
@@ -323,8 +323,11 @@ export const CardPayment = () => {
                         type='submit'
                         disabled={loading || !acceptedReglamento || !acceptedDatos}
                         className='w-full mt-4 px-6 py-3 bg-accent text-surface border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 hover:bg-accent/85 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
-                        <Lock className='w-5 h-5' />
-                        {loading ? 'Procesando pago...' : `Pagar $${formatPrice(currentPrice)}`}
+                        {loading ? (
+                            <><Loader className='w-5 h-5 animate-spin' /> Procesando pago...</>
+                        ) : (
+                            <><Lock className='w-5 h-5' /> Pagar ${formatPrice(currentPrice)}</>
+                        )}
                     </button>
 
                     <p className='text-center text-xs text-faint flex items-center justify-center gap-1'>

@@ -31,7 +31,7 @@ export const ReturnDetailModal = ({ isOpen, onClose, data }) => {
                         <Undo2 className='w-5 h-5' />
                         <span className='font-bold uppercase tracking-widest text-sm'>Detalle de Devolución</span>
                     </div>
-                    <button onClick={onClose} className='text-white hover:text-white/85 border border-white/30 hover:border-white rounded-md transition cursor-pointer'>
+                    <button onClick={onClose} className='p-1 text-white hover:text-white/85 border border-white/30 hover:border-white rounded-md transition cursor-pointer'>
                         <X className='w-5 h-5' />
                     </button>
                 </div>

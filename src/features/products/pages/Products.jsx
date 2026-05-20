@@ -255,22 +255,20 @@ export const Products = () => {
             {/* Modal crear categoría */}
             {showCategoryModal && (
                 <section
-                    className='fixed inset-0 bg-overlay w-full h-full flex items-center justify-center z-[70]'
-                    onClick={() => {
-                        setCategoryName('')
-                    }}>
+                    className='fixed inset-0 bg-overlay w-full h-full flex items-center justify-center z-50'>
                     <section
-                        className='bg-surface rounded-lg shadow-2xl w-full max-w-md relative overflow-hidden'
+                        className='bg-surface rounded-xl border border-outline shadow-lg w-full max-w-md relative overflow-hidden max-h-[90vh] overflow-y-auto'
                         onClick={(e) => e.stopPropagation()}>
-                    <button
-                    className='absolute top-4 right-4 text-accent hover:text-accent/85 border border-disabled hover:border-accent rounded-md transition mb-4 cursor-pointer'
-                    onClick={() => setShowCategoryModal(false)}>
-                    <X className='w-6 h-6' />
-                </button>
-                        <div className='p-6 border-b border-divider-light'>
-                            <h3 className='text-lg font-bold text-on-surface'>
+                        <div className='flex items-center justify-between px-6 py-4 border-b border-divider'>
+                            <h3 className='text-lg font-semibold flex items-center gap-2'>
+                                <Tags className='w-5 h-5 text-accent' />
                                 Nueva Categoría
                             </h3>
+                            <button
+                                onClick={() => setShowCategoryModal(false)}
+                                className='p-1 rounded-md text-accent hover:text-accent/85 border border-disabled hover:border-accent transition cursor-pointer'>
+                                <X className='w-6 h-6' />
+                            </button>
                         </div>
                         <div className='p-6'>
                             <label className='block text-sm font-medium text-on-body mb-2'>

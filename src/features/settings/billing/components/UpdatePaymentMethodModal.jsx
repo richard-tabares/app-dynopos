@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { X, CreditCard, Lock, ShieldCheck, Loader } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { apiFetch } from '../../../../shared/helpers/apiFetch'
+import { useEscape } from '../../../../shared/helpers/useEscape'
 
 const WOMPI_API = import.meta.env.VITE_WOMPI_API_URL || 'https://api-sandbox.wompi.co/v1'
 const WOMPI_PUB_KEY = import.meta.env.VITE_WOMPI_PUBLIC_KEY
@@ -104,6 +105,8 @@ export const UpdatePaymentMethodModal = ({ isOpen, onClose, businessId, customer
         }
     }
 
+    useEscape(onClose)
+
     if (!isOpen) return null
 
     return (
@@ -114,8 +117,8 @@ export const UpdatePaymentMethodModal = ({ isOpen, onClose, businessId, customer
                         <CreditCard className='w-5 h-5 text-accent' />
                         Actualizar Método de Pago
                     </h2>
-                    <button onClick={onClose} className='p-1 rounded-lg hover:bg-hover transition cursor-pointer'>
-                        <X className='w-5 h-5' />
+                    <button onClick={onClose} className='p-1 rounded-md text-accent hover:text-accent/85 border border-disabled hover:border-accent transition cursor-pointer'>
+                        <X className='w-6 h-6' />
                     </button>
                 </section>
 

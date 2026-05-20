@@ -60,7 +60,7 @@ export const SaleTicketModal = ({ isOpen, onClose, sale }) => {
                         <ReceiptText className='w-5 h-5' />
                         <span className='font-bold uppercase tracking-widest text-sm'>Ticket de Venta</span>
                     </div>
-                    <button onClick={onClose} className='text-surface hover:text-surface/85 border border-surface/30 hover:border-surface rounded-md transition cursor-pointer'>
+                    <button onClick={onClose} className='p-1 text-surface hover:text-surface/85 border border-surface/30 hover:border-surface rounded-md transition cursor-pointer'>
                         <X className='w-5 h-5' />
                     </button>
                 </div>

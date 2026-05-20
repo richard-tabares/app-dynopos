@@ -1,4 +1,4 @@
-import { X } from 'lucide-react'
+import { X, Loader, Package } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useEscape } from '../../../shared/helpers/useEscape'
@@ -71,18 +71,20 @@ export const Modal = ({
     return (
         <section className='fixed inset-0 bg-overlay w-full h-full flex flex-col items-center justify-center z-50'>
             <section
-                className='bg-surface rounded-lg shadow-lg p-6 w-full max-w-md relative'
+                className='bg-surface rounded-xl border border-outline shadow-lg w-full max-w-md relative max-h-[90vh] overflow-y-auto'
                 onClick={(e) => e.stopPropagation()}>
-                <button
-                    className='absolute top-4 right-4 cursor-pointer text-accent hover:text-accent/85 border border-disabled hover:border-accent rounded-md transition mb-4'
-                    onClick={handleOpenModal}>
-                    <X className='w-6 h-6' />
-                </button>
-                <h2 className='text-xl font-bold'>
-                    {editProductData.id ? 'Editar Producto' : 'Nuevo Producto'}
-                </h2>
+                <section className='flex items-center justify-between px-6 py-4 border-b border-divider'>
+                    <h2 className='text-lg font-semibold flex items-center gap-2'>
+                        <Package className='w-5 h-5 text-accent' />
+                        {editProductData.id ? 'Editar Producto' : 'Nuevo Producto'}
+                    </h2>
+                    <button onClick={handleOpenModal} className='p-1 rounded-md text-accent hover:text-accent/85 border border-disabled hover:border-accent transition cursor-pointer'>
+                        <X className='w-6 h-6' />
+                    </button>
+                </section>
+                <div className='p-6'>
                 <form
-                    className='flex flex-col gap-4 mt-6'
+                    className='flex flex-col gap-4'
                     onSubmit={handleFormSubmit}>
                     <section>
                         <label className='block text-sm font-medium text-on-body mb-1'>
@@ -190,7 +192,7 @@ export const Modal = ({
                             <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-0 peer-focus:ring-accent rounded-full peer-checked:after:translate-x-full peer-checked:after:border-surface after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-surface after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
                         </label>
                     </section>
-                    <section className='flex justify-end gap-4 mt-4'>
+                    <section className='flex justify-end gap-4 pt-4 border-t border-divider'>
                         <button
                             type='button'
                             className='px-4 py-2 border border-outline text-on-body hover:bg-hover font-medium rounded-lg transition cursor-pointer'
@@ -200,13 +202,14 @@ export const Modal = ({
                         <button
                             type='submit'
                             disabled={!isFormValid || submitting}
-                            className='px-4 py-2 bg-accent text-surface rounded-lg hover:bg-accent/85 font-medium transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'>
+                            className='px-4 py-2 bg-accent text-surface rounded-lg hover:bg-accent/85 font-medium transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
                             {submitting
-                                ? editProductData.id ? 'Actualizando...' : 'Guardando...'
+                                ? <><Loader className='w-5 h-5 animate-spin' /> {editProductData.id ? 'Actualizando...' : 'Guardando...'}</>
                                 : editProductData.id ? 'Actualizar' : 'Guardar'}
                         </button>
                     </section>
                 </form>
+                </div>
             </section>
         </section>
     )

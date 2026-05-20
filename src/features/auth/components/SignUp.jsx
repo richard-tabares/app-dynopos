@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { Eye, EyeClosed, ArrowRight } from 'lucide-react'
+import { Eye, EyeClosed, ArrowRight, Loader } from 'lucide-react'
 import { initiateSignup } from '../helpers/initiateSignup'
 import { checkEmail } from '../helpers/checkEmail'
 import { NavLink, useNavigate } from 'react-router'
@@ -452,7 +452,7 @@ export const SignUp = () => {
                         disabled={loading || !isFormValid}
                         className='w-full mt-4 px-6 py-3 bg-accent text-surface border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 hover:bg-accent/85 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
                         {loading ? (
-                            'Procesando...'
+                            <><Loader className='w-5 h-5 animate-spin' /> Procesando...</>
                         ) : (
                             <>
                                 Seleccionar Plan

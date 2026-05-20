@@ -8,27 +8,22 @@ export const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message }) => 
 
     return (
         <section
-            className='fixed inset-0 bg-overlay w-full h-full flex flex-col items-center justify-center z-[60]'
-            onClick={onClose}>
+            className='fixed inset-0 bg-overlay w-full h-full flex flex-col items-center justify-center z-50'>
             <section
-                className='bg-surface rounded-xl shadow-xl p-6 w-full max-w-sm relative'
+                className='bg-surface rounded-xl border border-outline shadow-lg w-full max-w-sm relative max-h-[90vh] overflow-y-auto'
                 onClick={(e) => e.stopPropagation()}>
-                <button
-                    className='absolute top-4 right-4 text-accent hover:text-accent/85 border border-disabled hover:border-accent rounded-md transition cursor-pointer'
-                    onClick={onClose}>
-                    <X className='w-5 h-5' />
-                </button>
-
-                <div className='flex flex-col items-center text-center'>
-                    <div className='p-3 bg-red-100 rounded-full mb-4'>
-                        <AlertTriangle className='w-8 h-8 text-red-600' />
-                    </div>
-                    
-                    <h2 className='text-xl font-bold text-on-surface mb-2'>
+                <section className='flex items-center justify-between px-6 py-4 border-b border-divider'>
+                    <h2 className='text-lg font-semibold flex items-center gap-2'>
+                        <AlertTriangle className='w-5 h-5 text-red-600' />
                         {title}
                     </h2>
-                    
-                    <p className='text-on-body text-sm mb-8'>
+                    <button onClick={onClose} className='p-1 rounded-md text-accent hover:text-accent/85 border border-disabled hover:border-accent transition cursor-pointer'>
+                        <X className='w-6 h-6' />
+                    </button>
+                </section>
+
+                <div className='p-6'>
+                    <p className='text-on-body text-sm mb-6'>
                         {message}
                     </p>
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Tag, Plus, Edit2, Trash2, Search, X } from 'lucide-react'
+import { Tag, Plus, Edit2, Trash2, Search, X, Loader } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { useStore } from '../../../app/providers/store'
 import { getCategories } from '../../categories/helpers/getCategories'
@@ -110,10 +110,11 @@ export const Categories = () => {
         <>
             {/* Create/Edit Modal */}
             {showModal && (
-                <section className='fixed inset-0 bg-overlay w-full h-full flex items-center justify-center z-[70]'>
-                    <section className='bg-surface rounded-lg shadow-2xl w-full max-w-md relative overflow-hidden'>
-                        <div className='p-6 border-b border-divider-light flex items-center justify-between'>
-                            <h3 className='text-lg font-bold text-on-surface'>
+                <section className='fixed inset-0 bg-overlay w-full h-full flex items-center justify-center z-50'>
+                    <section className='bg-surface rounded-xl border border-outline shadow-lg w-full max-w-md relative overflow-hidden'>
+                        <div className='px-6 py-4 border-b border-divider flex items-center justify-between'>
+                            <h3 className='text-lg font-semibold flex items-center gap-2'>
+                                <Tag className='w-5 h-5 text-accent' />
                                 {editingCategory
                                     ? 'Editar Categoría'
                                     : 'Nueva Categoría'}
@@ -124,8 +125,8 @@ export const Categories = () => {
                                     setEditingCategory(null)
                                     setCategoryName('')
                                 }}
-                                className='p-1 text-accent hover:text-accent/85 border border-disabled hover:border-accent rounded-lg transition cursor-pointer'>
-                                <X className='w-5 h-5' />
+                                className='p-1 rounded-md text-accent hover:text-accent/85 border border-disabled hover:border-accent transition cursor-pointer'>
+                                <X className='w-6 h-6' />
                             </button>
                         </div>
                         <div className='p-6'>
@@ -162,8 +163,8 @@ export const Categories = () => {
                             <button
                                 onClick={handleSave}
                                 disabled={saving || !categoryName.trim()}
-                                className='flex-1 py-2.5 bg-accent text-surface rounded-lg font-bold hover:bg-accent/85 transition text-sm disabled:opacity-50 cursor-pointer'>
-                                {saving ? 'Guardando...' : 'Guardar'}
+                                className='flex-1 py-2.5 bg-accent text-surface rounded-lg font-bold hover:bg-accent/85 transition text-sm disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2'>
+                                {saving ? <><Loader className='w-5 h-5 animate-spin' /> Guardando...</> : 'Guardar'}
                             </button>
                         </div>
                     </section>
@@ -173,18 +174,20 @@ export const Categories = () => {
             {/* Delete Confirmation */}
             {showDeleteConfirm && (
                 <section
-                    className='fixed inset-0 bg-overlay w-full h-full flex items-center justify-center z-[70]'
-                    onClick={() => setShowDeleteConfirm(null)}>
+                    className='fixed inset-0 bg-overlay w-full h-full flex items-center justify-center z-50'>
                     <section
-                        className='bg-surface rounded-lg shadow-2xl w-full max-w-sm relative overflow-hidden'
+                        className='bg-surface rounded-xl border border-outline shadow-lg w-full max-w-sm relative overflow-hidden'
                         onClick={(e) => e.stopPropagation()}>
-                        <div className='p-6 text-center'>
-                            <div className='mx-auto w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-4'>
-                                <Trash2 className='w-6 h-6 text-red-600' />
-                            </div>
-                            <h3 className='text-lg font-bold text-on-surface mb-2'>
+                        <section className='flex items-center justify-between px-6 py-4 border-b border-divider'>
+                            <h2 className='text-lg font-semibold flex items-center gap-2'>
+                                <Trash2 className='w-5 h-5 text-red-600' />
                                 Eliminar Categoría
-                            </h3>
+                            </h2>
+                            <button onClick={() => setShowDeleteConfirm(null)} className='p-1 rounded-md text-accent hover:text-accent/85 border border-disabled hover:border-accent transition cursor-pointer'>
+                                <X className='w-6 h-6' />
+                            </button>
+                        </section>
+                        <div className='p-6'>
                             <p className='text-sm text-muted'>
                                 ¿Estás seguro de eliminar{' '}
                                 <strong>{showDeleteConfirm.name}</strong>? Esta
@@ -200,8 +203,8 @@ export const Categories = () => {
                             <button
                                 onClick={handleDelete}
                                 disabled={loading}
-                                className='flex-1 py-2.5 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 transition text-sm disabled:opacity-50 cursor-pointer'>
-                                {loading ? 'Eliminando...' : 'Eliminar'}
+                                className='flex-1 py-2.5 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 transition text-sm disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2'>
+                                {loading ? <><Loader className='w-5 h-5 animate-spin' /> Eliminando...</> : 'Eliminar'}
                             </button>
                         </div>
                     </section>
