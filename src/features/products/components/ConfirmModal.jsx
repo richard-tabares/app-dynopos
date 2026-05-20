@@ -1,4 +1,4 @@
-import { X, AlertTriangle } from 'lucide-react'
+import { X, AlertTriangle, Trash2 } from 'lucide-react'
 import { useEscape } from '../../../shared/helpers/useEscape'
 
 export const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message }) => {
@@ -36,12 +36,12 @@ export const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message }) => 
                         </button>
                         <button
                             type='button'
-                            className='flex-1 px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition cursor-pointer'
+                            className='flex-1 px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition cursor-pointer flex items-center justify-center gap-2'
                             onClick={() => {
                                 onConfirm()
                                 onClose()
                             }}>
-                            Eliminar
+                            <Trash2 className='w-5 h-5' /> Eliminar
                         </button>
                     </div>
                 </div>

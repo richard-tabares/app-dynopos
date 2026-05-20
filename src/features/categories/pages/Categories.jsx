@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Tag, Plus, Edit2, Trash2, Search, X, Loader } from 'lucide-react'
+import { Tag, Plus, Edit2, Trash2, Search, X, Loader, Save } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { useStore } from '../../../app/providers/store'
 import { getCategories } from '../../categories/helpers/getCategories'
@@ -164,7 +164,7 @@ export const Categories = () => {
                                 onClick={handleSave}
                                 disabled={saving || !categoryName.trim()}
                                 className='flex-1 py-2.5 bg-accent text-surface rounded-lg font-bold hover:bg-accent/85 transition text-sm disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2'>
-                                {saving ? <><Loader className='w-5 h-5 animate-spin' /> Guardando...</> : 'Guardar'}
+                                {saving ? <><Loader className='w-5 h-5 animate-spin' /> Guardando...</> : <><Save className='w-5 h-5' /> Guardar</>}
                             </button>
                         </div>
                     </section>
@@ -204,7 +204,7 @@ export const Categories = () => {
                                 onClick={handleDelete}
                                 disabled={loading}
                                 className='flex-1 py-2.5 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 transition text-sm disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2'>
-                                {loading ? <><Loader className='w-5 h-5 animate-spin' /> Eliminando...</> : 'Eliminar'}
+                                {loading ? <><Loader className='w-5 h-5 animate-spin' /> Eliminando...</> : <><Trash2 className='w-5 h-5' /> Eliminar</>}
                             </button>
                         </div>
                     </section>
@@ -233,10 +233,10 @@ export const Categories = () => {
                             </span>
                         </h2>
                         <button
-                            className='flex items-center justify-center p-2 bg-accent text-surface text-sm rounded-lg hover:bg-accent/85 transition cursor-pointer'
-                            onClick={openCreateModal}
-                            title='Nueva Categoría'>
-                            <Plus className='w-5 h-5' />
+                            className='flex items-center gap-2 px-4 py-2 bg-accent text-surface text-sm font-medium rounded-lg hover:bg-accent/85 transition cursor-pointer'
+                            onClick={openCreateModal}>
+                            <Tag className='w-5 h-5' />
+                            Nueva Categoría
                         </button>
                     </section>
                     <section className='p-6'>

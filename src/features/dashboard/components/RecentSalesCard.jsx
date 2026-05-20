@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ReceiptText, Clock } from 'lucide-react'
+import { ReceiptText, Clock, ChevronDown } from 'lucide-react'
 import { SaleTicketModal } from '../../../shared/components/SaleTicketModal'
 
 export const RecentSalesCard = ({ sales = [] }) => {
@@ -54,9 +54,9 @@ export const RecentSalesCard = ({ sales = [] }) => {
                 {visibleCount < sales.length && (
                     <button 
                         onClick={handleLoadMore}
-                        className='mt-6 w-full py-2 text-sm font-medium text-on-surface hover:text-surface hover:bg-accent rounded-lg border border-accent transition-colors cursor-pointer'
+                        className='mt-6 w-full py-2 text-sm font-medium text-on-surface hover:text-surface hover:bg-accent rounded-lg border border-accent transition-colors cursor-pointer flex items-center justify-center gap-2'
                     >
-                        Cargar más
+                        <ChevronDown className='w-4 h-4' /> Cargar más
                     </button>
                 )}
             </section>

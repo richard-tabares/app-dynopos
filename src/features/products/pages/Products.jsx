@@ -15,6 +15,8 @@ import {
     XCircle,
     PackageCheck,
     PackageX,
+    Save,
+    Loader,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
@@ -305,8 +307,8 @@ export const Products = () => {
                                 disabled={
                                     savingCategory || !categoryName.trim()
                                 }
-                                className='flex-1 py-2.5 bg-accent text-surface rounded-lg font-bold hover:bg-accent/85 transition text-sm disabled:opacity-50 cursor-pointer'>
-                                {savingCategory ? 'Guardando...' : 'Guardar'}
+                                className='flex-1 py-2.5 bg-accent text-surface rounded-lg font-bold hover:bg-accent/85 transition text-sm disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2'>
+                                {savingCategory ? <><Loader className='w-5 h-5 animate-spin' /> Guardando...</> : <><Save className='w-5 h-5' /> Guardar</>}
                             </button>
                         </div>
                     </section>
@@ -725,8 +727,8 @@ export const Products = () => {
                     {visibleCount < filteredProducts.length && (
                         <button
                             onClick={handleLoadMore}
-                            className='w-full mt-4 py-2 text-sm font-medium text-on-surface hover:text-surface hover:bg-accent rounded-lg border border-accent transition-colors cursor-pointer px-6'>
-                            Cargar más ({filteredProducts.length - visibleCount} restantes)
+                            className='w-full mt-4 py-2 text-sm font-medium text-on-surface hover:text-surface hover:bg-accent rounded-lg border border-accent transition-colors cursor-pointer px-6 flex items-center justify-center gap-2'>
+                            <ChevronDown className='w-4 h-4' /> Cargar más ({filteredProducts.length - visibleCount} restantes)
                         </button>
                     )}
                     {filteredProducts.length === 0 && (

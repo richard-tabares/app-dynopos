@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { Store, Shield, Receipt, Bell, Save, Loader, Palette } from 'lucide-react'
+import { Store, Shield, Receipt, Bell, Save, Loader, Palette, Lock } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { useStore } from '../../../../app/providers/store'
 import { updateBusiness } from '../helpers/updateBusiness'
@@ -275,7 +275,7 @@ export const Account = () => {
                             onClick={handleChangePassword}
                             disabled={changingPassword}
                             className='flex items-center gap-2 px-4 py-2 bg-accent text-surface text-sm font-medium rounded-lg hover:bg-accent/85 transition disabled:opacity-50 cursor-pointer'>
-                            {changingPassword ? <Loader className='w-4 h-4 animate-spin' /> : null}
+                            {changingPassword ? <Loader className='w-4 h-4 animate-spin' /> : <Lock className='w-4 h-4' />}
                             Cambiar Contraseña
                         </button>
                     </div>

@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react'
-import { Search, TrendingUp, DollarSign, Bell, History, X } from 'lucide-react'
+import { Search, TrendingUp, DollarSign, Bell, History, X, ChevronDown } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { useStore } from '../../../app/providers/store'
 import { getProducts } from '../../products/helpers/getProducts'
@@ -227,9 +227,9 @@ export const Sales = () => {
                                         {visibleCount < filteredProducts.length && (
                                             <button
                                                 onClick={handleLoadMore}
-                                                className='w-full mt-4 py-2 text-sm font-medium text-on-surface hover:text-surface hover:bg-accent rounded-lg border border-accent transition-colors cursor-pointer'
+                                                className='w-full mt-4 py-2 text-sm font-medium text-on-surface hover:text-surface hover:bg-accent rounded-lg border border-accent transition-colors cursor-pointer flex items-center justify-center gap-2'
                                             >
-                                                Cargar más ({filteredProducts.length - visibleCount} restantes)
+                                                <ChevronDown className='w-4 h-4' /> Cargar más ({filteredProducts.length - visibleCount} restantes)
                                             </button>
                                         )}
                                     </>

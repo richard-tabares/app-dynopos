@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router'
-import { CheckCircle, Printer, ArrowRight } from 'lucide-react'
+import { CheckCircle, Printer, ArrowRight, LogIn } from 'lucide-react'
 
 export const PaymentSuccess = () => {
     const navigate = useNavigate()
@@ -13,8 +13,8 @@ export const PaymentSuccess = () => {
                     <h1 className='text-2xl font-bold text-on-surface mb-4'>No se encontró información de pago</h1>
                     <button
                         onClick={() => navigate('/login', { replace: true })}
-                        className='px-6 py-3 bg-accent text-surface rounded-lg font-semibold hover:bg-accent/85 transition cursor-pointer'>
-                        Ir al login
+                        className='px-6 py-3 bg-accent text-surface rounded-lg font-semibold hover:bg-accent/85 transition cursor-pointer flex items-center justify-center gap-2'>
+                        <LogIn className='w-5 h-5' /> Ir al login
                     </button>
                 </section>
             </section>

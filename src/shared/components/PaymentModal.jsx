@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Loader2, CheckCircle, XCircle } from 'lucide-react'
+import { Loader2, CheckCircle, XCircle, ArrowRight, X } from 'lucide-react'
 import { useEscape } from '../helpers/useEscape'
 
 export const PaymentModal = ({ isOpen, status, message, onClose }) => {
@@ -49,8 +49,8 @@ export const PaymentModal = ({ isOpen, status, message, onClose }) => {
                 {status !== 'processing' && (
                     <button
                         onClick={handleClose}
-                        className='mt-6 px-6 py-2.5 bg-accent text-surface rounded-lg font-semibold hover:bg-accent/85 transition cursor-pointer'>
-                        {status === 'success' ? 'Continuar' : 'Cerrar'}
+                        className='mt-6 px-6 py-2.5 bg-accent text-surface rounded-lg font-semibold hover:bg-accent/85 transition cursor-pointer flex items-center justify-center gap-2'>
+                        {status === 'success' ? <><ArrowRight className='w-5 h-5' /> Continuar</> : <><X className='w-5 h-5' /> Cerrar</>}
                     </button>
                 )}
             </section>

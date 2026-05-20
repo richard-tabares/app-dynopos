@@ -34,9 +34,9 @@ export const PaymentMethodCard = ({ isAutoRenew, onToggle, businessId, customerE
                         </div>
                         <button
                             onClick={() => setModalOpen(true)}
-                            className='px-4 py-2 bg-accent text-surface text-sm font-medium rounded-lg hover:bg-accent/85 transition cursor-pointer'
+                            className='px-4 py-2 bg-accent text-surface text-sm font-medium rounded-lg hover:bg-accent/85 transition cursor-pointer flex items-center gap-2'
                         >
-                            Actualizar
+                            <CreditCard className='w-4 h-4' /> Actualizar
                         </button>
                     </div>
 

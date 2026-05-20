@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router'
-import { CheckCircle2, Loader2, XCircle } from 'lucide-react'
+import { CheckCircle2, Loader2, XCircle, ArrowLeft, LogIn } from 'lucide-react'
 
 export const EmailConfirmationSuccess = () => {
     const navigate = useNavigate()
@@ -93,8 +93,8 @@ export const EmailConfirmationSuccess = () => {
                     </p>
                     <button
                         onClick={() => navigate('/signup', { replace: true })}
-                        className='w-full px-6 py-3 bg-accent text-surface rounded-lg text-base font-semibold transition-all duration-300 hover:bg-accent/85'>
-                        Volver al registro
+                        className='w-full px-6 py-3 bg-accent text-surface rounded-lg text-base font-semibold transition-all duration-300 hover:bg-accent/85 flex items-center justify-center gap-2'>
+                        <ArrowLeft className='w-5 h-5' /> Volver al registro
                     </button>
                 </section>
             </section>
@@ -118,8 +118,8 @@ export const EmailConfirmationSuccess = () => {
                 </p>
                 <button
                     onClick={() => navigate('/login', { replace: true })}
-                    className='w-full px-6 py-3 bg-accent text-surface rounded-lg text-base font-semibold transition-all duration-300 hover:bg-accent/85'>
-                    Ir al inicio de sesión
+                    className='w-full px-6 py-3 bg-accent text-surface rounded-lg text-base font-semibold transition-all duration-300 hover:bg-accent/85 flex items-center justify-center gap-2'>
+                    <LogIn className='w-5 h-5' /> Ir al inicio de sesión
                 </button>
             </section>
         </section>

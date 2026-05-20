@@ -265,7 +265,7 @@ export const PaymentStep = () => {
                     onClick={handlePayment}
                     disabled={loading || !paymentMethod}
                     className='w-full px-6 py-3 bg-accent text-surface border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 hover:bg-accent/85 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
-                    {loading ? <><Loader className='w-5 h-5 animate-spin' /> Procesando...</> : 'Ir a Pagar'}
+                    {loading ? <><Loader className='w-5 h-5 animate-spin' /> Procesando...</> : <><CreditCard className='w-5 h-5' /> Ir a Pagar</>}
                 </button>
 
                 <p className='text-center text-on-body mt-4'>

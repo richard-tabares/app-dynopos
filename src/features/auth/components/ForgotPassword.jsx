@@ -1,4 +1,5 @@
 import { NavLink, useNavigate } from "react-router"
+import { Send } from 'lucide-react'
 import { forgotPassword } from '../helpers/forgotPassword'
 import { useState } from "react"
 import { toast } from 'react-toastify'
@@ -81,8 +82,8 @@ export const ForgotPassword = () => {
                             <p className='text-xs font-semibold text-red-500'>{errors.email}</p>
                         )}
                     </section>
-                    <button type="submit" className='py-3 px-6 font-semibold bg-accent text-surface rounded-md w-full cursor-pointer mb-2'>
-                        Enviar enlace
+                    <button type="submit" className='py-3 px-6 font-semibold bg-accent text-surface rounded-md w-full cursor-pointer mb-2 flex items-center justify-center gap-2'>
+                        <Send className='w-5 h-5' /> Enviar enlace
                     </button>
                     <p className='text-center text-on-body'>
                         <NavLink

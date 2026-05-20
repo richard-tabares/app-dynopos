@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Search, Undo2 } from 'lucide-react'
+import { Search, Undo2, ChevronDown } from 'lucide-react'
 
 const formatCurrency = (value) =>
     new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(value)
@@ -66,9 +66,9 @@ export const ReturnsTable = ({ data = [], onReturnClick }) => {
                         {visibleCount < filtered.length && (
                             <button
                                 onClick={() => setVisibleCount(prev => prev + 10)}
-                                className='w-full mt-4 py-2 text-sm font-medium text-on-surface hover:text-surface hover:bg-accent rounded-lg border border-accent transition-colors cursor-pointer'
+                                className='w-full mt-4 py-2 text-sm font-medium text-on-surface hover:text-surface hover:bg-accent rounded-lg border border-accent transition-colors cursor-pointer flex items-center justify-center gap-2'
                             >
-                                Cargar más ({filtered.length - visibleCount} restantes)
+                                <ChevronDown className='w-4 h-4' /> Cargar más ({filtered.length - visibleCount} restantes)
                             </button>
                         )}
                     </>

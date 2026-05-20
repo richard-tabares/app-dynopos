@@ -2,7 +2,7 @@ import { NavLink, useNavigate } from "react-router"
 import { resetPassword } from '../helpers/resetPassword'
 import { useState, useMemo } from "react"
 import { toast } from 'react-toastify'
-import { Eye, EyeClosed } from 'lucide-react'
+import { Eye, EyeClosed, KeyRound } from 'lucide-react'
 
 export const ResetPassword = () => {
     const navigate = useNavigate()
@@ -155,8 +155,8 @@ export const ResetPassword = () => {
                             <p className='text-xs font-semibold text-green-600'>✓ Las contraseñas coinciden</p>
                         )}
                     </section>
-                    <button type="submit" className='py-3 px-6 font-semibold bg-accent text-white rounded-md w-full cursor-pointer mb-2'>
-                        Restablecer contraseña
+                    <button type="submit" className='py-3 px-6 font-semibold bg-accent text-white rounded-md w-full cursor-pointer mb-2 flex items-center justify-center gap-2'>
+                        <KeyRound className='w-5 h-5' /> Restablecer contraseña
                     </button>
                     <p className='text-center text-on-body'>
                         <NavLink

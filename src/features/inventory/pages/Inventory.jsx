@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Package, Search, AlertCircle, Settings2, AlertTriangle, PackageCheck, PackageX, Layers } from 'lucide-react'
+import { Package, Search, AlertCircle, Settings2, AlertTriangle, PackageCheck, PackageX, Layers, ChevronDown } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { useStore } from '../../../app/providers/store'
 import { getProducts } from '../../products/helpers/getProducts'
@@ -285,8 +285,8 @@ export const Inventory = () => {
                     {visibleCount < filteredProducts.length && (
                         <button
                             onClick={handleLoadMore}
-                            className='w-full mt-4 py-2 text-sm font-medium text-on-surface hover:text-surface hover:bg-accent rounded-lg border border-accent transition-colors cursor-pointer px-6'>
-                            Cargar más ({filteredProducts.length - visibleCount} restantes)
+                            className='w-full mt-4 py-2 text-sm font-medium text-on-surface hover:text-surface hover:bg-accent rounded-lg border border-accent transition-colors cursor-pointer px-6 flex items-center justify-center gap-2'>
+                            <ChevronDown className='w-4 h-4' /> Cargar más ({filteredProducts.length - visibleCount} restantes)
                         </button>
                     )}
 
