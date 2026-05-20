@@ -9,13 +9,14 @@ import { ProductGrid } from '../components/ProductGrid'
 import { OrderSidebar } from '../components/OrderSidebar'
 import { SaleConfirmationModal } from '../components/SaleConfirmationModal'
 import { SalesHistoryCard } from '../components/SalesHistoryCard'
+import { apiFetch } from '../../../shared/helpers/apiFetch'
 import { createSale } from '../helpers/createSale'
 import { getSales } from '../helpers/getSales'
 import { returnSale } from '../helpers/returnSale'
 import { getTodayRevenue } from '../helpers/getTodayRevenue'
 
 export const Sales = () => {
-    const { user, products, setProducts, cart, clearCart, setTodayRevenue, setCategories } = useStore()
+    const { user, products, setProducts, cart, clearCart, setTodayRevenue, setCategories, setSubscription } = useStore()
     const [searchTerm, setSearchTerm] = useState('')
     const [loading, setLoading] = useState(false)
     const [, setLastSaleTicket] = useState(null)
@@ -40,13 +41,20 @@ export const Sales = () => {
                 setProducts(productsData)
                 setCategories(categoriesData)
                 setSalesList(salesData)
+
+                const apiUrl = import.meta.env.VITE_API_URL
+                const subResponse = await apiFetch(`${apiUrl}/api/billing/${businessId}`)
+                const subResult = await subResponse.json()
+                if (subResult.data) {
+                    setSubscription(subResult.data)
+                }
             } catch (error) {
                 console.error('Error loading sales data:', error)
                 toast.error('Error al cargar datos de venta')
             }
         }
         loadData()
-    }, [businessId, setProducts])
+    }, [businessId, setProducts, setSubscription])
 
     const filteredProducts = products
         .filter((product) => {

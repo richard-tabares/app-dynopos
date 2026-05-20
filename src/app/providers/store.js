@@ -48,6 +48,10 @@ export const useStore = create(
             setLogOut: () => set({ user: '', token: null, refreshToken: null, cart: [] }),
             setToken: (token) => set({ token }),
             setRefreshToken: (refreshToken) => set({ refreshToken }),
+            setSubscription: (payload) =>
+                set((state) => ({
+                    user: { ...state.user, subscription: payload },
+                })),
             setBusiness: (payload) =>
                 set((state) => ({
                     user: {

@@ -1,9 +1,12 @@
-import { Minus, Plus, Trash2, ShoppingCart, CreditCard, Banknote, ReceiptText } from 'lucide-react'
+import { Minus, Plus, Trash2, ShoppingCart, CreditCard, Banknote, ReceiptText, AlertTriangle } from 'lucide-react'
 import { useStore } from '../../../app/providers/store'
 import { useState } from 'react'
+import { Link } from 'react-router'
 
 export const OrderSidebar = ({ onProcessSale }) => {
-    const { cart, removeFromCart, updateQuantity, clearCart } = useStore()
+    const { user, cart, removeFromCart, updateQuantity, clearCart } = useStore()
+    const subscription = user?.subscription
+    const hasActiveSubscription = subscription?.status === 'active'
 
     const [paymentMethod, setPaymentMethod] = useState('Efectivo')
 
@@ -126,12 +129,27 @@ export const OrderSidebar = ({ onProcessSale }) => {
 
                 <button
                     onClick={() => onProcessSale(paymentMethod, total)}
-                    disabled={!cart?.length}
+                    disabled={!cart?.length || !hasActiveSubscription}
                     className='w-full py-4 bg-accent text-surface rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-accent/85 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer'
                 >
                     <ShoppingCart className='w-5 h-5' />
                     Procesar Venta
                 </button>
+
+                {!hasActiveSubscription && (
+                    <div className='mt-4 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-3'>
+                        <AlertTriangle className='w-5 h-5 text-amber-600 shrink-0 mt-0.5' />
+                        <div className='text-sm text-amber-800'>
+                            <p className='font-semibold'>Suscripción inactiva</p>
+                            <p className='mt-1 text-amber-700'>
+                                Renueva tu plan para seguir procesando ventas.{' '}
+                                <Link to='/settings/billing' className='font-medium underline hover:text-amber-900'>
+                                    Ir a Facturación
+                                </Link>
+                            </p>
+                        </div>
+                    </div>
+                )}
             </div>
         </section>
     )
