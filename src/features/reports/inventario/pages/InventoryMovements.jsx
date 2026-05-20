@@ -175,7 +175,7 @@ export const InventoryMovements = () => {
                         placeholder='Buscar producto...'
                     />
                 </div>
-                <div className='flex gap-1 bg-disabled/70 w-fit rounded-lg p-1 mb-4'>
+                <div className='flex gap-1 bg-disabled/70 overflow-x-auto scrollbar-none rounded-lg p-1 mb-4'>
                     {typeOptions.map(opt => {
                         const Icon = opt.icon
                         return (

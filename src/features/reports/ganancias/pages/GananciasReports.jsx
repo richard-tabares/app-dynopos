@@ -115,7 +115,7 @@ export const GananciasReports = () => {
             />
 
             {loading ? (
-                <div className='grid grid-cols-4 max-lg:grid-cols-2 gap-4'>
+                <div className='grid grid-cols-4 max-lg:grid-cols-2 max-sm:grid-cols-1 gap-4'>
                     {[1, 2, 3, 4].map(i => (
                         <div key={i} className='bg-surface border border-outline p-6 rounded-lg animate-pulse'>
                             <div className='h-4 w-24 bg-gray-200 rounded mb-3' />
@@ -125,41 +125,41 @@ export const GananciasReports = () => {
                 </div>
             ) : (
                     <>
-                    <section className='grid grid-cols-4 max-lg:grid-cols-2 gap-4'>
-                        <section className='bg-surface border border-outline p-6 rounded-lg shadow-xs flex items-center gap-4'>
-                            <div className='p-3 bg-green-100 rounded-xl'>
+                    <section className='grid grid-cols-4 max-lg:grid-cols-2 max-sm:grid-cols-1 gap-4'>
+                        <section className='bg-surface border border-outline p-6 rounded-lg shadow-xs flex items-center gap-4 min-w-0'>
+                            <div className='p-3 bg-green-100 rounded-xl shrink-0'>
                                 <DollarSign className='w-5 h-5 text-green-600' />
                             </div>
-                            <div>
-                                <p className='text-xs text-muted uppercase font-medium tracking-wider'>Ingresos</p>
-                                <p className='text-2xl font-bold text-on-surface'>{formatCurrency(summary?.totalRevenue || 0)}</p>
+                            <div className='min-w-0'>
+                                <p className='text-xs text-muted uppercase font-medium tracking-wider truncate'>Ingresos</p>
+                                <p className='text-2xl font-bold text-on-surface truncate'>{formatCurrency(summary?.totalRevenue || 0)}</p>
                             </div>
                         </section>
-                        <section className='bg-surface border border-outline p-6 rounded-lg shadow-xs flex items-center gap-4'>
-                            <div className='p-3 bg-orange-100 rounded-xl'>
+                        <section className='bg-surface border border-outline p-6 rounded-lg shadow-xs flex items-center gap-4 min-w-0'>
+                            <div className='p-3 bg-orange-100 rounded-xl shrink-0'>
                                 <Package className='w-5 h-5 text-orange-600' />
                             </div>
-                            <div>
-                                <p className='text-xs text-muted uppercase font-medium tracking-wider'>Costos</p>
-                                <p className='text-2xl font-bold text-on-surface'>{formatCurrency(summary?.totalCost || 0)}</p>
+                            <div className='min-w-0'>
+                                <p className='text-xs text-muted uppercase font-medium tracking-wider truncate'>Costos</p>
+                                <p className='text-2xl font-bold text-on-surface truncate'>{formatCurrency(summary?.totalCost || 0)}</p>
                             </div>
                         </section>
-                        <section className='bg-surface border border-outline p-6 rounded-lg shadow-xs flex items-center gap-4'>
-                            <div className='p-3 bg-emerald-100 rounded-xl'>
+                        <section className='bg-surface border border-outline p-6 rounded-lg shadow-xs flex items-center gap-4 min-w-0'>
+                            <div className='p-3 bg-emerald-100 rounded-xl shrink-0'>
                                 <TrendingUp className='w-5 h-5 text-emerald-600' />
                             </div>
-                            <div>
-                                <p className='text-xs text-muted uppercase font-medium tracking-wider'>Ganancia Neta</p>
-                                <p className='text-2xl font-bold text-on-surface'>{formatCurrency(summary?.totalProfit || 0)}</p>
+                            <div className='min-w-0'>
+                                <p className='text-xs text-muted uppercase font-medium tracking-wider truncate'>Ganancia Neta</p>
+                                <p className='text-2xl font-bold text-on-surface truncate'>{formatCurrency(summary?.totalProfit || 0)}</p>
                             </div>
                         </section>
-                        <section className='bg-surface border border-outline p-6 rounded-lg shadow-xs flex items-center gap-4'>
-                            <div className='p-3 bg-teal-100 rounded-xl'>
+                        <section className='bg-surface border border-outline p-6 rounded-lg shadow-xs flex items-center gap-4 min-w-0'>
+                            <div className='p-3 bg-teal-100 rounded-xl shrink-0'>
                                 <Percent className='w-5 h-5 text-teal-600' />
                             </div>
-                            <div>
-                                <p className='text-xs text-muted uppercase font-medium tracking-wider'>Margen Global</p>
-                                <p className='text-2xl font-bold text-on-surface'>{summary?.overallMargin || 0}%</p>
+                            <div className='min-w-0'>
+                                <p className='text-xs text-muted uppercase font-medium tracking-wider truncate'>Margen Global</p>
+                                <p className='text-2xl font-bold text-on-surface truncate'>{summary?.overallMargin || 0}%</p>
                             </div>
                         </section>
                     </section>

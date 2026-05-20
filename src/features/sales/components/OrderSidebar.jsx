@@ -16,7 +16,7 @@ export const OrderSidebar = ({ onProcessSale }) => {
     ]
 
     return (
-        <section className='bg-surface rounded-lg border border-outline shadow-xs flex flex-col lg:h-[calc(100vh-140px)] lg:sticky lg:top-20'>
+        <section className='bg-surface rounded-lg border border-outline shadow-xs flex flex-col lg:h-[calc(100vh-120px)] lg:sticky lg:top-20'>
             <div className='p-6 border-b border-divider-light'>
                 <div className='flex items-center justify-between'>
                     <h2 className='text-xl font-bold flex items-center gap-2'>
