@@ -68,6 +68,9 @@ export const Billing = () => {
             <PaymentMethodCard
                 isAutoRenew={subscription?.auto_renew === true}
                 onToggle={handleToggleAutoRenew}
+                businessId={businessId}
+                customerEmail={user?.business?.email || user?.data?.user?.email}
+                onPaymentMethodUpdated={fetchData}
             />
 
             <PaymentHistoryTable transactions={transactions} loading={loadingTx} />
