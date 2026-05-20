@@ -34,11 +34,7 @@ export const Header = ({ todayRevenue = 0 }) => {
             ${isCollapsed ? 'left-20' : 'left-64'}
             max-lg:left-0 max-lg:w-full`}>
             <section className='flex items-center h-full justify-between px-4 gap-4'>
-                <button
-                    className='p-2 rounded-lg cursor-pointer hidden max-lg:block hover:bg-hover-icon'
-                    onClick={() => setIsMobile(true)}>
-                    <Menu className='w-5 h-5 visible' />
-                </button>
+                <img src="/logo-bykor-symbol.svg" alt="Bykor" className='h-8 hidden max-lg:block pr-4 mr-2 border-r border-divider' />
 
                 {/* Page title and description */}
                 <section className='flex-1'>
@@ -59,9 +55,14 @@ export const Header = ({ todayRevenue = 0 }) => {
                     <section className='p-2 text-on-body hover:bg-hover-icon rounded-lg cursor-pointer hidden'>
                         <Bell className='w-5 h-5' />
                     </section>
-                    <section className='p-2 text-on-body hover:bg-hover-icon rounded-lg cursor-pointer' onClick={toggleDarkMode}>
+                    <section className='p-2 text-on-body hover:bg-hover-icon rounded-lg cursor-pointer max-lg:hidden' onClick={toggleDarkMode}>
                         {isDarkMode ? <Sun className='w-5 h-5' /> : <Moon className='w-5 h-5' />}
                     </section>
+                    <button
+                        className='rounded-lg cursor-pointer hidden max-lg:block hover:bg-hover-icon'
+                        onClick={() => setIsMobile(true)}>
+                        <Menu className='w-5 h-5 visible' />
+                    </button>
                 </section>
             </section>
         </header>

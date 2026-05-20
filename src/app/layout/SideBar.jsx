@@ -128,14 +128,17 @@ export const SideBar = () => {
                     onClick={() => setIsMobile(false)}></section>
             )}
             <aside
-                className={`fixed flex flex-col left-0 top-0 border-r justify-between border-outline h-screen bg-surface z-30 transition-all duration-300 
-                ${isMobile ? 'max-lg:translate-x-0 w-64' : 'max-lg:-translate-x-64'}
+                className={`fixed flex flex-col top-0 justify-between h-screen bg-surface z-30 transition-all duration-300 border-outline
+                lg:left-0 lg:border-r
+                max-lg:right-0 max-lg:border-l
+                ${isMobile ? 'max-lg:translate-x-0' : 'max-lg:translate-x-full'}
                 ${isCollapsed ? 'w-20' : 'w-64'}
                 `}>
                 <section className={`h-16 border-b border-outline flex items-center gap-2 px-3 
                     ${isCollapsed ? 'justify-center' : 'justify-between'}
                 `}>
-                    <img src="/logo-bykor.svg" alt="Bykor" className='h-8 block' />
+                    <img src="/logo-bykor-complete.svg" alt="Bykor" className={`h-8 ${isCollapsed ? 'hidden' : 'block'}`} />
+                    <img src="/logo-bykor-symbol.svg" alt="Bykor" className={`h-8 ${isCollapsed ? 'block' : 'hidden'}`} />
                     <button
                         className={`p-2 rounded-lg cursor-pointer hover:bg-hover-icon hidden lg:block ${isCollapsed ? 'lg:hidden' : ''}`}
                         onClick={() => setIsCollapsed(!isCollapsed)}>
