@@ -1,4 +1,4 @@
-import { apiFetch } from '../../../shared/helpers/apiFetch'
+import { apiFetch } from '../../../../shared/helpers/apiFetch'
 
 export const changePassword = async (data) => {
     const apiUrl = import.meta.env.VITE_API_URL

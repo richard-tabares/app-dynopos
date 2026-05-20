@@ -1,0 +1,128 @@
+import { Crown, Calendar, DollarSign, Loader } from 'lucide-react'
+
+const statusColors = {
+    active: 'text-green-600 bg-green-50 dark:bg-green-900/20',
+    cancelled: 'text-red-600 bg-red-50 dark:bg-red-900/20',
+    expired: 'text-yellow-600 bg-yellow-50 dark:bg-yellow-900/20',
+    trial: 'text-blue-600 bg-blue-50 dark:bg-blue-900/20',
+}
+
+const statusLabels = {
+    active: 'Activa',
+    cancelled: 'Cancelada',
+    expired: 'Expirada',
+    trial: 'Prueba',
+}
+
+const frequencyLabels = {
+    monthly: 'Mensual',
+    quarterly: 'Trimestral',
+    annual: 'Anual',
+}
+
+const formatCurrency = (value) =>
+    new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(value)
+
+const formatDate = (dateStr) =>
+    new Date(dateStr).toLocaleDateString('es-CO', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+    })
+
+export const SubscriptionInfo = ({ subscription, loading }) => {
+    if (loading) {
+        return (
+            <section className='bg-surface border border-outline shadow-sm rounded-lg'>
+                <div className='px-6 py-4 border-b border-divider bg-body/50'>
+                    <h2 className='text-lg font-semibold flex items-center gap-2'>
+                        <Crown className='w-5 h-5 text-accent' />
+                        Información de Suscripción
+                    </h2>
+                </div>
+                <div className='p-6 flex items-center justify-center py-12'>
+                    <Loader className='w-6 h-6 animate-spin text-accent' />
+                </div>
+            </section>
+        )
+    }
+
+    if (!subscription) {
+        return (
+            <section className='bg-surface border border-outline shadow-sm rounded-lg'>
+                <div className='px-6 py-4 border-b border-divider bg-body/50'>
+                    <h2 className='text-lg font-semibold flex items-center gap-2'>
+                        <Crown className='w-5 h-5 text-accent' />
+                        Información de Suscripción
+                    </h2>
+                </div>
+                <div className='p-6 text-center py-12'>
+                    <Crown className='w-12 h-12 text-faint mx-auto mb-3' />
+                    <p className='text-muted'>No tienes una suscripción activa</p>
+                </div>
+            </section>
+        )
+    }
+
+    return (
+        <section className='bg-surface border border-outline shadow-sm rounded-lg'>
+            <div className='px-6 py-4 border-b border-divider bg-body/50'>
+                <h2 className='text-lg font-semibold flex items-center gap-2'>
+                    <Crown className='w-5 h-5 text-accent' />
+                    Información de Suscripción
+                </h2>
+            </div>
+            <div className='p-6'>
+                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6'>
+                    <div>
+                        <p className='text-sm text-muted mb-1'>Plan</p>
+                        <p className='text-lg font-semibold'>{subscription.plan?.name || 'Sin plan'}</p>
+                        {subscription.plan?.description && (
+                            <p className='text-xs text-muted'>{subscription.plan.description}</p>
+                        )}
+                    </div>
+                    <div>
+                        <p className='text-sm text-muted mb-1'>Estado</p>
+                        <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium ${statusColors[subscription.status] || 'text-muted'}`}>
+                            {statusLabels[subscription.status] || subscription.status}
+                        </span>
+                    </div>
+                    <div>
+                        <p className='text-sm text-muted mb-1'>Auto-renovación</p>
+                        <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium ${
+                            subscription.auto_renew
+                                ? 'text-green-600 bg-green-50 dark:bg-green-900/20'
+                                : 'text-yellow-600 bg-yellow-50 dark:bg-yellow-900/20'
+                        }`}>
+                            {subscription.auto_renew ? 'Activa' : 'Inactiva'}
+                        </span>
+                    </div>
+                    <div>
+                        <p className='text-sm text-muted mb-1'>Frecuencia</p>
+                        <p className='text-lg font-semibold flex items-center gap-2'>
+                            <Calendar className='w-4 h-4 text-accent' />
+                            {frequencyLabels[subscription.billing_frequency] || subscription.billing_frequency}
+                        </p>
+                    </div>
+                    <div>
+                        <p className='text-sm text-muted mb-1'>Próxima Facturación</p>
+                        <p className='text-lg font-semibold flex items-center gap-2'>
+                            <DollarSign className='w-4 h-4 text-accent' />
+                            {subscription.current_period_end ? formatDate(subscription.current_period_end) : '—'}
+                        </p>
+                    </div>
+                </div>
+                {subscription.plan?.monthly_price && (
+                    <div className='mt-4 pt-4 border-t border-divider'>
+                        <p className='text-sm text-muted'>
+                            Precio:{' '}
+                            <span className='font-semibold text-on-body'>
+                                ${formatCurrency(subscription.plan.monthly_price)}/mes
+                            </span>
+                        </p>
+                    </div>
+                )}
+            </div>
+        </section>
+    )
+}

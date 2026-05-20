@@ -9,7 +9,8 @@ const pageInfo = [
     { path: '/products', title: 'Gestión de Productos', description: 'Administra tu catálogo de productos' },
     { path: '/inventory', title: 'Inventario', description: 'Controla el stock de tus productos' },
     { path: '/reports', title: 'Reportes', description: 'Visualiza análisis y estadísticas de ventas' },
-    { path: '/settings', title: 'Configuraciones', description: 'Ajusta la configuración de tu negocio' },
+    { path: '/settings/account', title: 'Configuraciones', description: 'Ajusta la configuración de tu negocio' },
+    { path: '/settings/billing', title: 'Facturación', description: 'Gestiona tu suscripción y métodos de pago' },
 ]
 
 export const Header = ({ todayRevenue = 0 }) => {

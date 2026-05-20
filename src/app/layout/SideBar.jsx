@@ -14,7 +14,9 @@ import {
     ChevronDown,
     Undo2,
     Warehouse,
-    TrendingUp
+    TrendingUp,
+    User,
+    CreditCard
 } from 'lucide-react'
 import { useNavigate, NavLink, useLocation } from 'react-router'
 import { useStore } from '../providers/store'
@@ -42,12 +44,18 @@ export const SideBar = () => {
     }, [isMobile, setIsMobile])
 
     const [reportsOpen, setReportsOpen] = useState(location.pathname.startsWith('/reports'))
+    const [settingsOpen, setSettingsOpen] = useState(location.pathname.startsWith('/settings'))
 
     const reportSubItems = [
         { id: 'ventas', label: 'Ventas', icon: ShoppingCart, path: '/reports/ventas' },
         { id: 'inventario', label: 'Inventario', icon: Warehouse, path: '/reports/inventario' },
         { id: 'ganancias', label: 'Ganancias', icon: TrendingUp, path: '/reports/ganancias' },
         { id: 'devoluciones', label: 'Devoluciones', icon: Undo2, path: '/reports/devoluciones' },
+    ]
+
+    const settingsSubItems = [
+        { id: 'account', label: 'Cuenta', icon: User, path: '/settings/account' },
+        { id: 'billing', label: 'Facturación', icon: CreditCard, path: '/settings/billing' },
     ]
 
     const menuItems = [
@@ -92,7 +100,8 @@ export const SideBar = () => {
             id: 'settings',
             label: 'Configuraciones',
             icon: Settings,
-            path: '/settings',
+            path: '#',
+            hasSubmenu: true,
         },
     ]
 
@@ -103,7 +112,9 @@ export const SideBar = () => {
     }
 
     const isActiveParent = (item) => {
-        if (item.hasSubmenu) return location.pathname.startsWith('/reports')
+        if (item.id === 'reports') return location.pathname.startsWith('/reports')
+        if (item.id === 'settings') return location.pathname.startsWith('/settings')
+        if (item.hasSubmenu) return location.pathname.startsWith(`/${item.id}`)
         return location.pathname === item.path
     }
 
@@ -150,15 +161,21 @@ export const SideBar = () => {
                         {menuItems.map((item) => {
                             const Icon = item.icon
                             if (item.hasSubmenu) {
+                                const isOpen = item.id === 'reports' ? reportsOpen : settingsOpen
+                                const toggleOpen = item.id === 'reports'
+                                    ? () => setReportsOpen(!reportsOpen)
+                                    : () => setSettingsOpen(!settingsOpen)
+                                const subItems = item.id === 'reports' ? reportSubItems : settingsSubItems
+
                                 return (
                                     <li key={item.id}>
                                         <button
                                             onClick={() => {
                                                 if (isCollapsed) {
                                                     setIsCollapsed(false)
-                                                    setReportsOpen(true)
+                                                    item.id === 'reports' ? setReportsOpen(true) : setSettingsOpen(true)
                                                 } else {
-                                                    setReportsOpen(!reportsOpen)
+                                                    toggleOpen()
                                                 }
                                             }}
                                             className={`w-full flex items-center text-sm font-semibold px-3 py-2 rounded-lg transition-colors cursor-pointer
@@ -173,12 +190,12 @@ export const SideBar = () => {
                                                 <span className={`${isCollapsed ? 'hidden' : 'block'}`}>{item.label}</span>
                                             </div>
                                             {!isCollapsed && (
-                                                <ChevronDown className={`w-4 h-4 transition-transform ${reportsOpen ? 'rotate-180' : ''}`} />
+                                                <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
                                             )}
                                         </button>
-                                        {!isCollapsed && reportsOpen && (
+                                        {!isCollapsed && isOpen && (
                                             <ul className='mt-1 space-y-1 ml-2'>
-                                                {reportSubItems.map((sub) => {
+                                                {subItems.map((sub) => {
                                                     const SubIcon = sub.icon
                                                     return (
                                                         <li key={sub.id}>

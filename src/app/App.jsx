@@ -11,6 +11,8 @@ import { InventoryMovements } from '../features/reports/inventario/pages/Invento
 import { DevolucionesReports } from '../features/reports/devoluciones/pages/DevolucionesReports'
 import { GananciasReports } from '../features/reports/ganancias/pages/GananciasReports'
 import { Settings } from '../features/settings/pages/Settings'
+import { Account } from '../features/settings/account/pages/Account'
+import { Billing } from '../features/settings/billing/pages/Billing'
 import { Login } from '../features/auth/components/Login'
 import { SignUp } from '../features/auth/components/SignUp'
 import { PaymentStep } from '../features/auth/components/PaymentStep'
@@ -119,10 +121,11 @@ export const App = () => {
                                 <Route path='devoluciones' element={<DevolucionesReports />} />
                                 <Route path='ganancias' element={<GananciasReports />} />
                             </Route>
-                            <Route
-                                path='/settings'
-                                element={<Settings />}
-                            />
+                            <Route path='/settings' element={<Settings />}>
+                                <Route index element={<Navigate to='account' replace />} />
+                                <Route path='account' element={<Account />} />
+                                <Route path='billing' element={<Billing />} />
+                            </Route>
                             <Route
                                 path='/*'
                                 element={<Navigate to='/dashboard' />}
