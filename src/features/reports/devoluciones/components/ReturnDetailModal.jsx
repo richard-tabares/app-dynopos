@@ -21,7 +21,7 @@ export const ReturnDetailModal = ({ isOpen, onClose, data }) => {
 
     return (
         <section
-            className='fixed inset-0 bg-overlay w-full h-full flex flex-col items-center justify-center z-[70]'
+            className='fixed inset-0 bg-overlay w-full h-full flex flex-col items-center justify-center z-[70] p-4'
             onClick={onClose}>
             <section
                 className='bg-surface rounded-lg shadow-2xl w-full max-w-sm relative max-h-[90vh] overflow-y-auto'

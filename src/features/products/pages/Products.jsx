@@ -257,7 +257,7 @@ export const Products = () => {
             {/* Modal crear categoría */}
             {showCategoryModal && (
                 <section
-                    className='fixed inset-0 bg-overlay w-full h-full flex items-center justify-center z-50'>
+                    className='fixed inset-0 bg-overlay w-full h-full flex items-center justify-center z-50 p-4'>
                     <section
                         className='bg-surface rounded-xl border border-outline shadow-lg w-full max-w-md relative overflow-hidden max-h-[90vh] overflow-y-auto'
                         onClick={(e) => e.stopPropagation()}>

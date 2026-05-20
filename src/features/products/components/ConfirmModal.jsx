@@ -8,7 +8,7 @@ export const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message }) => 
 
     return (
         <section
-            className='fixed inset-0 bg-overlay w-full h-full flex flex-col items-center justify-center z-50'>
+            className='fixed inset-0 bg-overlay w-full h-full flex flex-col items-center justify-center z-50 p-4'>
             <section
                 className='bg-surface rounded-xl border border-outline shadow-lg w-full max-w-sm relative max-h-[90vh] overflow-y-auto'
                 onClick={(e) => e.stopPropagation()}>
