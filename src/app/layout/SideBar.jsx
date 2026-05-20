@@ -189,7 +189,7 @@ export const SideBar = () => {
                                             className={`w-full flex items-center text-sm font-semibold px-3 py-2 rounded-lg transition-colors cursor-pointer
                                                 ${isCollapsed ? 'justify-center' : 'justify-between'}
                                                 ${isActiveParent(item)
-                                                    ? 'bg-accent/5 text-accent'
+                                                    ? 'bg-accent/10 text-accent'
                                                     : 'text-on-body hover:bg-accent/5 hover:text-accent'
                                                 }`}
                                         >
@@ -234,11 +234,11 @@ export const SideBar = () => {
                                     <NavLink
                                         to={item.path}
                                         className={({ isActive}) =>
-                                            `flex items-center text-on-body text-sm font-semibold px-3 py-2 rounded-lg
+                                            `flex items-center text-sm font-semibold px-3 py-2 rounded-lg transition-all duration-200
                                             ${isCollapsed ? 'justify-center' : 'justify-start'}
                                             ${
                                                 isActive
-                                                    ? 'bg-accent/5 text-accent'
+                                                    ? 'bg-accent/10 text-accent'
                                                     : 'text-on-body hover:bg-accent/5 hover:text-accent'
                                             }`
                                         }>
@@ -249,7 +249,7 @@ export const SideBar = () => {
                             )
                         })}
                         <li
-                            className={`mt-auto flex items-center text-red-600 text-sm font-semibold hover:bg-red-50 transition px-3 py-2 rounded-lg cursor-pointer ${isCollapsed ? 'justify-center' : 'justify-start'}`}
+                            className={`mt-auto flex items-center text-red-600 text-sm font-semibold hover:bg-red-500/10 transition px-3 py-2 rounded-lg cursor-pointer ${isCollapsed ? 'justify-center' : 'justify-start'}`}
                             onClick={handleLogout}>
                             <LogOut className={`w-5 h-5 ${isCollapsed ? 'mr-0' : 'mr-2'}`} />
                             <span className={`${isCollapsed ? 'hidden' : 'block'}`}>Salir</span>
