@@ -135,19 +135,11 @@ export const SideBar = () => {
                 <section className={`h-16 border-b border-outline flex items-center gap-2 px-3 
                     ${isCollapsed ? 'justify-center' : 'justify-between'}
                 `}>
-                    {user?.business?.business_logo ? (
-                        <img src={user.business.business_logo} alt="Business Logo" className={`w-12 h-12 rounded-full ${isCollapsed ? 'hidden' : 'block'}`} />
-                    ) : (
-                        ''
-                    )}
-                    
-                    <span className={`text-xl font-semibold flex-1 ${isCollapsed ? 'hidden' : 'block'}`}>
-                        {user?.business.business_name || 'Dyno POS'}
-                    </span>
+                    <img src="/logo-bykor.svg" alt="Bykor" className='h-8 block' />
                     <button
-                        className={'p-2 rounded-lg cursor-pointer hover:bg-hover-icon hidden lg:block'}
+                        className={`p-2 rounded-lg cursor-pointer hover:bg-hover-icon hidden lg:block ${isCollapsed ? 'lg:hidden' : ''}`}
                         onClick={() => setIsCollapsed(!isCollapsed)}>
-                        {isCollapsed ? <PanelLeftOpen className='w-5 h-5' /> : <PanelLeftClose className='w-5 h-5' />}
+                        <PanelLeftClose className='w-5 h-5' />
                     </button>
                     <button
                         className='p-2 rounded-lg cursor-pointer hover:bg-hover-icon hidden max-lg:block'
@@ -158,6 +150,15 @@ export const SideBar = () => {
 
                 <nav className='flex-1 p-4 overflow-y-auto'>
                     <ul className='h-full space-y-2 flex flex-col'>
+                        {isCollapsed && (
+                            <li>
+                                <button
+                                    onClick={() => setIsCollapsed(false)}
+                                    className='w-full flex items-center justify-center text-on-body text-sm font-semibold px-3 py-2 rounded-lg hover:bg-hover-strong hover:text-on-surface transition-colors cursor-pointer'>
+                                    <PanelLeftOpen className='w-5 h-5' />
+                                </button>
+                            </li>
+                        )}
                         {menuItems.map((item) => {
                             const Icon = item.icon
                             if (item.hasSubmenu) {
