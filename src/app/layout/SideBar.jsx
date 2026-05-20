@@ -189,7 +189,7 @@ export const SideBar = () => {
                                             className={`w-full flex items-center text-sm font-semibold px-3 py-2 rounded-lg transition-colors cursor-pointer
                                                 ${isCollapsed ? 'justify-center' : 'justify-between'}
                                                 ${isActiveParent(item)
-                                                    ? 'bg-accent text-surface'
+                                                    ? 'bg-accent/5 text-accent'
                                                     : 'text-on-body hover:bg-accent/5 hover:text-accent'
                                                 }`}
                                         >
@@ -211,9 +211,9 @@ export const SideBar = () => {
                                                                 to={sub.path}
                                                                 onClick={() => setIsMobile(false)}
                                                                 className={`flex items-center text-sm font-medium px-3 py-2 rounded-lg transition-colors
-                                                                    ${isActiveSub(sub.path)
-                                                                        ? 'bg-accent text-surface'
-                                                                        : 'text-muted hover:bg-accent/5 hover:text-accent'
+                                                                     ${isActiveSub(sub.path)
+                                                                         ? 'bg-accent/5 text-accent'
+                                                                         : 'text-muted hover:bg-accent/5 hover:text-accent'
                                                                     }`}
                                                             >
                                                                 <SubIcon className='w-4 h-4 mr-2' />
@@ -238,7 +238,7 @@ export const SideBar = () => {
                                             ${isCollapsed ? 'justify-center' : 'justify-start'}
                                             ${
                                                 isActive
-                                                    ? 'bg-accent text-surface'
+                                                    ? 'bg-accent/5 text-accent'
                                                     : 'text-on-body hover:bg-accent/5 hover:text-accent'
                                             }`
                                         }>
