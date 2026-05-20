@@ -187,7 +187,7 @@ export const SalesReports = () => {
                 </div>
             </div>
 
-            <RecentSalesTable sales={data?.recentSales || []} />
+            <RecentSalesTable sales={data?.recentSales || []} onSaleUpdated={fetchData} />
 
             <div>
                 <AvgTicketCard

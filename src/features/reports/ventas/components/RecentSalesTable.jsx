@@ -1,6 +1,11 @@
 import { useState, useMemo } from 'react'
-import { Clock, Search, ReceiptText, ChevronDown } from 'lucide-react'
+import { Clock, Search, ReceiptText, ChevronDown, RotateCcw } from 'lucide-react'
+import { toast } from 'react-toastify'
 import { SaleTicketModal } from '../../../../shared/components/SaleTicketModal'
+import { ReturnModal } from '../../../sales/components/ReturnModal'
+import { returnSale } from '../../../sales/helpers/returnSale'
+import { getTodayRevenue } from '../../../sales/helpers/getTodayRevenue'
+import { useStore } from '../../../../app/providers/store'
 
 const formatCurrency = (value) =>
     new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(value)
@@ -13,20 +18,39 @@ const statusConfig = {
 
 const getStatusConfig = (status) => statusConfig[status] || statusConfig.default
 
-export const RecentSalesTable = ({ sales = [] }) => {
+export const RecentSalesTable = ({ sales = [], onSaleUpdated }) => {
+    const user = useStore((s) => s.user)
+    const setTodayRevenue = useStore((s) => s.setTodayRevenue)
+    const businessId = user?.data?.user?.id
     const [visibleCount, setVisibleCount] = useState(10)
     const [search, setSearch] = useState('')
     const [selectedSale, setSelectedSale] = useState(null)
+    const [returnTarget, setReturnTarget] = useState(null)
 
     const filtered = useMemo(() => {
         if (!search.trim()) return sales
         const term = search.trim()
-        return sales.filter(sale =>
-            String(sale.ticketNumber ?? sale.id).includes(term)
-        )
+        return sales.filter(sale => {
+            const displayId = String(sale.ticketNumber ?? '').padStart(4, '0')
+            return displayId.includes(term) || (sale.id && sale.id.includes(term))
+        })
     }, [sales, search])
 
     const visible = filtered.slice(0, visibleCount)
+
+    const handleReturn = async (sale, reason, items) => {
+        try {
+            await returnSale(sale.id, { reason, businessId, items })
+            toast.success('Devolución procesada exitosamente')
+            setReturnTarget(null)
+            onSaleUpdated?.()
+            const revenueData = await getTodayRevenue(businessId)
+            setTodayRevenue(revenueData.todayRevenue)
+        } catch (err) {
+            toast.error(err.message || 'Error al procesar la devolución')
+            throw err
+        }
+    }
 
     return (
         <>
@@ -59,6 +83,7 @@ export const RecentSalesTable = ({ sales = [] }) => {
                                         <th className='text-left py-3 px-4 font-medium'>Estado</th>
                                         <th className='text-right py-3 px-4 font-medium'>Items</th>
                                         <th className='text-right py-3 px-4 font-medium'>Total</th>
+                                        <th className='text-center py-3 px-4 font-medium'>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -85,6 +110,22 @@ export const RecentSalesTable = ({ sales = [] }) => {
                                                 </td>
                                                 <td className='py-3 px-4 text-right text-on-surface'>{sale.itemsCount}</td>
                                                 <td className='py-3 px-4 text-right font-bold text-on-surface'>{formatCurrency(sale.total)}</td>
+                                                <td className='py-3 px-4 text-center'>
+                                                    {sale.status !== 'returned' ? (
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation()
+                                                                setReturnTarget(sale)
+                                                            }}
+                                                            className='p-2 text-red-500 hover:bg-red-100 rounded-lg transition-colors cursor-pointer'
+                                                            title='Devolver venta'
+                                                        >
+                                                            <RotateCcw className='w-4 h-4' />
+                                                        </button>
+                                                    ) : (
+                                                        <span className='text-xs text-muted italic'>—</span>
+                                                    )}
+                                                </td>
                                             </tr>
                                         )
                                     })}
@@ -108,7 +149,18 @@ export const RecentSalesTable = ({ sales = [] }) => {
             <SaleTicketModal
                 isOpen={!!selectedSale}
                 onClose={() => setSelectedSale(null)}
+                onSaleUpdated={onSaleUpdated}
                 sale={selectedSale}
+            />
+
+            <ReturnModal
+                key={returnTarget?.id || 'closed'}
+                isOpen={!!returnTarget}
+                sale={returnTarget}
+                onClose={() => setReturnTarget(null)}
+                onConfirm={async (reason, items) => {
+                    await handleReturn(returnTarget, reason, items)
+                }}
             />
         </>
     )

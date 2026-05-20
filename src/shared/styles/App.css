@@ -83,7 +83,7 @@
     }
 
     * {
-        @apply focus:outline-none focus-visible:ring-8 focus-visible:ring-accent focus-visible:ring-offset-0;
+        @apply focus:outline-none focus-visible:ring-0 focus-visible:ring-accent focus-visible:ring-offset-0;
     }
 
     .scrollbar-none {

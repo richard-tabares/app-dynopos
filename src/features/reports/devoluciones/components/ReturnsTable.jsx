@@ -10,10 +10,11 @@ export const ReturnsTable = ({ data = [], onReturnClick }) => {
 
     const filtered = useMemo(() => {
         if (!search.trim()) return data
-        const term = search.toLowerCase()
-        return data.filter(item =>
-            String(item.ticket_number ?? item.return_id ?? '').includes(term)
-        )
+        const term = search.trim()
+        return data.filter(item => {
+            const displayId = String(item.ticket_number ?? item.return_id ?? '').padStart(4, '0')
+            return displayId.includes(term)
+        })
     }, [data, search])
 
     const visible = filtered.slice(0, visibleCount)

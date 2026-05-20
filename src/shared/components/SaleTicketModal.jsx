@@ -1,10 +1,16 @@
-import { X, Printer, ReceiptText } from 'lucide-react'
+import { useState } from 'react'
+import { X, Printer, ReceiptText, Pencil, Check, XCircle } from 'lucide-react'
+import { toast } from 'react-toastify'
 import { useStore } from '../../app/providers/store'
 import { useEscape } from '../helpers/useEscape'
+import { updateSaleDate } from '../../features/sales/helpers/updateSaleDate'
 
-export const SaleTicketModal = ({ isOpen, onClose, sale }) => {
+export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
     const business = useStore((state) => state.user.business)
     const ticketFooter = business?.ticket_footer || ''
+    const [editingDate, setEditingDate] = useState(false)
+    const [newDate, setNewDate] = useState('')
+    const [saving, setSaving] = useState(false)
 
     useEscape(onClose)
 
@@ -16,6 +22,35 @@ export const SaleTicketModal = ({ isOpen, onClose, sale }) => {
             currency: 'COP', 
             maximumFractionDigits: 0 
         }).format(value)
+
+    const handleStartEdit = () => {
+        setNewDate(sale.date || '')
+        setEditingDate(true)
+    }
+
+    const handleCancelEdit = () => {
+        setEditingDate(false)
+        setNewDate('')
+    }
+
+    const handleSaveDate = async () => {
+        if (!newDate || newDate === sale.date) {
+            setEditingDate(false)
+            return
+        }
+        try {
+            setSaving(true)
+            await updateSaleDate(sale.id, newDate)
+            toast.success('Fecha actualizada correctamente')
+            setEditingDate(false)
+            onClose()
+            onSaleUpdated?.()
+        } catch (err) {
+            toast.error(err.message || 'Error al actualizar la fecha')
+        } finally {
+            setSaving(false)
+        }
+    }
 
     return (
         <section
@@ -47,15 +82,16 @@ export const SaleTicketModal = ({ isOpen, onClose, sale }) => {
                         padding: 0;
                         background: white;
                     }
+                    .no-print { display: none !important; }
                 }
             `}} />
 
             <section
                 className='bg-surface rounded-lg shadow-2xl w-full max-w-sm relative overflow-hidden print-content print:shadow-none print:max-w-none print:w-[57mm] print:rounded-none print:border-none'
                 onClick={(e) => e.stopPropagation()}
-                onKeyDown={(e) => e.key === 'Enter' && window.print()}>
+                onKeyDown={(e) => e.key === 'Enter' && !editingDate && window.print()}>
                 
-                <div className='bg-accent p-4 text-surface flex justify-between items-center print:hidden'>
+                <div className='bg-accent p-4 text-surface flex justify-between items-center no-print'>
                     <div className='flex items-center gap-2'>
                         <ReceiptText className='w-5 h-5' />
                         <span className='font-bold uppercase tracking-widest text-sm'>Ticket de Venta</span>
@@ -76,9 +112,28 @@ export const SaleTicketModal = ({ isOpen, onClose, sale }) => {
                             <span className='text-muted uppercase shrink-0'>Orden:</span>
                             <span className='font-bold text-on-surface truncate'>#{String(sale.ticketNumber || sale.id).padStart(4, '0')}</span>
                         </div>
-                        <div className='flex justify-between gap-1'>
+                        <div className='flex justify-between gap-1 items-center'>
                             <span className='text-muted uppercase shrink-0'>Fecha:</span>
-                            <span className='text-on-surface font-medium truncate'>{sale.date}</span>
+                            {editingDate ? (
+                                <input
+                                    type='date'
+                                    value={newDate}
+                                    onChange={(e) => setNewDate(e.target.value)}
+                                    className='w-40 text-right text-on-surface font-medium bg-subtle border border-accent rounded px-1 py-0.5 text-[11px] focus:outline-none'
+                                    autoFocus
+                                />
+                            ) : (
+                                <span className='text-on-surface font-medium truncate flex items-center gap-1'>
+                                    <button
+                                        onClick={handleStartEdit}
+                                        className='p-1 text-muted hover:text-accent transition decoration-neutral-200 cursor-pointer no-print shrink-0'
+                                        title='Cambiar fecha'
+                                    >
+                                        <Pencil className='w-3 h-3' />
+                                    </button>
+                                    {sale.date}
+                                </span>
+                            )}
                         </div>
                         <div className='flex justify-between gap-1'>
                             <span className='text-muted uppercase shrink-0'>Pago:</span>
@@ -120,14 +175,39 @@ export const SaleTicketModal = ({ isOpen, onClose, sale }) => {
                     </div>
                 </div>
 
-                <div className='p-4 bg-subtle border-t border-divider-light flex gap-2 print:hidden'>
-                    <button 
-                        className='flex-1 flex items-center justify-center gap-2 bg-accent text-surface py-2 rounded-lg font-bold hover:bg-accent/85 transition text-sm cursor-pointer'
-                        onClick={() => window.print()}
-                    >
-                        <Printer className='w-4 h-4' />
-                        Imprimir
-                    </button>
+                <div className='p-4 bg-subtle border-t border-divider-light flex gap-2 no-print'>
+                    {editingDate ? (
+                        <>
+                            <button
+                                onClick={handleCancelEdit}
+                                disabled={saving}
+                                className='flex-1 flex items-center justify-center gap-2 border border-divider text-on-surface py-2 rounded-lg font-bold hover:bg-hover transition text-sm cursor-pointer disabled:opacity-50'
+                            >
+                                <XCircle className='w-4 h-4' />
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={handleSaveDate}
+                                disabled={saving || !newDate}
+                                className='flex-1 flex items-center justify-center gap-2 bg-accent text-surface py-2 rounded-lg font-bold hover:bg-accent/85 transition text-sm cursor-pointer disabled:opacity-50'
+                            >
+                                {saving ? (
+                                    <span className='w-4 h-4 border-2 border-surface border-t-transparent rounded-full animate-spin' />
+                                ) : (
+                                    <Check className='w-4 h-4' />
+                                )}
+                                {saving ? 'Guardando...' : 'Guardar'}
+                            </button>
+                        </>
+                    ) : (
+                        <button 
+                            className='flex-1 flex items-center justify-center gap-2 bg-accent text-surface py-2 rounded-lg font-bold hover:bg-accent/85 transition text-sm cursor-pointer'
+                            onClick={() => window.print()}
+                        >
+                            <Printer className='w-4 h-4' />
+                            Imprimir
+                        </button>
+                    )}
                 </div>
             </section>
         </section>

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { X, CreditCard, Lock, ShieldCheck, Loader } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { apiFetch } from '../../../../shared/helpers/apiFetch'
@@ -18,6 +18,15 @@ export const UpdatePaymentMethodModal = ({ isOpen, onClose, businessId, customer
         cvc: '',
         card_holder: '',
     })
+
+    useEffect(() => {
+        if (!isOpen) {
+            setForm({ card_number: '', exp_month: '', exp_year: '', cvc: '', card_holder: '' })
+            setAcceptedReglamento(false)
+            setAcceptedDatos(false)
+            setLoading(false)
+        }
+    }, [isOpen])
 
     const handleChange = (e) => {
         const { name, value } = e.target
