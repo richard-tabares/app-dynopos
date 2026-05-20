@@ -436,7 +436,7 @@ Iconos por período:
   value={value}
   onChange={onChange}
   placeholder='Placeholder'
-  className='w-full px-4 py-2 border border-gray-300 rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-0'
+  className='w-full px-4 py-2 border border-gray-300 rounded-lg duration-300 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-0'
 />
 ```
 
@@ -445,7 +445,7 @@ Iconos por período:
 <select
   value={value}
   onChange={onChange}
-  className='w-full px-4 py-2 border border-gray-300 rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-0'
+  className='w-full px-4 py-2 border border-gray-300 rounded-lg duration-300 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-0'
 >
   <option value=''>Seleccionar</option>
   {options.map(opt => <option key={opt.id} value={opt.id}>{opt.name}</option>)}
@@ -473,7 +473,7 @@ Iconos por período:
   value={value}
   onChange={onChange}
   placeholder='Placeholder'
-  className='w-full px-4 py-2 border border-gray-300 rounded-lg duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-0 resize-none'
+  className='w-full px-4 py-2 border border-gray-300 rounded-lg duration-300 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-0 resize-none'
   rows={3}
 />
 ```
