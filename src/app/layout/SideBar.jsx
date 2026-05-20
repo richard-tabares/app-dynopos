@@ -21,6 +21,8 @@ import {
 import { useNavigate, NavLink, useLocation } from 'react-router'
 import { useStore } from '../providers/store'
 import { logout } from '../../features/auth/helpers/logout'
+import { LogoComplete } from '../../shared/components/LogoComplete'
+import { LogoSymbol } from '../../shared/components/LogoSymbol'
 
 export const SideBar = () => {
     const isMobile = useStore((state) => state.isMobile)
@@ -139,8 +141,8 @@ export const SideBar = () => {
                         ${isCollapsed ? 'justify-center' : 'justify-between'}
                     `}>
                         <section className='flex items-center self-stretch'>
-                            <img src="/logo-bykor-complete.svg" alt="Bykor" className={`h-8 ${isCollapsed ? 'hidden' : 'block'}`} />
-                            <img src="/logo-bykor-symbol.svg" alt="Bykor" className={`h-8 ${isCollapsed ? 'block' : 'hidden'}`} />
+                            <LogoComplete className={`h-8 ${isCollapsed ? 'hidden' : 'block'}`} />
+                            <LogoSymbol className={`h-8 ${isCollapsed ? 'block' : 'hidden'}`} />
                         </section>
                         <button
                             className={`p-2 rounded-lg cursor-pointer hover:bg-accent/5  hover:text-accent hidden lg:block ${isCollapsed ? 'lg:hidden' : ''}`}

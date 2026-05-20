@@ -1,6 +1,7 @@
 import { Bell, Menu, MessageCircleQuestionMark } from 'lucide-react'
 import { useStore } from '../providers/store'
 import { useLocation } from 'react-router'
+import { LogoSymbol } from '../../shared/components/LogoSymbol'
 
 const pageInfo = [
     { path: '/dashboard', title: 'Dashboard', description: 'Resumen general de tu negocio' },
@@ -33,7 +34,7 @@ export const Header = ({ todayRevenue = 0 }) => {
             max-lg:left-0 max-lg:w-full`}>
             <section className='flex items-center justify-between px-4 gap-4 min-h-16'>
                 <section className='hidden max-lg:flex items-center self-stretch pr-4 mr-2 border-r border-outline'>
-                    <img src="/logo-bykor-symbol.svg" alt="Bykor" className='h-8' />
+                    <LogoSymbol className='h-8' />
                 </section>
 
                 {/* Page title and description */}
