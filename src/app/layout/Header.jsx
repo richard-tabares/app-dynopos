@@ -31,7 +31,7 @@ export const Header = ({ todayRevenue = 0 }) => {
         <header className={`fixed bg-surface top-0 border-b border-outline right-0 z-50 transition-all duration-300 
             ${isCollapsed ? 'left-20' : 'left-64'}
             max-lg:left-0 max-lg:w-full`}>
-            <section className='flex items-center justify-between px-4 gap-4 min-h-16 max-sm:min-h-0'>
+            <section className='flex items-center justify-between px-4 gap-4 min-h-16'>
                 <section className='hidden max-lg:flex items-center self-stretch pr-4 mr-2 border-r border-outline'>
                     <img src="/logo-bykor-symbol.svg" alt="Bykor" className='h-8' />
                 </section>
@@ -42,7 +42,7 @@ export const Header = ({ todayRevenue = 0 }) => {
                     <p className='text-muted text-sm max-sm:hidden'>
                         {description}
                     </p>
-                    <p className='text-muted text-sm hidden max-sm:block'>
+                    <p className='text-muted text-sm hidden max-sm:block max-xs:!hidden'>
                         Ventas hoy: <span className='text-green-600 font-bold'>${formatCurrency(todayRevenue)}</span>
                     </p>
                 </section>
@@ -58,11 +58,11 @@ export const Header = ({ todayRevenue = 0 }) => {
                     <section className='p-2 text-on-body hover:text-accent rounded-lg cursor-pointer transition-all duration-300'>
                         <Bell className='w-5 h-5' />
                     </section>
-                    <section className='p-2 text-on-body hover:text-accent rounded-lg cursor-pointer transition-all duration-300 max-lg:hidden'>
+                    <section className='p-2 text-on-body hover:text-accent rounded-lg cursor-pointer transition-all duration-300'>
                         <MessageCircleQuestionMark className='w-5 h-5' />
                     </section>
                     <button
-                        className='rounded-lg cursor-pointer hidden max-lg:block hover:bg-hover-icon'
+                        className='rounded-lg cursor-pointer hidden max-lg:block hover:bg-accent/5 hover:text-accent duration-300 transition p-2'
                         onClick={() => setIsMobile(true)}>
                         <Menu className='w-5 h-5 visible' />
                     </button>

@@ -143,12 +143,12 @@ export const SideBar = () => {
                             <img src="/logo-bykor-symbol.svg" alt="Bykor" className={`h-8 ${isCollapsed ? 'block' : 'hidden'}`} />
                         </section>
                         <button
-                            className={`p-2 rounded-lg cursor-pointer hover:bg-hover-icon hidden lg:block ${isCollapsed ? 'lg:hidden' : ''}`}
+                            className={`p-2 rounded-lg cursor-pointer hover:bg-accent/5  hover:text-accent hidden lg:block ${isCollapsed ? 'lg:hidden' : ''}`}
                             onClick={() => setIsCollapsed(!isCollapsed)}>
                             <PanelLeftClose className='w-5 h-5' />
                         </button>
                         <button
-                            className='p-2 rounded-lg cursor-pointer hover:bg-hover-icon hidden max-lg:block'
+                            className='p-2 rounded-lg cursor-pointer hover:bg-accent/5 hover:text-accent hidden max-lg:block'
                             onClick={() => setIsMobile(false)}>
                             <X className='w-5 h-5' />
                         </button>
@@ -161,7 +161,7 @@ export const SideBar = () => {
                             <li>
                                 <button
                                     onClick={() => setIsCollapsed(false)}
-                                    className='w-full flex items-center justify-center text-on-body text-sm font-semibold px-3 py-2 rounded-lg hover:bg-hover-strong hover:text-on-surface transition-colors cursor-pointer'>
+                                    className='w-full flex items-center justify-center text-on-body text-sm font-semibold px-3 py-2 rounded-lg hover:bg-accent/5 hover:text-accent transition-colors cursor-pointer'>
                                     <PanelLeftOpen className='w-5 h-5' />
                                 </button>
                             </li>
@@ -190,7 +190,7 @@ export const SideBar = () => {
                                                 ${isCollapsed ? 'justify-center' : 'justify-between'}
                                                 ${isActiveParent(item)
                                                     ? 'bg-accent text-surface'
-                                                    : 'text-on-body hover:bg-hover-strong hover:text-on-surface'
+                                                    : 'text-on-body hover:bg-accent/5 hover:text-accent'
                                                 }`}
                                         >
                                             <div className={`flex items-center ${isCollapsed ? '' : ''}`}>
@@ -213,7 +213,7 @@ export const SideBar = () => {
                                                                 className={`flex items-center text-sm font-medium px-3 py-2 rounded-lg transition-colors
                                                                     ${isActiveSub(sub.path)
                                                                         ? 'bg-accent text-surface'
-                                                                        : 'text-muted hover:bg-hover-strong hover:text-on-surface'
+                                                                        : 'text-muted hover:bg-accent/5 hover:text-accent'
                                                                     }`}
                                                             >
                                                                 <SubIcon className='w-4 h-4 mr-2' />
@@ -239,7 +239,7 @@ export const SideBar = () => {
                                             ${
                                                 isActive
                                                     ? 'bg-accent text-surface'
-                                                    : 'text-on-body hover:bg-hover-strong hover:text-on-surface'
+                                                    : 'text-on-body hover:bg-accent/5 hover:text-accent'
                                             }`
                                         }>
                                         <Icon className={`w-5 h-5 ${isCollapsed ? 'mr-0' : 'mr-2'}`} />
