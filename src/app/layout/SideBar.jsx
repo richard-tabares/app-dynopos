@@ -124,7 +124,7 @@ export const SideBar = () => {
         <>
             {isMobile && (
                 <section
-                    className='fixed inset-0 bg-overlay opacity-100 z-20 lg:hidden'
+                    className='fixed inset-0 bg-overlay backdrop-blur-xs opacity-100 z-20 lg:hidden'
                     onClick={() => setIsMobile(false)}></section>
             )}
             <aside

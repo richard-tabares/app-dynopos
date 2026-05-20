@@ -15,7 +15,7 @@ export const SaleConfirmationModal = ({
 
     return (
         <section
-            className='fixed inset-0 bg-overlay w-full h-full flex flex-col items-center justify-center z-50 p-4'>
+            className='fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex flex-col items-center justify-center z-50 p-4'>
             <section
                 className='bg-surface rounded-xl border border-outline shadow-lg w-full max-w-md relative max-h-[90vh] flex flex-col'
                 onClick={(e) => e.stopPropagation()}

@@ -110,7 +110,7 @@ export const UpdatePaymentMethodModal = ({ isOpen, onClose, businessId, customer
     if (!isOpen) return null
 
     return (
-        <section className='fixed inset-0 z-50 flex items-center justify-center bg-overlay p-4'>
+        <section className='fixed inset-0 z-50 flex items-center justify-center bg-overlay backdrop-blur-xs p-4'>
             <section className='bg-surface rounded-xl border border-outline shadow-lg w-full max-w-lg max-h-[90vh] overflow-y-auto'>
                 <section className='flex items-center justify-between px-6 py-4 border-b border-divider'>
                     <h2 className='text-lg font-semibold flex items-center gap-2'>

@@ -123,7 +123,7 @@ export const DevolucionesReports = () => {
             <ReturnsTable data={data?.list || []} onReturnClick={handleReturnClick} />
 
             {detailLoading && (
-                <div className='fixed inset-0 bg-overlay flex items-center justify-center z-[70]'>
+                <div className='fixed inset-0 bg-overlay backdrop-blur-xs flex items-center justify-center z-[70]'>
                     <div className='bg-surface p-6 rounded-lg shadow-lg'>
                         <div className='animate-spin w-8 h-8 border-4 border-accent border-t-transparent rounded-full mx-auto' />
                         <p className='text-sm text-muted mt-3'>Cargando detalle...</p>

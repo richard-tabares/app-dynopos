@@ -110,7 +110,7 @@ export const Categories = () => {
         <>
             {/* Create/Edit Modal */}
             {showModal && (
-                <section className='fixed inset-0 bg-overlay w-full h-full flex items-center justify-center z-50 p-4'>
+                <section className='fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex items-center justify-center z-50 p-4'>
                     <section className='bg-surface rounded-xl border border-outline shadow-lg w-full max-w-md relative overflow-hidden'>
                         <div className='px-6 py-4 border-b border-divider flex items-center justify-between'>
                             <h3 className='text-lg font-semibold flex items-center gap-2'>
@@ -174,7 +174,7 @@ export const Categories = () => {
             {/* Delete Confirmation */}
             {showDeleteConfirm && (
                 <section
-                    className='fixed inset-0 bg-overlay w-full h-full flex items-center justify-center z-50 p-4'>
+                    className='fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex items-center justify-center z-50 p-4'>
                     <section
                         className='bg-surface rounded-xl border border-outline shadow-lg w-full max-w-sm relative overflow-hidden'
                         onClick={(e) => e.stopPropagation()}>

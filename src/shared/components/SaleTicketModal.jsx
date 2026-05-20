@@ -19,7 +19,7 @@ export const SaleTicketModal = ({ isOpen, onClose, sale }) => {
 
     return (
         <section
-            className='fixed inset-0 bg-overlay w-full h-full flex flex-col items-center justify-center z-[70] p-4 print:relative print:bg-white print:inset-auto print:h-auto print:w-auto print:block'
+            className='fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex flex-col items-center justify-center z-[70] p-4 print:relative print:bg-white print:inset-auto print:h-auto print:w-auto print:block'
             onClick={onClose}>
             
             <style dangerouslySetInnerHTML={{ __html: `
