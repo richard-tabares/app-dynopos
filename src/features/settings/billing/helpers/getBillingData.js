@@ -44,6 +44,18 @@ export const cancelRecurring = async (businessId) => {
     }
 }
 
+export const payNow = async (businessId) => {
+    try {
+        const response = await apiFetch(`${apiUrl}/api/billing/${businessId}/pay-now`, {
+            method: 'POST',
+        })
+        return await handleResponse(response)
+    } catch (error) {
+        console.error('Error processing payment:', error.message)
+        throw error
+    }
+}
+
 export const reactivateSubscription = async (businessId) => {
     try {
         const response = await apiFetch(`${apiUrl}/api/billing/${businessId}/reactivate`, {

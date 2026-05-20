@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useStore } from '../../../../app/providers/store'
-import { getSubscription, getTransactions, cancelRecurring, reactivateSubscription } from '../helpers/getBillingData'
+import { getSubscription, getTransactions, cancelRecurring, reactivateSubscription, payNow } from '../helpers/getBillingData'
 import { SubscriptionInfo } from '../components/SubscriptionInfo'
 import { PaymentMethodCard } from '../components/PaymentMethodCard'
 import { PaymentHistoryTable } from '../components/PaymentHistoryTable'
@@ -14,6 +14,7 @@ export const Billing = () => {
     const [transactions, setTransactions] = useState([])
     const [loadingSub, setLoadingSub] = useState(true)
     const [loadingTx, setLoadingTx] = useState(true)
+    const [isPaying, setIsPaying] = useState(false)
 
     const fetchData = useCallback(async () => {
         if (!businessId) return
@@ -39,6 +40,40 @@ export const Billing = () => {
         fetchData()
     }, [fetchData])
 
+    const refreshBillingData = useCallback(async () => {
+        if (!businessId) return
+        try {
+            const [subResult, txResult] = await Promise.all([
+                getSubscription(businessId),
+                getTransactions(businessId),
+            ])
+            setSubscription(subResult)
+            setTransactions(txResult || [])
+        } catch (error) {
+            console.error('Error refreshing billing data:', error)
+        }
+    }, [businessId])
+
+    const handlePayNow = useCallback(async () => {
+        setIsPaying(true)
+        try {
+            const result = await payNow(businessId)
+            if (result.renewed) {
+                toast.success('Suscripción renovada exitosamente')
+            } else if (result.transaction?.status === 'pending') {
+                toast.info('El pago está pendiente de confirmación. Se actualizará automáticamente.')
+            } else {
+                toast.error('No se pudo renovar la suscripción. Verifica tu método de pago.')
+            }
+            await refreshBillingData()
+        } catch (error) {
+            toast.error(error.message || 'Error al procesar el pago')
+            await refreshBillingData()
+        } finally {
+            setIsPaying(false)
+        }
+    }, [businessId, refreshBillingData])
+
     const handleToggleAutoRenew = useCallback(async (newValue) => {
         const prev = subscription
         setSubscription((s) => s ? { ...s, auto_renew: newValue } : s)
@@ -56,20 +91,6 @@ export const Billing = () => {
         }
     }, [subscription, businessId])
 
-    const refreshBillingData = useCallback(async () => {
-        if (!businessId) return
-        try {
-            const [subResult, txResult] = await Promise.all([
-                getSubscription(businessId),
-                getTransactions(businessId),
-            ])
-            setSubscription(subResult)
-            setTransactions(txResult || [])
-        } catch (error) {
-            console.error('Error refreshing billing data:', error)
-        }
-    }, [businessId])
-
     return (
         <section className='flex flex-col gap-6'>
             <section>
@@ -77,7 +98,13 @@ export const Billing = () => {
                 <p className='text-on-body'>Gestiona tu suscripción y métodos de pago</p>
             </section>
 
-            <SubscriptionInfo subscription={subscription} loading={loadingSub} />
+            <SubscriptionInfo
+                subscription={subscription}
+                loading={loadingSub}
+                onPayNow={handlePayNow}
+                isPaying={isPaying}
+                hasPaymentSource={!!subscription?.wompi_payment_source_id}
+            />
 
             <PaymentMethodCard
                 isAutoRenew={subscription?.auto_renew === true}
