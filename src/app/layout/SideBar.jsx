@@ -134,21 +134,25 @@ export const SideBar = () => {
                 ${isMobile ? 'max-lg:translate-x-0' : 'max-lg:translate-x-full'}
                 ${isCollapsed ? 'w-20' : 'w-64'}
                 `}>
-                <section className={`h-16 border-b border-outline flex items-center gap-2 px-3 
-                    ${isCollapsed ? 'justify-center' : 'justify-between'}
-                `}>
-                    <img src="/logo-bykor-complete.svg" alt="Bykor" className={`h-8 ${isCollapsed ? 'hidden' : 'block'}`} />
-                    <img src="/logo-bykor-symbol.svg" alt="Bykor" className={`h-8 ${isCollapsed ? 'block' : 'hidden'}`} />
-                    <button
-                        className={`p-2 rounded-lg cursor-pointer hover:bg-hover-icon hidden lg:block ${isCollapsed ? 'lg:hidden' : ''}`}
-                        onClick={() => setIsCollapsed(!isCollapsed)}>
-                        <PanelLeftClose className='w-5 h-5' />
-                    </button>
-                    <button
-                        className='p-2 rounded-lg cursor-pointer hover:bg-hover-icon hidden max-lg:block'
-                        onClick={() => setIsMobile(false)}>
-                        <X className='w-5 h-5' />
-                    </button>
+                <section className='border-b border-outline shrink-0'>
+                    <section className={`flex items-center gap-2 px-3 min-h-16
+                        ${isCollapsed ? 'justify-center' : 'justify-between'}
+                    `}>
+                        <section className='flex items-center self-stretch'>
+                            <img src="/logo-bykor-complete.svg" alt="Bykor" className={`h-8 ${isCollapsed ? 'hidden' : 'block'}`} />
+                            <img src="/logo-bykor-symbol.svg" alt="Bykor" className={`h-8 ${isCollapsed ? 'block' : 'hidden'}`} />
+                        </section>
+                        <button
+                            className={`p-2 rounded-lg cursor-pointer hover:bg-hover-icon hidden lg:block ${isCollapsed ? 'lg:hidden' : ''}`}
+                            onClick={() => setIsCollapsed(!isCollapsed)}>
+                            <PanelLeftClose className='w-5 h-5' />
+                        </button>
+                        <button
+                            className='p-2 rounded-lg cursor-pointer hover:bg-hover-icon hidden max-lg:block'
+                            onClick={() => setIsMobile(false)}>
+                            <X className='w-5 h-5' />
+                        </button>
+                    </section>
                 </section>
 
                 <nav className='flex-1 p-4 overflow-y-auto'>

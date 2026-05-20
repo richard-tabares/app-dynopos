@@ -13,7 +13,7 @@ export const ProductCard = ({ product }) => {
         <button
             onClick={() => addToCart(product)}
             disabled={!noStockControl && availableStock <= 0}
-            className={`bg-surface p-4 rounded-lg border transition-all duration-200 flex items-center justify-between group ${
+            className={`bg-surface p-4 rounded-lg border transition-all duration-300 flex items-center justify-between group ${
                 !noStockControl && availableStock <= 0
                     ? 'border-divider opacity-50 cursor-not-allowed bg-subtle grayscale' 
                     : 'border-divider hover:border-accent/85 hover:bg-hover cursor-pointer'

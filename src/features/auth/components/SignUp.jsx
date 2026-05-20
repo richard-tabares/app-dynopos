@@ -342,7 +342,7 @@ export const SignUp = () => {
                             />
                             <button
                                 type='button'
-                                className='absolute right-3 bg-transparent border-none cursor-pointer text-lg p-1 text-accent hover:scale-110 transition-transform duration-200'
+                                className='absolute right-3 bg-transparent border-none cursor-pointer text-lg p-1 text-accent hover:scale-110 transition-transform duration-300'
                                 onClick={() => setShowPassword(!showPassword)}>
                                 {showPassword ? <Eye /> : <EyeClosed />}
                             </button>
@@ -398,7 +398,7 @@ export const SignUp = () => {
                             />
                             <button
                                 type='button'
-                                className='absolute right-3 bg-transparent border-none cursor-pointer text-lg p-1 text-accent hover:scale-125 transition-transform duration-200'
+                                className='absolute right-3 bg-transparent border-none cursor-pointer text-lg p-1 text-accent hover:scale-125 transition-transform duration-300'
                                 onClick={() =>
                                     setShowConfirmPassword(!showConfirmPassword)
                                 }>
