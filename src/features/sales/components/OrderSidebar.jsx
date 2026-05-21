@@ -1,6 +1,6 @@
-import { Minus, Plus, Trash2, ShoppingCart, CreditCard, Banknote, ReceiptText, AlertTriangle } from 'lucide-react'
+import { Minus, Plus, Trash2, ShoppingCart, CreditCard, Banknote, ReceiptText, AlertTriangle, Calendar } from 'lucide-react'
 import { useStore } from '../../../app/providers/store'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Link } from 'react-router'
 
 export const OrderSidebar = ({ onProcessSale }) => {
@@ -9,6 +9,10 @@ export const OrderSidebar = ({ onProcessSale }) => {
     const hasActiveSubscription = subscription?.status === 'active'
 
     const [paymentMethod, setPaymentMethod] = useState('Efectivo')
+    const today = new Date().toISOString().split('T')[0]
+    const [saleDate, setSaleDate] = useState(today)
+    const [isEditingDate, setIsEditingDate] = useState(false)
+    const dateInputRef = useRef(null)
 
     const total = (cart || []).reduce((acc, item) => acc + (item.price * item.quantity), 0)
 
@@ -39,6 +43,23 @@ export const OrderSidebar = ({ onProcessSale }) => {
                 <p className='text-sm text-muted mt-1'>
                     {cart?.length} {cart?.length === 1 ? 'item' : 'items'}
                 </p>
+                <div className='flex items-center gap-2 mt-2 text-xs'>
+                    <Calendar
+                        className={`w-3.5 h-3.5 cursor-pointer transition-colors ${
+                            isEditingDate ? 'text-accent' : 'text-on-body hover:text-accent'
+                        }`}
+                        onClick={() => dateInputRef.current?.showPicker()}
+                    />
+                    <input
+                        ref={dateInputRef}
+                        type='date'
+                        value={saleDate}
+                        onChange={(e) => { setSaleDate(e.target.value); setIsEditingDate(false) }}
+                        onFocus={() => setIsEditingDate(true)}
+                        onBlur={() => setIsEditingDate(false)}
+                        className='border-0 bg-transparent p-1 text-xs text-on-body focus:outline-none focus:ring-0 focus:border focus:border-solid focus:border-accent focus:rounded w-auto min-w-0 cursor-pointer [&::-webkit-calendar-picker-indicator]:hidden'
+                    />
+                </div>
             </div>
 
             <div className='flex-1 overflow-y-auto p-6 flex flex-col gap-4 scrollbar-thin'>
@@ -128,7 +149,7 @@ export const OrderSidebar = ({ onProcessSale }) => {
                 </div>
 
                 <button
-                    onClick={() => onProcessSale(paymentMethod, total)}
+                    onClick={() => onProcessSale(paymentMethod, total, saleDate)}
                     disabled={!cart?.length || !hasActiveSubscription}
                     className='w-full py-4 bg-accent text-surface rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-accent/85 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer'
                 >

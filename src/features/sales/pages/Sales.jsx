@@ -98,7 +98,7 @@ export const Sales = () => {
         setVisibleCount((prev) => prev + 10)
     }
 
-    const handleProcessSale = (paymentMethod, total) => {
+    const handleProcessSale = (paymentMethod, total, saleDate) => {
         if (cart.length === 0) {
             toast.warn('El carrito está vacío')
             return
@@ -106,7 +106,8 @@ export const Sales = () => {
 
         setSaleSummaryData({
             total,
-            paymentMethod
+            paymentMethod,
+            date: saleDate
         })
         setShowConfirmationModal(true)
     }
@@ -121,6 +122,7 @@ export const Sales = () => {
             payment_method: saleSummaryData.paymentMethod,
             total_amount: saleSummaryData.total,
             status: 'completed',
+            created_at: saleSummaryData.date,
             salesItems: cart.map(item => ({
                 product_id: item.id,
                 quantity: item.quantity
