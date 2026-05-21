@@ -13,6 +13,11 @@ export const SaleConfirmationModal = ({
     const isCustomDate = date && date !== today
     const { cart } = useStore()
 
+    const formatDate = (dateStr) => {
+        if (!dateStr) return ''
+        const [year, month, day] = dateStr.split('-')
+        return `${day}/${month}/${year}`
+    }
     useEscape(onCancel)
 
     return (
@@ -42,7 +47,7 @@ export const SaleConfirmationModal = ({
                         <div className='text-xs text-red-400'>
                             <p className='font-semibold'>Fecha diferente</p>
                                 <p className='text-on-surface'>
-                                Esta venta se registrará con fecha <strong>{date}</strong> y no afectará las métricas del día de hoy.
+                                Esta venta se registrará con fecha <strong>{formatDate(date)}</strong> y no afectará las métricas del día de hoy.
                             </p>
                         </div>
                     </div>
