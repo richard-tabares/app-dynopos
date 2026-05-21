@@ -1,4 +1,4 @@
-import { X, CheckCircle, CircleDollarSign, Loader } from 'lucide-react'
+import { X, CheckCircle, CircleDollarSign, Loader, AlertTriangle } from 'lucide-react'
 import { useStore } from '../../../app/providers/store'
 import { useEscape } from '../../../shared/helpers/useEscape'
 
@@ -8,7 +8,9 @@ export const SaleConfirmationModal = ({
     onCancel,
     loading = false,
 }) => {
-    const { total, paymentMethod } = orderSummary
+    const { total, paymentMethod, date } = orderSummary
+    const today = new Date().toLocaleDateString('en-CA')
+    const isCustomDate = date && date !== today
     const { cart } = useStore()
 
     useEscape(onCancel)
@@ -33,6 +35,18 @@ export const SaleConfirmationModal = ({
                 <p className='text-sm text-muted mb-4 flex-shrink-0'>
                     Revisa los detalles de la venta antes de confirmar.
                 </p>
+
+                {isCustomDate && (
+                    <div className='flex items-start gap-2 p-4 mb-4 bg-accent/10 border border-accent rounded-lg flex-shrink-0'>
+                        <AlertTriangle className='w-5 h-5 text-red-500 shrink-0' />
+                        <div className='text-xs text-red-400'>
+                            <p className='font-semibold'>Fecha diferente</p>
+                                <p className='text-white'>
+                                Esta venta se registrará con fecha <strong>{date}</strong> y no afectará las métricas del día de hoy.
+                            </p>
+                        </div>
+                    </div>
+                )}
 
                 <div className='flex-1 overflow-y-auto scrollbar-thin mb-4 pr-2'>
                     <div className='mb-4'>

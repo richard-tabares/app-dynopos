@@ -9,9 +9,10 @@ export const OrderSidebar = ({ onProcessSale }) => {
     const hasActiveSubscription = subscription?.status === 'active'
 
     const [paymentMethod, setPaymentMethod] = useState('Efectivo')
-    const today = new Date().toISOString().split('T')[0]
+    const today = new Date().toLocaleDateString('en-CA')
     const [saleDate, setSaleDate] = useState(today)
     const [isEditingDate, setIsEditingDate] = useState(false)
+    const isCustomDate = saleDate !== today
     const dateInputRef = useRef(null)
 
     const total = (cart || []).reduce((acc, item) => acc + (item.price * item.quantity), 0)
@@ -59,6 +60,12 @@ export const OrderSidebar = ({ onProcessSale }) => {
                         onBlur={() => setIsEditingDate(false)}
                         className='border-0 bg-transparent p-1 text-xs text-on-body focus:outline-none focus:ring-0 focus:border focus:border-solid focus:border-accent focus:rounded w-auto min-w-0 cursor-pointer [&::-webkit-calendar-picker-indicator]:hidden'
                     />
+                    {isCustomDate && (
+                        <AlertTriangle
+                            className='w-3.5 h-3.5 text-red-500 shrink-0'
+                            title='La fecha seleccionada no es hoy. La venta se registrará con esta fecha.'
+                        />
+                    )}
                 </div>
             </div>
 
