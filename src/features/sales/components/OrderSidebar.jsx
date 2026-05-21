@@ -4,13 +4,12 @@ import { useState, useRef } from 'react'
 import { Link } from 'react-router'
 
 export const OrderSidebar = ({ onProcessSale }) => {
-    const { user, cart, removeFromCart, updateQuantity, clearCart } = useStore()
+    const { user, cart, removeFromCart, updateQuantity, clearCart, saleDate, setSaleDate } = useStore()
     const subscription = user?.subscription
     const hasActiveSubscription = subscription?.status === 'active'
 
     const [paymentMethod, setPaymentMethod] = useState('Efectivo')
     const today = new Date().toLocaleDateString('en-CA')
-    const [saleDate, setSaleDate] = useState(today)
     const [isEditingDate, setIsEditingDate] = useState(false)
     const isCustomDate = saleDate !== today
     const dateInputRef = useRef(null)

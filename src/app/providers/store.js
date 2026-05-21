@@ -97,6 +97,8 @@ export const useStore = create(
             clearCart: () => set({ cart: [] }),
             setTodayRevenue: (payload) => set({ todayRevenue: payload }),
             setCategories: (payload) => set({ categories: payload }),
+            saleDate: new Date().toLocaleDateString('en-CA'),
+            setSaleDate: (payload) => set({ saleDate: payload }),
         }),
         {
             name: 'dynopos-store',
