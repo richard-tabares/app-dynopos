@@ -3,6 +3,7 @@ import { X, Printer, ReceiptText, Calendar } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { useStore } from '../../app/providers/store'
 import { useEscape } from '../helpers/useEscape'
+import { useFormatDate } from '../helpers/useFormatDate'
 import { updateSaleDate } from '../../features/sales/helpers/updateSaleDate'
 import { getTodayRevenue } from '../../features/sales/helpers/getTodayRevenue'
 
@@ -15,6 +16,8 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
     const dateInputRef = useRef(null)
     const [saving, setSaving] = useState(false)
 
+    const formatDate = useFormatDate()
+
     useEscape(onClose)
 
     if (!isOpen || !sale) return null
@@ -25,12 +28,6 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
             currency: 'COP',
             maximumFractionDigits: 0,
         }).format(value)
-
-    const formatDate = (dateStr) => {
-        if (!dateStr) return ''
-        const [year, month, day] = dateStr.split('-')
-        return `${day}/${month}/${year}`
-    }
 
     const handleDateSave = async (e) => {
         const value = e.target.value

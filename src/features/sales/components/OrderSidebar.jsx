@@ -12,6 +12,7 @@ import {
 import { useStore } from '../../../app/providers/store'
 import { useState, useRef } from 'react'
 import { Link } from 'react-router'
+import { useFormatDate } from '../../../shared/helpers/useFormatDate'
 
 export const OrderSidebar = ({ onProcessSale }) => {
     const {
@@ -37,16 +38,13 @@ export const OrderSidebar = ({ onProcessSale }) => {
         0,
     )
 
+    const formatDate = useFormatDate()
+
     const paymentMethods = [
         { id: 'Efectivo', label: 'Efectivo', icon: Banknote },
         // { id: 'Tarjeta', label: 'Tarjeta', icon: CreditCard },
         { id: 'Transferencia', label: 'Transferencia', icon: ReceiptText },
     ]
-    const formatDate = (dateStr) => {
-        if (!dateStr) return ''
-        const [year, month, day] = dateStr.split('-')
-        return `${day}/${month}/${year}`
-    }
 
     return (
         <section className='bg-surface rounded-lg border border-outline shadow-xs flex flex-col lg:h-[calc(100vh-120px)] lg:sticky lg:top-20'>

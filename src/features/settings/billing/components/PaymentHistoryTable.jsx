@@ -1,5 +1,6 @@
 import { FileDown, Receipt, Loader } from 'lucide-react'
 import { useStore } from '../../../../app/providers/store'
+import { useFormatDate } from '../../../../shared/helpers/useFormatDate'
 import html2pdf from 'html2pdf.js'
 
 const statusColors = {
@@ -28,16 +29,8 @@ const paymentMethodLabels = {
 const formatCurrency = (value) =>
     new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(value)
 
-const formatDate = (dateStr) =>
-    new Date(dateStr).toLocaleDateString('es-CO', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-    })
-
 export const PaymentHistoryTable = ({ transactions, loading }) => {
+    const formatDate = useFormatDate()
     const user = useStore((state) => state.user)
 
     const handleDownloadPDF = (transaction) => {
@@ -98,7 +91,7 @@ export const PaymentHistoryTable = ({ transactions, loading }) => {
                     </div>
                     <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f3f4f6;">
                         <span style="font-size: 13px; color: #666;">Fecha</span>
-                        <span style="font-size: 13px; font-weight: 600; color: #111;">${formatDate(transaction.created_at)}</span>
+                        <span style="font-size: 13px; font-weight: 600; color: #111;">${formatDate(transaction.created_at, { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
                     </div>
                     ${business.business_name ? `
                     <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f3f4f6;">
@@ -191,7 +184,7 @@ export const PaymentHistoryTable = ({ transactions, loading }) => {
                     <tbody>
                         {transactions.map((tx) => (
                             <tr key={tx.id} className='border-b border-divider hover:bg-body/50 transition'>
-                                <td className='px-4 py-3 text-sm'>{formatDate(tx.created_at)}</td>
+                                <td className='px-4 py-3 text-sm'>{formatDate(tx.created_at, { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
                                 <td className='px-4 py-3 text-sm font-mono max-w-[140px] truncate overflow-hidden text-ellipsis whitespace-nowrap'>
                                     {tx.reference || tx.wompi_transaction_id || '—'}
                                 </td>

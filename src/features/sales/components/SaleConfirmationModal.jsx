@@ -1,6 +1,7 @@
 import { X, CheckCircle, CircleDollarSign, Loader, AlertTriangle } from 'lucide-react'
 import { useStore } from '../../../app/providers/store'
 import { useEscape } from '../../../shared/helpers/useEscape'
+import { useFormatDate } from '../../../shared/helpers/useFormatDate'
 
 export const SaleConfirmationModal = ({
     orderSummary = {},
@@ -12,12 +13,8 @@ export const SaleConfirmationModal = ({
     const today = new Date().toLocaleDateString('en-CA')
     const isCustomDate = date && date !== today
     const { cart } = useStore()
+    const formatDate = useFormatDate()
 
-    const formatDate = (dateStr) => {
-        if (!dateStr) return ''
-        const [year, month, day] = dateStr.split('-')
-        return `${day}/${month}/${year}`
-    }
     useEscape(onCancel)
 
     return (

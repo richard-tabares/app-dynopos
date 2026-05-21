@@ -1,9 +1,11 @@
 import { useNavigate, useLocation } from 'react-router'
 import { CheckCircle, Printer, ArrowRight, LogIn } from 'lucide-react'
+import { useFormatDate } from '../../../shared/helpers/useFormatDate'
 
 export const PaymentSuccess = () => {
     const navigate = useNavigate()
     const location = useLocation()
+    const formatDate = useFormatDate()
     const data = location.state || JSON.parse(sessionStorage.getItem('payment_summary') || 'null')
 
     if (!data) {
@@ -91,7 +93,7 @@ export const PaymentSuccess = () => {
                             <section className='flex justify-between py-2 border-b border-divider-light'>
                                 <span className='text-sm text-muted'>Fecha</span>
                                 <span className='text-sm font-semibold text-on-surface'>
-                                    {new Date().toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' })}
+                                    {formatDate(new Date().toISOString().split('T')[0], { year: 'numeric', month: 'long', day: 'numeric' })}
                                 </span>
                             </section>
                             <section className='flex justify-between py-2'>

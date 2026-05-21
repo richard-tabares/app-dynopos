@@ -1,4 +1,5 @@
 import { Crown, Calendar, DollarSign, Loader, CreditCard, AlertTriangle } from 'lucide-react'
+import { useFormatDate } from '../../../../shared/helpers/useFormatDate'
 
 const statusColors = {
     active: 'text-green-600 bg-green-50 dark:bg-green-900/20',
@@ -23,14 +24,8 @@ const frequencyLabels = {
 const formatCurrency = (value) =>
     new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(value)
 
-const formatDate = (dateStr) =>
-    new Date(dateStr).toLocaleDateString('es-CO', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    })
-
 export const SubscriptionInfo = ({ subscription, loading, onPayNow, isPaying, hasPaymentSource }) => {
+    const formatDate = useFormatDate()
     if (loading) {
         return (
             <section className='bg-surface border border-outline shadow-sm rounded-lg'>
@@ -122,7 +117,7 @@ export const SubscriptionInfo = ({ subscription, loading, onPayNow, isPaying, ha
                         <p className='text-sm text-muted mb-1'>Próxima Facturación</p>
                         <p className='text-lg font-semibold flex items-center gap-2'>
                             <DollarSign className='w-4 h-4 text-accent' />
-                            {subscription.current_period_end ? formatDate(subscription.current_period_end) : '—'}
+                            {subscription.current_period_end ? formatDate(subscription.current_period_end, { year: 'numeric', month: 'long', day: 'numeric' }) : '—'}
                         </p>
                     </div>
                 </div>
