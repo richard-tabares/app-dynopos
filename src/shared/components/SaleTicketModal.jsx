@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { X, Printer, ReceiptText, Calendar } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { useStore } from '../../app/providers/store'
@@ -15,8 +15,13 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
     const ticketFooter = business?.ticket_footer || ''
     const dateInputRef = useRef(null)
     const [saving, setSaving] = useState(false)
+    const [currentSaleDate, setCurrentSaleDate] = useState(sale?.date || '')
 
     const formatDate = useFormatDate()
+
+    useEffect(() => {
+        setCurrentSaleDate(sale?.date || '')
+    }, [sale?.date])
 
     useEscape(onClose)
 
@@ -29,20 +34,21 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
             maximumFractionDigits: 0,
         }).format(value)
 
-    const handleDateSave = async (e) => {
-        const value = e.target.value
-        if (!value || value === sale.date) return
+    const handleDateSave = async (newDate) => {
+        if (!newDate || newDate === currentSaleDate) return
+        const previousDate = currentSaleDate
+        setCurrentSaleDate(newDate)
         try {
             setSaving(true)
-            await updateSaleDate(sale.id, value)
+            await updateSaleDate(sale.id, newDate)
             toast.success('Fecha actualizada correctamente')
-            // onClose()
             onSaleUpdated?.()
             if (businessId) {
                 const revenueData = await getTodayRevenue(businessId)
                 setTodayRevenue(revenueData.todayRevenue)
             }
         } catch (err) {
+            setCurrentSaleDate(previousDate)
             toast.error(err.message || 'Error al actualizar la fecha')
         } finally {
             setSaving(false)
@@ -144,16 +150,15 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
                                     <input
                                         ref={dateInputRef}
                                         type='date'
-                                        defaultValue={sale.date}
+                                        value={currentSaleDate}
                                         onChange={(e) => {
-                                            handleDateSave(e);
-                                            // setIsEditingDate(false);
+                                            handleDateSave(e.target.value);
                                         }}
                                         className='absolute inset-0 opacity-0 border-0'
                                     />
                                 </span>
                                 <span className='text-on-surface font-medium truncate flex items-center gap-1 hover:text-accent transition-all duration-200 cursor-pointer' onClick={() => dateInputRef.current?.showPicker()}>
-                                    {formatDate(sale.date)}
+                                    {formatDate(currentSaleDate)}
                                     {/* {saving && (
                                         <span className='w-3 h-3 border-2 border-accent border-t-transparent rounded-full animate-spin' />
                                     )} */}

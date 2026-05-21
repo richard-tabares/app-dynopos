@@ -3,7 +3,7 @@ import { ReceiptText, RotateCcw, History } from 'lucide-react'
 import { SaleTicketModal } from '../../../shared/components/SaleTicketModal'
 import { ReturnModal } from './ReturnModal'
 
-export const SalesHistoryCard = ({ sales = [], onReturn }) => {
+export const SalesHistoryCard = ({ sales = [], onReturn, onSaleUpdated }) => {
     const [selectedSale, setSelectedSale] = useState(null)
     const [returnTarget, setReturnTarget] = useState(null)
 
@@ -72,6 +72,7 @@ export const SalesHistoryCard = ({ sales = [], onReturn }) => {
                 isOpen={!!selectedSale}
                 onClose={() => setSelectedSale(null)}
                 sale={selectedSale}
+                onSaleUpdated={onSaleUpdated}
             />
 
             <ReturnModal

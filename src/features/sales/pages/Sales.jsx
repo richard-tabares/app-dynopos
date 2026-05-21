@@ -186,6 +186,15 @@ export const Sales = () => {
         }
     }
 
+    const handleSaleUpdated = async () => {
+        const [salesData, revenueData] = await Promise.all([
+            getSales(businessId),
+            getTodayRevenue(businessId)
+        ])
+        setSalesList(salesData)
+        setTodayRevenue(revenueData.todayRevenue)
+    }
+
     return (
         <section className='flex flex-col gap-6'>
             <div className='flex flex-col lg:flex-row gap-8'>
@@ -266,6 +275,7 @@ export const Sales = () => {
                         <SalesHistoryCard
                             sales={salesList}
                             onReturn={handleReturnSale}
+                            onSaleUpdated={handleSaleUpdated}
                         />
                     </div>
                 </div>
@@ -277,6 +287,7 @@ export const Sales = () => {
                         <SalesHistoryCard
                             sales={salesList}
                             onReturn={handleReturnSale}
+                            onSaleUpdated={handleSaleUpdated}
                         />
                     </div>
                 </div>

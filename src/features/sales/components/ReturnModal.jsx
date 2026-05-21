@@ -215,12 +215,12 @@ export const ReturnModal = ({ isOpen, sale, onClose, onConfirm }) => {
                 <div className='px-6 pb-6 flex gap-3 border-t border-divider pt-4'>
                     <button
                         onClick={onClose}
-                        className='flex-1 py-2.5 border border-outline text-on-body rounded-lg font-medium hover:bg-hover transition text-sm'>
+                        className='flex-1 py-2.5 border border-outline text-on-body rounded-lg font-medium hover:bg-hover transition text-sm cursor-pointer'>
                         Cancelar
                     </button>
                     <button
                         onClick={handleConfirm}
-                        className='flex-1 py-2.5 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 transition text-sm disabled:opacity-50 flex items-center justify-center gap-2'
+                        className='flex-1 py-2.5 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 transition text-sm disabled:opacity-50 flex items-center justify-center gap-2 disabled:cursor-not-allowed cursor-pointer'
                         disabled={
                             !returnReason.trim() || !hasSelectedItems || isReturning
                         }>

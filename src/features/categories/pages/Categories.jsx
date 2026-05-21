@@ -163,7 +163,7 @@ export const Categories = () => {
                             <button
                                 onClick={handleSave}
                                 disabled={saving || !categoryName.trim()}
-                                className='flex-1 py-2.5 bg-accent text-surface rounded-lg font-bold hover:bg-accent/85 transition text-sm disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2'>
+                                className='flex-1 py-2.5 bg-accent text-surface rounded-lg font-bold hover:bg-accent/85 transition text-sm disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed flex items-center justify-center gap-2'>
                                 {saving ? <><Loader className='w-5 h-5 animate-spin' /> Guardando...</> : <><Save className='w-5 h-5' /> Guardar</>}
                             </button>
                         </div>
