@@ -41,7 +41,7 @@ export const SaleConfirmationModal = ({
                         <AlertTriangle className='w-5 h-5 text-red-500 shrink-0' />
                         <div className='text-xs text-red-400'>
                             <p className='font-semibold'>Fecha diferente</p>
-                                <p className='text-white'>
+                                <p className='text-on-surface'>
                                 Esta venta se registrará con fecha <strong>{date}</strong> y no afectará las métricas del día de hoy.
                             </p>
                         </div>
