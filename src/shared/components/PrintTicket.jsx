@@ -48,10 +48,10 @@ export const PrintTicket = ({ children, printRef, sale, business, ticketFooter }
                 (item) => `
             <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:4px;margin-bottom:8px;">
                 <div style="flex:1;min-width:0;">
-                    <p style="margin:0;font-weight:700;text-transform:uppercase;font-size:11px;color:#111827;word-break:break-word;">${item.name}</p>
-                    <p style="margin:4px 0 0;font-size:10px;color:#374151;">${item.quantity}x ${formatCurrency(item.price)}</p>
+                    <p style="margin:0;font-weight:700;text-transform:uppercase;font-size:10px;color:#111827;word-break:break-word;">${item.name}</p>
+                    <p style="margin:4px 0 0;font-size:9px;color:#374151;">${item.quantity}x ${formatCurrency(item.price)}</p>
                 </div>
-                <span style="font-weight:700;font-size:11px;color:#111827;white-space:nowrap;">${formatCurrency(item.subtotal)}</span>
+                <span style="font-weight:700;font-size:10px;color:#111827;white-space:nowrap;">${formatCurrency(item.subtotal)}</span>
             </div>`
             )
             .join('')
@@ -60,10 +60,10 @@ export const PrintTicket = ({ children, printRef, sale, business, ticketFooter }
         wrapper.innerHTML = `
             <div style="width:215px;background:white;font-family:monospace;font-size:12px;padding:16px 12px;">
                 <div style="text-align:center;border-bottom:1px dashed #d1d5db;padding-bottom:8px;margin-bottom:16px;">
-                    <h2 style="margin:0;font-size:18px;font-weight:700;text-transform:uppercase;color:#111827;">
+                    <h2 style="margin:0;font-size:16px;font-weight:700;text-transform:uppercase;color:#111827;">
                         ${business.business_name || ''}
                     </h2>
-                    <p style="margin:4px 0 0;font-size:11px;color:#6b7280;">
+                    <p style="margin:4px 0 0;font-size:10px;color:#6b7280;">
                         Comprobante No Fiscal
                     </p>
                 </div>
@@ -106,6 +106,15 @@ export const PrintTicket = ({ children, printRef, sale, business, ticketFooter }
 
         const content = wrapper.firstElementChild
 
+        const measurer = document.createElement('div')
+        measurer.style.cssText = 'position:fixed;left:-9999px;top:0;width:215px;font-family:monospace;font-size:12px;'
+        measurer.appendChild(content.cloneNode(true))
+        document.body.appendChild(measurer)
+        void measurer.offsetHeight
+        const heightPx = measurer.scrollHeight
+        const heightMm = Math.max(Math.ceil(heightPx / 3.78) + 3, 20)
+        document.body.removeChild(measurer)
+
         const opt = {
             margin: 0,
             filename: 'ticket.pdf',
@@ -113,7 +122,7 @@ export const PrintTicket = ({ children, printRef, sale, business, ticketFooter }
             html2canvas: { scale: 2, useCORS: true, allowTaint: true, backgroundColor: '#ffffff' },
             jsPDF: {
                 unit: 'mm',
-                format: [57, 100],
+                format: [57, heightMm],
                 orientation: 'portrait',
             },
         }
