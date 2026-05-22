@@ -16,7 +16,7 @@ import { returnSale } from '../helpers/returnSale'
 import { getTodayRevenue } from '../helpers/getTodayRevenue'
 
 export const Sales = () => {
-    const { user, products, setProducts, cart, clearCart, setTodayRevenue, setCategories, setSubscription } = useStore()
+    const { user, products, setProducts, cart, clearCart, setTodayRevenue, setCategories, setSubscription, addToCart } = useStore()
     const [searchTerm, setSearchTerm] = useState('')
     const [loading, setLoading] = useState(false)
     const [, setLastSaleTicket] = useState(null)
@@ -58,8 +58,10 @@ export const Sales = () => {
 
     const filteredProducts = products
         .filter((product) => {
-            const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                                 product.sku.toLowerCase().includes(searchTerm.toLowerCase())
+            const term = searchTerm.toLowerCase()
+            const matchesSearch = product.name.toLowerCase().includes(term) || 
+                                 product.sku.toLowerCase().includes(term) ||
+                                 (product.barcode && product.barcode.toLowerCase().includes(term))
             const isActive = product.is_active !== false
 
             return matchesSearch && isActive
@@ -209,7 +211,14 @@ export const Sales = () => {
                                     type='search'
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
-                                    placeholder='Buscar por nombre o código...'
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && searchTerm.trim() && filteredProducts.length === 1) {
+                                            e.preventDefault()
+                                            addToCart(filteredProducts[0])
+                                            setSearchTerm('')
+                                        }
+                                    }}
+                                    placeholder='Buscar por nombre, código o código de barras...'
                                     className='w-full border border-divider rounded-md pl-10 pr-3 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                                     autoFocus
                                 />

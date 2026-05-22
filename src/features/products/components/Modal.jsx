@@ -15,6 +15,7 @@ export const Modal = ({
 
     const [formData, setFormData] = useState({
         sku: editProductData.sku || '',
+        barcode: editProductData.barcode || '',
         name: editProductData.name || '',
         category_id:
             editProductData.categories?.id || generalCategory?.id || '',
@@ -24,7 +25,7 @@ export const Modal = ({
         track_stock: editProductData.track_stock ?? true,
     })
 
-    const isFormValid = formData.sku.trim() && formData.name.trim() && Number(formData.price) > 0
+    const isFormValid = formData.name.trim() && Number(formData.price) > 0
     const [submitting, setSubmitting] = useState(false)
 
     useEscape(handleOpenModal)
@@ -46,25 +47,31 @@ export const Modal = ({
         e.preventDefault()
         setSubmitting(true)
 
-        const skuDuplicate = products.some(
-            (p) =>
-                p.sku?.toLowerCase() === formData.sku.trim().toLowerCase() &&
-                p.id !== editProductData.id,
-        )
+        if (formData.sku.trim()) {
+            const skuDuplicate = products.some(
+                (p) =>
+                    p.sku?.toLowerCase() === formData.sku.trim().toLowerCase() &&
+                    p.id !== editProductData.id,
+            )
 
-        if (skuDuplicate) {
-            toast.error('Ya existe un producto con este SKU')
-            setSubmitting(false)
-            return
+            if (skuDuplicate) {
+                toast.error('Ya existe un producto con este SKU')
+                setSubmitting(false)
+                return
+            }
         }
 
         const businessId = JSON.parse(localStorage.getItem('dynopos-store'))
             .state.user.data.user.id
-        await handleSubmit({
+        const sanitizedData = {
             ...formData,
+            category_id: formData.category_id || null,
+            price: formData.price === '' ? null : formData.price,
+            unit_cost: formData.unit_cost === '' ? null : formData.unit_cost,
             business_id: businessId,
             id: editProductData.id || undefined,
-        })
+        }
+        await handleSubmit(sanitizedData)
         setSubmitting(false)
     }
 
@@ -98,6 +105,19 @@ export const Modal = ({
                             autoFocus
                             className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
                             placeholder='Ingrese el SKU o código del producto'
+                        />
+                    </section>
+                    <section>
+                        <label className='block text-sm font-medium text-on-body mb-1'>
+                            Código de Barras
+                        </label>
+                        <input
+                            type='text'
+                            name='barcode'
+                            value={formData.barcode}
+                            onChange={handleChange}
+                            className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
+                            placeholder='Ingrese o escanee el código de barras'
                         />
                     </section>
                     <section>
