@@ -1,5 +1,4 @@
 import { useRef } from 'react'
-import { useReactToPrint } from 'react-to-print'
 import { X, Printer, ReceiptText, Calendar } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { useStore } from '../../app/providers/store'
@@ -7,59 +6,7 @@ import { useEscape } from '../helpers/useEscape'
 import { useFormatDate } from '../helpers/useFormatDate'
 import { updateSaleDate } from '../../features/sales/helpers/updateSaleDate'
 import { getTodayRevenue } from '../../features/sales/helpers/getTodayRevenue'
-
-const printCss = `
-    @page { margin: 0; size: 57mm auto; }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body {
-        width: 57mm;
-        background: white;
-        font-family: monospace;
-    }
-    body { padding: 2mm; }
-    .text-center { text-align: center; }
-    .text-right { text-align: right; }
-    .flex { display: flex; }
-    .justify-between { justify-content: space-between; }
-    .items-start { align-items: flex-start; }
-    .items-center { align-items: center; }
-    .gap-1 { gap: 0.25rem; }
-    .space-y-1 > * + * { margin-top: 0.25rem; }
-    .space-y-3 > * + * { margin-top: 0.75rem; }
-    .mb-4 { margin-bottom: 1rem; }
-    .mb-1 { margin-bottom: 0.25rem; }
-    .mt-0\\.5 { margin-top: 0.125rem; }
-    .mt-2 { margin-top: 0.5rem; }
-    .mt-6 { margin-top: 1.5rem; }
-    .my-2 { margin-top: 0.5rem; margin-bottom: 0.5rem; }
-    .pt-1 { padding-top: 0.25rem; }
-    .pt-2 { padding-top: 0.5rem; }
-    .pb-2 { padding-bottom: 0.5rem; }
-    .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
-    .border-b { border-bottom: 1px dashed #999; }
-    .border-t { border-top: 1px dashed #999; }
-    .font-bold { font-weight: 700; }
-    .font-medium { font-weight: 500; }
-    .uppercase { text-transform: uppercase; }
-    .capitalize { text-transform: capitalize; }
-    .tracking-widest { letter-spacing: 0.1em; }
-    .leading-tight { line-height: 1.25; }
-    .text-\\[9px\\] { font-size: 9px; }
-    .text-\\[10px\\] { font-size: 10px; }
-    .text-\\[11px\\] { font-size: 11px; }
-    .text-base { font-size: 14px; }
-    .text-lg { font-size: 16px; }
-    .text-muted { color: #666; }
-    .text-faint { color: #999; }
-    .text-on-surface { color: #000; }
-    .text-on-body { color: #444; }
-    .shrink-0 { flex-shrink: 0; }
-    .flex-1 { flex: 1; }
-    .min-w-0 { min-width: 0; }
-    .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .break-words { word-wrap: break-word; }
-    .no-print { display: none !important; }
-`
+import { PrintTicket } from './PrintTicket'
 
 export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
     const business = useStore((state) => state.user.business)
@@ -68,17 +15,11 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
     const currentSaleDate = sale?.date || ''
     const ticketFooter = business?.ticket_footer || ''
     const dateInputRef = useRef(null)
-    const ticketRef = useRef(null)
+    const printRef = useRef(null)
 
     const formatDate = useFormatDate()
 
     useEscape(onClose)
-
-    const handlePrint = useReactToPrint({
-        contentRef: ticketRef,
-        ignoreGlobalStyles: true,
-        pageStyle: printCss,
-    })
 
     if (!isOpen || !sale) return null
 
@@ -108,11 +49,11 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
         <section
             className='fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex flex-col items-center justify-center z-[70] p-4'
             onClick={onClose}>
-            <section
-                ref={ticketRef}
-                className='bg-surface rounded-lg shadow-2xl w-full max-w-sm relative overflow-hidden'
-                onClick={(e) => e.stopPropagation()}
-                onKeyDown={(e) => e.key === 'Enter' && handlePrint()}>
+            <PrintTicket printRef={printRef}>
+                <section
+                    className='bg-surface rounded-lg shadow-2xl w-full max-w-sm relative overflow-hidden'
+                    onClick={(e) => e.stopPropagation()}
+                    onKeyDown={(e) => e.key === 'Enter' && printRef.current?.()}>
                 <div className='bg-accent p-4 text-surface flex justify-between items-center no-print'>
                     <div className='flex items-center gap-2'>
                         <ReceiptText className='w-5 h-5' />
@@ -221,12 +162,13 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
                 <div className='p-4 bg-subtle border-t border-divider-light flex gap-2 no-print'>
                     <button
                         className='flex-1 flex items-center justify-center gap-2 bg-accent text-surface py-2 rounded-lg font-bold hover:bg-accent/85 transition text-sm cursor-pointer'
-                        onClick={handlePrint}>
+                        onClick={() => printRef.current?.()}>
                         <Printer className='w-4 h-4' />
                         Imprimir
                     </button>
                 </div>
-            </section>
+                </section>
+            </PrintTicket>
         </section>
     )
 }
