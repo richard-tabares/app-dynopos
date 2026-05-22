@@ -95,6 +95,7 @@ export const MovimientosReports = () => {
         return (
             (m.products?.name || '').toLowerCase().includes(term) ||
             (m.products?.sku || '').toLowerCase().includes(term) ||
+            (m.products?.barcode || '').toLowerCase().includes(term) ||
             (m.notes || '').toLowerCase().includes(term)
         )
     })
@@ -162,7 +163,7 @@ export const MovimientosReports = () => {
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className='w-full border border-divider rounded-md pl-10 pr-3 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
-                        placeholder='Buscar producto...'
+                        placeholder='Buscar por nombre, código o código de barras...'
                     />
                 </div>
                 {loading ? (

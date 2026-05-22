@@ -132,6 +132,7 @@ export const InventoryMovements = () => {
         return (
             (m.products?.name || '').toLowerCase().includes(term) ||
             (m.products?.sku || '').toLowerCase().includes(term) ||
+            (m.products?.barcode || '').toLowerCase().includes(term) ||
             (m.notes || '').toLowerCase().includes(term)
         )
     })
@@ -172,7 +173,7 @@ export const InventoryMovements = () => {
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className='w-full border border-divider rounded-md pl-10 pr-3 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
-                        placeholder='Buscar producto...'
+                        placeholder='Buscar por nombre, código o código de barras...'
                     />
                 </div>
                 <div className='flex gap-1 bg-disabled/70 overflow-x-auto scrollbar-none rounded-lg p-1 mb-4'>

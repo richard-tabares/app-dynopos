@@ -17,7 +17,8 @@ export const InventoryValuation = ({ data = [] }) => {
         const term = search.toLowerCase()
         return data.filter(item =>
             item.product_name?.toLowerCase().includes(term) ||
-            item.sku?.toLowerCase().includes(term)
+            item.sku?.toLowerCase().includes(term) ||
+            (item.barcode && item.barcode.toLowerCase().includes(term))
         )
     }, [data, search])
 
@@ -40,7 +41,7 @@ export const InventoryValuation = ({ data = [] }) => {
                     type='text'
                     value={search}
                     onChange={(e) => { setSearch(e.target.value); setVisibleCount(10) }}
-                    placeholder='Buscar producto por nombre o SKU...'
+                    placeholder='Buscar por nombre, código o código de barras...'
                     className='w-full border border-divider rounded-md pl-10 pr-3 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                 />
             </div>

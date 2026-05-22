@@ -41,7 +41,8 @@ export const Inventory = () => {
     const filteredProducts = activeProducts.filter((product) => {
         const matchesSearch =
             product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            product.sku.toLowerCase().includes(searchTerm.toLowerCase())
+            product.sku.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (product.barcode && product.barcode.toLowerCase().includes(searchTerm.toLowerCase()))
 
         const stock = product.inventory?.[0]?.stock || 0
         const minStock = product.inventory?.[0]?.min_stock || 0
@@ -137,7 +138,7 @@ export const Inventory = () => {
                                     setVisibleCount(20)
                                 }}
                                 className='w-full border border-divider rounded-md pl-10 pr-3 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
-                                placeholder='Buscar por nombre o código de barras...'
+                                placeholder='Buscar por nombre, código o código de barras...'
                             />
                         </div>
                         <div className='flex gap-2 bg-disabled/70 rounded-lg p-1 w-fit max-w-full overflow-x-auto scrollbar-none'>

@@ -28,7 +28,11 @@ export const StockTable = ({ data = [] }) => {
         let result = filter === 'all' ? data : data.filter(d => d.stock_status === filter)
         if (search.trim()) {
             const term = search.toLowerCase()
-            result = result.filter(d => d.product_name?.toLowerCase().includes(term))
+            result = result.filter(d =>
+                d.product_name?.toLowerCase().includes(term) ||
+                (d.sku && d.sku.toLowerCase().includes(term)) ||
+                (d.barcode && d.barcode.toLowerCase().includes(term))
+            )
         }
         return result
     }, [data, filter, search])
@@ -70,7 +74,7 @@ export const StockTable = ({ data = [] }) => {
                     type='text'
                     value={search}
                     onChange={(e) => { setSearch(e.target.value); setVisibleCount(10) }}
-                    placeholder='Buscar producto...'
+                    placeholder='Buscar por nombre, código o código de barras...'
                     className='w-full border border-divider rounded-md pl-10 pr-3 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                 />
             </div>

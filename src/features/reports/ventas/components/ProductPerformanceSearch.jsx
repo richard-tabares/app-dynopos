@@ -47,7 +47,7 @@ export const ProductPerformanceSearch = () => {
                 <h3 className='text-lg font-semibold text-on-surface'>Rendimiento por Producto</h3>
             </div>
 
-            <p className='text-xs text-muted mb-3'>Busca por nombre o SKU. No afectado por filtros de fecha.</p>
+            <p className='text-xs text-muted mb-3'>Busca por nombre, SKU o código de barras. No afectado por filtros de fecha.</p>
 
             <div className='flex gap-2 mb-4'>
                 <div className='relative flex-1'>

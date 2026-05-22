@@ -57,7 +57,8 @@ export const Products = () => {
         .filter((product) => {
             const matchesSearch =
                 product.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                product.sku?.toLowerCase().includes(searchTerm.toLowerCase())
+                product.sku?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                (product.barcode && product.barcode.toLowerCase().includes(searchTerm.toLowerCase()))
             const matchesStatus =
                 activeStatus === 'all' ||
                 (activeStatus === 'active' && product.is_active !== false) ||
@@ -463,7 +464,7 @@ export const Products = () => {
                                 value={searchTerm}
                                 onChange={handleSearch}
                                 className='w-full border border-divider rounded-md pl-10 pr-3 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
-                                placeholder='Buscar por nombre o código...'
+                                placeholder='Buscar por nombre, código o código de barras...'
                             />
                         </div>
                         <div className='flex flex-wrap items-center gap-2 max-w-full overflow-x-auto scrollbar-none'>
