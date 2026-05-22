@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { X, Printer, ReceiptText, Calendar } from 'lucide-react'
+import { X, FileDown, Printer, ReceiptText, Calendar } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { useStore } from '../../app/providers/store'
 import { useEscape } from '../helpers/useEscape'
@@ -49,7 +49,7 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
         <section
             className='fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex flex-col items-center justify-center z-[70] p-4'
             onClick={onClose}>
-            <PrintTicket printRef={printRef}>
+            <PrintTicket printRef={printRef} sale={sale} business={business} ticketFooter={ticketFooter}>
                 <section
                     className='bg-surface rounded-lg shadow-2xl w-full max-w-sm relative overflow-hidden'
                     onClick={(e) => e.stopPropagation()}
@@ -163,6 +163,12 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
                     <button
                         className='flex-1 flex items-center justify-center gap-2 bg-accent text-surface py-2 rounded-lg font-bold hover:bg-accent/85 transition text-sm cursor-pointer'
                         onClick={() => printRef.current?.()}>
+                        <FileDown className='w-4 h-4' />
+                        PDF
+                    </button>
+                    <button
+                        className='flex-1 flex items-center justify-center gap-2 bg-surface text-on-surface border border-outline py-2 rounded-lg font-bold transition text-sm cursor-not-allowed opacity-60'
+                        disabled>
                         <Printer className='w-4 h-4' />
                         Imprimir
                     </button>

@@ -1,76 +1,138 @@
-import { useRef, useEffect } from 'react'
-import { useReactToPrint } from 'react-to-print'
+import { useRef, useEffect, useCallback } from 'react'
+import html2pdf from 'html2pdf.js'
+import { toast } from 'react-toastify'
 
-export const defaultPrintCss = `
-    @page { margin: 0; size: 57mm auto; }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body {
-        width: 57mm;
-        background: white;
-        font-family: monospace;
-    }
-    body { padding: 2mm; }
-    .text-center { text-align: center; }
-    .text-right { text-align: right; }
-    .flex { display: flex; }
-    .justify-between { justify-content: space-between; }
-    .items-start { align-items: flex-start; }
-    .items-center { align-items: center; }
-    .gap-1 { gap: 0.25rem; }
-    .space-y-1 > * + * { margin-top: 0.25rem; }
-    .space-y-3 > * + * { margin-top: 0.75rem; }
-    .mb-4 { margin-bottom: 1rem; }
-    .mb-1 { margin-bottom: 0.25rem; }
-    .mt-0\\.5 { margin-top: 0.125rem; }
-    .mt-2 { margin-top: 0.5rem; }
-    .mt-6 { margin-top: 1.5rem; }
-    .my-2 { margin-top: 0.5rem; margin-bottom: 0.5rem; }
-    .pt-1 { padding-top: 0.25rem; }
-    .pt-2 { padding-top: 0.5rem; }
-    .pb-2 { padding-bottom: 0.5rem; }
-    .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
-    .border-b { border-bottom: 1px dashed #999; }
-    .border-t { border-top: 1px dashed #999; }
-    .font-bold { font-weight: 700; }
-    .font-medium { font-weight: 500; }
-    .uppercase { text-transform: uppercase; }
-    .capitalize { text-transform: capitalize; }
-    .tracking-widest { letter-spacing: 0.1em; }
-    .leading-tight { line-height: 1.25; }
-    .text-\\[9px\\] { font-size: 9px; }
-    .text-\\[10px\\] { font-size: 10px; }
-    .text-\\[11px\\] { font-size: 11px; }
-    .text-base { font-size: 14px; }
-    .text-lg { font-size: 16px; }
-    .text-muted { color: #666; }
-    .text-faint { color: #999; }
-    .text-on-surface { color: #000; }
-    .text-on-body { color: #444; }
-    .shrink-0 { flex-shrink: 0; }
-    .flex-1 { flex: 1; }
-    .min-w-0 { min-width: 0; }
-    .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .break-words { word-wrap: break-word; }
-    .no-print { display: none !important; }
-`
+const formatCurrency = (value) =>
+    new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        maximumFractionDigits: 0,
+    }).format(value)
 
-export const PrintTicket = ({ children, pageStyle, printRef }) => {
-    const contentRef = useRef(null)
+const formatDate = (dateStr) => {
+    if (!dateStr) return ''
+    const [year, month, day] = dateStr.split('-')
+    return `${day}/${month}/${year}`
+}
 
-    const handlePrint = useReactToPrint({
-        contentRef,
-        ignoreGlobalStyles: true,
-        pageStyle: pageStyle || defaultPrintCss,
-    })
+const paymentMethodLabels = {
+    cash: 'Efectivo',
+    card: 'Tarjeta',
+    transfer: 'Transferencia',
+    pse: 'PSE',
+}
+
+export const PrintTicket = ({ children, printRef, sale, business, ticketFooter }) => {
+    const wrapperRef = useRef(null)
+
+    const handlePrint = useCallback(async () => {
+        if (!sale || !business) return
+
+        const pdfWindow = window.open('', '_blank')
+        if (!pdfWindow) {
+            toast.warning('Permite ventanas emergentes para ver el PDF')
+            return
+        }
+        pdfWindow.document.write(
+            '<html><head><title>Cargando...</title></head><body style="display:flex;align-items:center;justify-content:center;font-family:sans-serif;margin:0;height:100vh;background:#f5f5f5"><p style="color:#666">Generando PDF...</p></body></html>'
+        )
+        pdfWindow.document.close()
+
+        const paymentLabel = paymentMethodLabels[sale.paymentMethod] || sale.paymentMethod || '—'
+        const orderNum = '#' + String(sale.ticketNumber || sale.id).padStart(4, '0')
+        const ticketDate = formatDate(sale.date || '')
+        const footer = ticketFooter || '¡Gracias por su compra!'
+
+        const itemsHtml = sale.items
+            .map(
+                (item) => `
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:4px;margin-bottom:8px;">
+                <div style="flex:1;min-width:0;">
+                    <p style="margin:0;font-weight:700;text-transform:uppercase;font-size:11px;color:#111827;word-break:break-word;">${item.name}</p>
+                    <p style="margin:4px 0 0;font-size:10px;color:#374151;">${item.quantity}x ${formatCurrency(item.price)}</p>
+                </div>
+                <span style="font-weight:700;font-size:11px;color:#111827;white-space:nowrap;">${formatCurrency(item.subtotal)}</span>
+            </div>`
+            )
+            .join('')
+
+        const wrapper = document.createElement('div')
+        wrapper.innerHTML = `
+            <div style="width:215px;background:white;font-family:monospace;font-size:12px;padding:16px 12px;">
+                <div style="text-align:center;border-bottom:1px dashed #d1d5db;padding-bottom:8px;margin-bottom:16px;">
+                    <h2 style="margin:0;font-size:18px;font-weight:700;text-transform:uppercase;color:#111827;">
+                        ${business.business_name || ''}
+                    </h2>
+                    <p style="margin:4px 0 0;font-size:11px;color:#6b7280;">
+                        Comprobante No Fiscal
+                    </p>
+                </div>
+
+                <div style="font-size:11px;margin-bottom:16px;">
+                    <div style="display:flex;justify-content:space-between;gap:4px;margin-bottom:4px;">
+                        <span style="color:#6b7280;text-transform:uppercase;">Orden:</span>
+                        <span style="font-weight:700;color:#111827;">${orderNum}</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;gap:4px;margin-bottom:4px;">
+                        <span style="color:#6b7280;text-transform:uppercase;">Fecha:</span>
+                        <span style="font-weight:500;color:#111827;">${ticketDate}</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;gap:4px;">
+                        <span style="color:#6b7280;text-transform:uppercase;">Pago:</span>
+                        <span style="font-weight:500;color:#111827;text-transform:capitalize;">${paymentLabel}</span>
+                    </div>
+                </div>
+
+                <div style="border-top:1px dashed #d1d5db;border-bottom:1px dashed #d1d5db;padding:8px 0;margin-bottom:8px;">
+                    <div style="display:flex;justify-content:space-between;font-weight:700;font-size:10px;text-transform:uppercase;color:#6b7280;margin-bottom:8px;">
+                        <span>Detalle</span>
+                        <span style="text-align:right;">Total</span>
+                    </div>
+                    ${itemsHtml}
+                </div>
+
+                <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:700;color:#111827;padding-top:4px;">
+                    <span>TOTAL</span>
+                    <span>${formatCurrency(sale.total)}</span>
+                </div>
+
+                <div style="text-align:center;margin-top:24px;padding-top:8px;border-top:1px dashed #d1d5db;">
+                    <p style="margin:0;font-size:9px;color:#9ca3af;letter-spacing:1px;">
+                        ${footer}
+                    </p>
+                </div>
+            </div>
+        `
+
+        const content = wrapper.firstElementChild
+
+        const opt = {
+            margin: 0,
+            filename: 'ticket.pdf',
+            image: { type: 'jpeg', quality: 0.95 },
+            html2canvas: { scale: 2, useCORS: true, allowTaint: true, backgroundColor: '#ffffff' },
+            jsPDF: {
+                unit: 'mm',
+                format: [57, 100],
+                orientation: 'portrait',
+            },
+        }
+
+        try {
+            const blobUrl = await html2pdf().set(opt).from(content).outputPdf('bloburl')
+            pdfWindow.location.href = blobUrl
+        } catch (err) {
+            pdfWindow.close()
+            toast.error(`Error: ${err?.message || err}`)
+        }
+    }, [sale, business, ticketFooter])
 
     useEffect(() => {
-        if (printRef) {
-            printRef.current = handlePrint
-        }
-    }, [handlePrint, printRef])
+        if (printRef) printRef.current = handlePrint
+    }, [printRef, handlePrint])
 
     return (
-        <div ref={contentRef} style={{ display: 'contents' }}>
+        <div ref={wrapperRef} style={{ display: 'contents' }}>
             {children}
         </div>
     )
