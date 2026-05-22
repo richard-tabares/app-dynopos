@@ -1,7 +1,10 @@
 import { Bell, Menu, MessageCircleQuestionMark } from 'lucide-react'
+import { useState, useRef, useEffect } from 'react'
 import { useStore } from '../providers/store'
 import { useLocation } from 'react-router'
 import { LogoSymbol } from '../../shared/components/LogoSymbol'
+import { SupportDropdown } from '../../features/support/components/SupportDropdown'
+import { SupportModal } from '../../features/support/components/SupportModal'
 
 const pageInfo = [
     { path: '/dashboard', title: 'Dashboard', description: 'Resumen general de tu negocio' },
@@ -18,6 +21,19 @@ export const Header = ({ todayRevenue = 0 }) => {
     const setIsMobile = useStore((state) => state.setIsMobile)
     const isCollapsed = useStore((state) => state.isCollapsed)
     const location = useLocation()
+    const [supportOpen, setSupportOpen] = useState(false)
+    const [supportModalOpen, setSupportModalOpen] = useState(false)
+    const supportRef = useRef(null)
+
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (supportRef.current && !supportRef.current.contains(e.target)) {
+                setSupportOpen(false)
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside)
+        return () => document.removeEventListener('mousedown', handleClickOutside)
+    }, [])
 
     const currentPage = pageInfo.find(info => location.pathname.startsWith(info.path))
     const title = currentPage?.title || 'DynoPOS'
@@ -29,6 +45,7 @@ export const Header = ({ todayRevenue = 0 }) => {
         }).format(value)
 
     return (
+        <>
         <header className={`fixed bg-surface top-0 border-b border-outline right-0 z-50 transition-all duration-300 
             ${isCollapsed ? 'left-20' : 'left-64'}
             max-lg:left-0 max-lg:w-full`}>
@@ -59,8 +76,16 @@ export const Header = ({ todayRevenue = 0 }) => {
                     <section className='p-2 text-on-body hover:text-accent rounded-lg cursor-pointer transition-all duration-300'>
                         <Bell className='w-5 h-5' />
                     </section>
-                    <section className='p-2 text-on-body hover:text-accent rounded-lg cursor-pointer transition-all duration-300'>
-                        <MessageCircleQuestionMark className='w-5 h-5' />
+                    <section ref={supportRef} className='relative'>
+                        <section
+                            className='p-2 text-on-body hover:text-accent rounded-lg cursor-pointer transition-all duration-300'
+                            onClick={() => setSupportOpen((prev) => !prev)}>
+                            <MessageCircleQuestionMark className='w-5 h-5' />
+                        </section>
+                        {supportOpen && <SupportDropdown
+                            onClose={() => setSupportOpen(false)}
+                            onOpenModal={() => { setSupportOpen(false); setSupportModalOpen(true) }}
+                        />}
                     </section>
                     <button
                         className='rounded-lg cursor-pointer hidden max-lg:block hover:bg-accent/5 hover:text-accent duration-300 transition p-2'
@@ -70,5 +95,6 @@ export const Header = ({ todayRevenue = 0 }) => {
                 </section>
             </section>
         </header>
-    )
+        {supportModalOpen && <SupportModal onClose={() => setSupportModalOpen(false)} />}
+        </>    )
 }
