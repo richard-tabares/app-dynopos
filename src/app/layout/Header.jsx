@@ -50,7 +50,7 @@ export const Header = ({ todayRevenue = 0 }) => {
             ${isCollapsed ? 'left-20' : 'left-64'}
             max-lg:left-0 max-lg:w-full`}>
             <section className='flex items-center justify-between px-4 gap-4 min-h-16'>
-                <section className='hidden max-lg:flex items-center self-stretch pr-4 mr-2 border-r border-outline'>
+                <section className='hidden max-lg:flex items-center self-stretch pr-4 mr-2'>
                     <LogoSymbol className='h-8' />
                 </section>
 

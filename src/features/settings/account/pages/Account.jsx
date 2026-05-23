@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { Store, Shield, Receipt, Bell, Save, Loader, Palette, Lock } from 'lucide-react'
+import { Store, Shield, Receipt, Bell, Save, Loader, Palette, Lock, Eye, EyeOff } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { useStore } from '../../../../app/providers/store'
 import { updateBusiness } from '../helpers/updateBusiness'
@@ -30,6 +30,12 @@ export const Account = () => {
     const [saving, setSaving] = useState(false)
     const [changingPassword, setChangingPassword] = useState(false)
     const [uploadingLogo, setUploadingLogo] = useState(false)
+    const [showPasswords, setShowPasswords] = useState({ current: false, new: false, confirm: false })
+    const isPasswordFormEmpty = !passwordData.currentPassword && !passwordData.newPassword && !passwordData.confirmPassword
+
+    const togglePasswordVisibility = (field) => {
+        setShowPasswords((prev) => ({ ...prev, [field]: !prev[field] }))
+    }
 
     useEffect(() => {
         const b = user?.business
@@ -238,43 +244,67 @@ export const Account = () => {
                     <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
                         <section>
                             <label className='block text-sm font-medium text-on-body mb-1'>Contraseña Actual</label>
-                            <input
-                                type='password'
-                                name='currentPassword'
-                                value={passwordData.currentPassword}
-                                onChange={handlePasswordChange}
-                                placeholder='••••••••'
-                                className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
-                            />
+                            <div className='relative'>
+                                <input
+                                    type={showPasswords.current ? 'text' : 'password'}
+                                    name='currentPassword'
+                                    value={passwordData.currentPassword}
+                                    onChange={handlePasswordChange}
+                                    placeholder='••••••••'
+                                    className='w-full px-4 py-3 pr-10 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
+                                />
+                                <button
+                                    type='button'
+                                    onClick={() => togglePasswordVisibility('current')}
+                                    className='absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-on-body transition cursor-pointer'>
+                                    {showPasswords.current ? <EyeOff className='w-4 h-4' /> : <Eye className='w-4 h-4' />}
+                                </button>
+                            </div>
                         </section>
                         <section>
                             <label className='block text-sm font-medium text-on-body mb-1'>Nueva Contraseña</label>
-                            <input
-                                type='password'
-                                name='newPassword'
-                                value={passwordData.newPassword}
-                                onChange={handlePasswordChange}
-                                placeholder='••••••••'
-                                className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
-                            />
+                            <div className='relative'>
+                                <input
+                                    type={showPasswords.new ? 'text' : 'password'}
+                                    name='newPassword'
+                                    value={passwordData.newPassword}
+                                    onChange={handlePasswordChange}
+                                    placeholder='••••••••'
+                                    className='w-full px-4 py-3 pr-10 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
+                                />
+                                <button
+                                    type='button'
+                                    onClick={() => togglePasswordVisibility('new')}
+                                    className='absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-on-body transition cursor-pointer'>
+                                    {showPasswords.new ? <EyeOff className='w-4 h-4' /> : <Eye className='w-4 h-4' />}
+                                </button>
+                            </div>
                         </section>
                         <section>
                             <label className='block text-sm font-medium text-on-body mb-1'>Confirmar Contraseña</label>
-                            <input
-                                type='password'
-                                name='confirmPassword'
-                                value={passwordData.confirmPassword}
-                                onChange={handlePasswordChange}
-                                placeholder='••••••••'
-                                className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
-                            />
+                            <div className='relative'>
+                                <input
+                                    type={showPasswords.confirm ? 'text' : 'password'}
+                                    name='confirmPassword'
+                                    value={passwordData.confirmPassword}
+                                    onChange={handlePasswordChange}
+                                    placeholder='••••••••'
+                                    className='w-full px-4 py-3 pr-10 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
+                                />
+                                <button
+                                    type='button'
+                                    onClick={() => togglePasswordVisibility('confirm')}
+                                    className='absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-on-body transition cursor-pointer'>
+                                    {showPasswords.confirm ? <EyeOff className='w-4 h-4' /> : <Eye className='w-4 h-4' />}
+                                </button>
+                            </div>
                         </section>
                     </div>
                     <div className='mt-4 flex justify-end'>
                         <button
                             onClick={handleChangePassword}
-                            disabled={changingPassword}
-                            className='flex items-center gap-2 px-4 py-2 bg-accent text-surface text-sm font-medium rounded-lg hover:bg-accent/85 transition disabled:opacity-50 cursor-pointer'>
+                            disabled={changingPassword || isPasswordFormEmpty}
+                            className='flex items-center gap-2 px-4 py-2 bg-accent text-surface text-sm font-medium rounded-lg hover:bg-accent/85 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer'>
                             {changingPassword ? <Loader className='w-4 h-4 animate-spin' /> : <Lock className='w-4 h-4' />}
                             Cambiar Contraseña
                         </button>
