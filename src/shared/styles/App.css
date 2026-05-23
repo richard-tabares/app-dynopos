@@ -97,6 +97,7 @@
 
     body {
         @apply bg-body text-on-body antialiased;
+        touch-action: manipulation;
     }
 
     * {
