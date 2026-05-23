@@ -1,4 +1,4 @@
-import { MessageCircle, Bug } from 'lucide-react'
+import { MessageCircle, Wrench } from 'lucide-react'
 
 const WHATSAPP_NUMBER = '573122200815'
 
@@ -25,7 +25,7 @@ export const SupportDropdown = ({ onClose, onOpenModal }) => {
                 className='w-full flex items-start gap-3 px-4 py-3 hover:bg-accent/5 transition cursor-pointer text-left'
             >
                 <section className='p-2 rounded-lg bg-accent/10 shrink-0'>
-                    <Bug className='w-5 h-5 text-accent' />
+                    <Wrench className='w-5 h-5 text-accent' />
                 </section>
                 <section className='flex flex-col'>
                     <span className='text-sm font-semibold text-on-body'>Registrar Soporte</span>
