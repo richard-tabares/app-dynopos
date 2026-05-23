@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { Store, Shield, Receipt, Bell, Save, Loader, Palette, Lock, Eye, EyeOff } from 'lucide-react'
+import { Store, Shield, Receipt, Bell, Save, Loader, Palette, Lock, Eye, EyeClosed } from 'lucide-react'
 import { sileo } from 'sileo'
 import { useStore } from '../../../../app/providers/store'
 import { updateBusiness } from '../helpers/updateBusiness'
@@ -244,7 +244,7 @@ export const Account = () => {
                     <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
                         <section>
                             <label className='block text-sm font-medium text-on-body mb-1'>Contraseña Actual</label>
-                            <div className='relative'>
+                            <div className='relative flex items-center'>
                                 <input
                                     type={showPasswords.current ? 'text' : 'password'}
                                     name='currentPassword'
@@ -255,15 +255,15 @@ export const Account = () => {
                                 />
                                 <button
                                     type='button'
-                                    onClick={() => togglePasswordVisibility('current')}
-                                    className='absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-on-body transition cursor-pointer'>
-                                    {showPasswords.current ? <EyeOff className='w-4 h-4' /> : <Eye className='w-4 h-4' />}
+                                    className='absolute right-3 bg-transparent border-none cursor-pointer text-lg p-1 text-accent hover:scale-110 transition-transform duration-300'
+                                    onClick={() => togglePasswordVisibility('current')}>
+                                    {showPasswords.current ? <EyeClosed /> : <Eye />}
                                 </button>
                             </div>
                         </section>
                         <section>
                             <label className='block text-sm font-medium text-on-body mb-1'>Nueva Contraseña</label>
-                            <div className='relative'>
+                            <div className='relative flex items-center'>
                                 <input
                                     type={showPasswords.new ? 'text' : 'password'}
                                     name='newPassword'
@@ -274,15 +274,15 @@ export const Account = () => {
                                 />
                                 <button
                                     type='button'
-                                    onClick={() => togglePasswordVisibility('new')}
-                                    className='absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-on-body transition cursor-pointer'>
-                                    {showPasswords.new ? <EyeOff className='w-4 h-4' /> : <Eye className='w-4 h-4' />}
+                                    className='absolute right-3 bg-transparent border-none cursor-pointer text-lg p-1 text-accent hover:scale-110 transition-transform duration-300'
+                                    onClick={() => togglePasswordVisibility('new')}>
+                                    {showPasswords.new ? <EyeClosed /> : <Eye />}
                                 </button>
                             </div>
                         </section>
                         <section>
                             <label className='block text-sm font-medium text-on-body mb-1'>Confirmar Contraseña</label>
-                            <div className='relative'>
+                            <div className='relative flex items-center'>
                                 <input
                                     type={showPasswords.confirm ? 'text' : 'password'}
                                     name='confirmPassword'
@@ -293,9 +293,9 @@ export const Account = () => {
                                 />
                                 <button
                                     type='button'
-                                    onClick={() => togglePasswordVisibility('confirm')}
-                                    className='absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-on-body transition cursor-pointer'>
-                                    {showPasswords.confirm ? <EyeOff className='w-4 h-4' /> : <Eye className='w-4 h-4' />}
+                                    className='absolute right-3 bg-transparent border-none cursor-pointer text-lg p-1 text-accent hover:scale-110 transition-transform duration-300'
+                                    onClick={() => togglePasswordVisibility('confirm')}>
+                                    {showPasswords.confirm ? <EyeClosed /> : <Eye />}
                                 </button>
                             </div>
                         </section>
