@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react'
 import { Search, TrendingUp, DollarSign, Bell, History, X, ChevronDown } from 'lucide-react'
-import { toast } from 'react-toastify'
+import { sileo } from 'sileo'
 import { useStore } from '../../../app/providers/store'
 import { getProducts } from '../../products/helpers/getProducts'
 import { getCategories } from '../../categories/helpers/getCategories'
@@ -50,7 +50,7 @@ export const Sales = () => {
                 }
             } catch (error) {
                 console.error('Error loading sales data:', error)
-                toast.error('Error al cargar datos de venta')
+                sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: 'Error al cargar datos de venta'})
             }
         }
         loadData()
@@ -102,7 +102,7 @@ export const Sales = () => {
 
     const handleProcessSale = (paymentMethod, total, saleDate) => {
         if (cart.length === 0) {
-            toast.warn('El carrito está vacío')
+            sileo.warning({ fill: 'var(--toast-warning)', title: 'Atención', description: 'El carrito está vacío'})
             return
         }
 
@@ -133,7 +133,7 @@ export const Sales = () => {
 
         try {
             const response = await createSale(saleData)
-            toast.success('Venta procesada exitosamente')
+            sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Venta procesada exitosamente'})
             
             // Prepare ticket data from response
             const sale = response.data
@@ -163,7 +163,7 @@ export const Sales = () => {
             setShowConfirmationModal(false)
             setSaleSummaryData(null)
         } catch (error) {
-            toast.error(error.message || 'Error al procesar la venta')
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al procesar la venta'})
         } finally {
             setLoading(false)
         }
@@ -172,7 +172,7 @@ export const Sales = () => {
     const handleReturnSale = async (sale, reason, items) => {
         try {
             await returnSale(sale.id, { reason, businessId, items })
-            toast.success('Devolución procesada exitosamente')
+            sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Devolución procesada exitosamente'})
 
             const [salesData, productsData, revenueData] = await Promise.all([
                 getSales(businessId),
@@ -183,7 +183,7 @@ export const Sales = () => {
             setProducts(productsData)
             setTodayRevenue(revenueData.todayRevenue)
         } catch (error) {
-            toast.error(error.message || 'Error al procesar la devolución')
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al procesar la devolución'})
             throw error
         }
     }

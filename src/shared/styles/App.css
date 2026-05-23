@@ -4,7 +4,11 @@
 
 @theme {
     --breakpoint-xs: 410px;
-
+    --color-toast-success: var(--toast-success);
+    --color-toast-error: var(--toast-error);
+    --color-toast-warning: var(--toast-warning);
+    --color-toast-info: var(--toast-info);
+    --color-toast-text: var(--text-toast);
     --color-surface: var(--surface);
     --color-accent: var(--accent);
     --color-body: var(--body);
@@ -26,6 +30,11 @@
 
 @layer base {
     :root {
+        --toast-success: hsl(140, 100%, 87%);
+        --toast-error: hsl(0, 100%, 87%);
+        --toast-warning: hsl(48, 100%, 85%);
+        --toast-info: hsl(210, 100%, 85%);
+        --text-toast: #111827;
         --surface: #ffffff;
         --accent: #3b7597ff;
         --body: #f9fafb;
@@ -46,6 +55,11 @@
     }
 
     .dark {
+        --toast-success: hsl(140, 100%, 89%);
+        --toast-error: hsl(0, 100%, 91%);
+        --toast-warning: hsl(48, 100%, 87%);
+        --toast-info: hsl(210, 100%, 87%);
+        --text-toast: #111827;
         --surface: #1f2937;
         --accent: #00ffffff;
         --body: #030712;
@@ -107,10 +121,12 @@
     body * {
         visibility: hidden;
     }
+
     .print-receipt,
     .print-receipt * {
         visibility: visible;
     }
+
     .print-receipt {
         position: absolute;
         left: 50%;
@@ -124,6 +140,7 @@
         border: 1px solid #e5e7eb;
         border-radius: 8px;
     }
+
     .no-print {
         display: none !important;
     }

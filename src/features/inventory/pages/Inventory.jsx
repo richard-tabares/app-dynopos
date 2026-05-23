@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Package, Search, AlertCircle, Settings2, AlertTriangle, PackageCheck, PackageX, Layers, ChevronDown } from 'lucide-react'
-import { toast } from 'react-toastify'
+import { sileo } from 'sileo'
 import { useStore } from '../../../app/providers/store'
 import { getProducts } from '../../products/helpers/getProducts'
 import { AdjustmentModal } from '../components/AdjustmentModal'
@@ -24,7 +24,7 @@ export const Inventory = () => {
                 const data = await getProducts(businessId)
                 setProducts(data)
             } catch (error) {
-                toast.error(error.message || 'Error al cargar el inventario')
+                sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al cargar el inventario'})
             }
         }
         loadInventory()
@@ -82,13 +82,13 @@ export const Inventory = () => {
                         p.id === updatedProduct.id ? updatedProduct : p,
                     ),
                 )
-                toast.success('Inventario actualizado correctamente')
+                sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Inventario actualizado correctamente'})
                 handleCloseModal()
             } else {
-                toast.error('No se pudo actualizar el inventario')
+                sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: 'No se pudo actualizar el inventario'})
             }
         } catch (error) {
-            toast.error(error.message || 'Error de red al actualizar el inventario')
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error de red al actualizar el inventario'})
         }
     }
 

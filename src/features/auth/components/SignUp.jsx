@@ -3,7 +3,7 @@ import { Eye, EyeClosed, ArrowRight, Loader } from 'lucide-react'
 import { initiateSignup } from '../helpers/initiateSignup'
 import { checkEmail } from '../helpers/checkEmail'
 import { NavLink, useNavigate } from 'react-router'
-import { toast } from 'react-toastify'
+import { sileo } from 'sileo'
 import { encryptData } from '../../../shared/helpers/crypto'
 
 export const SignUp = () => {
@@ -151,7 +151,7 @@ export const SignUp = () => {
                     replace: true,
                 })
             } catch (error) {
-                toast.error(error.message || 'Error al iniciar el registro')
+                sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al iniciar el registro'})
             } finally {
                 setLoading(false)
             }

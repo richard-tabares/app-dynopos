@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { X, CreditCard, Lock, ShieldCheck, Loader } from 'lucide-react'
-import { toast } from 'react-toastify'
+import { sileo } from 'sileo'
 import { apiFetch } from '../../../../shared/helpers/apiFetch'
 import { useEscape } from '../../../../shared/helpers/useEscape'
 
@@ -45,17 +45,17 @@ export const UpdatePaymentMethodModal = ({ isOpen, onClose, businessId, customer
         e.preventDefault()
 
         if (!acceptedReglamento || !acceptedDatos) {
-            toast.error('Debes aceptar los términos y condiciones')
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: 'Debes aceptar los términos y condiciones'})
             return
         }
 
         if (!form.card_number || !form.exp_month || !form.exp_year || !form.cvc || !form.card_holder) {
-            toast.error('Completa todos los campos de la tarjeta')
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: 'Completa todos los campos de la tarjeta'})
             return
         }
 
         if (form.card_holder.trim().length < 8) {
-            toast.error('El nombre completo debe tener al menos 8 caracteres')
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: 'El nombre completo debe tener al menos 8 caracteres'})
             return
         }
 
@@ -109,11 +109,11 @@ export const UpdatePaymentMethodModal = ({ isOpen, onClose, businessId, customer
             const msg = result.renewed
                 ? 'Método de pago actualizado y suscripción renovada'
                 : 'Método de pago actualizado exitosamente'
-            toast.success(msg)
+            sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: msg})
             onSuccess(result)
             onClose()
         } catch (error) {
-            toast.error(error.message || 'Error al actualizar el método de pago')
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al actualizar el método de pago'})
         } finally {
             setLoading(false)
         }

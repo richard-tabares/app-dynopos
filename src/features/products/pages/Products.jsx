@@ -19,7 +19,7 @@ import {
     Loader,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { toast } from 'react-toastify'
+import { sileo } from 'sileo'
 import { Modal } from '../components/Modal'
 import { ConfirmModal } from '../components/ConfirmModal'
 import { createNewProduct } from '../helpers/createNewProduct'
@@ -127,10 +127,10 @@ export const Products = () => {
                             : product,
                     ),
                 )
-                toast.success('Producto actualizado correctamente')
+                sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Producto actualizado correctamente'})
                 setOpenModal(false)
             } catch (error) {
-                toast.error(error.message || 'Error al actualizar el producto')
+                sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al actualizar el producto'})
             }
         } else {
             // Crear nuevo producto
@@ -140,10 +140,10 @@ export const Products = () => {
                     business_id: businessId,
                 })
                 setProducts([...products, newProduct])
-                toast.success('Producto creado correctamente')
+                sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Producto creado correctamente'})
                 setOpenModal(false)
             } catch (error) {
-                toast.error(error.message || 'Error al crear el producto')
+                sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al crear el producto'})
             }
         }
     }
@@ -168,16 +168,16 @@ export const Products = () => {
                             : product,
                     ),
                 )
-                toast.info(
+                sileo.info({ fill: 'var(--toast-info)', title: 'Información', description: 
                     'El producto tiene ventas asociadas y se ha marcado como inactivo.',
-                )
+                })
             } else {
                 setProducts(
                     products.filter(
                         (product) => product.id !== productToDelete,
                     ),
                 )
-                toast.success('Producto eliminado correctamente')
+                sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Producto eliminado correctamente'})
             }
         } catch (error) {
             if (
@@ -190,7 +190,7 @@ export const Products = () => {
                     ),
                 )
             }
-            toast.error(error.message || 'Error al eliminar el producto')
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al eliminar el producto'})
         } finally {
             setProductToDelete(null)
         }
@@ -210,7 +210,7 @@ export const Products = () => {
 
     const handleCreateCategory = async () => {
         if (!categoryName.trim()) {
-            toast.warn('El nombre de la categoría es obligatorio')
+            sileo.warning({ fill: 'var(--toast-warning)', title: 'Atención', description: 'El nombre de la categoría es obligatorio'})
             return
         }
         setSavingCategory(true)
@@ -220,11 +220,11 @@ export const Products = () => {
                 name: categoryName.trim(),
             })
             setCategories([...categories, newCategory])
-            toast.success('Categoría creada exitosamente')
+            sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Categoría creada exitosamente'})
             setShowCategoryModal(false)
             setCategoryName('')
         } catch (error) {
-            toast.error(error.message || 'Error al crear la categoría')
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al crear la categoría'})
         } finally {
             setSavingCategory(false)
         }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { Store, Shield, Receipt, Bell, Save, Loader, Palette, Lock, Eye, EyeOff } from 'lucide-react'
-import { toast } from 'react-toastify'
+import { sileo } from 'sileo'
 import { useStore } from '../../../../app/providers/store'
 import { updateBusiness } from '../helpers/updateBusiness'
 import { uploadLogo } from '../helpers/uploadLogo'
@@ -79,7 +79,7 @@ export const Account = () => {
 
     const handleSave = async () => {
         if (!businessId) {
-            toast.error('No se encontró el ID del negocio')
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: 'No se encontró el ID del negocio'})
             return
         }
 
@@ -97,10 +97,10 @@ export const Account = () => {
             const updated = await updateBusiness(businessId, formData)
             if (updated) {
                 setBusiness(updated)
-                toast.success('Configuraciones guardadas exitosamente')
+                sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Configuraciones guardadas exitosamente'})
             }
         } catch (error) {
-            toast.error(error.message || 'Error al guardar las configuraciones')
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al guardar las configuraciones'})
         } finally {
             setSaving(false)
         }
@@ -108,23 +108,23 @@ export const Account = () => {
 
     const handleChangePassword = async () => {
         if (!passwordData.currentPassword || !passwordData.newPassword || !passwordData.confirmPassword) {
-            toast.warn('Todos los campos de contraseña son obligatorios')
+            sileo.warning({ fill: 'var(--toast-warning)', title: 'Atención', description: 'Todos los campos de contraseña son obligatorios'})
             return
         }
         if (passwordData.newPassword !== passwordData.confirmPassword) {
-            toast.warn('Las contraseñas nuevas no coinciden')
+            sileo.warning({ fill: 'var(--toast-warning)', title: 'Atención', description: 'Las contraseñas nuevas no coinciden'})
             return
         }
         if (passwordData.newPassword.length < 6) {
-            toast.warn('La contraseña debe tener al menos 6 caracteres')
+            sileo.warning({ fill: 'var(--toast-warning)', title: 'Atención', description: 'La contraseña debe tener al menos 6 caracteres'})
             return
         }
         if (passwordData.currentPassword === passwordData.newPassword) {
-            toast.warn('La nueva contraseña debe ser diferente a la actual')
+            sileo.warning({ fill: 'var(--toast-warning)', title: 'Atención', description: 'La nueva contraseña debe ser diferente a la actual'})
             return
         }
         if (!formData.email) {
-            toast.error('No se encontró el correo del negocio')
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: 'No se encontró el correo del negocio'})
             return
         }
 
@@ -136,12 +136,12 @@ export const Account = () => {
                 newPassword: passwordData.newPassword,
             })
             if (result.status === 200) {
-                toast.success('Contraseña actualizada exitosamente. Inicia sesión de nuevo.')
+                sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Contraseña actualizada exitosamente. Inicia sesión de nuevo.'})
                 setLogOut()
                 navigate('/login', { replace: true })
             }
         } catch (error) {
-            toast.error(error.message || 'Error al cambiar la contraseña')
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al cambiar la contraseña'})
         } finally {
             setChangingPassword(false)
         }

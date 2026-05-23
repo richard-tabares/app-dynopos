@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Tag, Plus, Edit2, Trash2, Search, X, Loader, Save } from 'lucide-react'
-import { toast } from 'react-toastify'
+import { sileo } from 'sileo'
 import { useStore } from '../../../app/providers/store'
 import { getCategories } from '../../categories/helpers/getCategories'
 import { createCategory } from '../../categories/helpers/createCategory'
@@ -36,7 +36,7 @@ export const Categories = () => {
             const data = await getCategories(businessId)
             setCategories(data)
         } catch {
-            toast.error('Error al cargar categorías')
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: 'Error al cargar categorías'})
         }
     }
 
@@ -62,7 +62,7 @@ export const Categories = () => {
 
     const handleSave = async () => {
         if (!categoryName.trim()) {
-            toast.warn('El nombre de la categoría es obligatorio')
+            sileo.warning({ fill: 'var(--toast-warning)', title: 'Atención', description: 'El nombre de la categoría es obligatorio'})
             return
         }
 
@@ -72,20 +72,20 @@ export const Categories = () => {
                 await updateCategory(editingCategory.id, {
                     name: categoryName.trim(),
                 })
-                toast.success('Categoría actualizada exitosamente')
+                sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Categoría actualizada exitosamente'})
             } else {
                 await createCategory({
                     business_id: businessId,
                     name: categoryName.trim(),
                 })
-                toast.success('Categoría creada exitosamente')
+                sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Categoría creada exitosamente'})
             }
             setCategoryName('')
             setEditingCategory(null)
             await loadCategories()
             setShowModal(false)
         } catch (error) {
-            toast.error(error.message || 'Error al guardar la categoría')
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al guardar la categoría'})
         } finally {
             setSaving(false)
         }
@@ -96,11 +96,11 @@ export const Categories = () => {
         setLoading(true)
         try {
             await deleteCategory(showDeleteConfirm.id)
-            toast.success('Categoría eliminada exitosamente')
+            sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Categoría eliminada exitosamente'})
             setShowDeleteConfirm(null)
             await loadCategories()
         } catch (error) {
-            toast.error(error.message || 'Error al eliminar la categoría')
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al eliminar la categoría'})
         } finally {
             setLoading(false)
         }

@@ -1,6 +1,6 @@
 import { X, Loader, Send, MessageCircleQuestionMark } from 'lucide-react'
 import { useState } from 'react'
-import { toast } from 'react-toastify'
+import { sileo } from 'sileo'
 import { useEscape } from '../../../shared/helpers/useEscape'
 import { createSupportTicket } from '../helpers/createSupportTicket'
 
@@ -33,10 +33,10 @@ export const SupportModal = ({ onClose }) => {
         setSubmitting(true)
         try {
             await createSupportTicket(formData)
-            toast.success('Ticket de soporte creado con éxito')
+            sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Ticket de soporte creado con éxito'})
             onClose()
         } catch (error) {
-            toast.error(error.message || 'Error al crear el ticket')
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al crear el ticket'})
         } finally {
             setSubmitting(false)
         }

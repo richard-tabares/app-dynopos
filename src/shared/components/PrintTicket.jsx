@@ -1,6 +1,6 @@
 import { useRef, useEffect, useCallback } from 'react'
 import html2pdf from 'html2pdf.js'
-import { toast } from 'react-toastify'
+import { sileo } from 'sileo'
 
 const formatCurrency = (value) =>
     new Intl.NumberFormat('es-CO', {
@@ -30,7 +30,7 @@ export const PrintTicket = ({ children, printRef, sale, business, ticketFooter }
 
         const pdfWindow = window.open('', '_blank')
         if (!pdfWindow) {
-            toast.warning('Permite ventanas emergentes para ver el PDF')
+            sileo.warning({ fill: 'var(--toast-warning)', title: 'Atención', description: 'Permite ventanas emergentes para ver el PDF'})
             return
         }
         pdfWindow.document.write(
@@ -132,7 +132,7 @@ export const PrintTicket = ({ children, printRef, sale, business, ticketFooter }
             pdfWindow.location.href = blobUrl
         } catch (err) {
             pdfWindow.close()
-            toast.error(`Error: ${err?.message || err}`)
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: `Error: ${err?.message || err}`})
         }
     }, [sale, business, ticketFooter])
 

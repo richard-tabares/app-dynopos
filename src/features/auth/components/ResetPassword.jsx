@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from "react-router"
 import { resetPassword } from '../helpers/resetPassword'
 import { useState, useMemo } from "react"
-import { toast } from 'react-toastify'
+import { sileo } from 'sileo'
 import { Eye, EyeClosed, KeyRound } from 'lucide-react'
 
 export const ResetPassword = () => {
@@ -64,11 +64,11 @@ export const ResetPassword = () => {
             try {
                 const data = await resetPassword(token, refreshToken, password)
                 if (data) {
-                    toast.success('Contraseña actualizada exitosamente')
+                    sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Contraseña actualizada exitosamente'})
                     navigate('/login', { replace: true })
                 }
             } catch (error) {
-                toast.error(error.message || 'Error al restablecer la contraseña')
+                sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al restablecer la contraseña'})
             }
         } else {
             setErrors(newErrors)

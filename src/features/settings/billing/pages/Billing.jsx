@@ -4,7 +4,7 @@ import { getSubscription, getTransactions, cancelRecurring, reactivateSubscripti
 import { SubscriptionInfo } from '../components/SubscriptionInfo'
 import { PaymentMethodCard } from '../components/PaymentMethodCard'
 import { PaymentHistoryTable } from '../components/PaymentHistoryTable'
-import { toast } from 'react-toastify'
+import { sileo } from 'sileo'
 
 export const Billing = () => {
     const user = useStore((state) => state.user)
@@ -59,15 +59,15 @@ export const Billing = () => {
         try {
             const result = await payNow(businessId)
             if (result.renewed) {
-                toast.success('Suscripción renovada exitosamente')
+                sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Suscripción renovada exitosamente'})
             } else if (result.transaction?.status === 'pending') {
-                toast.info('El pago está pendiente de confirmación. Se actualizará automáticamente.')
+                sileo.info({ fill: 'var(--toast-info)', title: 'Información', description: 'El pago está pendiente de confirmación. Se actualizará automáticamente.'})
             } else {
-                toast.error('No se pudo renovar la suscripción. Verifica tu método de pago.')
+                sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: 'No se pudo renovar la suscripción. Verifica tu método de pago.'})
             }
             await refreshBillingData()
         } catch (error) {
-            toast.error(error.message || 'Error al procesar el pago')
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al procesar el pago'})
             await refreshBillingData()
         } finally {
             setIsPaying(false)
@@ -80,14 +80,14 @@ export const Billing = () => {
         try {
             if (newValue) {
                 await reactivateSubscription(businessId)
-                toast.success('Pagos recurrentes activados')
+                sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Pagos recurrentes activados'})
             } else {
                 await cancelRecurring(businessId)
-                toast.success('Pagos recurrentes desactivados')
+                sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Pagos recurrentes desactivados'})
             }
         } catch (error) {
             setSubscription(prev)
-            toast.error(error.message || 'Error al actualizar')
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al actualizar'})
         }
     }, [subscription, businessId])
 

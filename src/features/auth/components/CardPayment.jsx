@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router'
 import { Lock, Check, CreditCard, Calendar, ShieldCheck, Loader } from 'lucide-react'
 import { getAcceptanceTokens } from '../helpers/getAcceptanceTokens'
 import { processCardPayment } from '../helpers/processCardPayment'
-import { toast } from 'react-toastify'
+import { sileo } from 'sileo'
 import { decryptData } from '../../../shared/helpers/crypto'
 import { PaymentModal } from '../../../shared/components/PaymentModal'
 
@@ -81,12 +81,12 @@ export const CardPayment = () => {
         e.preventDefault()
 
         if (!acceptedReglamento || !acceptedDatos) {
-            toast.error('Debes aceptar los términos y condiciones')
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: 'Debes aceptar los términos y condiciones'})
             return
         }
 
         if (!form.card_number || !form.exp_month || !form.exp_year || !form.cvc || !form.card_holder || !form.legal_id) {
-            toast.error('Completa todos los campos de la tarjeta')
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: 'Completa todos los campos de la tarjeta'})
             return
         }
 

@@ -25,8 +25,7 @@ import { ForgotPassword } from '../features/auth/components/ForgotPassword'
 import { ResetPassword } from '../features/auth/components/ResetPassword'
 import { useStore } from './providers/store'
 import { Products } from '../features/products/pages/Products'
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import { Toaster } from 'sileo'
 
 export const App = () => {
     const user = useStore((state) => state.user)
@@ -114,17 +113,55 @@ export const App = () => {
                                 path='/inventory'
                                 element={<Inventory />}
                             />
-                            <Route path='/reports' element={<Reports />}>
-                                <Route index element={<Navigate to='ventas' replace />} />
-                                <Route path='ventas' element={<SalesReports />} />
-                                <Route path='inventario' element={<InventoryMovements />} />
-                                <Route path='devoluciones' element={<DevolucionesReports />} />
-                                <Route path='ganancias' element={<GananciasReports />} />
+                            <Route
+                                path='/reports'
+                                element={<Reports />}>
+                                <Route
+                                    index
+                                    element={
+                                        <Navigate
+                                            to='ventas'
+                                            replace
+                                        />
+                                    }
+                                />
+                                <Route
+                                    path='ventas'
+                                    element={<SalesReports />}
+                                />
+                                <Route
+                                    path='inventario'
+                                    element={<InventoryMovements />}
+                                />
+                                <Route
+                                    path='devoluciones'
+                                    element={<DevolucionesReports />}
+                                />
+                                <Route
+                                    path='ganancias'
+                                    element={<GananciasReports />}
+                                />
                             </Route>
-                            <Route path='/settings' element={<Settings />}>
-                                <Route index element={<Navigate to='account' replace />} />
-                                <Route path='account' element={<Account />} />
-                                <Route path='billing' element={<Billing />} />
+                            <Route
+                                path='/settings'
+                                element={<Settings />}>
+                                <Route
+                                    index
+                                    element={
+                                        <Navigate
+                                            to='account'
+                                            replace
+                                        />
+                                    }
+                                />
+                                <Route
+                                    path='account'
+                                    element={<Account />}
+                                />
+                                <Route
+                                    path='billing'
+                                    element={<Billing />}
+                                />
                             </Route>
                             <Route
                                 path='/*'
@@ -132,7 +169,7 @@ export const App = () => {
                             />
                         </Route>
                     ) : (
-                        // Ruta por defecto 
+                        // Ruta por defecto
                         <Route
                             path='/*'
                             element={<Navigate to='/login' />}
@@ -140,17 +177,23 @@ export const App = () => {
                     )}
                 </Routes>
             </section>
-            <ToastContainer
+            <Toaster
                 position='top-right'
-                autoClose={3000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
                 theme={isDarkMode ? 'dark' : 'light'}
+                options={{
+                    duration: 3000,
+                    roundness: 10,
+                    autopilot: {
+                        expand: 500,
+                        collapse: 5000,
+                    },
+                    styles: {
+                        title: 'text-toast-text! font-bold! text-center! text-lg!',
+                        description: 'text-toast-text! text-center!',
+                        badge: 'bg-toast-text!',
+                        button: 'bg-toast-text! hover:bg-toast-text!',
+                    },
+                }}
             />
         </BrowserRouter>
     )

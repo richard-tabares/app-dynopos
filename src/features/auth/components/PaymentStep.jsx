@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router'
 import { CreditCard, Landmark, ArrowLeft, Check, Calendar, CalendarPlus, CalendarCheck, Loader } from 'lucide-react'
 import { createCheckout } from '../helpers/createCheckout'
-import { toast } from 'react-toastify'
+import { sileo } from 'sileo'
 import { decryptData, encryptData } from '../../../shared/helpers/crypto'
 
 export const PaymentStep = () => {
@@ -32,12 +32,12 @@ export const PaymentStep = () => {
 
     const handlePayment = async () => {
         if (!paymentMethod) {
-            toast.error('Selecciona un método de pago')
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: 'Selecciona un método de pago'})
             return
         }
 
         if (!signupData?.email) {
-            toast.error('Datos de registro no encontrados. Vuelve a registrarte.')
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: 'Datos de registro no encontrados. Vuelve a registrarte.'})
             navigate('/signup', { replace: true })
             return
         }
@@ -72,10 +72,10 @@ export const PaymentStep = () => {
             if (result.checkout_url) {
                 window.location.href = result.checkout_url
             } else {
-                toast.error('Error al iniciar el pago')
+                sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: 'Error al iniciar el pago'})
             }
         } catch (error) {
-            toast.error(error.message || 'Error al procesar el pago')
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al procesar el pago'})
         } finally {
             setLoading(false)
         }

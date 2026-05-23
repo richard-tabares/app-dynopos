@@ -2,7 +2,7 @@ import { NavLink, useNavigate } from "react-router"
 import { Send } from 'lucide-react'
 import { forgotPassword } from '../helpers/forgotPassword'
 import { useState } from "react"
-import { toast } from 'react-toastify'
+import { sileo } from 'sileo'
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -42,13 +42,13 @@ export const ForgotPassword = () => {
             try {
                 const data = await forgotPassword(email)
                 if (data) {
-                    toast.success('Si el correo está registrado, recibirás un enlace para restablecer tu contraseña')
+                    sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Si el correo está registrado, recibirás un enlace para restablecer tu contraseña'})
                     navigate('/login', { replace: true })
                 } else {
-                    toast.error('Error al enviar el correo')
+                    sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: 'Error al enviar el correo'})
                 }
             } catch (error) {
-                toast.error(error.message || 'Error al enviar el correo')
+                sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al enviar el correo'})
             }
         } else {
             setErrors(newErrors)

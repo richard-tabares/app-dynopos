@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Clock, Search, ReceiptText, ChevronDown, RotateCcw } from 'lucide-react'
-import { toast } from 'react-toastify'
+import { sileo } from 'sileo'
 import { SaleTicketModal } from '../../../../shared/components/SaleTicketModal'
 import { ReturnModal } from '../../../sales/components/ReturnModal'
 import { returnSale } from '../../../sales/helpers/returnSale'
@@ -41,13 +41,13 @@ export const RecentSalesTable = ({ sales = [], onSaleUpdated }) => {
     const handleReturn = async (sale, reason, items) => {
         try {
             await returnSale(sale.id, { reason, businessId, items })
-            toast.success('Devolución procesada exitosamente')
+            sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Devolución procesada exitosamente'})
             setReturnTarget(null)
             onSaleUpdated?.()
             const revenueData = await getTodayRevenue(businessId)
             setTodayRevenue(revenueData.todayRevenue)
         } catch (err) {
-            toast.error(err.message || 'Error al procesar la devolución')
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: err.message || 'Error al procesar la devolución'})
             throw err
         }
     }

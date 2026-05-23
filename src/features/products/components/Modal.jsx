@@ -1,6 +1,6 @@
 import { X, Loader, Package, Save } from 'lucide-react'
 import { useState } from 'react'
-import { toast } from 'react-toastify'
+import { sileo } from 'sileo'
 import { useEscape } from '../../../shared/helpers/useEscape'
 export const Modal = ({
     handleSubmit,
@@ -55,7 +55,7 @@ export const Modal = ({
             )
 
             if (skuDuplicate) {
-                toast.error('Ya existe un producto con este SKU')
+                sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: 'Ya existe un producto con este SKU'})
                 setSubmitting(false)
                 return
             }

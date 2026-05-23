@@ -2,7 +2,7 @@ import { NavLink, useNavigate } from "react-router"
 import { Loader, LogIn } from 'lucide-react'
 import { login } from '../helpers/login'
 import { useState } from "react"
-import { toast } from 'react-toastify'
+import { sileo } from 'sileo'
 import { useStore } from '../../../app/providers/store'
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -55,13 +55,13 @@ export const Login = () => {
             try {
                 const data = await login(user, setLogin)
                 if (data) {
-                    toast.success('Sesión iniciada correctamente')
+                    sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Sesión iniciada correctamente'})
                     navigate('/dashboard', { replace: true })
                 } else {
-                    toast.error('Credenciales incorrectas')
+                    sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: 'Credenciales incorrectas'})
                 }
             } catch (error) {
-                toast.error(error.message || 'Error al iniciar sesión')
+                sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al iniciar sesión'})
             } finally {
                 setLoading(false)
             }

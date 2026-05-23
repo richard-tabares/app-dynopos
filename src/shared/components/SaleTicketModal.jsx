@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { X, FileDown, Printer, ReceiptText, Calendar } from 'lucide-react'
-import { toast } from 'react-toastify'
+import { sileo } from 'sileo'
 import { useStore } from '../../app/providers/store'
 import { useEscape } from '../helpers/useEscape'
 import { useFormatDate } from '../helpers/useFormatDate'
@@ -34,14 +34,14 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
         if (!newDate || newDate === currentSaleDate) return
         try {
             await updateSaleDate(sale.id, newDate)
-            toast.success('Fecha actualizada correctamente')
+            sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Fecha actualizada correctamente'})
             onSaleUpdated?.()
             if (businessId) {
                 const revenueData = await getTodayRevenue(businessId)
                 setTodayRevenue(revenueData.todayRevenue)
             }
         } catch (err) {
-            toast.error(err.message || 'Error al actualizar la fecha')
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: err.message || 'Error al actualizar la fecha'})
         }
     }
 
