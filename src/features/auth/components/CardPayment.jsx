@@ -270,11 +270,11 @@ export const CardPayment = () => {
                             <section className='flex flex-col gap-2'>
                                 <label className='font-semibold text-on-surface'>Tipo <span className='text-red-500'>*</span></label>
                                 <select name='legal_id_type' value={form.legal_id_type} onChange={handleChange} className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:ring-0 focus:ring-accent focus:border-accent'>
-                                    <option value='CC'>CC</option>
-                                    <option value='CE'>CE</option>
-                                    <option value='NIT'>NIT</option>
-                                    <option value='PP'>Pasaporte</option>
-                                    <option value='TI'>TI</option>
+                                    <option className='text-select-input' value='CC'>CC</option>
+                                    <option className='text-select-input' value='CE'>CE</option>
+                                    <option className='text-select-input' value='NIT'>NIT</option>
+                                    <option className='text-select-input' value='PP'>Pasaporte</option>
+                                    <option className='text-select-input' value='TI'>TI</option>
                                 </select>
                             </section>
                             <section className='flex flex-col gap-2 col-span-2'>

@@ -87,9 +87,9 @@ export const DateRangeFilter = ({ value: currentFilter = 'month', onChange, star
                         }}
                         className='border border-divider rounded-md px-4 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                     >
-                        <option value=''>Todas las categorías</option>
+                        <option className='text-select-input' value=''>Todas las categorías</option>
                         {categories.map((cat) => (
-                            <option key={cat.id} value={cat.id}>{cat.name}</option>
+                            <option className='text-select-input' key={cat.id} value={cat.id}>{cat.name}</option>
                         ))}
                     </select>
                 </div>

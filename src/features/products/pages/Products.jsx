@@ -464,7 +464,7 @@ export const Products = () => {
                                 value={searchTerm}
                                 onChange={handleSearch}
                                 className='w-full border border-divider rounded-md pl-10 pr-3 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
-                                placeholder='Buscar por nombre, código o código de barras...'
+                                placeholder='Buscar por código o nombre...'
                             />
                         </div>
                         <div className='flex flex-wrap items-center gap-2 max-w-full overflow-x-auto scrollbar-none'>

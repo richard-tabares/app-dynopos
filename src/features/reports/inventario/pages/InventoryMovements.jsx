@@ -173,7 +173,7 @@ export const InventoryMovements = () => {
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className='w-full border border-divider rounded-md pl-10 pr-3 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
-                        placeholder='Buscar por nombre, código o código de barras...'
+                        placeholder='Buscar por código o nombre...'
                     />
                 </div>
                 <div className='flex gap-1 bg-disabled/70 overflow-x-auto scrollbar-none rounded-lg p-1 mb-4'>

@@ -74,7 +74,7 @@ export const StockTable = ({ data = [] }) => {
                     type='text'
                     value={search}
                     onChange={(e) => { setSearch(e.target.value); setVisibleCount(10) }}
-                    placeholder='Buscar por nombre, código o código de barras...'
+                    placeholder='Buscar por código o nombre...'
                     className='w-full border border-divider rounded-md pl-10 pr-3 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                 />
             </div>

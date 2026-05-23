@@ -54,6 +54,11 @@ export const UpdatePaymentMethodModal = ({ isOpen, onClose, businessId, customer
             return
         }
 
+        if (form.card_holder.trim().length < 8) {
+            toast.error('El nombre completo debe tener al menos 8 caracteres')
+            return
+        }
+
         setLoading(true)
         try {
             const apiUrl = import.meta.env.VITE_API_URL
@@ -185,7 +190,7 @@ export const UpdatePaymentMethodModal = ({ isOpen, onClose, businessId, customer
                     </section>
 
                     <section className='flex flex-col gap-2'>
-                        <label className='font-semibold text-on-surface text-sm'>Nombre del titular <span className='text-red-500'>*</span></label>
+                        <label className='font-semibold text-on-surface text-sm'>Nombre completo <span className='text-red-500'>*</span></label>
                         <input
                             type='text'
                             name='card_holder'
@@ -233,7 +238,7 @@ export const UpdatePaymentMethodModal = ({ isOpen, onClose, businessId, customer
 
                     <button
                         type='submit'
-                        disabled={loading || !acceptedReglamento || !acceptedDatos}
+                        disabled={loading || !form.card_number || !form.exp_month || !form.exp_year || !form.cvc || !form.card_holder || form.card_holder.trim().length < 8 || !acceptedReglamento || !acceptedDatos}
                         className='w-full mt-2 px-6 py-3 bg-accent text-surface border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 hover:bg-accent/85 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'
                     >
                         {loading ? (

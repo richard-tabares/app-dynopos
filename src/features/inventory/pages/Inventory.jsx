@@ -138,7 +138,7 @@ export const Inventory = () => {
                                     setVisibleCount(20)
                                 }}
                                 className='w-full border border-divider rounded-md pl-10 pr-3 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
-                                placeholder='Buscar por nombre, código o código de barras...'
+                                placeholder='Buscar por código o nombre...'
                             />
                         </div>
                         <div className='flex gap-2 bg-disabled/70 rounded-lg p-1 w-fit max-w-full overflow-x-auto scrollbar-none'>

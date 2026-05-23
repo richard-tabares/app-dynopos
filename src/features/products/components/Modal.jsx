@@ -146,7 +146,7 @@ export const Modal = ({
                             className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0 text-on-surface'>
                             {categories.map((category) => (
                                 <option
-                                    className='dark:text-gray-700'
+                                    className='text-select-input'
                                     key={category.id}
                                     value={category.id}>
                                     {category.name}
