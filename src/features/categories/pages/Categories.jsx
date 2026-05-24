@@ -28,7 +28,7 @@ export const Categories = () => {
 
     useEscape(showModal ? handleEscapeCreate : showDeleteConfirm ? handleEscapeDelete : null)
 
-    const businessId = user?.data?.user?.id
+    const businessId = user?.profile?.business_id || user?.data?.user?.id
 
     const loadCategories = async () => {
         if (!businessId) return

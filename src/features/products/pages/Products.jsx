@@ -86,7 +86,7 @@ export const Products = () => {
         'Estado',
         'Acciones',
     ]
-    const businessId = user.data.user.id
+    const businessId = user?.profile?.business_id || user.data.user.id
 
     useEffect(() => {
         const loadProductsAndCategories = async () => {
@@ -110,8 +110,7 @@ export const Products = () => {
         setOpenModal(!openModal)
     }
     const handleSubmit = async (formData) => {
-        const businessId = JSON.parse(localStorage.getItem('dynopos-store'))
-            .state.user.data.user.id
+        const businessId = user?.profile?.business_id || user?.data?.user?.id
 
         if (formData.id) {
             // Actualizar producto existente

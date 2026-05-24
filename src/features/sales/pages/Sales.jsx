@@ -30,7 +30,7 @@ export const Sales = () => {
 
     const [showClearModal, setShowClearModal] = useState(false)
 
-    const businessId = user?.data?.user?.id
+    const businessId = user?.profile?.business_id || user?.data?.user?.id
 
     useEffect(() => {
         const loadData = async () => {

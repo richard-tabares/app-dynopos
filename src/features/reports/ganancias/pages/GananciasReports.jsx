@@ -29,7 +29,7 @@ const computeDates = (filter) => {
 
 export const GananciasReports = () => {
     const { user } = useStore()
-    const businessId = user?.data?.user?.id
+    const businessId = user?.profile?.business_id || user?.data?.user?.id
 
     const [filter, setFilter] = useState('month')
     const [rangeStart, setRangeStart] = useState('')

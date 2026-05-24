@@ -1,19 +1,37 @@
-import { Outlet, useLocation } from 'react-router'
+import { Outlet, useLocation, useNavigate } from 'react-router'
 import { SideBar } from './SideBar'
 import { Header } from './Header'
 import { useEffect } from 'react'
 import { useStore } from '../providers/store'
 import { getDashboardData } from '../../features/dashboard/helpers/getDashboardData'
 
+const CAJERO_RESTRICTED = [
+    '/products', '/categories', '/inventory',
+    '/reports', '/settings',
+]
+
 export const DashboardLayout = () => {
     const { user, isCollapsed, setTodayRevenue, todayRevenue } = useStore()
-    const businessId = user?.data?.user?.id
+    const businessId = user?.profile?.business_id || user?.data?.user?.id
     const businessName = `${user?.business?.business_name} - POS`
     const location = useLocation()
+    const navigate = useNavigate()
 
     useEffect(() => {
         document.title = businessName || 'DynoPOS'
     }, [businessName])
+
+    useEffect(() => {
+        const isCajero = user?.profile?.role === 'cajero'
+        if (isCajero) {
+            const restricted = CAJERO_RESTRICTED.some((prefix) =>
+                location.pathname.startsWith(prefix)
+            )
+            if (restricted) {
+                navigate('/sales', { replace: true })
+            }
+        }
+    }, [user, location.pathname, navigate])
 
     useEffect(() => {
         const fetchRevenue = async () => {

@@ -8,7 +8,7 @@ const formatCurrency = (value) =>
 
 export const ProductPerformanceSearch = () => {
     const { user } = useStore()
-    const businessId = user?.data?.user?.id
+    const businessId = user?.profile?.business_id || user?.data?.user?.id
     const [search, setSearch] = useState('')
     const [results, setResults] = useState(null)
     const [loading, setLoading] = useState(false)

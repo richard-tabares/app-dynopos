@@ -15,7 +15,7 @@ export const Inventory = () => {
     const [openModal, setOpenModal] = useState(false)
     const [visibleCount, setVisibleCount] = useState(10)
 
-    const businessId = user?.data?.user?.id
+    const businessId = user?.profile?.business_id || user?.data?.user?.id
 
     useEffect(() => {
         const loadInventory = async () => {

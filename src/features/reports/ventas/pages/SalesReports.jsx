@@ -33,7 +33,7 @@ const computeDates = (filter) => {
 
 export const SalesReports = () => {
     const { user } = useStore()
-    const businessId = user?.data?.user?.id
+    const businessId = user?.profile?.business_id || user?.data?.user?.id
     const [data, setData] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)

@@ -11,7 +11,7 @@ import { PrintTicket } from './PrintTicket'
 export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
     const business = useStore((state) => state.user.business)
     const setTodayRevenue = useStore((state) => state.setTodayRevenue)
-    const businessId = useStore((state) => state.user?.data?.user?.id)
+    const businessId = useStore((state) => state.user?.profile?.business_id || state.user?.data?.user?.id)
     const currentSaleDate = sale?.date || ''
     const ticketFooter = business?.ticket_footer || ''
     const dateInputRef = useRef(null)

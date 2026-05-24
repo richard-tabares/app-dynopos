@@ -8,7 +8,7 @@ import { sileo } from 'sileo'
 
 export const Billing = () => {
     const user = useStore((state) => state.user)
-    const businessId = user?.data?.user?.id
+    const businessId = user?.profile?.business_id || user?.data?.user?.id
 
     const [subscription, setSubscription] = useState(null)
     const [transactions, setTransactions] = useState([])

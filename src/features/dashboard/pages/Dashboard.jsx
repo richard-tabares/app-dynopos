@@ -20,7 +20,7 @@ export const Dashboard = () => {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
 
-    const businessId = user?.data?.user?.id
+    const businessId = user?.profile?.business_id || user?.data?.user?.id
 
     useEffect(() => {
         const loadData = async () => {

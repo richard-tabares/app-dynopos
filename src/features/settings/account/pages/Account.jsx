@@ -10,7 +10,7 @@ import { changePassword } from '../helpers/changePassword'
 export const Account = () => {
     const { user, setBusiness, setLogOut, isDarkMode, toggleDarkMode } = useStore()
     const navigate = useNavigate()
-    const businessId = user?.data?.user?.id
+    const businessId = user?.profile?.business_id || user?.data?.user?.id
 
     const [formData, setFormData] = useState({
         business_name: '',

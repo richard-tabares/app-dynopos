@@ -21,7 +21,7 @@ const getStatusConfig = (status) => statusConfig[status] || statusConfig.default
 export const RecentSalesTable = ({ sales = [], onSaleUpdated }) => {
     const user = useStore((s) => s.user)
     const setTodayRevenue = useStore((s) => s.setTodayRevenue)
-    const businessId = user?.data?.user?.id
+    const businessId = user?.profile?.business_id || user?.data?.user?.id
     const [visibleCount, setVisibleCount] = useState(10)
     const [search, setSearch] = useState('')
     const [selectedSale, setSelectedSale] = useState(null)

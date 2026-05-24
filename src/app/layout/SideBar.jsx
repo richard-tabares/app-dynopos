@@ -16,6 +16,7 @@ import {
     Warehouse,
     TrendingUp,
     User,
+    Users,
     CreditCard
 } from 'lucide-react'
 import { useNavigate, NavLink, useLocation } from 'react-router'
@@ -58,9 +59,12 @@ export const SideBar = () => {
     const settingsSubItems = [
         { id: 'account', label: 'Cuenta', icon: User, path: '/settings/account' },
         { id: 'billing', label: 'Facturación', icon: CreditCard, path: '/settings/billing' },
+        { id: 'users', label: 'Usuarios', icon: Users, path: '/settings/users' },
     ]
 
-    const menuItems = [
+    const isCajero = user?.profile?.role === 'cajero'
+
+    const allMenuItems = [
         {
             id: 'dashboard',
             label: 'Dashboard',
@@ -106,6 +110,10 @@ export const SideBar = () => {
             hasSubmenu: true,
         },
     ]
+
+    const menuItems = isCajero
+        ? allMenuItems.filter((m) => m.id === 'dashboard' || m.id === 'sales')
+        : allMenuItems
 
     const handleLogout = async () => {
         await logout()

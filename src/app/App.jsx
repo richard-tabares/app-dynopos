@@ -13,6 +13,7 @@ import { GananciasReports } from '../features/reports/ganancias/pages/GananciasR
 import { Settings } from '../features/settings/pages/Settings'
 import { Account } from '../features/settings/account/pages/Account'
 import { Billing } from '../features/settings/billing/pages/Billing'
+import { Users } from '../features/users/pages/Users'
 import { Login } from '../features/auth/components/Login'
 import { SignUp } from '../features/auth/components/SignUp'
 import { PaymentStep } from '../features/auth/components/PaymentStep'
@@ -161,6 +162,10 @@ export const App = () => {
                                 <Route
                                     path='billing'
                                     element={<Billing />}
+                                />
+                                <Route
+                                    path='users'
+                                    element={<Users />}
                                 />
                             </Route>
                             <Route

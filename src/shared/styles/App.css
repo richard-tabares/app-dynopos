@@ -22,6 +22,7 @@
     --color-divider: var(--divider);
     --color-divider-light: var(--divider-light);
     --color-disabled: var(--disabled);
+    --color-danger: var(--danger);
     --color-select-input: var(--select-input);
     --color-hover: var(--hover);
     --color-hover-strong: var(--hover-strong);
@@ -48,6 +49,7 @@
         --divider: #e5e7eb;
         --divider-light: #f3f4f6;
         --disabled: #f3f4f6;
+        --danger: #dc2626;
         --select-input: #1f2937;
         --hover: #f9fafb;
         --hover-strong: #f3f4f6;
@@ -73,6 +75,7 @@
         --divider: #374151;
         --divider-light: #374151;
         --disabled: #374151;
+        --danger: #dc2626;
         --select-input: #1f2937;
         --hover: #374151;
         --hover-strong: #4b5563;
