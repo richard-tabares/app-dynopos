@@ -1,8 +1,9 @@
 import { useStore } from '../../../app/providers/store'
 
-export const ProductCard = ({ product }) => {
-    const addToCart = useStore((state) => state.addToCart)
+export const ProductCard = ({ product, onAddToCart }) => {
+    const storeAddToCart = useStore((state) => state.addToCart)
     const cart = useStore((state) => state.cart)
+    const addToCart = onAddToCart || storeAddToCart
 
     const originalStock = product.inventory?.[0]?.stock || 0
     const cartQuantity = cart.find(item => item.id === product.id)?.quantity || 0
@@ -44,11 +45,11 @@ export const ProductCard = ({ product }) => {
     )
 }
 
-export const ProductGrid = ({ products = [] }) => {
+export const ProductGrid = ({ products = [], onAddToCart }) => {
     return (
         <div className='flex flex-col gap-3'>
             {products.map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard key={product.id} product={product} onAddToCart={onAddToCart} />
             ))}
         </div>
     )

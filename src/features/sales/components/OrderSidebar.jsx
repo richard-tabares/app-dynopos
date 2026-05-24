@@ -23,6 +23,7 @@ export const OrderSidebar = ({ onProcessSale }) => {
         clearCart,
         saleDate,
         setSaleDate,
+        currentLabel,
     } = useStore()
     const subscription = user?.subscription
     const hasActiveSubscription = subscription?.status === 'active'
@@ -52,7 +53,7 @@ export const OrderSidebar = ({ onProcessSale }) => {
                 <div className='flex items-center justify-between'>
                     <h2 className='text-xl font-bold flex items-center gap-2'>
                         <ShoppingCart className='w-5 h-5 text-accent' />
-                        Orden Actual
+                        {currentLabel ? `Orden #${currentLabel}` : 'Orden Actual'}
                     </h2>
                     {cart?.length > 0 && (
                         <button

@@ -28,7 +28,7 @@ migrateToken()
 
 export const useStore = create(
     persist(
-        (set) => ({
+        (set, get) => ({
             user: {},
             token: null,
             refreshToken: null,
@@ -39,13 +39,25 @@ export const useStore = create(
             cart: [],
             todayRevenue: 0,
             categories: [],
+            pendingOrders: [],
+            currentLabel: null,
+            nextLabel: 1,
             setLogin: (payload) =>
                 set({
                     user: payload,
                     token: payload?.access_token || null,
                     refreshToken: payload?.data?.session?.refresh_token || null,
                 }),
-            setLogOut: () => set({ user: '', token: null, refreshToken: null, cart: [] }),
+            setLogOut: () =>
+                set({
+                    user: '',
+                    token: null,
+                    refreshToken: null,
+                    cart: [],
+                    pendingOrders: [],
+                    currentLabel: null,
+                    nextLabel: 1,
+                }),
             setToken: (token) => set({ token }),
             setRefreshToken: (refreshToken) => set({ refreshToken }),
             setSubscription: (payload) =>
@@ -82,10 +94,14 @@ export const useStore = create(
                         cart: [...state.cart, { ...product, quantity: 1 }],
                     }
                 }),
-            removeFromCart: (productId) =>
-                set((state) => ({
-                    cart: state.cart.filter((item) => item.id !== productId),
-                })),
+            removeFromCart: (productId) => {
+                const { cart } = get()
+                const updated = cart.filter((item) => item.id !== productId)
+                set({
+                    cart: updated,
+                    currentLabel: updated.length === 0 ? null : get().currentLabel,
+                })
+            },
             updateQuantity: (productId, quantity) =>
                 set((state) => ({
                     cart: state.cart.map((item) =>
@@ -94,11 +110,100 @@ export const useStore = create(
                             : item,
                     ),
                 })),
-            clearCart: () => set({ cart: [] }),
+            clearCart: () => set({ cart: [], currentLabel: null }),
             setTodayRevenue: (payload) => set({ todayRevenue: payload }),
             setCategories: (payload) => set({ categories: payload }),
             saleDate: new Date().toLocaleDateString('en-CA'),
             setSaleDate: (payload) => set({ saleDate: payload }),
+
+            // ---- Multi-order (tabs) actions ----
+
+            initCurrentOrder: () => {
+                const { nextLabel } = get()
+                set({
+                    currentLabel: nextLabel,
+                    nextLabel: nextLabel + 1,
+                })
+            },
+
+            holdCurrentOrder: () => {
+                const { cart, saleDate, currentLabel, nextLabel } = get()
+                if (cart.length === 0 || currentLabel === null) return
+
+                const newPending = {
+                    label: currentLabel,
+                    cart: [...cart],
+                    saleDate,
+                }
+
+                set({
+                    pendingOrders: [...get().pendingOrders, newPending],
+                    cart: [],
+                    saleDate: new Date().toLocaleDateString('en-CA'),
+                    currentLabel: nextLabel,
+                    nextLabel: nextLabel + 1,
+                })
+            },
+
+            switchToOrder: (label) => {
+                const { cart, saleDate, currentLabel, pendingOrders } = get()
+                const target = pendingOrders.find((o) => o.label === label)
+                if (!target || label === currentLabel) return
+
+                const remaining = pendingOrders.filter(
+                    (o) => o.label !== label,
+                )
+
+                if (cart.length > 0 && currentLabel !== null) {
+                    remaining.push({
+                        label: currentLabel,
+                        cart: [...cart],
+                        saleDate,
+                    })
+                }
+
+                set({
+                    cart: [...target.cart],
+                    saleDate: target.saleDate,
+                    currentLabel: label,
+                    pendingOrders: remaining,
+                })
+            },
+
+            removePendingOrder: (label) => {
+                set((state) => ({
+                    pendingOrders: state.pendingOrders.filter(
+                        (o) => o.label !== label,
+                    ),
+                }))
+            },
+
+            finalizeCurrentOrder: () => {
+                const { pendingOrders, nextLabel } = get()
+
+                if (pendingOrders.length > 0) {
+                    set({
+                        cart: [],
+                        saleDate: new Date().toLocaleDateString('en-CA'),
+                        currentLabel: nextLabel,
+                        nextLabel: nextLabel + 1,
+                    })
+                } else {
+                    set({
+                        cart: [],
+                        currentLabel: null,
+                    })
+                }
+            },
+
+            resetOrderState: () => {
+                set({
+                    cart: [],
+                    pendingOrders: [],
+                    currentLabel: null,
+                    nextLabel: 1,
+                })
+            },
         }),
         {
             name: 'dynopos-store',

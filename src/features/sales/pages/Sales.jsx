@@ -1,11 +1,12 @@
 import { useEffect, useState, useMemo } from 'react'
-import { Search, TrendingUp, DollarSign, Bell, History, X, ChevronDown } from 'lucide-react'
+import { Search, TrendingUp, DollarSign, Bell, History, X, ChevronDown, AlertTriangle, Trash2 } from 'lucide-react'
 import { sileo } from 'sileo'
 import { useStore } from '../../../app/providers/store'
 import { getProducts } from '../../products/helpers/getProducts'
 import { getCategories } from '../../categories/helpers/getCategories'
 // import { CategoryTabs } from '../components/CategoryTabs'
 import { ProductGrid } from '../components/ProductGrid'
+import { OrderTabs } from '../components/OrderTabs'
 import { OrderSidebar } from '../components/OrderSidebar'
 import { SaleConfirmationModal } from '../components/SaleConfirmationModal'
 import { SalesHistoryCard } from '../components/SalesHistoryCard'
@@ -16,7 +17,7 @@ import { returnSale } from '../helpers/returnSale'
 import { getTodayRevenue } from '../helpers/getTodayRevenue'
 
 export const Sales = () => {
-    const { user, products, setProducts, cart, clearCart, setTodayRevenue, setCategories, setSubscription, addToCart } = useStore()
+    const { user, products, setProducts, cart, clearCart, setTodayRevenue, setCategories, setSubscription, addToCart, pendingOrders, currentLabel, initCurrentOrder, holdCurrentOrder, switchToOrder, finalizeCurrentOrder, resetOrderState } = useStore()
     const [searchTerm, setSearchTerm] = useState('')
     const [loading, setLoading] = useState(false)
     const [, setLastSaleTicket] = useState(null)
@@ -26,6 +27,8 @@ export const Sales = () => {
     const [salesList, setSalesList] = useState([])
 
     const [visibleCount, setVisibleCount] = useState(10)
+
+    const [showClearModal, setShowClearModal] = useState(false)
 
     const businessId = user?.data?.user?.id
 
@@ -151,6 +154,7 @@ export const Sales = () => {
             })
             
             clearCart()
+            finalizeCurrentOrder()
 
             const [productsData, salesData, revenueData] = await Promise.all([
                 getProducts(businessId),
@@ -197,12 +201,28 @@ export const Sales = () => {
         setTodayRevenue(revenueData.todayRevenue)
     }
 
+    const handleAddProduct = (product) => {
+        if (currentLabel === null) {
+            initCurrentOrder()
+        }
+        addToCart(product)
+    }
+
     return (
         <section className='flex flex-col gap-6'>
             <div className='flex flex-col lg:flex-row gap-8'>
                 {/* Left column */}
                 <div className='flex-1 flex flex-col gap-6 min-w-0'>
                     <section className='bg-surface p-6 rounded-lg border border-outline shadow-xs flex flex-col gap-6'>
+                        {/* Order Tabs */}
+                        <OrderTabs
+                            pendingOrders={pendingOrders}
+                            currentLabel={currentLabel}
+                            onSelect={switchToOrder}
+                            onNewOrder={holdCurrentOrder}
+                            onClearAll={() => setShowClearModal(true)}
+                        />
+
                         {/* Search Bar */}
                         <div className='flex flex-col gap-3'>
                             <div className='relative'>
@@ -214,7 +234,7 @@ export const Sales = () => {
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter' && searchTerm.trim() && filteredProducts.length === 1) {
                                             e.preventDefault()
-                                            addToCart(filteredProducts[0])
+                                            handleAddProduct(filteredProducts[0])
                                             setSearchTerm('')
                                         }
                                     }}
@@ -251,7 +271,7 @@ export const Sales = () => {
                                     </div>
                                 ) : (
                                     <>
-                                        <ProductGrid products={displayedProducts} />
+                                        <ProductGrid products={displayedProducts} onAddToCart={handleAddProduct} />
                                         {visibleCount < filteredProducts.length && (
                                             <button
                                                 onClick={handleLoadMore}
@@ -268,7 +288,7 @@ export const Sales = () => {
                                         <History className='w-3.5 h-3.5' />
                                         Últimos productos vendidos
                                     </div>
-                                    <ProductGrid products={recentlySoldProducts} />
+                                    <ProductGrid products={recentlySoldProducts} onAddToCart={handleAddProduct} />
                                 </div>
                             ) : (
                                 <div className='flex flex-col items-center justify-center py-20 text-faint'>
@@ -309,6 +329,48 @@ export const Sales = () => {
                     onCancel={() => setShowConfirmationModal(false)}
                     loading={loading}
                 />
+            )}
+
+            {showClearModal && (
+                <section className='fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex items-center justify-center z-50 p-4'>
+                    <section className='bg-surface rounded-xl border border-outline shadow-lg w-full max-w-sm relative overflow-hidden'>
+                        <div className='flex items-center justify-between px-6 py-4 border-b border-divider'>
+                            <h2 className='text-lg font-semibold flex items-center gap-2'>
+                                <AlertTriangle className='w-5 h-5 text-red-600' />
+                                Limpiar órdenes
+                            </h2>
+                            <button
+                                onClick={() => setShowClearModal(false)}
+                                className='p-1 rounded-md text-accent hover:text-accent/85 border border-disabled hover:border-accent transition cursor-pointer'
+                            >
+                                <X className='w-6 h-6' />
+                            </button>
+                        </div>
+                        <div className='p-6'>
+                            <p className='text-on-body text-sm mb-6'>
+                                ¿Estás seguro de limpiar todas las órdenes? Se perderán las órdenes en espera y la orden actual.
+                            </p>
+                            <div className='flex gap-3 w-full'>
+                                <button
+                                    onClick={() => setShowClearModal(false)}
+                                    className='flex-1 px-4 py-2 border border-outline text-on-body hover:bg-hover font-semibold rounded-lg transition cursor-pointer'
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        resetOrderState()
+                                        setShowClearModal(false)
+                                    }}
+                                    className='flex-1 px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 flex items-center justify-center gap-2 cursor-pointer'
+                                >
+                                    <Trash2 className='w-5 h-5' />
+                                    Limpiar
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                </section>
             )}
 
         </section>
