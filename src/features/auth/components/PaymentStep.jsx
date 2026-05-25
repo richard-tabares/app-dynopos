@@ -198,7 +198,7 @@ export const PaymentStep = () => {
 
                     {plan?.features && (
                         <section className='bg-subtle rounded-lg p-4'>
-                            <p className='text-xs font-semibold text-muted uppercase mb-2'>
+                            <p className='text-xs font-semibold text-muted uppercase mb-4'>
                                 Incluye:
                             </p>
                             <FeatureSlider features={plan.features} itemsPerSlide={2} />
