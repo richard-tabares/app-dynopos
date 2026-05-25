@@ -118,11 +118,11 @@ export const Login = () => {
                 <div className='relative z-10 [&_path]:fill-white max-lg:[&_path]:fill-on-surface max-lg:flex max-lg:justify-center'>
                     <LogoComplete className='w-48' />
                 </div>
-                <div className='relative z-10 lg:my-auto max-lg:my-0 py-6 lg:py-12'>
+                <div className='relative z-10 py-6 lg:py-12'>
                     <h2 className='text-3xl lg:text-4xl font-extrabold text-white max-lg:text-on-surface tracking-tight leading-tight max-md:text-2xl max-lg:text-center'>
                         Tu POS que administra tu negocio
                     </h2>
-                    <span className='dark:text-login-accent max-lg:text-accent text-login-accent text-4xl font-bold max-md:text-2xl max-lg:text-center max-lg:block'>
+                    <span className='max-lg:text-accent lg:text-login-accent text-4xl font-bold max-md:text-2xl max-lg:text-center max-lg:block'>
                         sin límites, desde cualquier lugar.
                     </span>
                     <p className='mt-4 text-slate-400 text-ms max-w-md leading-relaxed hidden lg:block'>
@@ -160,7 +160,7 @@ export const Login = () => {
                         </div>
                     </div>
                 </div>
-                <div className='z-10 items-center gap-4 max-w-sm hidden lg:flex'>
+                <div className='items-center gap-4 max-w-sm hidden lg:flex'>
                     <div className='p-3 text-login-accent'>
                         <Rocket className='w-8 h-8' />
                     </div>
