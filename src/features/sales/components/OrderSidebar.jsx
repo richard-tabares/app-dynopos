@@ -116,7 +116,7 @@ export const OrderSidebar = ({ onProcessSale }) => {
                             key={item.id}
                             className='flex items-center gap-4 bg-subtle p-3 rounded-lg border border-divider-light'>
                             <div className='flex-1'>
-                                <h4 className='font-bold text-sm text-on-surface truncate max-w-30'>
+                                <h4 className='font-bold text-sm text-on-surface max-w-full '>
                                     {item.name}
                                 </h4>
                                 <p className='text-accent font-bold text-xs'>
