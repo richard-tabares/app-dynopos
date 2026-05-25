@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import { X, CreditCard, Lock, ShieldCheck, Loader } from 'lucide-react'
+import { CreditCard, Lock, ShieldCheck, Loader } from 'lucide-react'
 import { sileo } from 'sileo'
 import { apiFetch } from '../../../../shared/helpers/apiFetch'
-import { useEscape } from '../../../../shared/helpers/useEscape'
+import { Modal } from '../../../../shared/components/Modal'
 
 const WOMPI_API = import.meta.env.VITE_WOMPI_API_URL || 'https://api-sandbox.wompi.co/v1'
 const WOMPI_PUB_KEY = import.meta.env.VITE_WOMPI_PUBLIC_KEY
@@ -119,140 +119,132 @@ export const UpdatePaymentMethodModal = ({ isOpen, onClose, businessId, customer
         }
     }
 
-    useEscape(onClose)
-
     if (!isOpen) return null
 
     return (
-        <section className='fixed inset-0 z-50 flex items-center justify-center bg-overlay backdrop-blur-xs p-4'>
-            <section className='bg-surface rounded-xl border border-outline w-full max-w-lg max-h-[90vh] overflow-y-auto scrollbar-none'>
-                <section className='sticky top-0 bg-title-surface/50 backdrop-blur-3xl z-50 flex items-center justify-between px-6 py-3.5 border-b border-divider'>
-                    <h2 className='text-lg font-semibold flex items-center gap-2'>
-                        <CreditCard className='w-5 h-5 text-accent' />
-                        Actualizar Método de Pago
-                    </h2>
-                    <button onClick={onClose} className='p-1 rounded-md text-accent hover:text-accent/85 border border-disabled hover:border-accent transition cursor-pointer'>
-                        <X className='w-5 h-5' />
-                    </button>
+        <Modal
+            isOpen={isOpen}
+            onClose={onClose}
+            title='Actualizar Método de Pago'
+            icon={CreditCard}
+            size='lg'
+        >
+            <form onSubmit={handleSubmit} className='p-6 space-y-4'>
+                <section className='flex flex-col gap-2'>
+                    <label className='font-semibold text-on-surface text-sm'>Número de tarjeta <span className='text-red-500'>*</span></label>
+                    <input
+                        type='text'
+                        name='card_number'
+                        value={form.card_number}
+                        onChange={handleChange}
+                        placeholder='4444 4444 4444 4444'
+                        maxLength={19}
+                        className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:ring-0 focus:border-accent'
+                    />
                 </section>
 
-                <form onSubmit={handleSubmit} className='p-6 space-y-4'>
+                <section className='grid grid-cols-3 gap-3'>
                     <section className='flex flex-col gap-2'>
-                        <label className='font-semibold text-on-surface text-sm'>Número de tarjeta <span className='text-red-500'>*</span></label>
+                        <label className='font-semibold text-on-surface text-sm'>Mes <span className='text-red-500'>*</span></label>
                         <input
                             type='text'
-                            name='card_number'
-                            value={form.card_number}
+                            name='exp_month'
+                            value={form.exp_month}
                             onChange={handleChange}
-                            placeholder='4444 4444 4444 4444'
-                            maxLength={19}
+                            placeholder='MM'
+                            maxLength={2}
                             className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:ring-0 focus:border-accent'
                         />
                     </section>
-
-                    <section className='grid grid-cols-3 gap-3'>
-                        <section className='flex flex-col gap-2'>
-                            <label className='font-semibold text-on-surface text-sm'>Mes <span className='text-red-500'>*</span></label>
-                            <input
-                                type='text'
-                                name='exp_month'
-                                value={form.exp_month}
-                                onChange={handleChange}
-                                placeholder='MM'
-                                maxLength={2}
-                                className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:ring-0 focus:border-accent'
-                            />
-                        </section>
-                        <section className='flex flex-col gap-2'>
-                            <label className='font-semibold text-on-surface text-sm'>Año <span className='text-red-500'>*</span></label>
-                            <input
-                                type='text'
-                                name='exp_year'
-                                value={form.exp_year}
-                                onChange={handleChange}
-                                placeholder='AA'
-                                maxLength={2}
-                                className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:ring-0 focus:border-accent'
-                            />
-                        </section>
-                        <section className='flex flex-col gap-2'>
-                            <label className='font-semibold text-on-surface text-sm'>CVV <span className='text-red-500'>*</span></label>
-                            <input
-                                type='password'
-                                name='cvc'
-                                value={form.cvc}
-                                onChange={handleChange}
-                                placeholder='123'
-                                maxLength={4}
-                                className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:ring-0 focus:border-accent'
-                            />
-                        </section>
-                    </section>
-
                     <section className='flex flex-col gap-2'>
-                        <label className='font-semibold text-on-surface text-sm'>Nombre completo <span className='text-red-500'>*</span></label>
+                        <label className='font-semibold text-on-surface text-sm'>Año <span className='text-red-500'>*</span></label>
                         <input
                             type='text'
-                            name='card_holder'
-                            value={form.card_holder}
+                            name='exp_year'
+                            value={form.exp_year}
                             onChange={handleChange}
-                            placeholder='Como aparece en la tarjeta'
+                            placeholder='AA'
+                            maxLength={2}
                             className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:ring-0 focus:border-accent'
                         />
                     </section>
-
-                    <section className='border-t border-divider pt-4 space-y-3'>
-                        <label className='flex items-start gap-3 cursor-pointer'>
-                            <label className='relative inline-flex items-center cursor-pointer mt-1'>
-                                <input
-                                    type='checkbox'
-                                    className='sr-only peer'
-                                    checked={acceptedReglamento}
-                                    onChange={(e) => setAcceptedReglamento(e.target.checked)}
-                                />
-                                <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-0 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-surface after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-surface after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent" />
-                            </label>
-                            <span className='text-sm text-on-body'>
-                                Acepto haber leído el{' '}
-                                <a href='https://wompi.com/assets/downloadble/reglamento-Usuarios-Colombia.pdf' target='_blank' rel='noopener noreferrer' className='text-accent underline'>reglamento</a>
-                            </span>
-                        </label>
-                        <label className='flex items-start gap-3 cursor-pointer'>
-                            <label className='relative inline-flex items-center cursor-pointer mt-1'>
-                                <input
-                                    type='checkbox'
-                                    className='sr-only peer'
-                                    checked={acceptedDatos}
-                                    onChange={(e) => setAcceptedDatos(e.target.checked)}
-                                />
-                                <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-0 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-surface after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-surface after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent" />
-                            </label>
-                            <span className='text-sm text-on-body'>
-                                Acepto la{' '}
-                                <a href='https://wompi.com/assets/downloadble/autorizacion-tratamiento-datos-personales.pdf' target='_blank' rel='noopener noreferrer' className='text-accent underline'>autorización para la administración de datos personales</a>{' '}
-                                y conozco la{' '}
-                                <a href='https://wompi.com/es/co/politica-de-privacidad' target='_blank' rel='noopener noreferrer' className='text-accent underline'>política de privacidad</a>
-                            </span>
-                        </label>
+                    <section className='flex flex-col gap-2'>
+                        <label className='font-semibold text-on-surface text-sm'>CVV <span className='text-red-500'>*</span></label>
+                        <input
+                            type='password'
+                            name='cvc'
+                            value={form.cvc}
+                            onChange={handleChange}
+                            placeholder='123'
+                            maxLength={4}
+                            className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:ring-0 focus:border-accent'
+                        />
                     </section>
+                </section>
 
-                    <button
-                        type='submit'
-                        disabled={loading || !form.card_number || !form.exp_month || !form.exp_year || !form.cvc || !form.card_holder || form.card_holder.trim().length < 8 || !acceptedReglamento || !acceptedDatos}
-                        className='w-full mt-2 px-6 py-3 bg-accent text-surface border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 hover:bg-accent/85 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'
-                    >
-                        {loading ? (
-                            <><Loader className='w-5 h-5 animate-spin' /> Actualizando...</>
-                        ) : (
-                            <><Lock className='w-5 h-5' /> Actualizar método de pago</>
-                        )}
-                    </button>
+                <section className='flex flex-col gap-2'>
+                    <label className='font-semibold text-on-surface text-sm'>Nombre completo <span className='text-red-500'>*</span></label>
+                    <input
+                        type='text'
+                        name='card_holder'
+                        value={form.card_holder}
+                        onChange={handleChange}
+                        placeholder='Como aparece en la tarjeta'
+                        className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:ring-0 focus:border-accent'
+                    />
+                </section>
 
-                    <p className='text-center text-xs text-faint flex items-center justify-center gap-1'>
-                        <Lock className='w-3 h-3' /> Tus datos están seguros. El pago es procesado de forma segura por Wompi.
-                    </p>
-                </form>
-            </section>
-        </section>
+                <section className='border-t border-divider pt-4 space-y-3'>
+                    <label className='flex items-start gap-3 cursor-pointer'>
+                        <label className='relative inline-flex items-center cursor-pointer mt-1'>
+                            <input
+                                type='checkbox'
+                                className='sr-only peer'
+                                checked={acceptedReglamento}
+                                onChange={(e) => setAcceptedReglamento(e.target.checked)}
+                            />
+                            <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-0 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-surface after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-surface after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent" />
+                        </label>
+                        <span className='text-sm text-on-body'>
+                            Acepto haber leído el{' '}
+                            <a href='https://wompi.com/assets/downloadble/reglamento-Usuarios-Colombia.pdf' target='_blank' rel='noopener noreferrer' className='text-accent underline'>reglamento</a>
+                        </span>
+                    </label>
+                    <label className='flex items-start gap-3 cursor-pointer'>
+                        <label className='relative inline-flex items-center cursor-pointer mt-1'>
+                            <input
+                                type='checkbox'
+                                className='sr-only peer'
+                                checked={acceptedDatos}
+                                onChange={(e) => setAcceptedDatos(e.target.checked)}
+                            />
+                            <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-0 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-surface after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-surface after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent" />
+                        </label>
+                        <span className='text-sm text-on-body'>
+                            Acepto la{' '}
+                            <a href='https://wompi.com/assets/downloadble/autorizacion-tratamiento-datos-personales.pdf' target='_blank' rel='noopener noreferrer' className='text-accent underline'>autorización para la administración de datos personales</a>{' '}
+                            y conozco la{' '}
+                            <a href='https://wompi.com/es/co/politica-de-privacidad' target='_blank' rel='noopener noreferrer' className='text-accent underline'>política de privacidad</a>
+                        </span>
+                    </label>
+                </section>
+
+                <button
+                    type='submit'
+                    disabled={loading || !form.card_number || !form.exp_month || !form.exp_year || !form.cvc || !form.card_holder || form.card_holder.trim().length < 8 || !acceptedReglamento || !acceptedDatos}
+                    className='w-full mt-2 px-6 py-3 bg-accent text-surface border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 hover:bg-accent/85 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'
+                >
+                    {loading ? (
+                        <><Loader className='w-5 h-5 animate-spin' /> Actualizando...</>
+                    ) : (
+                        <><Lock className='w-5 h-5' /> Actualizar método de pago</>
+                    )}
+                </button>
+
+                <p className='text-center text-xs text-faint flex items-center justify-center gap-1'>
+                    <Lock className='w-3 h-3' /> Tus datos están seguros. El pago es procesado de forma segura por Wompi.
+                </p>
+            </form>
+        </Modal>
     )
 }

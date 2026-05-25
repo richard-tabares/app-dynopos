@@ -1,6 +1,6 @@
-import { X, ArrowDownCircle, ArrowUpCircle, Loader, ArrowUpDown } from 'lucide-react'
+import { ArrowDownCircle, ArrowUpCircle, Loader, ArrowUpDown } from 'lucide-react'
 import { useState } from 'react'
-import { useEscape } from '../../../shared/helpers/useEscape'
+import { Modal } from '../../../shared/components/Modal'
 
 export const AdjustmentModal = ({
     product = {},
@@ -18,8 +18,6 @@ export const AdjustmentModal = ({
 
     const currentStock = product.inventory?.[0]?.stock || 0
     const isFormValid = formData.quantity !== '' && parseInt(formData.quantity) > 0
-
-    useEscape(handleClose)
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -57,34 +55,26 @@ export const AdjustmentModal = ({
     }
 
     return (
-        <section className='fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex flex-col items-center justify-center z-50 p-4'>
-            <section
-                className='bg-surface rounded-xl border border-outline w-full max-w-md relative max-h-[90vh] overflow-y-auto scrollbar-none'
-                onClick={(e) => e.stopPropagation()}>
-                <section className='sticky top-0 bg-title-surface/50 backdrop-blur-3xl z-50 flex items-center justify-between px-6 py-3.5 border-b border-divider'>
-                    <h2 className='text-lg font-semibold flex items-center gap-2'>
-                        <ArrowUpDown className='w-5 h-5 text-accent' />
-                        Ajuste de Inventario
-                    </h2>
-                    <button onClick={handleClose} className='p-1 rounded-md text-accent hover:text-accent/85 border border-disabled hover:border-accent transition cursor-pointer'>
-                        <X className='w-5 h-5' />
-                    </button>
-                </section>
-                <div className='p-6'>
-                    <p className='text-sm text-muted'>
-                        Producto:{' '}
-                        <span className='font-semibold text-on-body'>
-                            {product.name}
-                        </span>
-                    </p>
-                    <p className='text-sm text-muted'>
-                        Stock actual:{' '}
-                        <span className='font-semibold text-on-body'>{currentStock}</span>
-                    </p>
+        <Modal
+            onClose={handleClose}
+            title='Ajuste de Inventario'
+            icon={ArrowUpDown}
+        >
+            <div className='p-6'>
+                <p className='text-sm text-muted'>
+                    Producto:{' '}
+                    <span className='font-semibold text-on-body'>
+                        {product.name}
+                    </span>
+                </p>
+                <p className='text-sm text-muted'>
+                    Stock actual:{' '}
+                    <span className='font-semibold text-on-body'>{currentStock}</span>
+                </p>
 
-                    <form
-                        className='flex flex-col gap-4'
-                        onSubmit={onFormSubmit}>
+                <form
+                    className='flex flex-col gap-4'
+                    onSubmit={onFormSubmit}>
 
                     <section>
                         <label className='block text-sm font-medium text-on-body mb-2'>
@@ -191,8 +181,7 @@ export const AdjustmentModal = ({
                         </button>
                     </section>
                 </form>
-                </div>
-            </section>
-        </section>
+            </div>
+        </Modal>
     )
 }

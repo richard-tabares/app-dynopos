@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Tag, Plus, Edit2, Trash2, Search, X, Loader, Save } from 'lucide-react'
+import { Tag, Plus, Edit2, Trash2, Search, Loader, Save } from 'lucide-react'
 import { sileo } from 'sileo'
 import { useStore } from '../../../app/providers/store'
+import { Modal } from '../../../shared/components/Modal'
 import { getCategories } from '../../categories/helpers/getCategories'
 import { createCategory } from '../../categories/helpers/createCategory'
 import { updateCategory } from '../../categories/helpers/updateCategory'
@@ -110,105 +111,86 @@ export const Categories = () => {
         <>
             {/* Create/Edit Modal */}
             {showModal && (
-                <section className='fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex items-center justify-center z-50 p-4'>
-                    <section className='bg-surface rounded-xl border border-outline w-full max-w-md relative overflow-hidden'>
-                        <section className='sticky top-0 bg-title-surface/50 backdrop-blur-3xl z-50 flex items-center justify-between px-6 py-3.5 border-b border-divider'>
-                            <h2 className='text-lg font-semibold flex items-center gap-2'>
-                                <Tag className='w-5 h-5 text-accent' />
-                                {editingCategory
-                                    ? 'Editar Categoría'
-                                    : 'Nueva Categoría'}
-                            </h2>
-                            <button
-                                onClick={() => {
-                                    setShowModal(false)
-                                    setEditingCategory(null)
-                                    setCategoryName('')
-                                }}
-                                className='p-1 rounded-md text-accent hover:text-accent/85 border border-disabled hover:border-accent transition cursor-pointer'>
-                                <X className='w-5 h-5' />
-                            </button>
-                        </section>
-                        <div className='p-6'>
-                            <label className='block text-sm font-medium text-on-body mb-2'>
-                                Nombre
-                            </label>
-                            <input
-                                type='text'
-                                value={categoryName}
-                                onChange={(e) =>
-                                    setCategoryName(e.target.value)
+                <Modal
+                    onClose={() => {
+                        setShowModal(false)
+                        setEditingCategory(null)
+                        setCategoryName('')
+                    }}
+                    title={editingCategory ? 'Editar Categoría' : 'Nueva Categoría'}
+                    icon={Tag}
+                >
+                    <div className='p-6'>
+                        <label className='block text-sm font-medium text-on-body mb-2'>
+                            Nombre
+                        </label>
+                        <input
+                            type='text'
+                            value={categoryName}
+                            onChange={(e) =>
+                                setCategoryName(e.target.value)
+                            }
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    e.preventDefault()
+                                    handleSave()
                                 }
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                        e.preventDefault()
-                                        handleSave()
-                                    }
-                                }}
-                                placeholder='Nombre de la categoría'
-                                className='w-full border border-divider rounded-md py-3 px-4 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
-                                autoFocus
-                            />
-                        </div>
-                        <div className='px-6 pb-6 flex gap-3'>
-                            <button
-                                onClick={() => {
-                                    setShowModal(false)
-                                    setEditingCategory(null)
-                                    setCategoryName('')
-                                }}
-                                className='flex-1 py-2.5 border border-outline text-on-body rounded-lg font-medium hover:bg-hover transition text-sm cursor-pointer'>
-                                Cancelar
-                            </button>
-                            <button
-                                onClick={handleSave}
-                                disabled={saving || !categoryName.trim()}
-                                className='flex-1 py-2.5 bg-accent text-surface rounded-lg font-bold hover:bg-accent/85 transition text-sm disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed flex items-center justify-center gap-2'>
-                                {saving ? <><Loader className='w-5 h-5 animate-spin' /> Guardando...</> : <><Save className='w-5 h-5' /> Guardar</>}
-                            </button>
-                        </div>
-                    </section>
-                </section>
+                            }}
+                            placeholder='Nombre de la categoría'
+                            className='w-full border border-divider rounded-md py-3 px-4 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
+                            autoFocus
+                        />
+                    </div>
+                    <div className='px-6 pb-6 flex gap-3'>
+                        <button
+                            onClick={() => {
+                                setShowModal(false)
+                                setEditingCategory(null)
+                                setCategoryName('')
+                            }}
+                            className='flex-1 py-2.5 border border-outline text-on-body rounded-lg font-medium hover:bg-hover transition text-sm cursor-pointer'>
+                            Cancelar
+                        </button>
+                        <button
+                            onClick={handleSave}
+                            disabled={saving || !categoryName.trim()}
+                            className='flex-1 py-2.5 bg-accent text-surface rounded-lg font-bold hover:bg-accent/85 transition text-sm disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed flex items-center justify-center gap-2'>
+                            {saving ? <><Loader className='w-5 h-5 animate-spin' /> Guardando...</> : <><Save className='w-5 h-5' /> Guardar</>}
+                        </button>
+                    </div>
+                </Modal>
             )}
 
             {/* Delete Confirmation */}
             {showDeleteConfirm && (
-                <section
-                    className='fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex items-center justify-center z-50 p-4'>
-                    <section
-                        className='bg-surface rounded-xl border border-outline w-full max-w-sm relative overflow-hidden'
-                        onClick={(e) => e.stopPropagation()}>
-                        <section className='sticky top-0 bg-title-surface/50 backdrop-blur-3xl z-50 flex items-center justify-between px-6 py-3.5 border-b border-divider'>
-                            <h2 className='text-lg font-semibold flex items-center gap-2'>
-                                <Trash2 className='w-5 h-5 text-red-600' />
-                                Eliminar Categoría
-                            </h2>
-                            <button onClick={() => setShowDeleteConfirm(null)} className='p-1 rounded-md text-accent hover:text-accent/85 border border-disabled hover:border-accent transition cursor-pointer'>
-                                <X className='w-5 h-5' />
-                            </button>
-                        </section>
-                        <div className='p-6'>
-                            <p className='text-sm text-muted'>
-                                ¿Estás seguro de eliminar{' '}
-                                <strong>{showDeleteConfirm.name}</strong>? Esta
-                                acción no se puede deshacer.
-                            </p>
-                        </div>
-                        <div className='px-6 pb-6 flex gap-3'>
-                            <button
-                                onClick={() => setShowDeleteConfirm(null)}
-                                className='flex-1 py-2.5 border border-outline text-on-body rounded-lg font-medium hover:bg-hover transition text-sm cursor-pointer'>
-                                Cancelar
-                            </button>
-                            <button
-                                onClick={handleDelete}
-                                disabled={loading}
-                                className='flex-1 py-2.5 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 transition text-sm disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2'>
-                                {loading ? <><Loader className='w-5 h-5 animate-spin' /> Eliminando...</> : <><Trash2 className='w-5 h-5' /> Eliminar</>}
-                            </button>
-                        </div>
-                    </section>
-                </section>
+                <Modal
+                    onClose={() => setShowDeleteConfirm(null)}
+                    title='Eliminar Categoría'
+                    icon={Trash2}
+                    iconColor='text-red-600'
+                    size='sm'
+                >
+                    <div className='p-6'>
+                        <p className='text-sm text-muted'>
+                            ¿Estás seguro de eliminar{' '}
+                            <strong>{showDeleteConfirm.name}</strong>? Esta
+                            acción no se puede deshacer.
+                        </p>
+                    </div>
+                    <div className='px-6 pb-6 flex gap-3'>
+                        <button
+                            onClick={() => setShowDeleteConfirm(null)}
+                            className='flex-1 py-2.5 border border-outline text-on-body rounded-lg font-medium hover:bg-hover transition text-sm cursor-pointer'>
+                            Cancelar
+                        </button>
+                        <button
+                            onClick={handleDelete}
+                            disabled={loading}
+                            className='flex-1 py-2.5 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 transition text-sm disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2'>
+                            {loading ? <><Loader className='w-5 h-5 animate-spin' /> Eliminando...</> : <><Trash2 className='w-5 h-5' /> Eliminar</>}
+                        </button>
+                    </div>
+                </Modal>
             )}
 
             <section className='flex flex-col gap-6'>

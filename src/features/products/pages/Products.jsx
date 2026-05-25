@@ -9,7 +9,6 @@ import {
     ClipboardList,
     ChevronDown,
     EllipsisVertical,
-    X,
     CheckCircle2,
     CheckCircle,
     XCircle,
@@ -21,6 +20,7 @@ import {
 import { useEffect, useState } from 'react'
 import { sileo } from 'sileo'
 import { Modal } from '../components/Modal'
+import { Modal as SharedModal } from '../../../shared/components/Modal'
 import { ConfirmModal } from '../components/ConfirmModal'
 import { createNewProduct } from '../helpers/createNewProduct'
 import { getProducts } from '../helpers/getProducts'
@@ -256,63 +256,54 @@ export const Products = () => {
 
             {/* Modal crear categoría */}
             {showCategoryModal && (
-                <section
-                    className='fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex items-center justify-center z-50 p-4'>
-                    <section
-                        className='bg-surface rounded-xl border border-outline w-full max-w-md relative overflow-hidden max-h-[90vh] overflow-y-auto scrollbar-none'
-                        onClick={(e) => e.stopPropagation()}>
-                        <section className='sticky top-0 bg-title-surface/50 backdrop-blur-3xl z-50 flex items-center justify-between px-6 py-3.5 border-b border-divider'>
-                            <h2 className='text-lg font-semibold flex items-center gap-2'>
-                                <Tags className='w-5 h-5 text-accent' />
-                                Nueva Categoría
-                            </h2>
-                            <button
-                                onClick={() => setShowCategoryModal(false)}
-                                className='p-1 rounded-md text-accent hover:text-accent/85 border border-disabled hover:border-accent transition cursor-pointer'>
-                                <X className='w-5 h-5' />
-                            </button>
-                        </section>
-                        <div className='p-6'>
-                            <label className='block text-sm font-medium text-on-body mb-2'>
-                                Nombre
-                            </label>
-                            <input
-                                type='text'
-                                value={categoryName}
-                                onChange={(e) =>
-                                    setCategoryName(e.target.value)
+                <SharedModal
+                    onClose={() => {
+                        setShowCategoryModal(false)
+                        setCategoryName('')
+                    }}
+                    title='Nueva Categoría'
+                    icon={Tags}
+                >
+                    <div className='p-6'>
+                        <label className='block text-sm font-medium text-on-body mb-2'>
+                            Nombre
+                        </label>
+                        <input
+                            type='text'
+                            value={categoryName}
+                            onChange={(e) =>
+                                setCategoryName(e.target.value)
+                            }
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    e.preventDefault()
+                                    handleCreateCategory()
                                 }
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                        e.preventDefault()
-                                        handleCreateCategory()
-                                    }
-                                }}
-                                placeholder='Nombre de la categoría'
-                                className='w-full border border-divider rounded-md py-3 px-4 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
-                                autoFocus
-                            />
-                        </div>
-                        <div className='px-6 pb-6 flex gap-3'>
-                            <button
-                                onClick={() => {
-                                    setShowCategoryModal(false)
-                                    setCategoryName('')
-                                }}
-                                className='flex-1 py-2.5 border border-outline text-on-body hover:bg-hover rounded-lg font-medium transition text-sm cursor-pointer'>
-                                Cancelar
-                            </button>
-                            <button
-                                onClick={handleCreateCategory}
-                                disabled={
-                                    savingCategory || !categoryName.trim()
-                                }
-                                className='flex-1 py-2.5 bg-accent text-surface rounded-lg font-bold hover:bg-accent/85 transition text-sm disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed flex items-center justify-center gap-2'>
-                                {savingCategory ? <><Loader className='w-5 h-5 animate-spin' /> Guardando...</> : <><Save className='w-5 h-5' /> Guardar</>}
-                            </button>
-                        </div>
-                    </section>
-                </section>
+                            }}
+                            placeholder='Nombre de la categoría'
+                            className='w-full border border-divider rounded-md py-3 px-4 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
+                            autoFocus
+                        />
+                    </div>
+                    <div className='px-6 pb-6 flex gap-3'>
+                        <button
+                            onClick={() => {
+                                setShowCategoryModal(false)
+                                setCategoryName('')
+                            }}
+                            className='flex-1 py-2.5 border border-outline text-on-body hover:bg-hover rounded-lg font-medium transition text-sm cursor-pointer'>
+                            Cancelar
+                        </button>
+                        <button
+                            onClick={handleCreateCategory}
+                            disabled={
+                                savingCategory || !categoryName.trim()
+                            }
+                            className='flex-1 py-2.5 bg-accent text-surface rounded-lg font-bold hover:bg-accent/85 transition text-sm disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed flex items-center justify-center gap-2'>
+                            {savingCategory ? <><Loader className='w-5 h-5 animate-spin' /> Guardando...</> : <><Save className='w-5 h-5' /> Guardar</>}
+                        </button>
+                    </div>
+                </SharedModal>
             )}
 
             <section className='flex flex-col gap-6'>

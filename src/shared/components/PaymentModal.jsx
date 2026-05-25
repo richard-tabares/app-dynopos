@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { Loader2, CheckCircle, XCircle, ArrowRight, X } from 'lucide-react'
-import { useEscape } from '../helpers/useEscape'
+import { Loader2, CheckCircle, XCircle, ArrowRight, X, CircleDollarSign } from 'lucide-react'
+import { Modal } from './Modal'
 
 export const PaymentModal = ({ isOpen, status, message, onClose }) => {
     const [closing, setClosing] = useState(false)
@@ -12,10 +12,6 @@ export const PaymentModal = ({ isOpen, status, message, onClose }) => {
             onClose()
         }, 200)
     }
-
-    useEscape(() => {
-        if (status !== 'processing') handleClose()
-    })
 
     if (!isOpen) return null
 
@@ -36,10 +32,14 @@ export const PaymentModal = ({ isOpen, status, message, onClose }) => {
         : message
 
     return (
-        <section className={`fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex flex-col items-center justify-center z-50 p-4 transition-opacity duration-300 ${closing ? 'opacity-0' : 'opacity-100'}`}
-            onClick={status !== 'processing' ? handleClose : undefined}>
-            <section
-                className='bg-surface rounded-xl border border-outline p-8 w-full max-w-sm mx-4 text-center'
+        <Modal
+            isOpen={isOpen}
+            onClose={status !== 'processing' ? handleClose : null}
+            title='Pago'
+            icon={CircleDollarSign}
+            size='sm'
+        >
+            <section className={`p-8 w-full text-center transition-opacity duration-300 ${closing ? 'opacity-0' : 'opacity-100'}`}
                 onClick={(e) => e.stopPropagation()}>
                 <section className='mb-4 flex justify-center'>
                     {icon}
@@ -49,11 +49,11 @@ export const PaymentModal = ({ isOpen, status, message, onClose }) => {
                 {status !== 'processing' && (
                     <button
                         onClick={handleClose}
-                        className='mt-6 px-6 py-2.5 bg-accent text-surface rounded-lg font-semibold hover:bg-accent/85 transition cursor-pointer flex items-center justify-center gap-2'>
+                        className='mt-6 px-6 py-2.5 mx-auto bg-accent text-surface rounded-lg font-semibold hover:bg-accent/85 transition cursor-pointer flex items-center justify-center gap-2'>
                         {status === 'success' ? <><ArrowRight className='w-5 h-5' /> Continuar</> : <><X className='w-5 h-5' /> Cerrar</>}
                     </button>
                 )}
             </section>
-        </section>
+        </Modal>
     )
 }

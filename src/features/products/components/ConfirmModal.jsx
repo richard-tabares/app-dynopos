@@ -1,51 +1,39 @@
-import { X, AlertTriangle, Trash2 } from 'lucide-react'
-import { useEscape } from '../../../shared/helpers/useEscape'
+import { AlertTriangle, Trash2 } from 'lucide-react'
+import { Modal } from '../../../shared/components/Modal'
 
 export const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message }) => {
-    useEscape(onClose)
-
-    if (!isOpen) return null
-
     return (
-        <section
-            className='fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex flex-col items-center justify-center z-50 p-4'>
-            <section
-                className='bg-surface rounded-xl border border-outline w-full max-w-sm relative max-h-[90vh] overflow-y-auto scrollbar-none'
-                onClick={(e) => e.stopPropagation()}>
-                <section className='sticky top-0 bg-title-surface/50 backdrop-blur-3xl z-50 flex items-center justify-between px-6 py-3.5 border-b border-divider'>
-                    <h2 className='text-lg font-semibold flex items-center gap-2'>
-                        <AlertTriangle className='w-5 h-5 text-red-600' />
-                        {title}
-                    </h2>
-                    <button onClick={onClose} className='p-1 rounded-md text-accent hover:text-accent/85 border border-disabled hover:border-accent transition cursor-pointer'>
-                        <X className='w-5 h-5' />
+        <Modal
+            isOpen={isOpen}
+            onClose={onClose}
+            title={title}
+            icon={AlertTriangle}
+            iconColor='text-red-600'
+            size='sm'
+        >
+            <div className='p-6'>
+                <p className='text-on-body text-sm mb-6'>
+                    {message}
+                </p>
+
+                <div className='flex gap-3 w-full'>
+                    <button
+                        type='button'
+                        className='flex-1 px-4 py-2 border border-outline text-on-body hover:bg-hover font-semibold rounded-lg transition cursor-pointer'
+                        onClick={onClose}>
+                        Cancelar
                     </button>
-                </section>
-
-                <div className='p-6'>
-                    <p className='text-on-body text-sm mb-6'>
-                        {message}
-                    </p>
-
-                    <div className='flex gap-3 w-full'>
-                        <button
-                            type='button'
-                            className='flex-1 px-4 py-2 border border-outline text-on-body hover:bg-hover font-semibold rounded-lg transition cursor-pointer'
-                            onClick={onClose}>
-                            Cancelar
-                        </button>
-                        <button
-                            type='button'
-                            className='flex-1 px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition cursor-pointer flex items-center justify-center gap-2'
-                            onClick={() => {
-                                onConfirm()
-                                onClose()
-                            }}>
-                            <Trash2 className='w-5 h-5' /> Eliminar
-                        </button>
-                    </div>
+                    <button
+                        type='button'
+                        className='flex-1 px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition cursor-pointer flex items-center justify-center gap-2'
+                        onClick={() => {
+                            onConfirm()
+                            onClose()
+                        }}>
+                        <Trash2 className='w-5 h-5' /> Eliminar
+                    </button>
                 </div>
-            </section>
-        </section>
+            </div>
+        </Modal>
     )
 }

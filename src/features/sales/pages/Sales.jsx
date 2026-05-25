@@ -8,6 +8,7 @@ import { getCategories } from '../../categories/helpers/getCategories'
 import { ProductGrid } from '../components/ProductGrid'
 import { OrderTabs } from '../components/OrderTabs'
 import { OrderSidebar } from '../components/OrderSidebar'
+import { Modal } from '../../../shared/components/Modal'
 import { SaleConfirmationModal } from '../components/SaleConfirmationModal'
 import { SalesHistoryCard } from '../components/SalesHistoryCard'
 import { apiFetch } from '../../../shared/helpers/apiFetch'
@@ -332,45 +333,37 @@ export const Sales = () => {
             )}
 
             {showClearModal && (
-                <section className='fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex items-center justify-center z-50 p-4'>
-                    <section className='bg-surface rounded-xl border border-outline w-full max-w-sm relative overflow-hidden'>
-                        <section className='sticky top-0 bg-title-surface/50 backdrop-blur-3xl z-50 flex items-center justify-between px-6 py-3.5 border-b border-divider'>
-                            <h2 className='text-lg font-semibold flex items-center gap-2'>
-                                <AlertTriangle className='w-5 h-5 text-red-600' />
-                                Limpiar órdenes
-                            </h2>
+                <Modal
+                    onClose={() => setShowClearModal(false)}
+                    title='Limpiar órdenes'
+                    icon={AlertTriangle}
+                    iconColor='text-red-600'
+                    size='sm'
+                >
+                    <div className='p-6'>
+                        <p className='text-on-body text-sm mb-6'>
+                            ¿Estás seguro de limpiar todas las órdenes? Se perderán las órdenes en espera y la orden actual.
+                        </p>
+                        <div className='flex gap-3 w-full'>
                             <button
                                 onClick={() => setShowClearModal(false)}
-                                className='p-1 rounded-md text-accent hover:text-accent/85 border border-disabled hover:border-accent transition cursor-pointer'
+                                className='flex-1 px-4 py-2 border border-outline text-on-body hover:bg-hover font-semibold rounded-lg transition cursor-pointer'
                             >
-                                <X className='w-5 h-5' />
+                                Cancelar
                             </button>
-                        </section>
-                        <div className='p-6'>
-                            <p className='text-on-body text-sm mb-6'>
-                                ¿Estás seguro de limpiar todas las órdenes? Se perderán las órdenes en espera y la orden actual.
-                            </p>
-                            <div className='flex gap-3 w-full'>
-                                <button
-                                    onClick={() => setShowClearModal(false)}
-                                    className='flex-1 px-4 py-2 border border-outline text-on-body hover:bg-hover font-semibold rounded-lg transition cursor-pointer'
-                                >
-                                    Cancelar
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        resetOrderState()
-                                        setShowClearModal(false)
-                                    }}
-                                    className='flex-1 px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 flex items-center justify-center gap-2 cursor-pointer'
-                                >
-                                    <Trash2 className='w-5 h-5' />
-                                    Limpiar
-                                </button>
-                            </div>
+                            <button
+                                onClick={() => {
+                                    resetOrderState()
+                                    setShowClearModal(false)
+                                }}
+                                className='flex-1 px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 flex items-center justify-center gap-2 cursor-pointer'
+                            >
+                                <Trash2 className='w-5 h-5' />
+                                Limpiar
+                            </button>
                         </div>
-                    </section>
-                </section>
+                    </div>
+                </Modal>
             )}
 
         </section>
