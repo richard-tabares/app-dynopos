@@ -59,6 +59,8 @@ Archivo: `src/shared/styles/App.css` (líneas 1-147).
 |---|---|---|
 | `--surface` | `#ffffff` | Fondo de cards |
 | `--accent` | `#3b75997ff` | Azul acero — color principal de marca |
+| `--title-surface` | `hsl(202, 20%, 65%)` | Fondo de headers en modales (sticky) |
+| `--danger` | `#dc2626` | Rojo — acciones destructivas (eliminar) |
 | `--body` | `#f9fafb` | Fondo de página |
 | `--subtle` | `#f9fafb` | Header de cards, fondos secundarios |
 | `--on-surface` | `#111827` | Texto principal sobre surface |
@@ -492,6 +494,14 @@ Reglas:
 </button>
 ```
 
+### Botón danger outline (full-width, modal inline)
+```jsx
+<button className='w-full flex items-center justify-center gap-2 px-4 py-3 border border-danger/30 text-danger hover:bg-danger/5 rounded-lg transition cursor-pointer font-medium'>
+  <Trash2 className='w-4 h-4' />
+  Eliminar este elemento
+</button>
+```
+
 ### Botón icon-only (acciones de fila en tablas)
 ```jsx
 <button className='hover:bg-hover-icon p-1.5 rounded-sm cursor-pointer' title='Editar'>
@@ -547,27 +557,40 @@ Reglas:
   <section className='bg-surface rounded-xl border border-outline shadow-lg w-full max-w-md relative max-h-[90vh] overflow-y-auto'>
 ```
 
-### Header de modal
+### Header de modal (sticky con backdrop-blur)
 ```jsx
-<section className='flex items-center justify-between px-6 py-4 border-b border-divider'>
+<section className='sticky top-0 bg-title-surface/50 backdrop-blur-3xl z-50 flex items-center justify-between px-6 py-3.5 border-b border-divider'>
   <h2 className='text-lg font-semibold flex items-center gap-2'>
     <Icon className='w-5 h-5 text-accent' />
     Título
   </h2>
   <button onClick={onClose} className='p-1 rounded-md text-accent hover:text-accent/85 border border-disabled hover:border-accent transition cursor-pointer'>
-    <X className='w-6 h-6' />
+    <X className='w-5 h-5' />
   </button>
 </section>
 ```
 
+### Body de modal (form)
+```jsx
+<form onSubmit={handleSubmit} className='p-6 flex flex-col gap-4'>
+  {/* inputs, selects, etc. */}
+</form>
+```
+
 ### Footer de modal
 ```jsx
-<section className='flex justify-end gap-4 pt-4 border-t border-divider'>
-  <button type='button' className='px-4 py-2 border border-outline text-on-body hover:bg-hover font-medium rounded-lg transition text-sm cursor-pointer'>
+<section className='flex justify-end gap-4 pt-4'>
+  <button
+    type='button'
+    onClick={onClose}
+    className='px-4 py-2 border border-outline text-on-body hover:bg-hover font-medium rounded-lg transition cursor-pointer'>
     Cancelar
   </button>
-  <button type='submit' className='px-4 py-2 bg-accent text-surface rounded-lg hover:bg-accent/85 font-medium transition text-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'>
-    Guardar
+  <button
+    type='submit'
+    disabled={!isValid || submitting}
+    className='px-4 py-2 bg-accent text-surface rounded-lg hover:bg-accent/85 font-medium transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
+    {submitting ? <><Loader className='w-5 h-5 animate-spin' /> Guardando...</> : 'Guardar'}
   </button>
 </section>
 ```
@@ -732,9 +755,16 @@ Reglas:
 />
 ```
 
-### Error state en input
+### Error state en input (con touched pattern)
 ```jsx
-className='w-full px-4 py-3 border border-red-500 bg-red-50 rounded-md transition-all duration-300 focus:outline-none focus:border-red-500 focus:ring-0'
+className={`w-full px-4 py-3 border rounded-md transition-all duration-300 focus:outline-none ${
+  touched.field && errors.field
+    ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-0'
+    : 'border-divider focus:border-accent focus:ring-0'
+}`}
+{touched.field && errors.field && (
+  <p className='text-xs font-semibold text-red-500'>{errors.field}</p>
+)}
 ```
 
 ### Select
@@ -784,11 +814,36 @@ className='w-full px-4 py-3 border border-red-500 bg-red-50 rounded-md transitio
   <button
     type='button'
     onClick={() => setShowPassword(!showPassword)}
-    className='absolute right-3 bg-transparent border-none cursor-pointer text-accent'
+    className='absolute right-3 bg-transparent border-none cursor-pointer text-lg p-1 text-accent hover:scale-110 transition-transform duration-300'
   >
-    {showPassword ? <EyeOff className='w-5 h-5' /> : <Eye className='w-5 h-5' />}
+    {showPassword ? <EyeClosed /> : <Eye />}
   </button>
 </section>
+```
+
+### Password requirements checklist
+```jsx
+{password && !errors.password && (
+  <section className='bg-accent/10 border-l-4 border-accent p-3 rounded flex flex-col gap-1.5'>
+    <p className='text-xs font-semibold text-on-surface'>Requisitos cumplidos:</p>
+    <section className={`text-xs transition-colors duration-300 ${/[a-zA-Z]/.test(password) ? 'text-green-600 font-semibold' : 'text-muted'}`}>
+      ✓ Contiene letras
+    </section>
+    <section className={`text-xs transition-colors duration-300 ${/[0-9]/.test(password) ? 'text-green-600 font-semibold' : 'text-muted'}`}>
+      ✓ Contiene números
+    </section>
+    <section className={`text-xs transition-colors duration-300 ${password.length >= 8 ? 'text-green-600 font-semibold' : 'text-muted'}`}>
+      ✓ Mínimo 8 caracteres
+    </section>
+  </section>
+)}
+```
+
+### Confirm password match indicator
+```jsx
+{confirmPassword && password === confirmPassword && !errors.confirmPassword && (
+  <p className='text-xs font-semibold text-green-600'>✓ Las contraseñas coinciden</p>
+)}
 ```
 
 ### Date input
@@ -831,6 +886,23 @@ className='w-full px-4 py-3 border border-red-500 bg-red-50 rounded-md transitio
   <label className='block text-sm font-medium text-on-body'>Etiqueta</label>
   <input ... />
   <p className='text-xs font-semibold text-red-500'>Error</p>
+</section>
+```
+
+### PermissionSelector wrapper
+```jsx
+<section>
+  <label className='block text-sm font-medium text-on-body mb-1 flex items-center gap-1.5'>
+    <ShieldCheck className='w-4 h-4 text-accent' />
+    Permisos por sección
+  </label>
+  <section className='border border-divider rounded-md px-3 py-1 bg-body/20'>
+    <PermissionSelector
+      value={permissions}
+      onChange={setPermissions}
+      role={formData.role}
+    />
+  </section>
 </section>
 ```
 
