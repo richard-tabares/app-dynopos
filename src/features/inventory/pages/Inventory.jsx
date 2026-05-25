@@ -63,7 +63,8 @@ export const Inventory = () => {
 
     const displayedProducts = filteredProducts.slice(0, visibleCount)
 
-    const handleOpenModal = (product) => {
+    const handleOpenModal = (product, e) => {
+        e.stopPropagation()
         setSelectedProduct(product)
         setOpenModal(true)
     }
@@ -220,7 +221,8 @@ export const Inventory = () => {
                                     return (
                                         <tr
                                             key={product.id}
-                                            className='border-b border-divider-light hover:bg-hover'>
+                                            className='border-b border-divider-light hover:bg-hover cursor-pointer'
+                                            onClick={(e) => handleOpenModal(product, e)}>
                                             <td className='py-3 px-4 font-medium text-on-surface'>
                                                 {product.sku}
                                             </td>
@@ -267,8 +269,8 @@ export const Inventory = () => {
                                             <td className='py-3 px-2 text-right whitespace-nowrap'>
                                                 {!isUntracked && (
                                                     <button
-                                                        onClick={() =>
-                                                            handleOpenModal(product)
+                                                        onClick={(e) =>
+                                                            handleOpenModal(product, e)
                                                         }
                                                         className='bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-800 p-1.5 rounded-sm cursor-pointer'
                                                         title='Ajustar Inventario'>

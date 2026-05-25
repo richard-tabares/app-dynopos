@@ -95,7 +95,7 @@ export const StockTable = ({ data = [] }) => {
                             </thead>
                             <tbody>
                                 {visible.map((item, i) => (
-                                    <tr key={i} className='border-b border-divider-light hover:bg-hover'>
+                                    <tr key={i} className='border-b border-divider-light hover:bg-hover' onclick={() => {}}>
                                         <td className='py-3 px-4 font-medium text-on-surface'>{item.product_name}</td>
                                         <td className='py-3 px-4 text-muted'>{item.category_name || 'Sin categoría'}</td>
                                         <td className='py-3 px-4 text-right'>{item.stock_status === 'sin_control' ? '—' : item.current_stock}</td>

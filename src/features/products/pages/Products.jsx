@@ -51,14 +51,26 @@ export const Products = () => {
     const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
     const [showMobileActions, setShowMobileActions] = useState(null)
 
-    useEscape(showCategoryModal ? () => { setShowCategoryModal(false); setCategoryName('') } : null)
+    useEscape(
+        showCategoryModal
+            ? () => {
+                  setShowCategoryModal(false)
+                  setCategoryName('')
+              }
+            : null,
+    )
 
     const filteredProducts = products
         .filter((product) => {
             const matchesSearch =
-                product.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                product.name
+                    ?.toLowerCase()
+                    .includes(searchTerm.toLowerCase()) ||
                 product.sku?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                (product.barcode && product.barcode.toLowerCase().includes(searchTerm.toLowerCase()))
+                (product.barcode &&
+                    product.barcode
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase()))
             const matchesStatus =
                 activeStatus === 'all' ||
                 (activeStatus === 'active' && product.is_active !== false) ||
@@ -126,10 +138,19 @@ export const Products = () => {
                             : product,
                     ),
                 )
-                sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Producto actualizado correctamente'})
+                sileo.success({
+                    fill: 'var(--toast-success)',
+                    title: 'Completado',
+                    description: 'Producto actualizado correctamente',
+                })
                 setOpenModal(false)
             } catch (error) {
-                sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al actualizar el producto'})
+                sileo.error({
+                    fill: 'var(--toast-error)',
+                    title: 'Error',
+                    description:
+                        error.message || 'Error al actualizar el producto',
+                })
             }
         } else {
             // Crear nuevo producto
@@ -139,15 +160,24 @@ export const Products = () => {
                     business_id: businessId,
                 })
                 setProducts([...products, newProduct])
-                sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Producto creado correctamente'})
+                sileo.success({
+                    fill: 'var(--toast-success)',
+                    title: 'Completado',
+                    description: 'Producto creado correctamente',
+                })
                 setOpenModal(false)
             } catch (error) {
-                sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al crear el producto'})
+                sileo.error({
+                    fill: 'var(--toast-error)',
+                    title: 'Error',
+                    description: error.message || 'Error al crear el producto',
+                })
             }
         }
     }
 
-    const onDeleteProduct = async (productId) => {
+    const onDeleteProduct = async (productId, e) => {
+        e.stopPropagation()
         setProductToDelete(productId)
         setOpenConfirmModal(true)
     }
@@ -167,8 +197,11 @@ export const Products = () => {
                             : product,
                     ),
                 )
-                sileo.info({ fill: 'var(--toast-info)', title: 'Información', description: 
-                    'El producto tiene ventas asociadas y se ha marcado como inactivo.',
+                sileo.info({
+                    fill: 'var(--toast-info)',
+                    title: 'Información',
+                    description:
+                        'El producto tiene ventas asociadas y se ha marcado como inactivo.',
                 })
             } else {
                 setProducts(
@@ -176,7 +209,11 @@ export const Products = () => {
                         (product) => product.id !== productToDelete,
                     ),
                 )
-                sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Producto eliminado correctamente'})
+                sileo.success({
+                    fill: 'var(--toast-success)',
+                    title: 'Completado',
+                    description: 'Producto eliminado correctamente',
+                })
             }
         } catch (error) {
             if (
@@ -189,13 +226,18 @@ export const Products = () => {
                     ),
                 )
             }
-            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al eliminar el producto'})
+            sileo.error({
+                fill: 'var(--toast-error)',
+                title: 'Error',
+                description: error.message || 'Error al eliminar el producto',
+            })
         } finally {
             setProductToDelete(null)
         }
     }
-    const onEditProduct = (productId) => {
-        const product = products.find(p => p.id === productId)
+    const onEditProduct = (productId, e) => {
+        e.stopPropagation()
+        const product = products.find((p) => p.id === productId)
         if (product) {
             setEditProductData(product)
             setOpenModal(true)
@@ -209,7 +251,11 @@ export const Products = () => {
 
     const handleCreateCategory = async () => {
         if (!categoryName.trim()) {
-            sileo.warning({ fill: 'var(--toast-warning)', title: 'Atención', description: 'El nombre de la categoría es obligatorio'})
+            sileo.warning({
+                fill: 'var(--toast-warning)',
+                title: 'Atención',
+                description: 'El nombre de la categoría es obligatorio',
+            })
             return
         }
         setSavingCategory(true)
@@ -219,11 +265,19 @@ export const Products = () => {
                 name: categoryName.trim(),
             })
             setCategories([...categories, newCategory])
-            sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Categoría creada exitosamente'})
+            sileo.success({
+                fill: 'var(--toast-success)',
+                title: 'Completado',
+                description: 'Categoría creada exitosamente',
+            })
             setShowCategoryModal(false)
             setCategoryName('')
         } catch (error) {
-            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al crear la categoría'})
+            sileo.error({
+                fill: 'var(--toast-error)',
+                title: 'Error',
+                description: error.message || 'Error al crear la categoría',
+            })
         } finally {
             setSavingCategory(false)
         }
@@ -262,8 +316,7 @@ export const Products = () => {
                         setCategoryName('')
                     }}
                     title='Nueva Categoría'
-                    icon={Tags}
-                >
+                    icon={Tags}>
                     <div className='p-6'>
                         <label className='block text-sm font-medium text-on-body mb-2'>
                             Nombre
@@ -271,9 +324,7 @@ export const Products = () => {
                         <input
                             type='text'
                             value={categoryName}
-                            onChange={(e) =>
-                                setCategoryName(e.target.value)
-                            }
+                            onChange={(e) => setCategoryName(e.target.value)}
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
                                     e.preventDefault()
@@ -296,11 +347,18 @@ export const Products = () => {
                         </button>
                         <button
                             onClick={handleCreateCategory}
-                            disabled={
-                                savingCategory || !categoryName.trim()
-                            }
+                            disabled={savingCategory || !categoryName.trim()}
                             className='flex-1 py-2.5 bg-accent text-surface rounded-lg font-bold hover:bg-accent/85 transition text-sm disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed flex items-center justify-center gap-2'>
-                            {savingCategory ? <><Loader className='w-5 h-5 animate-spin text-surface' /> Guardando...</> : <><Save className='w-5 h-5' /> Guardar</>}
+                            {savingCategory ? (
+                                <>
+                                    <Loader className='w-5 h-5 animate-spin text-surface' />{' '}
+                                    Guardando...
+                                </>
+                            ) : (
+                                <>
+                                    <Save className='w-5 h-5' /> Guardar
+                                </>
+                            )}
                         </button>
                     </div>
                 </SharedModal>
@@ -322,9 +380,9 @@ export const Products = () => {
                             <Package className='w-5 h-5 text-accent' />
                             <h2 className='text-lg font-semibold flex flex-col'>
                                 Lista de Productos
-                            <span className='text-sm text-muted font-medium'>
-                                Total ({filteredProducts.length})
-                            </span>
+                                <span className='text-sm text-muted font-medium'>
+                                    Total ({filteredProducts.length})
+                                </span>
                             </h2>
                         </section>
                         <section className='flex items-center gap-2'>
@@ -487,7 +545,10 @@ export const Products = () => {
                             </div> */}
                             <div className='flex gap-1 bg-disabled/70 rounded-lg p-1 w-fit ml-0 xl:ml-4'>
                                 <button
-                                    onClick={() => { setActiveStatus('all'); setVisibleCount(20) }}
+                                    onClick={() => {
+                                        setActiveStatus('all')
+                                        setVisibleCount(20)
+                                    }}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                         activeStatus === 'all'
                                             ? 'bg-surface shadow-xs text-accent'
@@ -497,7 +558,10 @@ export const Products = () => {
                                     Todos
                                 </button>
                                 <button
-                                    onClick={() => { setActiveStatus('active'); setVisibleCount(20) }}
+                                    onClick={() => {
+                                        setActiveStatus('active')
+                                        setVisibleCount(20)
+                                    }}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                         activeStatus === 'active'
                                             ? 'bg-surface shadow-xs text-accent'
@@ -507,7 +571,10 @@ export const Products = () => {
                                     Activo
                                 </button>
                                 <button
-                                    onClick={() => { setActiveStatus('inactive'); setVisibleCount(20) }}
+                                    onClick={() => {
+                                        setActiveStatus('inactive')
+                                        setVisibleCount(20)
+                                    }}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                         activeStatus === 'inactive'
                                             ? 'bg-surface shadow-xs text-accent'
@@ -519,7 +586,10 @@ export const Products = () => {
                             </div>
                             <div className='flex gap-1 bg-disabled/70 rounded-lg p-1 w-fit'>
                                 <button
-                                    onClick={() => { setActiveStock('all'); setVisibleCount(20) }}
+                                    onClick={() => {
+                                        setActiveStock('all')
+                                        setVisibleCount(20)
+                                    }}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                         activeStock === 'all'
                                             ? 'bg-surface shadow-xs text-accent'
@@ -529,7 +599,10 @@ export const Products = () => {
                                     Todos
                                 </button>
                                 <button
-                                    onClick={() => { setActiveStock('with'); setVisibleCount(20) }}
+                                    onClick={() => {
+                                        setActiveStock('with')
+                                        setVisibleCount(20)
+                                    }}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                         activeStock === 'with'
                                             ? 'bg-surface shadow-xs text-accent'
@@ -539,7 +612,10 @@ export const Products = () => {
                                     Con control
                                 </button>
                                 <button
-                                    onClick={() => { setActiveStock('without'); setVisibleCount(20) }}
+                                    onClick={() => {
+                                        setActiveStock('without')
+                                        setVisibleCount(20)
+                                    }}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
                                         activeStock === 'without'
                                             ? 'bg-surface shadow-xs text-accent'
@@ -568,7 +644,10 @@ export const Products = () => {
                                 {displayedProducts.map((product, index) => (
                                     <tr
                                         key={index}
-                                        className='border-b border-divider-light hover:bg-hover'>
+                                        className='border-b border-divider-light hover:bg-hover cursor-pointer'
+                                        onClick={(e) =>
+                                            onEditProduct(product.id, e)
+                                        }>
                                         <td className='py-3 px-4 font-medium text-on-surface'>
                                             {product.sku}
                                         </td>
@@ -588,26 +667,45 @@ export const Products = () => {
                                         <td className='py-3 px-4 text-right'>
                                             {product.unit_cost != null ? (
                                                 <span className='font-medium text-on-body'>
-                                                    ${new Intl.NumberFormat('es-CO').format(product.unit_cost)}
+                                                    $
+                                                    {new Intl.NumberFormat(
+                                                        'es-CO',
+                                                    ).format(product.unit_cost)}
                                                 </span>
                                             ) : (
-                                                <span className='text-faint italic'>—</span>
+                                                <span className='text-faint italic'>
+                                                    —
+                                                </span>
                                             )}
                                         </td>
                                         <td className='py-3 px-4 text-right'>
-                                            {product.unit_cost != null && product.price > 0 ? (() => {
-                                                const margin = Math.round(((product.price - product.unit_cost) / product.price) * 100)
-                                                return (
-                                                    <span className={`px-2.5 py-0.5 text-xs font-medium rounded-full ${
-                                                        margin >= 30 ? 'bg-green-100 text-green-800' :
-                                                        margin >= 10 ? 'bg-amber-100 text-amber-800' :
-                                                        'bg-red-100 text-red-800'
-                                                    }`}>
-                                                        {margin}%
-                                                    </span>
-                                                )
-                                            })() : (
-                                                <span className='text-faint italic'>—</span>
+                                            {product.unit_cost != null &&
+                                            product.price > 0 ? (
+                                                (() => {
+                                                    const margin = Math.round(
+                                                        ((product.price -
+                                                            product.unit_cost) /
+                                                            product.price) *
+                                                            100,
+                                                    )
+                                                    return (
+                                                        <span
+                                                            className={`px-2.5 py-0.5 text-xs font-medium rounded-full ${
+                                                                margin >= 30
+                                                                    ? 'bg-green-100 text-green-800'
+                                                                    : margin >=
+                                                                        10
+                                                                      ? 'bg-amber-100 text-amber-800'
+                                                                      : 'bg-red-100 text-red-800'
+                                                            }`}>
+                                                            {margin}%
+                                                        </span>
+                                                    )
+                                                })()
+                                            ) : (
+                                                <span className='text-faint italic'>
+                                                    —
+                                                </span>
                                             )}
                                         </td>
                                         <td className='py-3 px-4 whitespace-nowrap'>
@@ -635,9 +733,9 @@ export const Products = () => {
                                         <td className='py-3 px-2 text-right whitespace-nowrap'>
                                             <section className='hidden sm:flex items-center justify-end gap-3'>
                                                 <button
-                                                    onClick={() =>
+                                                    onClick={(e) =>
                                                         onEditProduct(
-                                                            product.id,
+                                                            product.id,e
                                                         )
                                                     }
                                                     className='bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-800 p-1.5 rounded-sm cursor-pointer'
@@ -645,9 +743,10 @@ export const Products = () => {
                                                     <Edit2 className='w-4 h-4 text-accent' />
                                                 </button>
                                                 <button
-                                                    onClick={() =>
+                                                    onClick={(e) =>
                                                         onDeleteProduct(
                                                             product.id,
+                                                            e
                                                         )
                                                     }
                                                     className='hover:bg-red-500 bg-red-400 text-white p-1.5 rounded-sm cursor-pointer'
@@ -682,9 +781,9 @@ export const Products = () => {
                                                 <section
                                                     className={`absolute right-0 mt-1 w-40 bg-surface border border-divider rounded-lg shadow-lg z-50 ${showMobileActions === product.id ? 'block' : 'hidden'}`}>
                                                     <button
-                                                        onClick={() => {
+                                                        onClick={(e) => {
                                                             onEditProduct(
-                                                                product.id,
+                                                                product.id,e
                                                             )
                                                             setShowMobileActions(
                                                                 null,
@@ -695,9 +794,9 @@ export const Products = () => {
                                                         Editar
                                                     </button>
                                                     <button
-                                                        onClick={() => {
+                                                        onClick={(e) => {
                                                             onDeleteProduct(
-                                                                product.id,
+                                                                product.id,e
                                                             )
                                                             setShowMobileActions(
                                                                 null,
@@ -719,7 +818,8 @@ export const Products = () => {
                         <button
                             onClick={handleLoadMore}
                             className='w-full mt-4 py-2 text-sm font-medium text-on-surface hover:text-surface hover:bg-accent rounded-lg border border-accent transition-colors cursor-pointer px-6 flex items-center justify-center gap-2'>
-                            <ChevronDown className='w-4 h-4' /> Cargar más ({filteredProducts.length - visibleCount} restantes)
+                            <ChevronDown className='w-4 h-4' /> Cargar más (
+                            {filteredProducts.length - visibleCount} restantes)
                         </button>
                     )}
                     {filteredProducts.length === 0 && (

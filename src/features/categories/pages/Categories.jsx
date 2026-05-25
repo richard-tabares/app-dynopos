@@ -27,7 +27,13 @@ export const Categories = () => {
 
     const handleEscapeDelete = () => setShowDeleteConfirm(null)
 
-    useEscape(showModal ? handleEscapeCreate : showDeleteConfirm ? handleEscapeDelete : null)
+    useEscape(
+        showModal
+            ? handleEscapeCreate
+            : showDeleteConfirm
+              ? handleEscapeDelete
+              : null,
+    )
 
     const businessId = user?.profile?.business_id || user?.data?.user?.id
 
@@ -37,7 +43,11 @@ export const Categories = () => {
             const data = await getCategories(businessId)
             setCategories(data)
         } catch {
-            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: 'Error al cargar categorías'})
+            sileo.error({
+                fill: 'var(--toast-error)',
+                title: 'Error',
+                description: 'Error al cargar categorías',
+            })
         }
     }
 
@@ -55,7 +65,8 @@ export const Categories = () => {
         setShowModal(true)
     }
 
-    const openEditModal = (category) => {
+    const openEditModal = (category, e) => {
+        e.stopPropagation()
         setEditingCategory(category)
         setCategoryName(category.name)
         setShowModal(true)
@@ -63,7 +74,11 @@ export const Categories = () => {
 
     const handleSave = async () => {
         if (!categoryName.trim()) {
-            sileo.warning({ fill: 'var(--toast-warning)', title: 'Atención', description: 'El nombre de la categoría es obligatorio'})
+            sileo.warning({
+                fill: 'var(--toast-warning)',
+                title: 'Atención',
+                description: 'El nombre de la categoría es obligatorio',
+            })
             return
         }
 
@@ -73,35 +88,56 @@ export const Categories = () => {
                 await updateCategory(editingCategory.id, {
                     name: categoryName.trim(),
                 })
-                sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Categoría actualizada exitosamente'})
+                sileo.success({
+                    fill: 'var(--toast-success)',
+                    title: 'Completado',
+                    description: 'Categoría actualizada exitosamente',
+                })
             } else {
                 await createCategory({
                     business_id: businessId,
                     name: categoryName.trim(),
                 })
-                sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Categoría creada exitosamente'})
+                sileo.success({
+                    fill: 'var(--toast-success)',
+                    title: 'Completado',
+                    description: 'Categoría creada exitosamente',
+                })
             }
             setCategoryName('')
             setEditingCategory(null)
             await loadCategories()
             setShowModal(false)
         } catch (error) {
-            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al guardar la categoría'})
+            sileo.error({
+                fill: 'var(--toast-error)',
+                title: 'Error',
+                description: error.message || 'Error al guardar la categoría',
+            })
         } finally {
             setSaving(false)
         }
     }
 
-    const handleDelete = async () => {
+    const handleDelete = async (e) => {
+        e.stopPropagation()
         if (!showDeleteConfirm) return
         setLoading(true)
         try {
             await deleteCategory(showDeleteConfirm.id)
-            sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Categoría eliminada exitosamente'})
+            sileo.success({
+                fill: 'var(--toast-success)',
+                title: 'Completado',
+                description: 'Categoría eliminada exitosamente',
+            })
             setShowDeleteConfirm(null)
             await loadCategories()
         } catch (error) {
-            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al eliminar la categoría'})
+            sileo.error({
+                fill: 'var(--toast-error)',
+                title: 'Error',
+                description: error.message || 'Error al eliminar la categoría',
+            })
         } finally {
             setLoading(false)
         }
@@ -117,9 +153,10 @@ export const Categories = () => {
                         setEditingCategory(null)
                         setCategoryName('')
                     }}
-                    title={editingCategory ? 'Editar Categoría' : 'Nueva Categoría'}
-                    icon={Tag}
-                >
+                    title={
+                        editingCategory ? 'Editar Categoría' : 'Nueva Categoría'
+                    }
+                    icon={Tag}>
                     <div className='p-6'>
                         <label className='block text-sm font-medium text-on-body mb-2'>
                             Nombre
@@ -127,9 +164,7 @@ export const Categories = () => {
                         <input
                             type='text'
                             value={categoryName}
-                            onChange={(e) =>
-                                setCategoryName(e.target.value)
-                            }
+                            onChange={(e) => setCategoryName(e.target.value)}
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
                                     e.preventDefault()
@@ -155,7 +190,16 @@ export const Categories = () => {
                             onClick={handleSave}
                             disabled={saving || !categoryName.trim()}
                             className='flex-1 py-2.5 bg-accent text-surface rounded-lg font-bold hover:bg-accent/85 transition text-sm disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed flex items-center justify-center gap-2'>
-                            {saving ? <><Loader className='w-5 h-5 animate-spin text-surface' /> Guardando...</> : <><Save className='w-5 h-5' /> Guardar</>}
+                            {saving ? (
+                                <>
+                                    <Loader className='w-5 h-5 animate-spin text-surface' />{' '}
+                                    Guardando...
+                                </>
+                            ) : (
+                                <>
+                                    <Save className='w-5 h-5' /> Guardar
+                                </>
+                            )}
                         </button>
                     </div>
                 </Modal>
@@ -168,8 +212,7 @@ export const Categories = () => {
                     title='Eliminar Categoría'
                     icon={Trash2}
                     iconColor='text-red-600'
-                    size='sm'
-                >
+                    size='sm'>
                     <div className='p-6'>
                         <p className='text-sm text-muted'>
                             ¿Estás seguro de eliminar{' '}
@@ -184,10 +227,19 @@ export const Categories = () => {
                             Cancelar
                         </button>
                         <button
-                            onClick={handleDelete}
+                            onClick={(e) => handleDelete(e)}
                             disabled={loading}
                             className='flex-1 py-2.5 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 transition text-sm disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2'>
-                            {loading ? <><Loader className='w-5 h-5 animate-spin text-accent' /> Eliminando...</> : <><Trash2 className='w-5 h-5' /> Eliminar</>}
+                            {loading ? (
+                                <>
+                                    <Loader className='w-5 h-5 animate-spin text-accent' />{' '}
+                                    Eliminando...
+                                </>
+                            ) : (
+                                <>
+                                    <Trash2 className='w-5 h-5' /> Eliminar
+                                </>
+                            )}
                         </button>
                     </div>
                 </Modal>
@@ -248,7 +300,10 @@ export const Categories = () => {
                                     {filteredCategories.map((category) => (
                                         <tr
                                             key={category.id}
-                                            className='border-b border-divider-light hover:bg-hover'>
+                                            className='border-b border-divider-light hover:bg-hover cursor-pointer'
+                                            onClick={(e) => {
+                                                openEditModal(category, e)
+                                            }}>
                                             <td className='py-3 px-4'>
                                                 <div className='flex items-center gap-2'>
                                                     <Tag className='w-4 h-4 text-accent' />
@@ -260,19 +315,23 @@ export const Categories = () => {
                                             <td className='py-3 px-4 text-right'>
                                                 <section className='flex items-center justify-end gap-3'>
                                                     <button
-                                                        onClick={() =>
-                                                            openEditModal(category)
+                                                        onClick={(e) =>
+                                                            openEditModal(
+                                                                category,
+                                                                e,
+                                                            )
                                                         }
                                                         className='bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-800 p-1.5 rounded-sm cursor-pointer'
                                                         title='Editar Categoría'>
                                                         <Edit2 className='w-4 h-4 text-accent' />
                                                     </button>
                                                     <button
-                                                        onClick={() =>
+                                                        onClick={(e) => {
+                                                            e.stopPropagation()
                                                             setShowDeleteConfirm(
                                                                 category,
                                                             )
-                                                        }
+                                                        }}
                                                         className='hover:bg-red-500 bg-red-400 text-white p-1.5 rounded-sm cursor-pointer'
                                                         title='Eliminar Categoría'>
                                                         <Trash2 className='w-4 h-4' />

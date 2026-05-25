@@ -23,7 +23,6 @@ export const PaymentStep = () => {
         if (!pending_signup_id || !signupData) {
             navigate('/signup', { replace: true })
         }
-        console.log(signupData)
     }, [pending_signup_id, signupData, navigate])
 
     if (!pending_signup_id || !signupData) return null
