@@ -235,7 +235,7 @@ export const UpdatePaymentMethodModal = ({ isOpen, onClose, businessId, customer
                     className='w-full mt-2 px-6 py-3 bg-accent text-surface border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 hover:bg-accent/85 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'
                 >
                     {loading ? (
-                        <><Loader className='w-5 h-5 animate-spin' /> Actualizando...</>
+                        <><Loader className='w-5 h-5 animate-spin text-surface' /> Actualizando...</>
                     ) : (
                         <><Lock className='w-5 h-5' /> Actualizar método de pago</>
                     )}

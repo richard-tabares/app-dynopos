@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useState } from 'react'
 import { useNavigate, useLocation, NavLink } from 'react-router'
-import { Loader2, Clock, CheckCircle, ExternalLink } from 'lucide-react'
+import { Loader, Clock, CheckCircle, ExternalLink } from 'lucide-react'
 import { checkPaymentStatus } from '../helpers/checkPaymentStatus'
 
 export const PaymentPending = () => {
@@ -60,7 +60,7 @@ export const PaymentPending = () => {
     return (
         <section className='w-full flex flex-col items-center justify-center bg-surface px-4 py-8'>
             <section className='text-center'>
-                <Loader2 className='w-16 h-16 text-accent mx-auto mb-6 animate-spin' />
+                <Loader className='w-5 h-5 animate-spin text-accent mx-auto mb-6' />
                 <h1 className='text-2xl font-bold text-on-surface mb-2'>
                     Confirmando tu pago
                 </h1>

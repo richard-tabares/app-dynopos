@@ -86,7 +86,7 @@ export const SaleConfirmationModal = ({
                             className='px-6 py-3 bg-accent text-surface rounded-lg hover:bg-accent/85 font-medium transition cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed'
                             onClick={onConfirm}>
                             {loading ? (
-                                <><Loader className='w-5 h-5 animate-spin' /> Confirmando...</>
+                                <><Loader className='w-5 h-5 animate-spin text-surface' /> Confirmando...</>
                             ) : (
                                 <><CheckCircle className='w-5 h-5' /> Confirmar Venta</>
                             )}

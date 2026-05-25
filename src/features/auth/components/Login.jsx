@@ -231,7 +231,7 @@ export const Login = () => {
                             className='py-3 px-6 font-semibold bg-accent text-surface hover:bg-accent/85 transition-all duration-300 rounded-md w-full cursor-pointer mb-2 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
                             {loading ? (
                                 <>
-                                    <Loader className='w-5 h-5 animate-spin' />{' '}
+                                    <Loader className='w-5 h-5 animate-spin text-surface' />{' '}
                                     Iniciando...
                                 </>
                             ) : (

@@ -332,7 +332,7 @@ export const UserFormModal = ({ mode, userData, onClose, onSuccess }) => {
                                 onClick={handleDelete}
                                 disabled={deleting}
                                 className='flex-1 px-4 py-2 bg-danger text-white rounded-lg hover:bg-danger/85 font-medium transition cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2'>
-                                {deleting ? <Loader className='w-4 h-4 animate-spin' /> : <Trash2 className='w-4 h-4' />}
+                                {deleting ? <Loader className='w-5 h-5 animate-spin text-surface' /> : <Trash2 className='w-4 h-4' />}
                                 Eliminar
                             </button>
                         </section>
@@ -359,7 +359,7 @@ export const UserFormModal = ({ mode, userData, onClose, onSuccess }) => {
                         disabled={!isFormValid || submitting}
                         className='px-4 py-2 bg-accent text-surface rounded-lg hover:bg-accent/85 font-medium transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
                         {submitting
-                            ? <><Loader className='w-5 h-5 animate-spin' /> Guardando...</>
+                            ? <><Loader className='w-5 h-5 animate-spin text-surface' /> Guardando...</>
                             : <><Save className='w-5 h-5' /> {isEdit ? 'Guardar' : 'Crear Usuario'}</>}
                     </button>
                 </section>

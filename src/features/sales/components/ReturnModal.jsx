@@ -213,7 +213,7 @@ export const ReturnModal = ({ isOpen, sale, onClose, onConfirm }) => {
                     disabled={
                         !returnReason.trim() || !hasSelectedItems || isReturning
                     }>
-                    {isReturning ? <><Loader className='w-5 h-5 animate-spin' /> Devolviendo...</> : `Devolver ($${new Intl.NumberFormat('es-CO', {
+                    {isReturning ? <><Loader className='w-5 h-5 animate-spin text-accent' /> Devolviendo...</> : `Devolver ($${new Intl.NumberFormat('es-CO', {
                         maximumFractionDigits: 0,
                     }).format(totalReturn)})`}
                 </button>

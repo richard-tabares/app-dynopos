@@ -138,7 +138,7 @@ export const PaymentHistoryTable = ({ transactions, loading }) => {
                     </h2>
                 </div>
                 <div className='p-6 flex items-center justify-center py-12'>
-                    <Loader className='w-6 h-6 animate-spin text-accent' />
+                    <Loader className='w-5 h-5 animate-spin text-accent' />
                 </div>
             </section>
         )

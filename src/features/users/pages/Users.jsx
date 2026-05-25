@@ -68,7 +68,7 @@ export const Users = () => {
                 <section className='bg-surface border border-outline rounded-xl'>
                     {loading ? (
                         <section className='flex items-center justify-center py-16'>
-                            <Loader className='w-6 h-6 animate-spin text-accent' />
+                            <Loader className='w-5 h-5 animate-spin text-accent' />
                         </section>
                     ) : users.length === 0 ? (
                         <section className='flex flex-col items-center justify-center py-16 text-center'>

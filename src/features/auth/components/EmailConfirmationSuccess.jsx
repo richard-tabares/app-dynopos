@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router'
-import { CheckCircle2, Loader2, XCircle, ArrowLeft, LogIn } from 'lucide-react'
+import { CheckCircle2, Loader, XCircle, ArrowLeft, LogIn } from 'lucide-react'
 
 export const EmailConfirmationSuccess = () => {
     const navigate = useNavigate()
@@ -61,7 +61,7 @@ export const EmailConfirmationSuccess = () => {
             <section className='w-full min-h-screen flex flex-col items-center justify-center bg-body px-4'>
                 <section className='w-full max-w-md bg-surface border border-outline p-10 text-center'>
                     <div className='flex justify-center mb-6'>
-                        <Loader2 className='w-12 h-12 text-accent animate-spin' />
+                        <Loader className='w-5 h-5 animate-spin text-accent' />
                     </div>
                     <h1 className='text-2xl font-bold text-on-surface mb-4'>
                         Verificando tu correo...

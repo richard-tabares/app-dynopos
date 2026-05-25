@@ -305,7 +305,7 @@ export const Account = () => {
                             onClick={handleChangePassword}
                             disabled={changingPassword || isPasswordFormEmpty}
                             className='flex items-center gap-2 px-4 py-2 bg-accent text-surface text-sm font-medium rounded-lg hover:bg-accent/85 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer'>
-                            {changingPassword ? <Loader className='w-4 h-4 animate-spin' /> : <Lock className='w-4 h-4' />}
+                            {changingPassword ? <Loader className='w-5 h-5 animate-spin text-surface' /> : <Lock className='w-4 h-4' />}
                             Cambiar Contraseña
                         </button>
                     </div>
@@ -394,7 +394,7 @@ export const Account = () => {
                     disabled={saving || uploadingLogo}
                     className='flex items-center gap-2 px-6 py-2.5 bg-accent text-surface text-sm font-bold rounded-lg hover:bg-accent/85 transition disabled:opacity-50 cursor-pointer'>
                     {saving || uploadingLogo ? (
-                        <Loader className='w-4 h-4 animate-spin' />
+                        <Loader className='w-5 h-5 animate-spin text-surface' />
                     ) : (
                         <Save className='w-4 h-4' />
                     )}

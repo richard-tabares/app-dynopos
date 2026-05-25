@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
+import { Loader } from 'lucide-react'
 import { DateRangeFilter } from '../../shared/components/DateRangeFilter'
 import { ReturnsChart } from '../components/ReturnsChart'
 import { ReturnsTable } from '../components/ReturnsTable'
@@ -125,7 +126,7 @@ export const DevolucionesReports = () => {
             {detailLoading && (
                 <div className='fixed inset-0 bg-overlay backdrop-blur-xs flex items-center justify-center z-[70]'>
                     <div className='bg-surface p-6 rounded-xl border border-outline'>
-                        <div className='animate-spin w-8 h-8 border-4 border-accent border-t-transparent rounded-full mx-auto' />
+                        <Loader className='w-5 h-5 animate-spin text-accent mx-auto' />
                         <p className='text-sm text-muted mt-3'>Cargando detalle...</p>
                     </div>
                 </div>

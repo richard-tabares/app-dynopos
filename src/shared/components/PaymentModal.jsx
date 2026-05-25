@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Loader2, CheckCircle, XCircle, ArrowRight, X, CircleDollarSign } from 'lucide-react'
+import { Loader, CheckCircle, XCircle, ArrowRight, X, CircleDollarSign } from 'lucide-react'
 import { Modal } from './Modal'
 
 export const PaymentModal = ({ isOpen, status, message, onClose }) => {
@@ -19,7 +19,7 @@ export const PaymentModal = ({ isOpen, status, message, onClose }) => {
         ? <CheckCircle className='w-16 h-16 text-green-500' />
         : status === 'error'
             ? <XCircle className='w-16 h-16 text-red-500' />
-            : <Loader2 className='w-16 h-16 text-accent animate-spin' />
+            : <Loader className='w-5 h-5 animate-spin text-accent' />
 
     const title = status === 'success'
         ? '¡Pago exitoso!'
