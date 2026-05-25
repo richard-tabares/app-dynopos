@@ -104,7 +104,7 @@ export const Login = () => {
         }`
 
     return (
-        <section className='flex max-lg:flex-col min-h-screen relative justify-between'>
+        <section className='bg-surface flex max-lg:flex-col min-h-screen relative max-lg:justify-center'>
             <button
                 onClick={toggleDarkMode}
                 className='absolute top-4 right-4 z-50 p-2.5 rounded-full bg-accent text-surface hover:bg-accent/85 transition-all duration-300 cursor-pointer'>
@@ -114,11 +114,11 @@ export const Login = () => {
                     <Moon className='w-5 h-5' />
                 )}
             </button>
-            <section className='w-1/2 max-lg:h-1/2 max-lg:w-full dark:bg-corporate dark:max-lg:bg-corporate/80 bg-corporate max-lg:bg-surface p-8 lg:p-16 flex flex-col lg:justify-between relative overflow-hidden'>
+            <section className='w-1/2 max-lg:w-full bg-corporate max-lg:bg-surface p-8 lg:p-16 flex flex-col lg:justify-between relative overflow-hidden'>
                 <div className='relative z-10 [&_path]:fill-white max-lg:[&_path]:fill-on-surface max-lg:flex max-lg:justify-center'>
                     <LogoComplete className='w-48' />
                 </div>
-                <div className='relative z-10 my-auto py-6 lg:py-12'>
+                <div className='relative z-10 lg:my-auto max-lg:my-0 py-6 lg:py-12'>
                     <h2 className='text-3xl lg:text-4xl font-extrabold text-white max-lg:text-on-surface tracking-tight leading-tight max-md:text-2xl max-lg:text-center'>
                         Tu POS que administra tu negocio
                     </h2>
@@ -160,7 +160,7 @@ export const Login = () => {
                         </div>
                     </div>
                 </div>
-                <div className='relative z-10 flex items-center gap-4 max-w-sm hidden lg:block'>
+                <div className='z-10 items-center gap-4 max-w-sm hidden lg:flex'>
                     <div className='p-3 text-login-accent'>
                         <Rocket className='w-8 h-8' />
                     </div>
@@ -174,8 +174,9 @@ export const Login = () => {
                     </div>
                 </div>
             </section>
-            <section className='w-1/2 max-lg:h-1/2 max-lg:w-full bg-surface/80 flex lg:items-center justify-center p-6 md:p-10 max-lg:flex-1'>
-                <div className='w-full max-w-md'>
+            <section className='w-1/2 max-lg:w-full bg-surface flex lg:items-center justify-center p-6 md:p-10 relative overflow-hidden'>
+                <div className='absolute inset-0 dark:bg-black/20 hidden lg:block pointer-events-none' />
+                <div className='w-full max-w-md z-10'>
                     <h1 className='text-2xl font-bold text-center text-on-surface mb-2'>Iniciar Sesión</h1>
                     <p className='text-on-body text-center mb-8'>
                         Administra tu negocio en un solo lugar
