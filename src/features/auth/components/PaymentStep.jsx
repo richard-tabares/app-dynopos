@@ -206,7 +206,7 @@ export const PaymentStep = () => {
                                         key={i}
                                         className='flex items-center gap-2 text-sm text-on-body'>
                                         <Check className='w-4 h-4 text-green-500 flex-shrink-0' />
-                                        {feature}
+                                        {feature.title || feature}
                                     </li>
                                 ))}
                             </ul>

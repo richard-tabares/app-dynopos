@@ -43,7 +43,7 @@ export const useStore = create(
             refreshToken: null,
             isCollapsed: false,
             isMobile: false,
-            isDarkMode: false,
+            isDarkMode: true,
             products: [],
             cart: [],
             todayRevenue: 0,

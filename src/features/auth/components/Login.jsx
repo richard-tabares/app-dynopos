@@ -1,6 +1,5 @@
 import { NavLink, useNavigate } from 'react-router'
 import {
-    Check,
     Eye,
     EyeClosed,
     Loader,
@@ -10,10 +9,12 @@ import {
     Sun,
 } from 'lucide-react'
 import { login } from '../helpers/login'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { getPlanFeatures } from '../helpers/getPlanFeatures'
 import { sileo } from 'sileo'
 import { useStore } from '../../../app/providers/store'
 import { LogoComplete } from '../../../shared/components/LogoComplete'
+import { FeatureCarousel } from '../../../shared/components/FeatureCarousel'
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -29,6 +30,11 @@ export const Login = () => {
     const [touched, setTouched] = useState({})
     const [showPassword, setShowPassword] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [features, setFeatures] = useState([])
+
+    useEffect(() => {
+        getPlanFeatures().then(setFeatures)
+    }, [])
 
     const validateForm = () => {
         const newErrors = {}
@@ -130,34 +136,8 @@ export const Login = () => {
                         automatizar ventas, controlar inventarios y obtener
                         analíticas precisas en tiempo real.
                     </p>
-                    <div className='mt-8 space-y-4 max-w-sm hidden lg:block'>
-                        <div className='flex items-start gap-3'>
-                            <div className='mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-login-accent/10 flex items-center justify-center border border-login-accent/30'>
-                                <Check className='w-3 h-3 text-login-accent' />
-                            </div>
-                            <div>
-                                <h4 className='text-sm font-semibold text-white'>
-                                    Facturación Ultra-Rápida
-                                </h4>
-                                <p className='text-xs text-white/80'>
-                                    Reduce tiempos de espera de tus clientes.
-                                </p>
-                            </div>
-                        </div>
-                        <div className='flex items-start gap-3'>
-                            <div className='mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-login-accent/10 flex items-center justify-center border border-login-accent/30'>
-                                <Check className='w-3 h-3 text-login-accent' />
-                            </div>
-                            <div>
-                                <h4 className='text-sm font-semibold text-white'>
-                                    Sincronización en la Nube
-                                </h4>
-                                <p className='text-xs text-white/80'>
-                                    Accede a tus reportes de ventas desde tu
-                                    móvil.
-                                </p>
-                            </div>
-                        </div>
+                    <div className='mt-8 max-w-sm hidden lg:block'>
+                        <FeatureCarousel features={features} />
                     </div>
                 </div>
                 <div className='items-center gap-4 max-w-sm hidden lg:flex'>
