@@ -124,7 +124,7 @@ export const DevolucionesReports = () => {
 
             {detailLoading && (
                 <div className='fixed inset-0 bg-overlay backdrop-blur-xs flex items-center justify-center z-[70]'>
-                    <div className='bg-surface p-6 rounded-lg shadow-lg'>
+                    <div className='bg-surface p-6 rounded-xl border border-outline'>
                         <div className='animate-spin w-8 h-8 border-4 border-accent border-t-transparent rounded-full mx-auto' />
                         <p className='text-sm text-muted mt-3'>Cargando detalle...</p>
                     </div>

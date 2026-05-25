@@ -18,7 +18,7 @@ export const PaymentMethodCard = ({ isAutoRenew, onToggle, businessId, customerE
     return (
         <>
             <section className='bg-surface border border-outline shadow-sm rounded-lg'>
-                <div className='px-6 py-4 border-b border-divider bg-body/50'>
+                <div className='px-6 py-3 border-b border-divider bg-body/50'>
                     <h2 className='text-lg font-semibold flex items-center gap-2'>
                         <CreditCard className='w-5 h-5 text-accent' />
                         Información de Pago

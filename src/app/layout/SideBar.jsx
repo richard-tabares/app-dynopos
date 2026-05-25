@@ -169,7 +169,7 @@ export const SideBar = () => {
                     </section>
                 </section>
 
-                <nav className='flex-1 p-4 overflow-y-auto'>
+                <nav className='flex-1 p-4 overflow-y-auto scrollbar-none'>
                     <ul className='h-full space-y-2 flex flex-col'>
                         {isCollapsed && (
                             <li>

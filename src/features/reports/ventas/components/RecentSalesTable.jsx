@@ -6,6 +6,7 @@ import { ReturnModal } from '../../../sales/components/ReturnModal'
 import { returnSale } from '../../../sales/helpers/returnSale'
 import { getTodayRevenue } from '../../../sales/helpers/getTodayRevenue'
 import { useStore } from '../../../../app/providers/store'
+import { useFormatDate } from '../../../../shared/helpers/useFormatDate'
 
 const formatCurrency = (value) =>
     new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(value)
@@ -26,6 +27,7 @@ export const RecentSalesTable = ({ sales = [], onSaleUpdated }) => {
     const [search, setSearch] = useState('')
     const [selectedSale, setSelectedSale] = useState(null)
     const [returnTarget, setReturnTarget] = useState(null)
+    const formatDate = useFormatDate()
 
     const filtered = useMemo(() => {
         if (!search.trim()) return sales
@@ -101,7 +103,7 @@ export const RecentSalesTable = ({ sales = [], onSaleUpdated }) => {
                                                         #{String(sale.ticketNumber ?? sale.id).padStart(4, '0')}
                                                     </span>
                                                 </td>
-                                                <td className='py-3 px-4 text-muted'>{sale.date}</td>
+                                                <td className='py-3 px-4 text-muted'>{formatDate(sale.date)}</td>
                                                 <td className='py-3 px-4 text-on-surface capitalize'>{sale.paymentMethod}</td>
                                                 <td className='py-3 px-4'>
                                                     <span className={`text-xs font-medium px-2 py-1 rounded-full ${status.bg} ${status.color}`}>

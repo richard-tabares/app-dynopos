@@ -24,17 +24,17 @@ export const ReturnDetailModal = ({ isOpen, onClose, data }) => {
             className='fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex flex-col items-center justify-center z-[70] p-4'
             onClick={onClose}>
             <section
-                className='bg-surface rounded-lg shadow-2xl w-full max-w-sm relative max-h-[90vh] overflow-y-auto'
+                className='bg-surface rounded-xl border border-outline w-full max-w-sm relative max-h-[90vh] overflow-y-auto scrollbar-none'
                 onClick={(e) => e.stopPropagation()}>
-                <div className='bg-red-600 p-4 text-white flex justify-between items-center sticky top-0'>
-                    <div className='flex items-center gap-2'>
-                        <Undo2 className='w-5 h-5' />
-                        <span className='font-bold uppercase tracking-widest text-sm'>Detalle de Devolución</span>
-                    </div>
-                    <button onClick={onClose} className='p-1 text-white hover:text-white/85 border border-white/30 hover:border-white rounded-md transition cursor-pointer'>
+                <section className='sticky top-0 bg-title-surface/50 backdrop-blur-3xl z-50 flex items-center justify-between px-6 py-3.5 border-b border-divider'>
+                    <h2 className='text-lg font-semibold flex items-center gap-2'>
+                        <Undo2 className='w-5 h-5 text-accent' />
+                        Detalle de Devolución
+                    </h2>
+                    <button onClick={onClose} className='p-1 rounded-md text-accent hover:text-accent/85 border border-disabled hover:border-accent transition cursor-pointer'>
                         <X className='w-5 h-5' />
                     </button>
-                </div>
+                </section>
 
                 <div className='p-6'>
                     <div className='text-center mb-4 border-b border-dashed border-outline pb-3'>

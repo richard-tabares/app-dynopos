@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Search, Undo2, ChevronDown } from 'lucide-react'
+import { useFormatDate } from '../../../../shared/helpers/useFormatDate'
 
 const formatCurrency = (value) =>
     new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(value)
@@ -7,6 +8,7 @@ const formatCurrency = (value) =>
 export const ReturnsTable = ({ data = [], onReturnClick }) => {
     const [visibleCount, setVisibleCount] = useState(10)
     const [search, setSearch] = useState('')
+    const formatDate = useFormatDate()
 
     const filtered = useMemo(() => {
         if (!search.trim()) return data
@@ -58,7 +60,7 @@ export const ReturnsTable = ({ data = [], onReturnClick }) => {
                                     >
                                         <td className='py-3 px-4 font-medium text-on-surface'>#{String(item.ticket_number ?? item.return_id ?? '').padStart(4, '0')}</td>
                                         <td className='py-3 px-4 text-right'>{item.total_items_returned}</td>
-                                        <td className='py-3 px-4 text-right'>{item.return_date}</td>
+                                        <td className='py-3 px-4 text-right'>{formatDate(item.return_date)}</td>
                                         <td className='py-3 px-4 text-right font-medium text-red-600'>{formatCurrency(item.total_amount)}</td>
                                     </tr>
                                 ))}

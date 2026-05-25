@@ -125,14 +125,14 @@ export const UpdatePaymentMethodModal = ({ isOpen, onClose, businessId, customer
 
     return (
         <section className='fixed inset-0 z-50 flex items-center justify-center bg-overlay backdrop-blur-xs p-4'>
-            <section className='bg-surface rounded-xl border border-outline shadow-lg w-full max-w-lg max-h-[90vh] overflow-y-auto'>
-                <section className='flex items-center justify-between px-6 py-4 border-b border-divider'>
+            <section className='bg-surface rounded-xl border border-outline w-full max-w-lg max-h-[90vh] overflow-y-auto scrollbar-none'>
+                <section className='sticky top-0 bg-title-surface/50 backdrop-blur-3xl z-50 flex items-center justify-between px-6 py-3.5 border-b border-divider'>
                     <h2 className='text-lg font-semibold flex items-center gap-2'>
                         <CreditCard className='w-5 h-5 text-accent' />
                         Actualizar Método de Pago
                     </h2>
                     <button onClick={onClose} className='p-1 rounded-md text-accent hover:text-accent/85 border border-disabled hover:border-accent transition cursor-pointer'>
-                        <X className='w-6 h-6' />
+                        <X className='w-5 h-5' />
                     </button>
                 </section>
 

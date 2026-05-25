@@ -15,6 +15,7 @@
     --color-subtle: var(--subtle);
     --color-overlay: var(--overlay);
     --color-on-surface: var(--on-surface);
+    --color-title-surface: var(--title-surface);
     --color-on-body: var(--on-body);
     --color-muted: var(--muted);
     --color-faint: var(--faint);
@@ -42,6 +43,7 @@
         --subtle: #f9fafb;
         --overlay: rgba(17, 24, 39, 0.5);
         --on-surface: #111827;
+        --title-surface: hsl(202, 20%, 65%);
         --on-body: #374151;
         --muted: #6b7280;
         --faint: #9ca3af;
@@ -68,6 +70,7 @@
         --subtle: rgba(31, 41, 55, 0.5);
         --overlay: rgba(0, 0, 0, 0.6);
         --on-surface: #f9fafb;
+        --title-surface: #030712;
         --on-body: #e5e7eb;
         --muted: #d1d5db;
         --faint: #9ca3af;

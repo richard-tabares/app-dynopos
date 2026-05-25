@@ -259,19 +259,19 @@ export const Products = () => {
                 <section
                     className='fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex items-center justify-center z-50 p-4'>
                     <section
-                        className='bg-surface rounded-xl border border-outline shadow-lg w-full max-w-md relative overflow-hidden max-h-[90vh] overflow-y-auto'
+                        className='bg-surface rounded-xl border border-outline w-full max-w-md relative overflow-hidden max-h-[90vh] overflow-y-auto scrollbar-none'
                         onClick={(e) => e.stopPropagation()}>
-                        <div className='flex items-center justify-between px-6 py-4 border-b border-divider'>
-                            <h3 className='text-lg font-semibold flex items-center gap-2'>
+                        <section className='sticky top-0 bg-title-surface/50 backdrop-blur-3xl z-50 flex items-center justify-between px-6 py-3.5 border-b border-divider'>
+                            <h2 className='text-lg font-semibold flex items-center gap-2'>
                                 <Tags className='w-5 h-5 text-accent' />
                                 Nueva Categoría
-                            </h3>
+                            </h2>
                             <button
                                 onClick={() => setShowCategoryModal(false)}
                                 className='p-1 rounded-md text-accent hover:text-accent/85 border border-disabled hover:border-accent transition cursor-pointer'>
-                                <X className='w-6 h-6' />
+                                <X className='w-5 h-5' />
                             </button>
-                        </div>
+                        </section>
                         <div className='p-6'>
                             <label className='block text-sm font-medium text-on-body mb-2'>
                                 Nombre

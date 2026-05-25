@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { ReceiptText, Clock, ChevronDown } from 'lucide-react'
 import { SaleTicketModal } from '../../../shared/components/SaleTicketModal'
+import { useFormatDate } from '../../../shared/helpers/useFormatDate'
 
 export const RecentSalesCard = ({ sales = [] }) => {
     const [visibleCount, setVisibleCount] = useState(10)
     const [selectedSale, setSelectedSale] = useState(null)
+    const formatDate = useFormatDate()
 
     const handleLoadMore = () => {
         setVisibleCount(prev => prev + 10)
@@ -34,7 +36,7 @@ export const RecentSalesCard = ({ sales = [] }) => {
                                         #{String(sale.ticketNumber || sale.id).padStart(4, '0')}
                                     </p>
                                     <p className='text-xs text-muted'>
-                                        {sale.date} • {sale.itemsCount} {sale.itemsCount === 1 ? 'item' : 'items'}
+                                        {formatDate(sale.date)} • {sale.itemsCount} {sale.itemsCount === 1 ? 'item' : 'items'}
                                     </p>
                                 </div>
                                 <div className='text-right'>

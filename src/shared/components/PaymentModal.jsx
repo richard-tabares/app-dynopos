@@ -39,7 +39,7 @@ export const PaymentModal = ({ isOpen, status, message, onClose }) => {
         <section className={`fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex flex-col items-center justify-center z-50 p-4 transition-opacity duration-300 ${closing ? 'opacity-0' : 'opacity-100'}`}
             onClick={status !== 'processing' ? handleClose : undefined}>
             <section
-                className='bg-surface rounded-lg shadow-lg p-8 w-full max-w-sm mx-4 text-center'
+                className='bg-surface rounded-xl border border-outline p-8 w-full max-w-sm mx-4 text-center'
                 onClick={(e) => e.stopPropagation()}>
                 <section className='mb-4 flex justify-center'>
                     {icon}

@@ -104,7 +104,7 @@ export const OrderSidebar = ({ onProcessSale }) => {
                 </div>
             </div>
 
-            <div className='flex-1 overflow-y-auto p-2 flex flex-col gap-2 scrollbar-thin'>
+            <div className='flex-1 overflow-y-auto p-2 flex flex-col gap-2 scrollbar-thin scrollbar-none'>
                 {!cart?.length ? (
                     <div className='flex-1 flex flex-col items-center justify-center text-faint gap-2'>
                         <ShoppingCart className='w-12 h-12 opacity-20' />

@@ -21,19 +21,19 @@ export const SaleConfirmationModal = ({
         <section
             className='fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex flex-col items-center justify-center z-50 p-4'>
             <section
-                className='bg-surface rounded-xl border border-outline shadow-lg w-full max-w-md relative max-h-[90vh] flex flex-col'
+                className='bg-surface rounded-xl border border-outline w-full max-w-md relative max-h-[90vh] flex flex-col overflow-hidden'
                 onClick={(e) => e.stopPropagation()}
                 onKeyDown={(e) => e.key === 'Enter' && !loading && onConfirm()}>
-                <section className='flex items-center justify-between px-6 py-4 border-b border-divider flex-shrink-0'>
+                <section className='sticky top-0 bg-title-surface/50 backdrop-blur-3xl z-50 flex items-center justify-between px-6 py-3.5 border-b border-divider'>
                     <h2 className='text-lg font-semibold flex items-center gap-2'>
                         <CircleDollarSign className='w-5 h-5 text-accent' />
                         Confirmar Venta
                     </h2>
                     <button onClick={onCancel} className='p-1 rounded-md text-accent hover:text-accent/85 border border-disabled hover:border-accent transition cursor-pointer'>
-                        <X className='w-6 h-6' />
+                        <X className='w-5 h-5' />
                     </button>
                 </section>
-                <div className='p-6 flex flex-col flex-1 overflow-y-auto'>
+                <div className='p-6 flex flex-col flex-1 overflow-y-auto scrollbar-none'>
                 <p className='text-sm text-muted mb-4 flex-shrink-0'>
                     Revisa los detalles de la venta antes de confirmar.
                 </p>
@@ -82,7 +82,7 @@ export const SaleConfirmationModal = ({
                     </div>
                 </div>
 
-                <div className='flex justify-end gap-4 border-t border-divider pt-4 mt-4'>
+                <div className='flex justify-end gap-4 pt-4 mt-4'>
                     <button
                         type='button'
                         className='px-6 py-3 border border-outline text-on-body hover:bg-hover font-medium rounded-lg transition cursor-pointer'

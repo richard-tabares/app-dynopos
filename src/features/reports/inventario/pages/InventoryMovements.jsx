@@ -6,6 +6,7 @@ import { ReportSkeletons } from '../../shared/components/ReportsSkeletons'
 import { getReports } from '../../shared/helpers/getReports'
 import { useStore } from '../../../../app/providers/store'
 import { History, Search, ArrowDownCircle, ArrowUpCircle, ShoppingCart, Undo2, List, ChevronDown } from 'lucide-react'
+import { useFormatDate } from '../../../../shared/helpers/useFormatDate'
 
 const typeConfig = {
     entry: { label: 'Entrada', icon: ArrowDownCircle, cls: 'bg-emerald-100 text-emerald-700' },
@@ -61,6 +62,8 @@ export const InventoryMovements = () => {
     const [typeFilter, setTypeFilter] = useState('')
     const [searchTerm, setSearchTerm] = useState('')
     const [movVisibleCount, setMovVisibleCount] = useState(10)
+
+    const formatDate = useFormatDate()
 
     const initialLoad = useRef(true)
 
@@ -225,7 +228,7 @@ export const InventoryMovements = () => {
                                     const Icon = config.icon
                                     return (
                                         <tr key={m.id} className='border-b border-divider-light hover:bg-hover'>
-                                            <td className='py-3 px-4 text-on-body whitespace-nowrap'>{m.created_at}</td>
+                                            <td className='py-3 px-4 text-on-body whitespace-nowrap'>{formatDate(m.created_at)}</td>
                                             <td className='py-3 px-4 font-medium text-on-surface'>
                                                 {m.products?.name || '—'}
                                                 {m.products?.sku && <span className='text-muted text-xs ml-1'>({m.products.sku})</span>}
