@@ -1,8 +1,8 @@
 import { useStore } from '../../app/providers/store'
 
-export const LogoComplete = ({ className }) => {
+export const LogoComplete = ({ className, fill }) => {
   const isDarkMode = useStore((state) => state.isDarkMode)
-  const fillColor = isDarkMode ? '#ffffff' : '#1f2937'
+  const fillColor = fill || (isDarkMode ? '#ffffff' : '#1f2937')
 
   return (
     <svg

@@ -11,6 +11,7 @@
     --color-toast-text: var(--text-toast);
     --color-surface: var(--surface);
     --color-accent: var(--accent);
+    --color-login-accent: var(--login-accent);
     --color-body: var(--body);
     --color-subtle: var(--subtle);
     --color-overlay: var(--overlay);
@@ -24,6 +25,7 @@
     --color-divider-light: var(--divider-light);
     --color-disabled: var(--disabled);
     --color-danger: var(--danger);
+    --color-corporate: var(--corporate);
     --color-select-input: var(--select-input);
     --color-hover: var(--hover);
     --color-hover-strong: var(--hover-strong);
@@ -39,6 +41,7 @@
         --text-toast: #111827;
         --surface: #ffffff;
         --accent: #3b7597ff;
+        --login-accent: #00ffffff;
         --body: #f9fafb;
         --subtle: #f9fafb;
         --overlay: rgba(17, 24, 39, 0.5);
@@ -51,6 +54,7 @@
         --divider: #e5e7eb;
         --divider-light: #f3f4f6;
         --disabled: #f3f4f6;
+        --corporate: #1f2937;
         --danger: #dc2626;
         --select-input: #1f2937;
         --hover: #f9fafb;
@@ -66,6 +70,7 @@
         --text-toast: #111827;
         --surface: #1f2937;
         --accent: #00ffffff;
+        --login-accent: #00ffffff;
         --body: #030712;
         --subtle: rgba(31, 41, 55, 0.5);
         --overlay: rgba(0, 0, 0, 0.6);
@@ -78,6 +83,7 @@
         --divider: #374151;
         --divider-light: #374151;
         --disabled: #374151;
+        --corporate: #1f2937;
         --danger: #dc2626;
         --select-input: #1f2937;
         --hover: #374151;
