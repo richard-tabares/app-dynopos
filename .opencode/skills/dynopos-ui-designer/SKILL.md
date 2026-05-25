@@ -553,8 +553,17 @@ Reglas:
 
 ### Overlay estándar
 ```jsx
-<section className='fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex flex-col items-center justify-center z-50 p-4'>
-  <section className='bg-surface rounded-xl border border-outline shadow-lg w-full max-w-md relative max-h-[90vh] overflow-y-auto'>
+<Modal
+  isOpen={isOpen}
+  onClose={onClose}
+  title='Título'
+  icon={IconName}
+  iconColor='text-accent'  // opcional, default 'text-accent'
+  size='md'                // 'sm' | 'md' | 'lg', default 'md'
+  zIndex='z-50'            // 'z-50' | 'z-[70]', default 'z-50'
+>
+  {children}
+</Modal>
 ```
 
 ### Header de modal (sticky con backdrop-blur)
