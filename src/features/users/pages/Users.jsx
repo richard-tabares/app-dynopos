@@ -5,8 +5,9 @@ import { UserFormModal } from '../components/UserFormModal'
 import { useStore } from '../../../app/providers/store'
 
 const roleConfig = {
-    admin: { label: 'Admin', className: 'bg-accent/10 text-accent border-accent/20' },
-    cajero: { label: 'Cajero', className: 'bg-blue-600/10 text-blue-300 border-blue-100/20' },
+    admin: { label: 'Admin', className: 'bg-purple-600/10 text-purple-300 border-purple-100/20' },
+    supervisor: { label: 'Supervisor', className: 'bg-blue-600/10 text-blue-300 border-blue-100/20' },
+    cajero: { label: 'Cajero', className: 'bg-green-600/10 text-green-300 border-green-100/20' },
 }
 
 export const Users = () => {
@@ -114,7 +115,7 @@ export const Users = () => {
                                                 </td>
                                                 <td className='px-6 py-4'>
                                                     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${role.className}`}>
-                                                        {u.role === 'admin' ? <Shield className='w-3 h-3' /> : <UserCog className='w-3 h-3' />}
+                                                        {u.role === 'cajero' ? <UserCog className='w-3 h-3' /> : <Shield className='w-3 h-3' />}
                                                         {role.label}
                                                     </span>
                                                 </td>

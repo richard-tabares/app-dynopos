@@ -26,6 +26,15 @@ const migrateToken = () => {
 
 migrateToken()
 
+const _nextAvailableLabel = (state) => {
+    const used = new Set()
+    if (state.currentLabel !== null) used.add(state.currentLabel)
+    for (const o of state.pendingOrders) used.add(o.label)
+    let n = 1
+    while (used.has(n)) n++
+    return n
+}
+
 export const useStore = create(
     persist(
         (set, get) => ({
@@ -41,7 +50,6 @@ export const useStore = create(
             categories: [],
             pendingOrders: [],
             currentLabel: null,
-            nextLabel: 1,
             setLogin: (payload) =>
                 set({
                     user: payload,
@@ -56,7 +64,6 @@ export const useStore = create(
                     cart: [],
                     pendingOrders: [],
                     currentLabel: null,
-                    nextLabel: 1,
                 }),
             setToken: (token) => set({ token }),
             setRefreshToken: (refreshToken) => set({ refreshToken }),
@@ -119,15 +126,13 @@ export const useStore = create(
             // ---- Multi-order (tabs) actions ----
 
             initCurrentOrder: () => {
-                const { nextLabel } = get()
-                set({
-                    currentLabel: nextLabel,
-                    nextLabel: nextLabel + 1,
-                })
+                set((state) => ({
+                    currentLabel: _nextAvailableLabel(state),
+                }))
             },
 
             holdCurrentOrder: () => {
-                const { cart, saleDate, currentLabel, nextLabel } = get()
+                const { cart, saleDate, currentLabel } = get()
                 if (cart.length === 0 || currentLabel === null) return
 
                 const newPending = {
@@ -136,13 +141,12 @@ export const useStore = create(
                     saleDate,
                 }
 
-                set({
-                    pendingOrders: [...get().pendingOrders, newPending],
+                set((state) => ({
+                    pendingOrders: [...state.pendingOrders, newPending],
                     cart: [],
                     saleDate: new Date().toLocaleDateString('en-CA'),
-                    currentLabel: nextLabel,
-                    nextLabel: nextLabel + 1,
-                })
+                    currentLabel: _nextAvailableLabel(state),
+                }))
             },
 
             switchToOrder: (label) => {
@@ -179,15 +183,14 @@ export const useStore = create(
             },
 
             finalizeCurrentOrder: () => {
-                const { pendingOrders, nextLabel } = get()
+                const { pendingOrders } = get()
 
                 if (pendingOrders.length > 0) {
-                    set({
+                    set((state) => ({
                         cart: [],
                         saleDate: new Date().toLocaleDateString('en-CA'),
-                        currentLabel: nextLabel,
-                        nextLabel: nextLabel + 1,
-                    })
+                        currentLabel: _nextAvailableLabel({ ...state, currentLabel: null }),
+                    }))
                 } else {
                     set({
                         cart: [],
@@ -201,7 +204,6 @@ export const useStore = create(
                     cart: [],
                     pendingOrders: [],
                     currentLabel: null,
-                    nextLabel: 1,
                 })
             },
         }),

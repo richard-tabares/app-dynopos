@@ -1,4 +1,4 @@
-import { X, Loader, Save, Trash2, Shield, ShieldOff, Eye, EyeClosed, Users } from 'lucide-react'
+import { X, Loader, Save, Trash2, Eye, EyeClosed, Users } from 'lucide-react'
 import { useState } from 'react'
 import { sileo } from 'sileo'
 import { useEscape } from '../../../shared/helpers/useEscape'
@@ -8,6 +8,7 @@ import { deleteUser } from '../helpers/deleteUser'
 
 const roles = [
     { value: 'cajero', label: 'Cajero' },
+    { value: 'supervisor', label: 'Supervisor' },
     { value: 'admin', label: 'Administrador' },
 ]
 
@@ -137,13 +138,6 @@ export const UserFormModal = ({ mode, userData, onClose, onSuccess }) => {
         }
     }
 
-    const toggleRole = () => {
-        setFormData((prev) => ({
-            ...prev,
-            role: prev.role === 'admin' ? 'cajero' : 'admin',
-        }))
-    }
-
     return (
         <section className='fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex flex-col items-center justify-center z-50 p-4'>
             <section
@@ -233,7 +227,7 @@ export const UserFormModal = ({ mode, userData, onClose, onSuccess }) => {
                                     </p>
                                 )}
                                 {formData.password && !errors.password && (
-                                    <section className='bg-body border-l-4 border-accent p-3 rounded flex flex-col gap-1.5'>
+                                    <section className='bg-accent/10 border-l-4 border-accent p-3 rounded flex flex-col gap-1.5'>
                                         <p className='text-xs font-semibold text-on-surface'>
                                             Requisitos cumplidos:
                                         </p>
@@ -302,34 +296,17 @@ export const UserFormModal = ({ mode, userData, onClose, onSuccess }) => {
                         <label className='block text-sm font-medium text-on-body mb-1'>
                             Rol
                         </label>
-                        {isEdit ? (
-                            <button
-                                type='button'
-                                onClick={toggleRole}
-                                className={`w-full flex items-center justify-between px-4 py-3 border rounded-md transition cursor-pointer ${
-                                    formData.role === 'admin'
-                                        ? 'border-accent bg-accent/5 text-accent'
-                                        : 'border-divider text-on-body hover:border-accent'
-                                }`}>
-                                <span className='flex items-center gap-2'>
-                                    {formData.role === 'admin' ? <Shield className='w-4 h-4' /> : <ShieldOff className='w-4 h-4' />}
-                                    {formData.role === 'admin' ? 'Administrador' : 'Cajero'}
-                                </span>
-                                <span className='text-xs text-muted'>Click para cambiar</span>
-                            </button>
-                        ) : (
-                            <select
-                                name='role'
-                                value={formData.role}
-                                onChange={handleChange}
-                                className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0 text-on-surface'>
-                                {roles.map((r) => (
-                                    <option className='text-select-input' key={r.value} value={r.value}>
-                                        {r.label}
-                                    </option>
-                                ))}
-                            </select>
-                        )}
+                        <select
+                            name='role'
+                            value={formData.role}
+                            onChange={handleChange}
+                            className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0 text-on-surface'>
+                            {roles.map((r) => (
+                                <option className='text-select-input' key={r.value} value={r.value}>
+                                    {r.label}
+                                </option>
+                            ))}
+                        </select>
                     </section>
 
                     {isEdit && showDeleteConfirm ? (

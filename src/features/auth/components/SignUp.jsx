@@ -353,7 +353,7 @@ export const SignUp = () => {
                             </p>
                         )}
                         {formData.password && !errors.password && (
-                            <section className='bg-body border-l-4 border-accent p-3 rounded flex flex-col gap-1.5'>
+                            <section className='bg-accent/10 border-l-4 border-accent p-3 rounded flex flex-col gap-1.5'>
                                 <p className='text-xs font-semibold text-on-surface'>
                                     Requisitos cumplidos:
                                 </p>

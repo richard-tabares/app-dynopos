@@ -62,7 +62,13 @@ export const SideBar = () => {
         { id: 'users', label: 'Usuarios', icon: Users, path: '/settings/users' },
     ]
 
-    const isCajero = user?.profile?.role === 'cajero'
+    const role = user?.profile?.role
+
+    const roleAccess = {
+        admin: ['dashboard', 'sales', 'products', 'categories', 'inventory', 'reports', 'settings'],
+        supervisor: ['sales', 'products', 'categories', 'inventory'],
+        cajero: ['sales'],
+    }
 
     const allMenuItems = [
         {
@@ -111,9 +117,8 @@ export const SideBar = () => {
         },
     ]
 
-    const menuItems = isCajero
-        ? allMenuItems.filter((m) => m.id === 'dashboard' || m.id === 'sales')
-        : allMenuItems
+    const allowedIds = roleAccess[role] || roleAccess.cajero
+    const menuItems = allMenuItems.filter((m) => allowedIds.includes(m.id))
 
     const handleLogout = async () => {
         await logout()

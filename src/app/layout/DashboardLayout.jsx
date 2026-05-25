@@ -5,10 +5,10 @@ import { useEffect } from 'react'
 import { useStore } from '../providers/store'
 import { getDashboardData } from '../../features/dashboard/helpers/getDashboardData'
 
-const CAJERO_RESTRICTED = [
-    '/products', '/categories', '/inventory',
-    '/reports', '/settings',
-]
+const RESTRICTED_BY_ROLE = {
+    cajero: ['/dashboard', '/products', '/categories', '/inventory', '/reports', '/settings'],
+    supervisor: ['/dashboard', '/reports', '/settings'],
+}
 
 export const DashboardLayout = () => {
     const { user, isCollapsed, setTodayRevenue, todayRevenue } = useStore()
@@ -22,12 +22,13 @@ export const DashboardLayout = () => {
     }, [businessName])
 
     useEffect(() => {
-        const isCajero = user?.profile?.role === 'cajero'
-        if (isCajero) {
-            const restricted = CAJERO_RESTRICTED.some((prefix) =>
+        const role = user?.profile?.role
+        const restrictedPaths = RESTRICTED_BY_ROLE[role]
+        if (restrictedPaths) {
+            const isRestricted = restrictedPaths.some((prefix) =>
                 location.pathname.startsWith(prefix)
             )
-            if (restricted) {
+            if (isRestricted) {
                 navigate('/sales', { replace: true })
             }
         }
