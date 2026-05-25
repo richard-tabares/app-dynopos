@@ -81,6 +81,10 @@ export const PrintTicket = ({ children, printRef, sale, business, ticketFooter }
                         <span style="color:#6b7280;text-transform:uppercase;">Pago:</span>
                         <span style="font-weight:500;color:#111827;text-transform:capitalize;">${paymentLabel}</span>
                     </div>
+                    <div style="display:flex;justify-content:space-between;gap:4px;margin-top:4px;">
+                        <span style="color:#6b7280;text-transform:uppercase;">Vendedor:</span>
+                        <span style="font-weight:500;color:#111827;">${sale.salesperson || '—'}</span>
+                    </div>
                 </div>
 
                 <div style="border-top:1px dashed #d1d5db;border-bottom:1px dashed #d1d5db;padding:8px 0;margin-bottom:8px;">

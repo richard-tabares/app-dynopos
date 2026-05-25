@@ -1,15 +1,16 @@
-import { X, Loader, Save, Trash2, Eye, EyeClosed, Users } from 'lucide-react'
+import { X, Loader, Save, Trash2, Eye, EyeClosed, Users, ShieldCheck } from 'lucide-react'
 import { useState } from 'react'
 import { sileo } from 'sileo'
 import { useEscape } from '../../../shared/helpers/useEscape'
 import { createUser } from '../helpers/createUser'
 import { updateUser } from '../helpers/updateUser'
 import { deleteUser } from '../helpers/deleteUser'
+import { PermissionSelector } from '../../../shared/components/PermissionSelector'
+import { getDefaultPermissions } from '../../../shared/helpers/permissions'
 
 const roles = [
     { value: 'cajero', label: 'Cajero' },
     { value: 'supervisor', label: 'Supervisor' },
-    { value: 'admin', label: 'Administrador' },
 ]
 
 export const UserFormModal = ({ mode, userData, onClose, onSuccess }) => {
@@ -21,6 +22,7 @@ export const UserFormModal = ({ mode, userData, onClose, onSuccess }) => {
         confirm_password: '',
         role: userData?.role || 'cajero',
     })
+    const [permissions, setPermissions] = useState(userData?.permissions || [])
     const [submitting, setSubmitting] = useState(false)
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
     const [deleting, setDeleting] = useState(false)
@@ -100,19 +102,16 @@ export const UserFormModal = ({ mode, userData, onClose, onSuccess }) => {
 
         setSubmitting(true)
         try {
+            const payload = {
+                display_name: formData.display_name,
+                role: formData.role,
+                permissions,
+            }
             if (isEdit) {
-                await updateUser(userData.id, {
-                    display_name: formData.display_name,
-                    role: formData.role,
-                })
+                await updateUser(userData.id, payload)
                 sileo.success({ fill: 'var(--toast-success)', title: 'Actualizado', description: 'Usuario actualizado correctamente' })
             } else {
-                await createUser({
-                    email: formData.email,
-                    password: formData.password,
-                    display_name: formData.display_name,
-                    role: formData.role,
-                })
+                await createUser({ ...payload, email: formData.email, password: formData.password })
                 sileo.success({ fill: 'var(--toast-success)', title: 'Creado', description: 'Usuario creado correctamente' })
             }
             onSuccess()
@@ -299,7 +298,10 @@ export const UserFormModal = ({ mode, userData, onClose, onSuccess }) => {
                         <select
                             name='role'
                             value={formData.role}
-                            onChange={handleChange}
+                            onChange={(e) => {
+                                handleChange(e)
+                                setPermissions(getDefaultPermissions(e.target.value))
+                            }}
                             className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0 text-on-surface'>
                             {roles.map((r) => (
                                 <option className='text-select-input' key={r.value} value={r.value}>
@@ -307,6 +309,20 @@ export const UserFormModal = ({ mode, userData, onClose, onSuccess }) => {
                                 </option>
                             ))}
                         </select>
+                    </section>
+
+                    <section>
+                        <label className='block text-sm font-medium text-on-body mb-1 flex items-center gap-1.5'>
+                            <ShieldCheck className='w-4 h-4 text-accent' />
+                            Permisos por sección
+                        </label>
+                        <section className='border border-divider rounded-md px-3 py-1 bg-body/20'>
+                            <PermissionSelector
+                                value={permissions}
+                                onChange={setPermissions}
+                                role={formData.role}
+                            />
+                        </section>
                     </section>
 
                     {isEdit && showDeleteConfirm ? (

@@ -24,6 +24,7 @@ import { useStore } from '../providers/store'
 import { logout } from '../../features/auth/helpers/logout'
 import { LogoComplete } from '../../shared/components/LogoComplete'
 import { LogoSymbol } from '../../shared/components/LogoSymbol'
+import { getDefaultPermissions } from '../../shared/helpers/permissions'
 
 export const SideBar = () => {
     const isMobile = useStore((state) => state.isMobile)
@@ -33,6 +34,8 @@ export const SideBar = () => {
     const isCollapsed = isMobile ? false : rawCollapsed
 
     const user = useStore((state) => state.user)
+    const displayName = user?.profile?.display_name || user?.business?.owner_name || 'Usuario'
+    const initials = displayName.split(' ').map((w) => w[0]).join('').toUpperCase().slice(0, 2)
     const navigate = useNavigate()
     const location = useLocation()
 
@@ -63,12 +66,9 @@ export const SideBar = () => {
     ]
 
     const role = user?.profile?.role
-
-    const roleAccess = {
-        admin: ['dashboard', 'sales', 'products', 'categories', 'inventory', 'reports', 'settings'],
-        supervisor: ['sales', 'products', 'categories', 'inventory'],
-        cajero: ['sales'],
-    }
+    const permissions = user?.profile?.permissions
+        ? user.profile.permissions
+        : getDefaultPermissions(role)
 
     const allMenuItems = [
         {
@@ -117,8 +117,7 @@ export const SideBar = () => {
         },
     ]
 
-    const allowedIds = roleAccess[role] || roleAccess.cajero
-    const menuItems = allMenuItems.filter((m) => allowedIds.includes(m.id))
+    const menuItems = allMenuItems.filter((m) => permissions.includes(m.id))
 
     const handleLogout = async () => {
         await logout()
@@ -188,7 +187,8 @@ export const SideBar = () => {
                                 const toggleOpen = item.id === 'reports'
                                     ? () => setReportsOpen(!reportsOpen)
                                     : () => setSettingsOpen(!settingsOpen)
-                                const subItems = item.id === 'reports' ? reportSubItems : settingsSubItems
+                                const allSubs = item.id === 'reports' ? reportSubItems : settingsSubItems
+                                const subItems = allSubs.filter((s) => permissions.includes(`${item.id}.${s.id}`))
 
                                 return (
                                     <li key={item.id}>
@@ -274,15 +274,11 @@ export const SideBar = () => {
                 <section className={`border-t border-outline p-4 relative ${isCollapsed ? 'flex justify-center' : ''}`}>
                     <section className={`flex items-center ${isCollapsed ? 'flex-col gap-y-2' : 'gap-x-3'}`}>
                         <section className='flex items-center place-content-center w-10 h-10 bg-hover-strong rounded-full shrink-0'>
-                            <span>AD</span>
+                            <span className='text-sm font-semibold'>{initials}</span>
                         </section>
                         <section className={`flex flex-col text-left ${isCollapsed ? 'hidden' : 'block'}`}>
-                            <span className='text-sm font-medium first-letter:uppercase'>{ user.profile.role }</span>
-                            <span className='text-xs text-muted'>
-                                {
-                                    user && user.business.owner_name || 'Usuario'
-                                }
-                            </span>
+                            <span className='text-sm font-medium first-letter:uppercase'>{user?.profile?.role}</span>
+                            <span className='text-xs text-muted'>{displayName}</span>
                         </section>
                     </section>
                 </section>

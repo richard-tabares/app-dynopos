@@ -121,6 +121,14 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
                                 {sale.paymentMethod}
                             </span>
                         </div>
+                        <div className='flex justify-between gap-1'>
+                            <span className='text-muted uppercase shrink-0'>
+                                Vendedor:
+                            </span>
+                            <span className='text-on-surface font-medium truncate'>
+                                {sale.salesperson || '—'}
+                            </span>
+                        </div>
                     </div>
 
                     <div className='border-t border-b border-dashed border-outline py-2 my-2'>

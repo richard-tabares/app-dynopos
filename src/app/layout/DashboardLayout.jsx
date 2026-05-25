@@ -4,10 +4,16 @@ import { Header } from './Header'
 import { useEffect } from 'react'
 import { useStore } from '../providers/store'
 import { getDashboardData } from '../../features/dashboard/helpers/getDashboardData'
+import { getDefaultPermissions } from '../../shared/helpers/permissions'
 
-const RESTRICTED_BY_ROLE = {
-    cajero: ['/dashboard', '/products', '/categories', '/inventory', '/reports', '/settings'],
-    supervisor: ['/dashboard', '/reports', '/settings'],
+const PATH_TO_PERMISSION = {
+    '/dashboard': 'dashboard',
+    '/sales': 'sales',
+    '/products': 'products',
+    '/categories': 'categories',
+    '/inventory': 'inventory',
+    '/reports': 'reports',
+    '/settings': 'settings',
 }
 
 export const DashboardLayout = () => {
@@ -23,14 +29,14 @@ export const DashboardLayout = () => {
 
     useEffect(() => {
         const role = user?.profile?.role
-        const restrictedPaths = RESTRICTED_BY_ROLE[role]
-        if (restrictedPaths) {
-            const isRestricted = restrictedPaths.some((prefix) =>
-                location.pathname.startsWith(prefix)
-            )
-            if (isRestricted) {
-                navigate('/sales', { replace: true })
-            }
+        const permissions = user?.profile?.permissions
+            ? user.profile.permissions
+            : getDefaultPermissions(role)
+
+        const basePath = '/' + location.pathname.split('/')[1]
+        const requiredPerm = PATH_TO_PERMISSION[basePath]
+        if (requiredPerm && !permissions.includes(requiredPerm)) {
+            navigate('/sales', { replace: true })
         }
     }, [user, location.pathname, navigate])
 
