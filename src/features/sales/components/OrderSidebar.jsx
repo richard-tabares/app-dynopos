@@ -70,7 +70,7 @@ export const OrderSidebar = ({ onProcessSale }) => {
                 <div className='flex items-center gap-2 mt-2 text-xs'>
                     <span className='relative w-5 h-5 flex items-center justify-center'>
                         <Calendar
-                            className={`w-3.5 h-3.5 transition-all duration-200 cursor-pointer hover:text-accent z-50 ${
+                            className={`w-3.5 h-3.5 transition-all duration-200 cursor-pointer hover:text-accent z-10 ${
                                 isEditingDate
                                     ? 'text-accent'
                                     : 'text-on-body hover:text-accent'
@@ -91,7 +91,7 @@ export const OrderSidebar = ({ onProcessSale }) => {
                         />
                     </span>
                     <span
-                        className='text-on-surface font-medium truncate flex items-center gap-1 hover:text-accent transition-all duration-200 cursor-pointer z-50'
+                        className='text-on-surface font-medium truncate flex items-center gap-1 hover:text-accent transition-all duration-200 cursor-pointer z-10'
                         onClick={() => dateInputRef.current?.showPicker()}>
                         {formatDate(saleDate)}
                     </span>

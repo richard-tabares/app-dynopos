@@ -112,7 +112,7 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
                                 <div className='flex items-center gap-1'>
                                     <span className='relative w-5 h-5 flex items-center justify-center no-print'>
                                         <Calendar
-                                            className='w-3.5 h-3.5 cursor-pointer hover:text-accent z-50'
+                                            className='w-3.5 h-3.5 cursor-pointer hover:text-accent z-10'
                                             onClick={() =>
                                                 dateInputRef.current?.showPicker()
                                             }
@@ -128,7 +128,7 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
                                         />
                                     </span>
                                     <span
-                                        className='text-on-surface font-medium truncate'
+                                        className='text-on-surface font-medium truncate z-10 hover:text-accent cursor-pointer'
                                         onClick={() =>
                                             dateInputRef.current?.showPicker()
                                         }>
