@@ -4,6 +4,7 @@ import { CreditCard, Landmark, ArrowLeft, Check, Calendar, CalendarPlus, Calenda
 import { createCheckout } from '../helpers/createCheckout'
 import { sileo } from 'sileo'
 import { decryptData, encryptData } from '../../../shared/helpers/crypto'
+import { FeatureSlider } from '../../../shared/components/FeatureSlider'
 
 export const PaymentStep = () => {
     const navigate = useNavigate()
@@ -200,16 +201,7 @@ export const PaymentStep = () => {
                             <p className='text-xs font-semibold text-muted uppercase mb-2'>
                                 Incluye:
                             </p>
-                            <ul className='space-y-1.5'>
-                                {plan.features.map((feature, i) => (
-                                    <li
-                                        key={i}
-                                        className='flex items-center gap-2 text-sm text-on-body'>
-                                        <Check className='w-4 h-4 text-green-500 flex-shrink-0' />
-                                        {feature.title || feature}
-                                    </li>
-                                ))}
-                            </ul>
+                            <FeatureSlider features={plan.features} itemsPerSlide={2} />
                         </section>
                     )}
                 </section>
