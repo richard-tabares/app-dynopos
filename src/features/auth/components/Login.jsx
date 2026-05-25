@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from "react-router"
-import { Loader, LogIn } from 'lucide-react'
+import { Eye, EyeClosed, Loader, LogIn } from 'lucide-react'
 import { login } from '../helpers/login'
 import { useState } from "react"
 import { sileo } from 'sileo'
@@ -15,6 +15,7 @@ export const Login = () => {
     const [password, setPassword] = useState('')
     const [errors, setErrors] = useState({})
     const [touched, setTouched] = useState({})
+    const [showPassword, setShowPassword] = useState(false)
     const [loading, setLoading] = useState(false)
 
     const validateForm = () => {
@@ -102,15 +103,23 @@ export const Login = () => {
                         )}
                     </section>
                     <section className='flex flex-col gap-2 mb-4'>
-                        <input
-                            type='password'
-                            name="password"
-                            value={password}
-                            onChange={handleChange('password')}
-                            onBlur={handleBlur('password')}
-                            placeholder='Contraseña'
-                            className={inputClass('password')}
-                        />
+                        <section className='relative flex items-center'>
+                            <input
+                                type={showPassword ? 'text' : 'password'}
+                                name="password"
+                                value={password}
+                                onChange={handleChange('password')}
+                                onBlur={handleBlur('password')}
+                                placeholder='Contraseña'
+                                className={`${inputClass('password')} pr-10`}
+                            />
+                            <button
+                                type='button'
+                                className='absolute right-3 bg-transparent border-none cursor-pointer text-lg p-1 text-accent hover:scale-110 transition-transform duration-300'
+                                onClick={() => setShowPassword(!showPassword)}>
+                                {showPassword ? <Eye /> : <EyeClosed />}
+                            </button>
+                        </section>
                         {touched.password && errors.password && (
                             <p className='text-xs font-semibold text-red-500'>{errors.password}</p>
                         )}

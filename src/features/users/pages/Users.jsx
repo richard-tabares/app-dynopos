@@ -5,9 +5,9 @@ import { UserFormModal } from '../components/UserFormModal'
 import { useStore } from '../../../app/providers/store'
 
 const roleConfig = {
-    admin: { label: 'Admin', className: 'bg-purple-600/10 text-purple-300 border-purple-100/20' },
-    supervisor: { label: 'Supervisor', className: 'bg-blue-600/10 text-blue-300 border-blue-100/20' },
-    cajero: { label: 'Cajero', className: 'bg-green-600/10 text-green-300 border-green-100/20' },
+    admin: { label: 'Admin', className: 'bg-purple-600/10 text-purple-500 border-purple-100/20' },
+    supervisor: { label: 'Supervisor', className: 'bg-blue-600/10 text-blue-500 border-blue-100/20' },
+    cajero: { label: 'Cajero', className: 'bg-green-600/10 text-green-500 border-green-100/20' },
 }
 
 export const Users = () => {
