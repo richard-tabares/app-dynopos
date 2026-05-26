@@ -82,7 +82,7 @@ export const ForgotPassword = () => {
                             <p className='text-xs font-semibold text-red-500'>{errors.email}</p>
                         )}
                     </section>
-                    <button type="submit" className='py-3 px-6 font-semibold bg-accent text-surface rounded-md w-full cursor-pointer mb-2 flex items-center justify-center gap-2'>
+                    <button type="submit" disabled={!email.trim() || !emailRegex.test(email)} className='py-3 px-6 font-semibold bg-accent text-surface rounded-md w-full cursor-pointer mb-2 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed'>
                         <Send className='w-5 h-5' /> Enviar enlace
                     </button>
                     <p className='text-center text-on-body'>
