@@ -13,5 +13,6 @@ returns_items,
 profiles,
 subscriptions,
 businesses,
-ticket_counters
+ticket_counters,
+support_tickets
 restart identity cascade;

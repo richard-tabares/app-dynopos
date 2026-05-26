@@ -182,9 +182,9 @@ export const ClientEditModal = ({ client, onClose, onSuccess }) => {
                                         onChange={(e) => handleFreqChange(e.target.value)}
                                         className='text-sm px-3 py-1.5 border border-divider rounded-md bg-surface text-on-body cursor-pointer focus:outline-none focus:border-accent'
                                     >
-                                        <option value='monthly'>Mensual</option>
-                                        <option value='quarterly'>Trimestral</option>
-                                        <option value='annual'>Anual</option>
+                                        <option value='monthly' className='text-on-body'>Mensual</option>
+                                        <option value='quarterly' className='text-on-body'>Trimestral</option>
+                                        <option value='annual' className='text-on-body'>Anual</option>
                                     </select>
                                     <button
                                         onClick={handleRenew}
