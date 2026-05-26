@@ -35,13 +35,13 @@ export const CardPayment = () => {
         full_name: storedData?.owner_name || '',
         email: stateData?.email || storedData?.email || '',
         phone: storedData?.phone || '',
-        card_number: '4242424242424242',
-        exp_month: '11',
-        exp_year: '33',
-        cvc: '123',
-        card_holder: 'richard',
-        legal_id_type: 'CC',
-        legal_id: '1017155071',
+        card_number: '',
+        exp_month: '',
+        exp_year: '',
+        cvc: '',
+        card_holder: '',
+        legal_id_type: '',
+        legal_id: '',
     })
 
     useEffect(() => {
