@@ -130,10 +130,10 @@ export const Modal = ({
                         id='category_id'
                         value={formData.category_id}
                         onChange={handleChange}
-                        className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0 text-on-surface'>
+                        className='w-full px-4 py-3 bg-surface border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0 text-on-body'>
                         {categories.map((category) => (
                             <option
-                                className='text-select-input'
+                                className='text-on-body'
                                 key={category.id}
                                 value={category.id}>
                                 {category.name}

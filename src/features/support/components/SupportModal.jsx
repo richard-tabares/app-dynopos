@@ -56,10 +56,10 @@ export const SupportModal = ({ onClose }) => {
                             name='type'
                             value={formData.type}
                             onChange={handleChange}
-                            className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0 text-on-surface'>
-                            <option className='text-select-input' value=''>Seleccione un tipo</option>
+                            className='w-full px-4 py-3 bg-surface border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0 text-on-body'>
+                            <option className='text-on-body' value=''>Seleccione un tipoaaa</option>
                             {reportTypes.map((t) => (
-                                <option className='text-select-input' key={t.value} value={t.value}>
+                                <option className='text-on-body' key={t.value} value={t.value}>
                                     {t.label}
                                 </option>
                             ))}

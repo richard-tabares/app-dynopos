@@ -292,9 +292,9 @@ export const UserFormModal = ({ mode, userData, onClose, onSuccess }) => {
                             handleChange(e)
                             setPermissions(getDefaultPermissions(e.target.value))
                         }}
-                        className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0 text-on-surface'>
+                        className='w-full px-4 py-3 bg-surface border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0 text-on-body'>
                         {roles.map((r) => (
-                            <option className='text-select-input' key={r.value} value={r.value}>
+                            <option className='text-on-body' key={r.value} value={r.value}>
                                 {r.label}
                             </option>
                         ))}
