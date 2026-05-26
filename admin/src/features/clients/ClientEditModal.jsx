@@ -96,7 +96,9 @@ export const ClientEditModal = ({ client, onClose, onSuccess }) => {
             await manualRenewal(client.id)
             const freq = liveSub?.billing_frequency || 'monthly'
             const daysMap = { monthly: 30, quarterly: 90, annual: 365 }
-            const now = new Date()
+            // const now = new Date()
+            const now = liveSub?.current_period_end
+            console.log(now)
             const newEndDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + (daysMap[freq] || 30))
             const newEnd = newEndDate.toLocaleDateString('en-CA')
             setLiveSub((prev) => ({ ...prev, current_period_end: newEnd, status: 'active' }))
