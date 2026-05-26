@@ -13,7 +13,7 @@ export const Modal = ({ isOpen = true, onClose, title, icon: Icon, iconColor = '
     if (!isOpen) return null
 
     return (
-        <section className={`fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex flex-col items-center justify-center ${zIndex} p-4`} onClick={onClose}>
+        <section className={`fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex flex-col items-center justify-center ${zIndex} p-4`}>
             <section
                 className={`bg-surface rounded-xl border border-outline w-full ${sizeMap[size]} relative max-h-[90vh] overflow-y-auto scrollbar-none`}
                 onClick={(e) => e.stopPropagation()}>
