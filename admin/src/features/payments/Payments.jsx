@@ -173,7 +173,7 @@ export const Payments = () => {
                                                 </span>
                                             </td>
                                             <td className='py-3 px-4 text-muted text-xs'>
-                                                {formatDate(tx.created_at)}
+                                                {formatDate(tx.created_at,{ year: 'numeric', short: 'short', day: 'numeric' })}
                                             </td>
                                         </tr>
                                     ))}
