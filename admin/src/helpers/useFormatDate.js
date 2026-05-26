@@ -1,14 +1,11 @@
 export const useFormatDate = () => {
-    return (dateStr) => {
-        if (!dateStr) return '—'
-        try {
-            return new Date(dateStr).toLocaleDateString('es-CO', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-            })
-        } catch {
-            return dateStr
+    const formatDate = (dateStr, options) => {
+        if (!dateStr) return ''
+        if (options) {
+            return new Date(dateStr).toLocaleDateString('es-CO', options)
         }
+        const [year, month, day] = dateStr.split('-')
+        return `${day}/${month}/${year}`
     }
+    return formatDate
 }

@@ -21,6 +21,7 @@
     --color-hover: var(--hover);
     --color-hover-strong: var(--hover-strong);
     --color-hover-icon: var(--hover-icon);
+    --color-title-surface: var(--title-surface);
 }
 
 @layer base {
@@ -42,6 +43,7 @@
         --hover: #f9fafb;
         --hover-strong: #f3f4f6;
         --hover-icon: #e5e7eb;
+        --title-surface: hsl(202, 20%, 65%);
     }
 
     .dark {
@@ -62,6 +64,7 @@
         --hover: #374151;
         --hover-strong: #4b5563;
         --hover-icon: #6b7280;
+        --title-surface: #030712;
     }
 
     html {

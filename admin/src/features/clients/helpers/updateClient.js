@@ -29,6 +29,18 @@ export const extendSubscription = async (id, current_period_end) => {
     return res.json()
 }
 
+export const updateClientInfo = async (id, data) => {
+    const res = await apiFetch(`${API_URL}/api/admin/clients/${id}/info`, {
+        method: 'PATCH',
+        body: JSON.stringify(data),
+    })
+    if (!res.ok) {
+        const err = await res.json()
+        throw new Error(err.error || 'Error al actualizar cliente')
+    }
+    return res.json()
+}
+
 export const manualRenewal = async (id) => {
     const res = await apiFetch(`${API_URL}/api/admin/clients/${id}/renew`, {
         method: 'POST',

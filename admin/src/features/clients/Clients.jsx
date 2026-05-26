@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react'
 import {
-    Users, Plus, Search, EllipsisVertical, Loader, AlertCircle,
-    RefreshCw, Calendar, UserCheck, UserX,
+    Users, Plus, Search, Loader, AlertCircle,
 } from 'lucide-react'
 import { getClients } from './helpers/getClients.js'
-import { toggleClientStatus, changeBillingFrequency, manualRenewal } from './helpers/updateClient.js'
 import { ClientFormModal } from './ClientFormModal.jsx'
-import { ExtendModal } from './ExtendModal.jsx'
+import { ClientEditModal } from './ClientEditModal.jsx'
 
 const FREQ_LABELS = {
     monthly: 'Mensual',
@@ -16,12 +14,13 @@ const FREQ_LABELS = {
 
 const formatDate = (dateStr) => {
     if (!dateStr) return '—'
-    return new Date(dateStr).toLocaleDateString('es-CO', { year: 'numeric', month: 'short', day: 'numeric' })
+    const [y, m, d] = dateStr.split('-')
+    return `${d}/${m}/${y}`
 }
 
 const isExpired = (dateStr) => {
     if (!dateStr) return false
-    return new Date(dateStr) < new Date()
+    return dateStr < new Date().toLocaleDateString('en-CA')
 }
 
 export const Clients = () => {
@@ -30,10 +29,7 @@ export const Clients = () => {
     const [error, setError] = useState('')
     const [search, setSearch] = useState('')
     const [showFormModal, setShowFormModal] = useState(false)
-    const [extendTarget, setExtendTarget] = useState(null)
-    const [openDropdown, setOpenDropdown] = useState(null)
-    const [toggling, setToggling] = useState(null)
-    const [renewing, setRenewing] = useState(null)
+    const [editTarget, setEditTarget] = useState(null)
 
     const loadClients = async () => {
         try {
@@ -68,40 +64,6 @@ export const Clients = () => {
             c.owner_name?.toLowerCase().includes(q)
         )
     })
-
-    const handleToggle = async (client) => {
-        setToggling(client.id)
-        const isActive = client.subscription?.status === 'active'
-        try {
-            await toggleClientStatus(client.id, !isActive)
-            await loadClients()
-        } catch (err) {
-            setError(err.message)
-        } finally {
-            setToggling(null)
-        }
-    }
-
-    const handleRenew = async (client) => {
-        setRenewing(client.id)
-        try {
-            await manualRenewal(client.id)
-            await loadClients()
-        } catch (err) {
-            setError(err.message)
-        } finally {
-            setRenewing(null)
-        }
-    }
-
-    const handleChangeFreq = async (client, freq) => {
-        try {
-            await changeBillingFrequency(client.id, freq)
-            await loadClients()
-        } catch (err) {
-            setError(err.message)
-        }
-    }
 
     if (loading) {
         return (
@@ -186,7 +148,6 @@ export const Clients = () => {
                                         <th className='text-left py-3 px-4 font-medium'>Plan / Frecuencia</th>
                                         <th className='text-left py-3 px-4 font-medium'>Vencimiento</th>
                                         <th className='text-left py-3 px-4 font-medium'>Estado</th>
-                                        <th className='text-right py-3 px-2 font-medium'>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -197,7 +158,11 @@ export const Clients = () => {
                                         const expired = isExpired(sub?.current_period_end)
 
                                         return (
-                                            <tr key={client.id} className='border-b border-divider-light hover:bg-hover'>
+                                            <tr
+                                                key={client.id}
+                                                onClick={() => setEditTarget(client)}
+                                                className='border-b border-divider-light hover:bg-hover cursor-pointer transition'
+                                            >
                                                 <td className='py-3 px-4 font-medium text-on-surface'>
                                                     {client.business_name}
                                                 </td>
@@ -211,7 +176,7 @@ export const Clients = () => {
                                                 </td>
                                                 <td className='py-3 px-4'>
                                                     <span className={expired && isActive ? 'text-red-600 font-medium' : 'text-on-body'}>
-                                                        {formatDate(sub?.current_period_end)}
+                                                        {formatDate(sub?.current_period_end, { year: 'numeric', month: 'short', day: 'numeric' }) || '—'}
                                                     </span>
                                                 </td>
                                                 <td className='py-3 px-4 whitespace-nowrap'>
@@ -228,79 +193,6 @@ export const Clients = () => {
                                                             Expirada
                                                         </span>
                                                     )}
-                                                </td>
-                                                <td className='py-3 px-2 text-right whitespace-nowrap'>
-                                                    <section className='hidden sm:flex items-center justify-end gap-2'>
-                                                        <button
-                                                            onClick={() => handleToggle(client)}
-                                                            disabled={toggling === client.id}
-                                                            className={`p-1.5 rounded-sm cursor-pointer transition ${isActive ? 'hover:bg-red-100 text-red-500' : 'hover:bg-green-100 text-green-500'}`}
-                                                            title={isActive ? 'Desactivar' : 'Activar'}
-                                                        >
-                                                            {toggling === client.id ? <Loader className='w-4 h-4 animate-spin' /> : isActive ? <UserX className='w-4 h-4' /> : <UserCheck className='w-4 h-4' />}
-                                                        </button>
-                                                        <div className='relative inline-block'>
-                                                            <select
-                                                                value={sub?.billing_frequency || 'monthly'}
-                                                                onChange={(e) => handleChangeFreq(client, e.target.value)}
-                                                                className='text-xs px-2 py-1 border border-divider rounded-md bg-surface text-on-body cursor-pointer focus:outline-none focus:border-accent'
-                                                                title='Cambiar frecuencia'
-                                                            >
-                                                                <option value='monthly'>Mensual</option>
-                                                                <option value='quarterly'>Trimestral</option>
-                                                                <option value='annual'>Anual</option>
-                                                            </select>
-                                                        </div>
-                                                        <button
-                                                            onClick={() => setExtendTarget(client)}
-                                                            className='p-1.5 rounded-sm hover:bg-hover-icon cursor-pointer'
-                                                            title='Extender vencimiento'
-                                                        >
-                                                            <Calendar className='w-4 h-4 text-accent' />
-                                                        </button>
-                                                        <button
-                                                            onClick={() => handleRenew(client)}
-                                                            disabled={renewing === client.id}
-                                                            className='p-1.5 rounded-sm hover:bg-hover-icon cursor-pointer disabled:opacity-50'
-                                                            title='Renovación manual'
-                                                        >
-                                                            {renewing === client.id ? <Loader className='w-4 h-4 animate-spin' /> : <RefreshCw className='w-4 h-4 text-accent' />}
-                                                        </button>
-                                                    </section>
-
-                                                    <div className='relative sm:hidden'>
-                                                        <button
-                                                            onClick={() => setOpenDropdown(openDropdown === client.id ? null : client.id)}
-                                                            className='p-2 text-on-body hover:bg-hover-strong rounded-lg transition cursor-pointer'
-                                                        >
-                                                            <EllipsisVertical className='w-5 h-5' />
-                                                        </button>
-                                                        {openDropdown === client.id && (
-                                                            <>
-                                                                <section className='fixed inset-0 z-40' onClick={() => setOpenDropdown(null)} />
-                                                                <section className='absolute right-0 mt-1 w-44 bg-surface border border-outline rounded-lg shadow-lg z-50'>
-                                                                    <button onClick={() => { handleToggle(client); setOpenDropdown(null) }} className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-on-body hover:bg-hover rounded-t-lg'>
-                                                                        {isActive ? <UserX className='w-4 h-4' /> : <UserCheck className='w-4 h-4' />}
-                                                                        {isActive ? 'Desactivar' : 'Activar'}
-                                                                    </button>
-                                                                    <div className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-on-body border-b border-divider-light'>
-                                                                        <Layers className='w-4 h-4 text-faint' />
-                                                                        <select value={sub?.billing_frequency || 'monthly'} onChange={(e) => { handleChangeFreq(client, e.target.value); setOpenDropdown(null) }} className='text-xs bg-transparent border-none cursor-pointer focus:outline-none p-0'>
-                                                                            <option value='monthly'>Mensual</option>
-                                                                            <option value='quarterly'>Trimestral</option>
-                                                                            <option value='annual'>Anual</option>
-                                                                        </select>
-                                                                    </div>
-                                                                    <button onClick={() => { setExtendTarget(client); setOpenDropdown(null) }} className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-on-body hover:bg-hover'>
-                                                                        <Calendar className='w-4 h-4' /> Extender
-                                                                    </button>
-                                                                    <button onClick={() => { handleRenew(client); setOpenDropdown(null) }} className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-on-body hover:bg-hover rounded-b-lg'>
-                                                                        <RefreshCw className='w-4 h-4' /> Renovar
-                                                                    </button>
-                                                                </section>
-                                                            </>
-                                                        )}
-                                                    </div>
                                                 </td>
                                             </tr>
                                         )
@@ -319,10 +211,10 @@ export const Clients = () => {
                 />
             )}
 
-            {extendTarget && (
-                <ExtendModal
-                    client={extendTarget}
-                    onClose={() => setExtendTarget(null)}
+            {editTarget && (
+                <ClientEditModal
+                    client={editTarget}
+                    onClose={() => setEditTarget(null)}
                     onSuccess={loadClients}
                 />
             )}

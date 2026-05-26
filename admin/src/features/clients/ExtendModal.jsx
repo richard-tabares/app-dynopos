@@ -1,14 +1,12 @@
 import { useState } from 'react'
-import { X, Calendar, Loader } from 'lucide-react'
-import { useEscape } from '../../helpers/useEscape.js'
+import { Calendar, Loader } from 'lucide-react'
+import { Modal } from '../../components/Modal.jsx'
 import { extendSubscription } from './helpers/updateClient.js'
 
 export const ExtendModal = ({ client, onClose, onSuccess }) => {
     const [newDate, setNewDate] = useState('')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
-
-    useEscape(onClose)
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -27,19 +25,8 @@ export const ExtendModal = ({ client, onClose, onSuccess }) => {
     }
 
     return (
-        <section className='fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex flex-col items-center justify-center z-50 p-4'>
-            <section className='bg-surface rounded-xl border border-outline shadow-lg w-full max-w-md'>
-                <section className='flex items-center justify-between px-6 py-4 border-b border-divider'>
-                    <h2 className='text-lg font-semibold flex items-center gap-2'>
-                        <Calendar className='w-5 h-5 text-accent' />
-                        Extender Suscripción
-                    </h2>
-                    <button onClick={onClose} className='p-1 rounded-md text-accent hover:text-accent/85 border border-disabled hover:border-accent transition cursor-pointer'>
-                        <X className='w-6 h-6' />
-                    </button>
-                </section>
-
-                <form onSubmit={handleSubmit} className='p-6 flex flex-col gap-4'>
+        <Modal onClose={onClose} title='Extender Suscripción' icon={Calendar}>
+            <form onSubmit={handleSubmit} className='p-6 flex flex-col gap-4'>
                     <p className='text-sm text-on-body'>
                         Cliente: <span className='font-semibold text-on-surface'>{client.business_name}</span>
                     </p>
@@ -69,7 +56,6 @@ export const ExtendModal = ({ client, onClose, onSuccess }) => {
                         </button>
                     </section>
                 </form>
-            </section>
-        </section>
+        </Modal>
     )
 }

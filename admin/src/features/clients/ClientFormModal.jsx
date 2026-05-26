@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { X, UserPlus, Loader, AlertCircle, Eye, EyeOff } from 'lucide-react'
-import { useEscape } from '../../helpers/useEscape.js'
+import { UserPlus, Loader, AlertCircle, Eye, EyeOff } from 'lucide-react'
+import { Modal } from '../../components/Modal.jsx'
 import { createClient } from './helpers/createClient.js'
 
 export const ClientFormModal = ({ onClose, onSuccess }) => {
@@ -15,8 +15,6 @@ export const ClientFormModal = ({ onClose, onSuccess }) => {
     const [showPassword, setShowPassword] = useState(false)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
-
-    useEscape(onClose)
 
     const handleChange = (e) => {
         setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -38,18 +36,7 @@ export const ClientFormModal = ({ onClose, onSuccess }) => {
     }
 
     return (
-        <section className='fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex flex-col items-center justify-center z-50 p-4'>
-            <section className='bg-surface rounded-xl border border-outline shadow-lg w-full max-w-lg relative max-h-[90vh] overflow-y-auto'>
-                <section className='flex items-center justify-between px-6 py-4 border-b border-divider'>
-                    <h2 className='text-lg font-semibold flex items-center gap-2'>
-                        <UserPlus className='w-5 h-5 text-accent' />
-                        Nuevo Cliente
-                    </h2>
-                    <button onClick={onClose} className='p-1 rounded-md text-accent hover:text-accent/85 border border-disabled hover:border-accent transition cursor-pointer'>
-                        <X className='w-6 h-6' />
-                    </button>
-                </section>
-
+        <Modal onClose={onClose} title='Nuevo Cliente' icon={UserPlus} size='lg'>
                 <form onSubmit={handleSubmit} className='p-6 flex flex-col gap-4'>
                     {error && (
                         <div className='flex items-start gap-3 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg'>
@@ -107,7 +94,6 @@ export const ClientFormModal = ({ onClose, onSuccess }) => {
                         </button>
                     </section>
                 </form>
-            </section>
-        </section>
+        </Modal>
     )
 }
