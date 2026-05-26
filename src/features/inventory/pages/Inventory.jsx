@@ -203,7 +203,7 @@ export const Inventory = () => {
                                     {headers.map((header) => (
                                         <th
                                             key={header}
-                                            className={`py-3 px-4 font-medium ${header === 'Stock' || header === 'Mínimo' ? 'text-right' : header === 'Acciones' ? 'text-right' : 'text-left'}`}>
+                                            className={`py-3 px-4 font-medium ${header === 'Stock' || header === 'Mínimo' || header === 'Costo Unit.' || header === 'Valor Total' ? 'text-right' : header === 'Acciones' ? 'text-right' : 'text-left'}`}>
                                             {header}
                                         </th>
                                     ))}
