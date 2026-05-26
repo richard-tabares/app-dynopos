@@ -1,0 +1,100 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --breakpoint-xs: 410px;
+    --color-surface: var(--surface);
+    --color-accent: var(--accent);
+    --color-body: var(--body);
+    --color-subtle: var(--subtle);
+    --color-overlay: var(--overlay);
+    --color-on-surface: var(--on-surface);
+    --color-on-body: var(--on-body);
+    --color-muted: var(--muted);
+    --color-faint: var(--faint);
+    --color-outline: var(--outline);
+    --color-divider: var(--divider);
+    --color-divider-light: var(--divider-light);
+    --color-disabled: var(--disabled);
+    --color-select-input: var(--select-input);
+    --color-hover: var(--hover);
+    --color-hover-strong: var(--hover-strong);
+    --color-hover-icon: var(--hover-icon);
+}
+
+@layer base {
+    :root {
+        --surface: #ffffff;
+        --accent: #3b7597ff;
+        --body: #f9fafb;
+        --subtle: #f9fafb;
+        --overlay: rgba(17, 24, 39, 0.5);
+        --on-surface: #111827;
+        --on-body: #374151;
+        --muted: #6b7280;
+        --faint: #9ca3af;
+        --outline: #d1d5db;
+        --divider: #e5e7eb;
+        --divider-light: #f3f4f6;
+        --disabled: #f3f4f6;
+        --select-input: #1f2937;
+        --hover: #f9fafb;
+        --hover-strong: #f3f4f6;
+        --hover-icon: #e5e7eb;
+    }
+
+    .dark {
+        --surface: #1f2937;
+        --accent: #00ffffff;
+        --body: #030712;
+        --subtle: rgba(31, 41, 55, 0.5);
+        --overlay: rgba(0, 0, 0, 0.6);
+        --on-surface: #f9fafb;
+        --on-body: #e5e7eb;
+        --muted: #d1d5db;
+        --faint: #9ca3af;
+        --outline: #4b5563;
+        --divider: #374151;
+        --divider-light: #374151;
+        --disabled: #374151;
+        --select-input: #1f2937;
+        --hover: #374151;
+        --hover-strong: #4b5563;
+        --hover-icon: #6b7280;
+    }
+
+    html {
+        font-size: 14px;
+    }
+
+    @media (min-width: 640px) {
+        html { font-size: 15px; }
+    }
+
+    @media (min-width: 1024px) {
+        html { font-size: 16px; }
+    }
+
+    body {
+        @apply bg-body text-on-body antialiased;
+        touch-action: manipulation;
+    }
+
+    * {
+        @apply focus:outline-none focus-visible:ring-0 focus-visible:ring-accent focus-visible:ring-offset-0;
+    }
+
+    .scrollbar-none {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .scrollbar-none::-webkit-scrollbar {
+        display: none;
+    }
+
+    .dark input[type="date"]::-webkit-calendar-picker-indicator {
+        filter: invert(1);
+    }
+}
