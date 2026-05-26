@@ -12,6 +12,7 @@ import { Modal } from '../../../shared/components/Modal'
 import { SaleConfirmationModal } from '../components/SaleConfirmationModal'
 import { SalesHistoryCard } from '../components/SalesHistoryCard'
 import { apiFetch } from '../../../shared/helpers/apiFetch'
+import { normalizeSearch } from '../../../shared/helpers/normalizeSearch'
 import { createSale } from '../helpers/createSale'
 import { getSales } from '../helpers/getSales'
 import { returnSale } from '../helpers/returnSale'
@@ -62,10 +63,10 @@ export const Sales = () => {
 
     const filteredProducts = products
         .filter((product) => {
-            const term = searchTerm.toLowerCase()
-            const matchesSearch = product.name.toLowerCase().includes(term) || 
-                                 product.sku.toLowerCase().includes(term) ||
-                                 (product.barcode && product.barcode.toLowerCase().includes(term))
+            const term = normalizeSearch(searchTerm)
+            const matchesSearch = normalizeSearch(product.name).includes(term) || 
+                                 normalizeSearch(product.sku).includes(term) ||
+                                 (product.barcode && normalizeSearch(product.barcode).includes(term))
             const isActive = product.is_active !== false
 
             return matchesSearch && isActive

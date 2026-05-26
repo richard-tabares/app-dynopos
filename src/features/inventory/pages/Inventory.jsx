@@ -6,6 +6,7 @@ import { getProducts } from '../../products/helpers/getProducts'
 import { AdjustmentModal } from '../components/AdjustmentModal'
 import { updateInventory } from '../helpers/updateInventory'
 import { InventorySummary } from '../components/InventorySummary'
+import { normalizeSearch } from '../../../shared/helpers/normalizeSearch'
 
 export const Inventory = () => {
     const { user, products, setProducts } = useStore()
@@ -39,10 +40,11 @@ export const Inventory = () => {
     }
 
     const filteredProducts = activeProducts.filter((product) => {
+        const term = normalizeSearch(searchTerm)
         const matchesSearch =
-            product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            product.sku.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            (product.barcode && product.barcode.toLowerCase().includes(searchTerm.toLowerCase()))
+            normalizeSearch(product.name).includes(term) ||
+            normalizeSearch(product.sku).includes(term) ||
+            (product.barcode && normalizeSearch(product.barcode).includes(term))
 
         const stock = product.inventory?.[0]?.stock || 0
         const minStock = product.inventory?.[0]?.min_stock || 0

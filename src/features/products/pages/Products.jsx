@@ -32,6 +32,7 @@ import { editProduct } from '../helpers/editProduct'
 import { getCategories } from '../../categories/helpers/getCategories'
 import { createCategory } from '../../categories/helpers/createCategory'
 import { useEscape } from '../../../shared/helpers/useEscape'
+import { normalizeSearch } from '../../../shared/helpers/normalizeSearch'
 
 export const Products = () => {
     const [openModal, setOpenModal] = useState(false)
@@ -62,15 +63,12 @@ export const Products = () => {
 
     const filteredProducts = products
         .filter((product) => {
+            const term = normalizeSearch(searchTerm)
             const matchesSearch =
-                product.name
-                    ?.toLowerCase()
-                    .includes(searchTerm.toLowerCase()) ||
-                product.sku?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                normalizeSearch(product.name).includes(term) ||
+                normalizeSearch(product.sku).includes(term) ||
                 (product.barcode &&
-                    product.barcode
-                        .toLowerCase()
-                        .includes(searchTerm.toLowerCase()))
+                    normalizeSearch(product.barcode).includes(term))
             const matchesStatus =
                 activeStatus === 'all' ||
                 (activeStatus === 'active' && product.is_active !== false) ||
