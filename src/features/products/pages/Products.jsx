@@ -516,33 +516,6 @@ export const Products = () => {
                             />
                         </div>
                         <div className='flex flex-wrap items-center gap-2 max-w-full overflow-x-auto scrollbar-none'>
-                            {/* <div className='flex gap-1 bg-subtle dark:bg-gray-900 rounded-lg p-1 w-fit'>
-                                <button
-                                    onClick={() => setActiveCategory('all')}
-                                    className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
-                                        activeCategory === 'all'
-                                            ? 'bg-surface shadow-xs text-accent'
-                                            : 'text-muted hover:text-on-body hover:bg-hover'
-                                    }`}>
-                                    <Layers className='w-4 h-4' />
-                                    Todas
-                                </button>
-                                {categories.map((category) => (
-                                    <button
-                                        key={category.id}
-                                        onClick={() =>
-                                            setActiveCategory(category.id)
-                                        }
-                                        className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
-                                            activeCategory === category.id
-                                                ? 'bg-surface shadow-xs text-accent'
-                                                : 'text-muted hover:text-on-body hover:bg-hover'
-                                        }`}>
-                                        <Tags className='w-4 h-4' />
-                                        {category.name}
-                                    </button>
-                                ))}
-                            </div> */}
                             <div className='flex gap-1 bg-disabled/70 rounded-lg p-1 w-fit ml-0 xl:ml-4'>
                                 <button
                                     onClick={() => {
@@ -634,7 +607,7 @@ export const Products = () => {
                                     {productsHeaders.map((header, index) => (
                                         <th
                                             key={index}
-                                            className={`py-3 px-4 font-medium ${header === 'Precio' || header === 'Acciones' || header === 'Control Stock' ? 'text-right' : 'text-left'}`}>
+                                            className={`py-3 px-4 font-medium ${header === 'Precio' || header === 'Acciones' || header === 'Control Stock' || header === 'Costo' || header === 'Margen' ? 'text-right' : 'text-left'}`}>
                                             {header}
                                         </th>
                                     ))}
