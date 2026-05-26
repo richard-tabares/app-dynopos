@@ -1,32 +1,3 @@
-import { useStore } from '../store.js'
-
-export const LogoComplete = ({ className, fill }) => {
-  const isDarkMode = useStore((state) => state.isDarkMode)
-  const fillColor = fill || (isDarkMode ? '#ffffff' : '#1f2937')
-
-  return (
-    <svg
-      viewBox="0 0 151.18111 46.374808"
-      className={className}
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <g transform="translate(-1152.9474,-463.84842)">
-        <g transform="matrix(0.49429608,0,0,0.49429608,1109.4264,275.36394)">
-          <path
-            d="m 111.00005,390.15245 h 34.61484 q 8.48064,0 12.46134,3.89417 3.98071,3.80763 3.98071,11.68251 0,5.19223 -2.24997,8.48064 -2.24996,3.20187 -5.53837,4.49993 7.00951,1.90381 9.51908,9.346 0.86537,2.68265 0.86537,6.23067 0,8.48064 -3.9807,12.46135 -3.98071,3.9807 -12.46135,3.9807 h -37.21095 z m 38.07632,41.53781 q 0,-5.19222 -5.19222,-5.19222 h -17.30742 v 12.11519 h 17.30742 q 5.19222,0 5.19222,-5.19223 z m -2.59611,-24.23039 q 0,-5.19222 -5.19223,-5.19222 h -14.7113 v 12.11519 h 14.7113 q 5.19223,0 5.19223,-5.19222 z"
-            fill={fillColor}
-          />
-          <g transform="matrix(1.688767,0,0,1.688767,-242.91308,-310.4899)">
-            <rect
-              width="10.816064"
-              height="10.738976"
-              x="352.67816"
-              y="440.05194"
-              fill="#00ffff"
-            />
-          </g>
-        </g>
-      </g>
-    </svg>
-  )
-}
+export const LogoComplete = ({ className = 'h-8' }) => (
+    <img src="/logo-bykor-complete.svg" className={className} alt="Logo" />
+)
