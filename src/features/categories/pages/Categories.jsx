@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Tag, Plus, Edit2, Trash2, Search, Loader, Save } from 'lucide-react'
+import { Tag, Plus, Edit2, Trash2, Search, Loader, Save, ChevronDown } from 'lucide-react'
 import { sileo } from 'sileo'
 import { useStore } from '../../../app/providers/store'
 import { Modal } from '../../../shared/components/Modal'
@@ -8,6 +8,7 @@ import { createCategory } from '../../categories/helpers/createCategory'
 import { updateCategory } from '../../categories/helpers/updateCategory'
 import { deleteCategory } from '../../categories/helpers/deleteCategory'
 import { useEscape } from '../../../shared/helpers/useEscape'
+import { normalizeSearch } from '../../../shared/helpers/normalizeSearch'
 
 export const Categories = () => {
     const { user, categories, setCategories } = useStore()
@@ -18,6 +19,7 @@ export const Categories = () => {
     const [categoryName, setCategoryName] = useState('')
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(null)
     const [saving, setSaving] = useState(false)
+    const [visibleCount, setVisibleCount] = useState(10)
 
     const handleEscapeCreate = () => {
         setShowModal(false)
@@ -56,8 +58,9 @@ export const Categories = () => {
     }, [businessId])
 
     const filteredCategories = categories.filter((cat) =>
-        cat.name.toLowerCase().includes(searchTerm.toLowerCase()),
+        normalizeSearch(cat.name).includes(normalizeSearch(searchTerm)),
     )
+    const visibleCategories = filteredCategories.slice(0, visibleCount)
 
     const openCreateModal = () => {
         setEditingCategory(null)
@@ -279,7 +282,7 @@ export const Categories = () => {
                             <input
                                 type='search'
                                 value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
+                                onChange={(e) => { setSearchTerm(e.target.value); setVisibleCount(10) }}
                                 className='w-full border border-divider rounded-md pl-10 pr-3 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                                 placeholder='Buscar categorías...'
                             />
@@ -297,7 +300,7 @@ export const Categories = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {filteredCategories.map((category) => (
+                                    {visibleCategories.map((category) => (
                                         <tr
                                             key={category.id}
                                             className='border-b border-divider-light hover:bg-hover cursor-pointer'
@@ -341,10 +344,18 @@ export const Categories = () => {
                                         </tr>
                                     ))}
                                 </tbody>
-                            </table>
-                        </div>
-                    </section>
-                    {filteredCategories.length === 0 && (
+                        </table>
+                        {visibleCount < filteredCategories.length && (
+                            <button
+                                onClick={() => setVisibleCount(prev => prev + 10)}
+                                className='w-full mt-4 py-2 text-sm font-medium text-on-surface hover:text-surface hover:bg-accent rounded-lg border border-accent transition-colors cursor-pointer flex items-center justify-center gap-2'
+                            >
+                                <ChevronDown className='w-4 h-4' /> Cargar más ({filteredCategories.length - visibleCount} restantes)
+                            </button>
+                        )}
+                    </div>
+                </section>
+                {filteredCategories.length === 0 && (
                         <div className='text-center text-faint italic py-12 px-6'>
                             No se encontraron categorías
                         </div>

@@ -7,6 +7,7 @@ import { getReports } from '../../shared/helpers/getReports'
 import { useStore } from '../../../../app/providers/store'
 import { History, Search, ArrowDownCircle, ArrowUpCircle, ShoppingCart, Undo2, List, ChevronDown } from 'lucide-react'
 import { useFormatDate } from '../../../../shared/helpers/useFormatDate'
+import { normalizeSearch } from '../../../../shared/helpers/normalizeSearch'
 
 const typeConfig = {
     entry: { label: 'Entrada', icon: ArrowDownCircle, cls: 'bg-emerald-100 text-emerald-700' },
@@ -131,12 +132,12 @@ export const InventoryMovements = () => {
 
     const filteredMovements = movementsData.filter(m => {
         if (!searchTerm) return true
-        const term = searchTerm.toLowerCase()
+        const term = normalizeSearch(searchTerm)
         return (
-            (m.products?.name || '').toLowerCase().includes(term) ||
-            (m.products?.sku || '').toLowerCase().includes(term) ||
-            (m.products?.barcode || '').toLowerCase().includes(term) ||
-            (m.notes || '').toLowerCase().includes(term)
+            normalizeSearch(m.products?.name || '').includes(term) ||
+            normalizeSearch(m.products?.sku || '').includes(term) ||
+            normalizeSearch(m.products?.barcode || '').includes(term) ||
+            normalizeSearch(m.notes || '').includes(term)
         )
     })
 

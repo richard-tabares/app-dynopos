@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { History, Search, ArrowDownCircle, ArrowUpCircle, ShoppingCart, Undo2, List } from 'lucide-react'
+import { History, Search, ArrowDownCircle, ArrowUpCircle, ShoppingCart, Undo2, List, ChevronDown } from 'lucide-react'
 import { DateRangeFilter } from '../../shared/components/DateRangeFilter'
 import { getReports } from '../../shared/helpers/getReports'
 import { useStore } from '../../../../app/providers/store'
+import { normalizeSearch } from '../../../../shared/helpers/normalizeSearch'
 
 const typeConfig = {
     entry: { label: 'Entrada', icon: ArrowDownCircle, cls: 'bg-emerald-100 text-emerald-700' },
@@ -42,6 +43,7 @@ export const MovimientosReports = () => {
     const [data, setData] = useState([])
     const [typeFilter, setTypeFilter] = useState('')
     const [searchTerm, setSearchTerm] = useState('')
+    const [visibleCount, setVisibleCount] = useState(10)
     const initialLoad = useRef(true)
 
     const fetchData = useCallback(async () => {
@@ -91,14 +93,15 @@ export const MovimientosReports = () => {
 
     const filtered = data.filter(m => {
         if (!searchTerm) return true
-        const term = searchTerm.toLowerCase()
+        const term = normalizeSearch(searchTerm)
         return (
-            (m.products?.name || '').toLowerCase().includes(term) ||
-            (m.products?.sku || '').toLowerCase().includes(term) ||
-            (m.products?.barcode || '').toLowerCase().includes(term) ||
-            (m.notes || '').toLowerCase().includes(term)
+            normalizeSearch(m.products?.name || '').includes(term) ||
+            normalizeSearch(m.products?.sku || '').includes(term) ||
+            normalizeSearch(m.products?.barcode || '').includes(term) ||
+            normalizeSearch(m.notes || '').includes(term)
         )
     })
+    const visibleMovements = filtered.slice(0, visibleCount)
 
     const typeOptions = [
         { value: '', label: 'Todos', icon: List },
@@ -161,7 +164,7 @@ export const MovimientosReports = () => {
                     <input
                         type='text'
                         value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
+                        onChange={(e) => { setSearchTerm(e.target.value); setVisibleCount(10) }}
                         className='w-full border border-divider rounded-md pl-10 pr-3 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                         placeholder='Buscar por código o nombre...'
                     />
@@ -185,7 +188,7 @@ export const MovimientosReports = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {filtered.map((m) => {
+                                {visibleMovements.map((m) => {
                                     const config = typeConfig[m.type] || { label: m.type, icon: History, cls: 'bg-gray-100 text-gray-700' }
                                     const Icon = config.icon
                                     return (
@@ -208,6 +211,14 @@ export const MovimientosReports = () => {
                                 })}
                             </tbody>
                         </table>
+                        {visibleCount < filtered.length && (
+                            <button
+                                onClick={() => setVisibleCount(prev => prev + 10)}
+                                className='w-full mt-4 py-2 text-sm font-medium text-on-surface hover:text-surface hover:bg-accent rounded-lg border border-accent transition-colors cursor-pointer flex items-center justify-center gap-2'
+                            >
+                                <ChevronDown className='w-4 h-4' /> Cargar más ({filtered.length - visibleCount} restantes)
+                            </button>
+                        )}
                     </div>
                 ) : (
                     <div className='text-center text-faint italic py-12'>

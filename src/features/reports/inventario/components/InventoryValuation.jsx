@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Search, DollarSign, ChevronDown } from 'lucide-react'
+import { normalizeSearch } from '../../../../shared/helpers/normalizeSearch'
 
 const formatCurrency = (value) =>
     new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(value)
@@ -14,11 +15,11 @@ export const InventoryValuation = ({ data = [] }) => {
 
     const filtered = useMemo(() => {
         if (!search.trim()) return data
-        const term = search.toLowerCase()
+        const term = normalizeSearch(search)
         return data.filter(item =>
-            item.product_name?.toLowerCase().includes(term) ||
-            item.sku?.toLowerCase().includes(term) ||
-            (item.barcode && item.barcode.toLowerCase().includes(term))
+            normalizeSearch(item.product_name).includes(term) ||
+            normalizeSearch(item.sku).includes(term) ||
+            (item.barcode && normalizeSearch(item.barcode).includes(term))
         )
     }, [data, search])
 

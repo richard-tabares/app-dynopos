@@ -1,4 +1,5 @@
-import { FileDown, Receipt, Loader } from 'lucide-react'
+import { useState } from 'react'
+import { FileDown, Receipt, Loader, ChevronDown } from 'lucide-react'
 import { useStore } from '../../../../app/providers/store'
 import { useFormatDate } from '../../../../shared/helpers/useFormatDate'
 import html2pdf from 'html2pdf.js'
@@ -32,6 +33,8 @@ const formatCurrency = (value) =>
 export const PaymentHistoryTable = ({ transactions, loading }) => {
     const formatDate = useFormatDate()
     const user = useStore((state) => state.user)
+    const [visibleCount, setVisibleCount] = useState(10)
+    const visibleTransactions = (transactions || []).slice(0, visibleCount)
 
     const handleDownloadPDF = (transaction) => {
         const business = user?.business || {}
@@ -182,7 +185,7 @@ export const PaymentHistoryTable = ({ transactions, loading }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {transactions.map((tx) => (
+                        {visibleTransactions.map((tx) => (
                             <tr key={tx.id} className='border-b border-divider hover:bg-body/50 transition'>
                                 <td className='px-4 py-3 text-sm'>{formatDate(tx.created_at, { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
                                 <td className='px-4 py-3 text-sm font-mono max-w-[140px] truncate overflow-hidden text-ellipsis whitespace-nowrap'>
@@ -213,6 +216,14 @@ export const PaymentHistoryTable = ({ transactions, loading }) => {
                         ))}
                     </tbody>
                 </table>
+                {visibleCount < (transactions || []).length && (
+                    <button
+                        onClick={() => setVisibleCount(prev => prev + 10)}
+                        className='w-full py-2 text-sm font-medium text-on-surface hover:text-surface hover:bg-accent rounded-lg border border-accent transition-colors cursor-pointer flex items-center justify-center gap-2 mx-4 mb-4'
+                    >
+                        <ChevronDown className='w-4 h-4' /> Cargar más ({(transactions || []).length - visibleCount} restantes)
+                    </button>
+                )}
             </div>
         </section>
     )

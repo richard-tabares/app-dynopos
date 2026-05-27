@@ -5,7 +5,7 @@ import { SalesCountChart } from '../components/SalesCountChart'
 import { PaymentPieChart } from '../components/PaymentPieChart'
 import { CategorySalesTable } from '../components/CategorySalesTable'
 import { TopBottomProducts } from '../components/TopBottomProducts'
-import { ProductPerformanceSearch } from '../components/ProductPerformanceSearch'
+
 import { AvgTicketCard } from '../components/AvgTicketCard'
 import { RecentSalesTable } from '../components/RecentSalesTable'
 import { ReportSkeletons } from '../../shared/components/ReportsSkeletons'
@@ -176,16 +176,9 @@ export const SalesReports = () => {
                 </div>
             </div>
 
-            <div className='flex flex-col lg:flex-row gap-6'>
-                <div className='w-full lg:w-1/2'>
-                    <ProductPerformanceSearch />
-                </div>
-                <div className='w-full lg:w-1/2'>
-                    <CategorySalesTable
-                        data={data?.salesByCategory || []}
-                    />
-                </div>
-            </div>
+            <CategorySalesTable
+                data={data?.salesByCategory || []}
+            />
 
             <RecentSalesTable sales={data?.recentSales || []} onSaleUpdated={fetchData} />
 

@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Search, AlertTriangle, PackageCheck, Package, PackageX, Layers, ClipboardList, ChevronDown } from 'lucide-react'
+import { normalizeSearch } from '../../../../shared/helpers/normalizeSearch'
 
 const formatCurrency = (value) =>
     new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(value)
@@ -27,11 +28,11 @@ export const StockTable = ({ data = [] }) => {
     const filtered = useMemo(() => {
         let result = filter === 'all' ? data : data.filter(d => d.stock_status === filter)
         if (search.trim()) {
-            const term = search.toLowerCase()
+            const term = normalizeSearch(search)
             result = result.filter(d =>
-                d.product_name?.toLowerCase().includes(term) ||
-                (d.sku && d.sku.toLowerCase().includes(term)) ||
-                (d.barcode && d.barcode.toLowerCase().includes(term))
+                normalizeSearch(d.product_name).includes(term) ||
+                (d.sku && normalizeSearch(d.sku).includes(term)) ||
+                (d.barcode && normalizeSearch(d.barcode).includes(term))
             )
         }
         return result

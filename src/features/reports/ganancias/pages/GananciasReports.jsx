@@ -1,9 +1,10 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
-import { TrendingUp, DollarSign, Package, Percent, BarChart4, ArrowUpDown } from 'lucide-react'
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
+import { TrendingUp, DollarSign, Package, Percent, BarChart4, ArrowUpDown, Search, ChevronDown } from 'lucide-react'
 import { DateRangeFilter } from '../../shared/components/DateRangeFilter'
 import { getReports } from '../../shared/helpers/getReports'
 import { useStore } from '../../../../app/providers/store'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, Legend } from 'recharts'
+import { normalizeSearch } from '../../../../shared/helpers/normalizeSearch'
 
 const formatCurrency = (value) =>
     new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(value)
@@ -38,6 +39,8 @@ export const GananciasReports = () => {
     const [loading, setLoading] = useState(true)
     const [data, setData] = useState(null)
     const initialLoad = useRef(true)
+    const [searchTerm, setSearchTerm] = useState('')
+    const [visibleCount, setVisibleCount] = useState(10)
 
     const fetchData = useCallback(async () => {
         if (!businessId || !shouldFetch) return
@@ -85,7 +88,13 @@ export const GananciasReports = () => {
 
     const summary = data?.summary
     const dailyProfit = data?.dailyProfit || []
-    const productMargins = data?.productMargins || []
+    const productMargins = useMemo(() => data?.productMargins || [], [data])
+    const filteredMargins = useMemo(() => {
+        if (!searchTerm.trim()) return productMargins
+        const term = normalizeSearch(searchTerm)
+        return productMargins.filter(p => normalizeSearch(p.name).includes(term))
+    }, [productMargins, searchTerm])
+    const visibleMargins = filteredMargins.slice(0, visibleCount)
 
     if (!shouldFetch && filter !== 'month') {
         return (
@@ -190,29 +199,39 @@ export const GananciasReports = () => {
                     </section>
 
                     <section className='bg-surface border border-outline p-6 rounded-lg shadow-xs'>
-                        <div className='flex items-center gap-2 text-accent mb-6'>
+                        <div className='flex items-center gap-2 text-accent mb-4'>
                             <ArrowUpDown className='w-5 h-5' />
                             <h3 className='text-lg font-semibold text-on-surface'>Márgenes por Producto</h3>
                         </div>
-                        {productMargins.length > 0 ? (
+                        <div className='relative mb-4'>
+                            <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-faint' />
+                            <input
+                                type='search'
+                                value={searchTerm}
+                                onChange={(e) => { setSearchTerm(e.target.value); setVisibleCount(10) }}
+                                placeholder='Buscar producto...'
+                                className='w-full border border-divider rounded-md pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-accent focus:ring-0'
+                            />
+                        </div>
+                        {filteredMargins.length > 0 ? (
                             <div className='overflow-x-auto'>
                                 <table className='w-full text-sm'>
                                     <thead>
                                         <tr className='bg-subtle border-b border-divider text-muted uppercase text-xs tracking-wider'>
                                             <th className='text-left py-3 px-4 font-medium'>Producto</th>
                                             <th className='text-right py-3 px-4 font-medium'>Unidades Vendidas</th>
-                                            <th className='text-right py-3 px-4 font-medium'>Costo Total</th>
-                                            <th className='text-right py-3 px-4 font-medium'>Ingresos</th>
                                             <th className='text-right py-3 px-4 font-medium'>Margen</th>
+                                            <th className='text-right py-3 px-4 font-medium'>Costo Unitario</th>
+                                            <th className='text-right py-3 px-4 font-medium'>Costo Total</th>
+                                            <th className='text-right py-3 px-4 font-medium'>Precio Unitario</th>
+                                            <th className='text-right py-3 px-4 font-medium'>Valor Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {productMargins.map((p, i) => (
+                                        {visibleMargins.map((p, i) => (
                                             <tr key={i} className='border-b border-divider-light hover:bg-hover'>
                                                 <td className='py-3 px-4 font-medium text-on-surface'>{p.name}</td>
                                                 <td className='py-3 px-4 text-right text-on-body'>{p.totalQuantity}</td>
-                                                <td className='py-3 px-4 text-right text-on-body'>{formatCurrency(p.totalCost)}</td>
-                                                <td className='py-3 px-4 text-right text-on-body'>{formatCurrency(p.totalRevenue)}</td>
                                                 <td className='py-3 px-4 text-right'>
                                                     <span className={`px-2.5 py-0.5 text-xs font-medium rounded-full ${
                                                         p.margin >= 30 ? 'bg-green-100 text-green-800' :
@@ -222,10 +241,22 @@ export const GananciasReports = () => {
                                                         {p.margin}%
                                                     </span>
                                                 </td>
+                                                <td className='py-3 px-4 text-right text-on-body'>{formatCurrency(p.avgUnitCost)}</td>
+                                                <td className='py-3 px-4 text-right text-on-body'>{formatCurrency(p.totalCost)}</td>
+                                                <td className='py-3 px-4 text-right text-on-body'>{formatCurrency(p.avgUnitPrice)}</td>
+                                                <td className='py-3 px-4 text-right text-on-body'>{formatCurrency(p.totalRevenue)}</td>
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
+                                {visibleCount < filteredMargins.length && (
+                                    <button
+                                        onClick={() => setVisibleCount(prev => prev + 10)}
+                                        className='w-full mt-4 py-2 text-sm font-medium text-on-surface hover:text-surface hover:bg-accent rounded-lg border border-accent transition-colors cursor-pointer flex items-center justify-center gap-2'
+                                    >
+                                        <ChevronDown className='w-4 h-4' /> Cargar más ({filteredMargins.length - visibleCount} restantes)
+                                    </button>
+                                )}
                             </div>
                         ) : (
                             <div className='text-center text-faint italic py-12'>
