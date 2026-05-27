@@ -1,7 +1,10 @@
 import { useState, useRef } from 'react'
-import { Edit3, Loader, AlertCircle, UserCheck, UserX, Calendar, RefreshCw } from 'lucide-react'
+import { Edit3, Loader, AlertCircle, UserCheck, UserX, Calendar, RefreshCw, AlertTriangle, Trash2, RotateCcw } from 'lucide-react'
 import { Modal } from '../../components/Modal.jsx'
 import { toggleClientStatus, changeBillingFrequency, extendSubscription, manualRenewal, updateClientInfo } from './helpers/updateClient.js'
+import { clearClientData } from './helpers/clearClientData.js'
+import { deleteClient } from './helpers/deleteClient.js'
+import { sileo } from 'sileo'
 
 const formatDate = (dateStr) => {
     if (!dateStr) return '—'
@@ -24,6 +27,10 @@ export const ClientEditModal = ({ client, onClose, onSuccess }) => {
     const [extending, setExtending] = useState(false)
     const [isEditingDate, setIsEditingDate] = useState(false)
     const [liveSub, setLiveSub] = useState(client.subscription)
+    const [confirmAction, setConfirmAction] = useState(null)
+    const [confirmText, setConfirmText] = useState('')
+    const [clearing, setClearing] = useState(false)
+    const [deleting, setDeleting] = useState(false)
     const dateInputRef = useRef(null)
 
     const sub = liveSub
@@ -109,6 +116,58 @@ export const ClientEditModal = ({ client, onClose, onSuccess }) => {
         } finally {
             setRenewing(false)
         }
+    }
+
+    const handleClearData = async () => {
+        setError('')
+        setClearing(true)
+        try {
+            await clearClientData(client.id)
+            sileo.success({
+                fill: 'var(--toast-success)',
+                title: 'Completado',
+                description: 'Datos del cliente limpiados exitosamente',
+            })
+            setConfirmAction(null)
+            setConfirmText('')
+            onSuccess()
+            onClose()
+        } catch (err) {
+            setError(err.message)
+        } finally {
+            setClearing(false)
+        }
+    }
+
+    const handleDeleteAccount = async () => {
+        setError('')
+        setDeleting(true)
+        try {
+            await deleteClient(client.id)
+            sileo.success({
+                fill: 'var(--toast-success)',
+                title: 'Completado',
+                description: 'Cuenta eliminada completamente',
+            })
+            setConfirmAction(null)
+            setConfirmText('')
+            onSuccess()
+            onClose()
+        } catch (err) {
+            setError(err.message)
+        } finally {
+            setDeleting(false)
+        }
+    }
+
+    const openConfirm = (action) => {
+        setConfirmAction(action)
+        setConfirmText('')
+    }
+
+    const cancelConfirm = () => {
+        setConfirmAction(null)
+        setConfirmText('')
     }
 
     return (
@@ -233,6 +292,132 @@ export const ClientEditModal = ({ client, onClose, onSuccess }) => {
                                 >
                                     {extending ? <Loader className='w-4 h-4 animate-spin' /> : <><Calendar className='w-4 h-4' /> Extender</>}
                                 </button>
+                            </div>
+                        </div>
+                    </section>
+                    <section className='border-t border-divider' />
+
+                    <section>
+                        <div className='flex items-center gap-2 mb-4'>
+                            <AlertTriangle className='w-4 h-4 text-red-500' />
+                            <h3 className='text-sm font-semibold text-red-500 uppercase tracking-wider'>Zona de Peligro</h3>
+                        </div>
+                        <div className='border border-red-200 dark:border-red-900/50 rounded-lg divide-y divide-red-200 dark:divide-red-900/50'>
+                            <div className='p-4 flex flex-col gap-3'>
+                                <div className='flex items-start justify-between gap-4'>
+                                    <div>
+                                        <p className='text-sm font-medium text-on-surface'>Limpiar datos del cliente</p>
+                                        <p className='text-xs text-muted mt-1'>
+                                            Elimina todas las ventas, productos, inventario, categorías, movimientos y tickets de soporte.
+                                            La suscripción, datos del negocio y pagos se conservan.
+                                        </p>
+                                    </div>
+                                    <button
+                                        onClick={() => openConfirm('clear')}
+                                        disabled={confirmAction === 'clear' || clearing}
+                                        className='shrink-0 flex items-center gap-2 px-3 py-2 border border-red-600 text-red-600 rounded-lg text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'
+                                    >
+                                        {clearing ? <Loader className='w-4 h-4 animate-spin' /> : <RotateCcw className='w-4 h-4' />}
+                                        {clearing ? 'Limpiando...' : 'Limpiar Datos'}
+                                    </button>
+                                </div>
+                                {confirmAction === 'clear' && (
+                                    <div className='bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-lg p-4 flex flex-col gap-3'>
+                                        <div className='flex items-start gap-2'>
+                                            <AlertTriangle className='w-4 h-4 text-red-500 shrink-0 mt-0.5' />
+                                            <div>
+                                                <p className='text-sm font-medium text-red-700 dark:text-red-300'>¿Estás seguro?</p>
+                                                <p className='text-xs text-red-600 dark:text-red-400 mt-1'>
+                                                    Esta acción eliminará permanentemente todos los datos operacionales de <strong>{client.business_name}</strong>.
+                                                    No se puede deshacer. Escribe <strong>CONFIRMAR</strong> para continuar.
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <input
+                                            type='text'
+                                            value={confirmText}
+                                            onChange={(e) => setConfirmText(e.target.value)}
+                                            placeholder='Escribe CONFIRMAR'
+                                            className='w-full px-4 py-3 border border-red-300 dark:border-red-700 rounded-md text-sm bg-surface focus:outline-none focus:border-red-500 focus:ring-0'
+                                            autoFocus
+                                        />
+                                        <div className='flex gap-2 justify-end'>
+                                            <button
+                                                onClick={cancelConfirm}
+                                                className='px-3 py-2 border border-outline text-on-body hover:bg-hover font-medium rounded-lg transition text-sm cursor-pointer'
+                                            >
+                                                Cancelar
+                                            </button>
+                                            <button
+                                                onClick={handleClearData}
+                                                disabled={confirmText !== 'CONFIRMAR' || clearing}
+                                                className='flex items-center gap-2 px-4 py-2 bg-red-600/80 text-white rounded-lg hover:bg-red-800 font-medium transition text-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'
+                                            >
+                                                {clearing && <Loader className='w-4 h-4 animate-spin' />}
+                                                {clearing ? 'Limpiando...' : 'Sí, limpiar datos'}
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className='p-4 flex flex-col gap-3'>
+                                <div className='flex items-start justify-between gap-4'>
+                                    <div>
+                                        <p className='text-sm font-medium text-red-600 dark:text-red-400'>Eliminar cuenta</p>
+                                        <p className='text-xs text-muted mt-1'>
+                                            Elimina permanentemente el negocio, suscripción, pagos, usuarios y todos los datos asociados.
+                                            El cliente no podrá acceder nunca más.
+                                        </p>
+                                    </div>
+                                    <button
+                                        onClick={() => openConfirm('delete')}
+                                        disabled={confirmAction === 'delete' || deleting}
+                                        className='shrink-0 flex items-center gap-2 px-3 py-2 bg-red-600/80 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'
+                                    >
+                                        {deleting ? <Loader className='w-4 h-4 animate-spin' /> : <Trash2 className='w-4 h-4' />}
+                                        {deleting ? 'Eliminando...' : 'Eliminar Cuenta'}
+                                    </button>
+                                </div>
+                                {confirmAction === 'delete' && (
+                                    <div className='bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-lg p-4 flex flex-col gap-3'>
+                                        <div className='flex items-start gap-2'>
+                                            <AlertTriangle className='w-4 h-4 text-red-500 shrink-0 mt-0.5' />
+                                            <div>
+                                                <p className='text-sm font-medium text-red-700 dark:text-red-300'>¡Esta acción es irreversible!</p>
+                                                <p className='text-xs text-red-600 dark:text-red-400 mt-1'>
+                                                    Se eliminará <strong>todo</strong> lo relacionado con <strong>{client.business_name}</strong>:
+                                                    negocio, suscripción, pagos, usuarios y datos operacionales.
+                                                    El cliente no podrá recuperar nada. Escribe <strong>ELIMINAR</strong> para continuar.
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <input
+                                            type='text'
+                                            value={confirmText}
+                                            onChange={(e) => setConfirmText(e.target.value)}
+                                            placeholder='Escribe ELIMINAR'
+                                            className='w-full px-4 py-3 border border-red-300 dark:border-red-700 rounded-md text-sm bg-surface focus:outline-none focus:border-red-500 focus:ring-0'
+                                            autoFocus
+                                        />
+                                        <div className='flex gap-2 justify-end'>
+                                            <button
+                                                onClick={cancelConfirm}
+                                                className='px-3 py-2 border border-outline text-on-body hover:bg-hover font-medium rounded-lg transition text-sm cursor-pointer'
+                                            >
+                                                Cancelar
+                                            </button>
+                                            <button
+                                                onClick={handleDeleteAccount}
+                                                disabled={confirmText !== 'ELIMINAR' || deleting}
+                                                className='flex items-center gap-2 px-4 py-2 bg-red-600/80 text-white rounded-lg hover:bg-red-700 font-medium transition text-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'
+                                            >
+                                                {deleting && <Loader className='w-4 h-4 animate-spin' />}
+                                                {deleting ? 'Eliminando...' : 'Sí, eliminar cuenta'}
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </section>
