@@ -1,4 +1,4 @@
-import { Upload, FileSpreadsheet, Loader, CheckCircle2, XCircle, AlertTriangle } from 'lucide-react'
+import { Upload, FileSpreadsheet, Loader, CheckCircle2, XCircle, AlertTriangle, Download } from 'lucide-react'
 import { useState, useRef } from 'react'
 import { Modal as SharedModal } from '../../../shared/components/Modal'
 import { bulkUpload } from '../helpers/bulkUpload'
@@ -53,6 +53,11 @@ export const BulkUploadModal = ({ onClose, onComplete }) => {
         } finally {
             setUploading(false)
         }
+    }
+
+    const handleDownloadTemplate = () => {
+        const apiUrl = import.meta.env.VITE_API_URL
+        window.open(`${apiUrl}/api/products/template`, '_blank')
     }
 
     const handleClose = () => {
@@ -131,14 +136,14 @@ export const BulkUploadModal = ({ onClose, onComplete }) => {
                                     </tr>
                                 </thead>
                                 <tbody className='text-on-body'>
-                                    <tr><td className='py-1 pr-2 font-medium'>Nombre</td><td className='py-1 pr-2 text-red-500'>Sí</td><td className='py-1'>Nombre del producto</td></tr>
-                                    <tr><td className='py-1 pr-2 font-medium'>SKU</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Código único del producto</td></tr>
                                     <tr><td className='py-1 pr-2 font-medium'>Codigo de Barras</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Código de barras</td></tr>
-                                    <tr><td className='py-1 pr-2 font-medium'>Precio</td><td className='py-1 pr-2 text-red-500'>Sí</td><td className='py-1'>Precio de venta (en moneda local)</td></tr>
+                                    <tr><td className='py-1 pr-2 font-medium'>SKU</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Código único del producto</td></tr>
+                                    <tr><td className='py-1 pr-2 font-medium'>Nombre</td><td className='py-1 pr-2 text-red-500'>Sí</td><td className='py-1'>Nombre del producto</td></tr>
                                     <tr><td className='py-1 pr-2 font-medium'>Costo Unitario</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Costo unitario (en moneda local)</td></tr>
+                                    <tr><td className='py-1 pr-2 font-medium'>Precio</td><td className='py-1 pr-2 text-red-500'>Sí</td><td className='py-1'>Precio de venta (en moneda local)</td></tr>
                                     <tr><td className='py-1 pr-2 font-medium'>Categoria</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Nombre de la categoría</td></tr>
-                                    <tr><td className='py-1 pr-2 font-medium'>Stock Inicial</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Stock inicial (si se envía, habilita control de stock)</td></tr>
                                     <tr><td className='py-1 pr-2 font-medium'>Stock Minimo</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Stock mínimo (opcional, para notificaciones de stock bajo)</td></tr>
+                                    <tr><td className='py-1 pr-2 font-medium'>Stock Inicial</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Stock inicial (si se envía, habilita control de stock)</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -183,6 +188,14 @@ export const BulkUploadModal = ({ onClose, onComplete }) => {
                 )}
 
                 <div className='flex justify-end gap-3 pt-2'>
+                    {!result && (
+                        <button
+                            onClick={handleDownloadTemplate}
+                            className='px-4 py-2 border border-outline text-on-body hover:bg-hover font-medium rounded-lg transition cursor-pointer flex items-center gap-2'>
+                            <Download className='w-4 h-4' />
+                            Plantilla
+                        </button>
+                    )}
                     <button
                         onClick={handleClose}
                         className='px-4 py-2 border border-outline text-on-body hover:bg-hover font-medium rounded-lg transition cursor-pointer'>
