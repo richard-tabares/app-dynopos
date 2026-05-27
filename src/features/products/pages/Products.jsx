@@ -314,16 +314,21 @@ export const Products = () => {
                 <BulkUploadModal
                     onClose={() => setShowBulkUploadModal(false)}
                     onComplete={() => {
-                        const loadProductsAndCategories = async () => {
+                        const reload = async () => {
                             if (!businessId) return
                             try {
-                                const products = await getProducts(businessId)
+                                const [products, cats] = await Promise.all([
+                                    getProducts(businessId),
+                                    getCategories(businessId),
+                                ])
                                 setProducts(products)
+                                setCategories(cats)
                             } catch {
                                 setProducts([])
+                                setCategories([])
                             }
                         }
-                        loadProductsAndCategories()
+                        reload()
                     }}
                 />
             )}
