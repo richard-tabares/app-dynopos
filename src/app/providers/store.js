@@ -83,36 +83,53 @@ export const useStore = create(
                 set((state) => ({ isDarkMode: !state.isDarkMode })),
             setIsCollapsed: (payload) => set({ isCollapsed: payload }),
             setProducts: (payload) => set({ products: payload }),
-            addToCart: (product) =>
+            addToCart: (product, variation = null) =>
                 set((state) => {
+                    const cartKey = variation
+                        ? `${product.id}-${variation.id}`
+                        : product.id
                     const existingItem = state.cart.find(
-                        (item) => item.id === product.id,
+                        (item) => item.cartKey === cartKey,
                     )
                     if (existingItem) {
                         return {
                             cart: state.cart.map((item) =>
-                                item.id === product.id
+                                item.cartKey === cartKey
                                     ? { ...item, quantity: item.quantity + 1 }
                                     : item,
                             ),
                         }
                     }
+                    const cartItem = variation
+                        ? {
+                              ...product,
+                              id: cartKey,
+                              cartKey,
+                              product_id: product.id,
+                              price: variation.price,
+                              variation_id: variation.id,
+                              variation_name: variation.variation_name,
+                              variation_sku: variation.sku,
+                              variation_barcode: variation.barcode,
+                              name: `${product.name} - ${variation.variation_name}`,
+                          }
+                        : { ...product, cartKey, product_id: product.id }
                     return {
-                        cart: [...state.cart, { ...product, quantity: 1 }],
+                        cart: [...state.cart, { ...cartItem, quantity: 1 }],
                     }
                 }),
-            removeFromCart: (productId) => {
+            removeFromCart: (cartKey) => {
                 const { cart } = get()
-                const updated = cart.filter((item) => item.id !== productId)
+                const updated = cart.filter((item) => item.cartKey !== cartKey)
                 set({
                     cart: updated,
                     currentLabel: updated.length === 0 ? null : get().currentLabel,
                 })
             },
-            updateQuantity: (productId, quantity) =>
+            updateQuantity: (cartKey, quantity) =>
                 set((state) => ({
                     cart: state.cart.map((item) =>
-                        item.id === productId
+                        item.cartKey === cartKey
                             ? { ...item, quantity: Math.max(1, quantity) }
                             : item,
                     ),

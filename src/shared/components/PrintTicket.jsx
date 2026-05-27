@@ -45,14 +45,17 @@ export const PrintTicket = ({ children, printRef, sale, business, ticketFooter }
 
         const itemsHtml = sale.items
             .map(
-                (item) => `
+                (item) => {
+                const displayName = item.variation_name ? `${item.name} - ${item.variation_name}` : item.name
+                return `
             <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:4px;margin-bottom:8px;">
                 <div style="flex:1;min-width:0;">
-                    <p style="margin:0;font-weight:700;text-transform:uppercase;font-size:10px;color:#111827;word-break:break-word;">${item.name}</p>
+                    <p style="margin:0;font-weight:700;text-transform:uppercase;font-size:10px;color:#111827;word-break:break-word;">${displayName}</p>
                     <p style="margin:4px 0 0;font-size:9px;color:#374151;">${item.quantity}x ${formatCurrency(item.price)}</p>
                 </div>
                 <span style="font-weight:700;font-size:10px;color:#111827;white-space:nowrap;">${formatCurrency(item.subtotal)}</span>
             </div>`
+            }
             )
             .join('')
 

@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { Package, Search, AlertCircle, Settings2, AlertTriangle, PackageCheck, PackageX, Layers, ChevronDown } from 'lucide-react'
+import { Fragment, useEffect, useState } from 'react'
+import { Package, Search, AlertCircle, Settings2, AlertTriangle, PackageCheck, PackageX, Layers, ChevronDown, ChevronRight } from 'lucide-react'
 import { sileo } from 'sileo'
 import { useStore } from '../../../app/providers/store'
 import { getProducts } from '../../products/helpers/getProducts'
@@ -13,8 +13,10 @@ export const Inventory = () => {
     const [searchTerm, setSearchTerm] = useState('')
     const [filterStatus, setFilterStatus] = useState('all')
     const [selectedProduct, setSelectedProduct] = useState(null)
+    const [selectedVariation, setSelectedVariation] = useState(null)
     const [openModal, setOpenModal] = useState(false)
     const [visibleCount, setVisibleCount] = useState(10)
+    const [expandedProductId, setExpandedProductId] = useState(null)
 
     const businessId = user?.profile?.business_id || user?.data?.user?.id
 
@@ -33,6 +35,25 @@ export const Inventory = () => {
 
     const activeProducts = products.filter(p => p.is_active !== false)
 
+    const getVariationsStock = (product) => {
+        if (!product.product_variations || product.product_variations.length === 0) return null
+        return product.product_variations
+            .filter(v => v.is_active !== false)
+            .reduce((sum, v) => sum + (v.stock || 0), 0)
+    }
+
+    const getProductStock = (product) => {
+        const hasVariations = product.product_variations?.length > 0
+        if (hasVariations) {
+            return getVariationsStock(product) || 0
+        }
+        return product.inventory?.[0]?.stock || 0
+    }
+
+    const getProductMinStock = (product) => {
+        return product.inventory?.[0]?.min_stock || 0
+    }
+
     const getStockStatus = (stock, minStock) => {
         if (stock <= 0) return { label: 'Sin Stock', cls: 'text-red-600 bg-red-100', icon: true }
         if (minStock > 0 && stock < minStock) return { label: 'Bajo', cls: 'text-orange-600 bg-orange-100', icon: true }
@@ -46,8 +67,8 @@ export const Inventory = () => {
             normalizeSearch(product.sku).includes(term) ||
             (product.barcode && normalizeSearch(product.barcode).includes(term))
 
-        const stock = product.inventory?.[0]?.stock || 0
-        const minStock = product.inventory?.[0]?.min_stock || 0
+        const stock = getProductStock(product)
+        const minStock = getProductMinStock(product)
 
         let matchesFilter = true
         if (filterStatus === 'noStockControl') {
@@ -65,14 +86,26 @@ export const Inventory = () => {
 
     const displayedProducts = filteredProducts.slice(0, visibleCount)
 
-    const handleOpenModal = (product, e) => {
-        e.stopPropagation()
+    const handleRowClick = (product, e) => {
+        if (e.target.closest('button')) return
+        const hasVariations = product.product_variations?.length > 0
+        if (hasVariations) {
+            setExpandedProductId(expandedProductId === product.id ? null : product.id)
+        } else {
+            handleOpenModal(product, null, e)
+        }
+    }
+
+    const handleOpenModal = (product, variation, e) => {
+        if (e) e.stopPropagation()
         setSelectedProduct(product)
+        setSelectedVariation(variation)
         setOpenModal(true)
     }
 
     const handleCloseModal = () => {
         setSelectedProduct(null)
+        setSelectedVariation(null)
         setOpenModal(false)
     }
 
@@ -106,6 +139,7 @@ export const Inventory = () => {
             {openModal && (
                 <AdjustmentModal
                     product={selectedProduct}
+                    variation={selectedVariation}
                     handleClose={handleCloseModal}
                     handleSubmit={handleUpdateInventory}
                 />
@@ -213,20 +247,31 @@ export const Inventory = () => {
                             </thead>
                             <tbody>
                                 {displayedProducts.map((product) => {
-                                    const stock =
-                                        product.inventory?.[0]?.stock || 0
-                                    const minStock =
-                                        product.inventory?.[0]?.min_stock || 0
+                                    const hasVariations = product.product_variations?.length > 0
+                                    const isExpanded = expandedProductId === product.id
+                                    const stock = getProductStock(product)
+                                    const minStock = getProductMinStock(product)
                                     const isUntracked = product.track_stock === false
                                     const status = getStockStatus(stock, minStock)
 
                                     return (
+                                    <Fragment key={product.id}>
                                         <tr
-                                            key={product.id}
-                                            className='border-b border-divider-light hover:bg-hover cursor-pointer'
-                                            onClick={(e) => handleOpenModal(product, e)}>
+                                            className={`border-b border-divider-light hover:bg-hover cursor-pointer ${isExpanded ? 'bg-accent/5' : ''}`}
+                                            onClick={(e) => handleRowClick(product, e)}>
                                             <td className='py-3 px-4 font-medium text-on-surface'>
-                                                {product.sku}
+                                                {hasVariations ? (
+                                                    <span className='flex items-center gap-1'>
+                                                        {isExpanded ? (
+                                                            <ChevronDown className='w-3.5 h-3.5 text-accent shrink-0' />
+                                                        ) : (
+                                                            <ChevronRight className='w-3.5 h-3.5 text-muted shrink-0' />
+                                                        )}
+                                                        {product.sku}
+                                                    </span>
+                                                ) : (
+                                                    product.sku
+                                                )}
                                             </td>
                                             <td className='py-3 px-4 text-on-body'>
                                                 {product.name}
@@ -243,17 +288,25 @@ export const Inventory = () => {
                                                 {isUntracked ? '—' : minStock}
                                             </td>
                                             <td className='py-3 px-4 text-right'>
-                                                {product.unit_cost != null ? (
+                                                {product.unit_cost != null && product.unit_cost > 0 ? (
                                                     <span className='text-on-body font-medium'>
                                                         ${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(product.unit_cost)}
                                                     </span>
+                                                ) : hasVariations ? (
+                                                    <span className='text-faint italic text-xs'>—</span>
                                                 ) : (
                                                     <span className='text-faint italic'>—</span>
                                                 )}
                                             </td>
                                             <td className='py-3 px-4 text-right font-bold text-on-surface'>
-                                                {!isUntracked && product.unit_cost != null
+                                                {!isUntracked && product.unit_cost != null && !hasVariations
                                                     ? `$${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(stock * product.unit_cost)}`
+                                                    : hasVariations
+                                                    ? `$${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(
+                                                        (product.product_variations || [])
+                                                            .filter(v => v.is_active !== false)
+                                                            .reduce((sum, v) => sum + ((v.stock || 0) * (v.unit_cost || 0)), 0)
+                                                    )}`
                                                     : '—'}
                                             </td>
                                             <td className='py-3 px-4'>
@@ -269,10 +322,10 @@ export const Inventory = () => {
                                                 )}
                                             </td>
                                             <td className='py-3 px-2 text-right whitespace-nowrap'>
-                                                {!isUntracked && (
+                                                {!isUntracked && !hasVariations && (
                                                     <button
                                                         onClick={(e) =>
-                                                            handleOpenModal(product, e)
+                                                            handleOpenModal(product, null, e)
                                                         }
                                                         className='bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-800 p-1.5 rounded-sm cursor-pointer'
                                                         title='Ajustar Inventario'>
@@ -281,6 +334,61 @@ export const Inventory = () => {
                                                 )}
                                             </td>
                                         </tr>
+                                        {isExpanded && hasVariations && product.product_variations
+                                            .filter(v => v.is_active !== false)
+                                            .map((v) => {
+                                                const vStatus = getStockStatus(v.stock || 0, v.min_stock || minStock)
+                                                return (
+                                                <tr
+                                                    key={v.id}
+                                                    className='border-b border-divider-light bg-accent/5 hover:bg-accent/10 cursor-pointer'
+                                                    onClick={(e) => handleOpenModal(product, v, e)}>
+                                                    <td className='py-2 px-4'></td>
+                                                    <td className='py-2 px-4'>
+                                                        <span className='flex items-center gap-2 text-sm'>
+                                                            <span className='w-1.5 h-1.5 rounded-full bg-accent shrink-0' />
+                                                            <span className='font-medium text-on-surface'>{v.variation_name}</span>
+                                                        </span>
+                                                    </td>
+                                                    <td className='py-2 px-4 text-xs text-muted'>—</td>
+                                                    <td className={`py-2 px-4 text-sm font-bold text-right ${vStatus.label === 'Normal' ? 'text-on-body' : 'text-red-600'}`}>
+                                                        {v.stock || 0}
+                                                    </td>
+                                                    <td className='py-2 px-4 text-right text-xs text-muted'>
+                                                        {v.min_stock != null ? v.min_stock : (minStock || '—')}
+                                                    </td>
+                                                    <td className='py-2 px-4 text-right'>
+                                                        {v.unit_cost ? (
+                                                            <span className='text-sm font-medium text-on-body'>
+                                                                ${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(v.unit_cost)}
+                                                            </span>
+                                                        ) : (
+                                                            <span className='text-faint italic text-xs'>—</span>
+                                                        )}
+                                                    </td>
+                                                    <td className='py-2 px-4 text-right text-sm font-bold text-on-surface'>
+                                                        {v.unit_cost
+                                                            ? `$${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format((v.stock || 0) * v.unit_cost)}`
+                                                            : '—'}
+                                                    </td>
+                                                    <td className='py-2 px-4'>
+                                                        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium ${vStatus.cls}`}>
+                                                            {vStatus.icon && <AlertCircle className='w-2.5 h-2.5' />}
+                                                            {vStatus.label}
+                                                        </span>
+                                                    </td>
+                                                    <td className='py-2 px-2 text-right whitespace-nowrap'>
+                                                        <button
+                                                            onClick={(e) => handleOpenModal(product, v, e)}
+                                                            className='bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-800 p-1 rounded-sm cursor-pointer'
+                                                            title='Ajustar Inventario'>
+                                                            <Settings2 className='w-3.5 h-3.5 text-accent' />
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                )
+                                            })}
+                                    </Fragment>
                                     )
                                 })}
                             </tbody>

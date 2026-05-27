@@ -4,6 +4,7 @@ import { Modal } from '../../../shared/components/Modal'
 
 export const AdjustmentModal = ({
     product = {},
+    variation = null,
     handleClose,
     handleSubmit,
 }) => {
@@ -11,12 +12,12 @@ export const AdjustmentModal = ({
     const [movementType, setMovementType] = useState('entry')
     const [formData, setFormData] = useState({
         quantity: '',
-        unit_cost: product.unit_cost ?? '',
-        min_stock: product.inventory?.[0]?.min_stock ?? '',
+        unit_cost: variation ? (variation.unit_cost ?? '') : (product.unit_cost ?? ''),
+        min_stock: variation ? (variation.min_stock ?? '') : (product.inventory?.[0]?.min_stock ?? ''),
         notes: '',
     })
 
-    const currentStock = product.inventory?.[0]?.stock || 0
+    const currentStock = variation ? (variation.stock || 0) : (product.inventory?.[0]?.stock || 0)
     const isFormValid = formData.quantity !== '' && parseInt(formData.quantity) > 0
 
     const handleChange = (e) => {
@@ -48,6 +49,7 @@ export const AdjustmentModal = ({
                 min_stock: formData.min_stock === '' ? undefined : parseInt(formData.min_stock),
                 notes: formData.notes || null,
                 business_id: product.business_id,
+                variation_id: variation ? variation.id : undefined,
             })
         } finally {
             setLoading(false)
@@ -67,6 +69,14 @@ export const AdjustmentModal = ({
                         {product.name}
                     </span>
                 </p>
+                {variation && (
+                    <p className='text-sm text-muted'>
+                        Variación:{' '}
+                        <span className='font-semibold text-accent'>
+                            {variation.variation_name}
+                        </span>
+                    </p>
+                )}
                 <p className='text-sm text-muted'>
                     Stock actual:{' '}
                     <span className='font-semibold text-on-body'>{currentStock}</span>

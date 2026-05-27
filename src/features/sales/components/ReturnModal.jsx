@@ -59,6 +59,8 @@ export const ReturnModal = ({ isOpen, sale, onClose, onConfirm }) => {
             .filter((i) => i.returnQuantity > 0)
             .map((i) => ({
                 product_id: i.product_id,
+                variation_id: i.variation_id || null,
+                variation_name: i.variation_name || null,
                 quantity: i.returnQuantity,
                 unit_price: i.price,
                 subtotal: i.returnQuantity * i.price,

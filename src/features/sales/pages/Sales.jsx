@@ -131,8 +131,9 @@ export const Sales = () => {
             status: 'completed',
             created_at: saleSummaryData.date,
             salesItems: cart.map(item => ({
-                product_id: item.id,
-                quantity: item.quantity
+                product_id: item.product_id || item.id,
+                quantity: item.quantity,
+                variation_id: item.variation_id || null,
             }))
         }
 

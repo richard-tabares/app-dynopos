@@ -132,7 +132,7 @@ export const OrderSidebar = ({ onProcessSale }) => {
                                     <button
                                         onClick={() =>
                                             updateQuantity(
-                                                item.id,
+                                                item.cartKey,
                                                 item.quantity - 1,
                                             )
                                         }
@@ -146,7 +146,7 @@ export const OrderSidebar = ({ onProcessSale }) => {
                                     <button
                                         onClick={() =>
                                             updateQuantity(
-                                                item.id,
+                                                item.cartKey,
                                                 item.quantity + 1,
                                             )
                                         }
@@ -154,14 +154,16 @@ export const OrderSidebar = ({ onProcessSale }) => {
                                         disabled={
                                             item.track_stock !== false &&
                                             item.quantity >=
-                                                (item.inventory?.[0]?.stock ||
-                                                    0)
+                                                (item.variation_id
+                                                    ? item.stock || 0
+                                                    : item.inventory?.[0]
+                                                          ?.stock || 0)
                                         }>
                                         <Plus className='w-3 h-3' />
                                     </button>
                                 </div>
                                 <button
-                                    onClick={() => removeFromCart(item.id)}
+                                    onClick={() => removeFromCart(item.cartKey)}
                                     className='p-2 text-red-500 hover:bg-red-50 rounded-md transition-colors cursor-pointer'>
                                     <Trash2 className='w-4 h-4' />
                                 </button>

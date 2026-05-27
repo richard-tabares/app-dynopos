@@ -8,6 +8,7 @@ import {
     Layers,
     ClipboardList,
     ChevronDown,
+    ChevronRight,
     EllipsisVertical,
     CheckCircle2,
     CheckCircle,
@@ -18,16 +19,18 @@ import {
     Loader,
     Upload,
 } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { sileo } from 'sileo'
 import { Modal } from '../components/Modal'
 import { Modal as SharedModal } from '../../../shared/components/Modal'
 import { ConfirmModal } from '../components/ConfirmModal'
+import { VariationEditModal } from '../components/VariationEditModal'
 import { createNewProduct } from '../helpers/createNewProduct'
 import { getProducts } from '../helpers/getProducts'
 import { useStore } from '../../../app/providers/store'
 import { useNavigate } from 'react-router'
 import { deleteProduct } from '../helpers/deleteProduct'
+import { deleteVariation } from '../helpers/deleteVariation'
 import { editProduct } from '../helpers/editProduct'
 
 import { getCategories } from '../../categories/helpers/getCategories'
@@ -55,6 +58,8 @@ export const Products = () => {
     const [savingCategory, setSavingCategory] = useState(false)
     const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
     const [showMobileActions, setShowMobileActions] = useState(null)
+    const [expandedProductId, setExpandedProductId] = useState(null)
+    const [editingVariation, setEditingVariation] = useState(null)
 
     useEscape(
         showCategoryModal
@@ -97,6 +102,7 @@ export const Products = () => {
         'Costo',
         'Margen',
         'Maneja Stock',
+        'Variaciones',
         'Estado',
         'Acciones',
     ]
@@ -246,6 +252,63 @@ export const Products = () => {
         }
     }
 
+    const handleRowClick = (product, e) => {
+        if (e.target.closest('button')) return
+        if (product.product_variations?.length > 0) {
+            setExpandedProductId(expandedProductId === product.id ? null : product.id)
+        } else {
+            onEditProduct(product.id, e)
+        }
+    }
+
+    const onEditVariation = (variation, e) => {
+        e.stopPropagation()
+        setEditingVariation(variation)
+    }
+
+    const handleVariationSaved = (updatedVariation) => {
+        setProducts(
+            products.map((product) => {
+                if (!product.product_variations) return product
+                return {
+                    ...product,
+                    product_variations: product.product_variations.map((v) =>
+                        v.id === updatedVariation.id ? { ...v, ...updatedVariation } : v,
+                    ),
+                }
+            }),
+        )
+    }
+
+    const handleDeleteVariation = async (variationId, e) => {
+        e.stopPropagation()
+        try {
+            await deleteVariation(variationId)
+            setProducts(
+                products.map((product) => {
+                    if (!product.product_variations) return product
+                    return {
+                        ...product,
+                        product_variations: product.product_variations.filter(
+                            (v) => v.id !== variationId,
+                        ),
+                    }
+                }),
+            )
+            sileo.success({
+                fill: 'var(--toast-success)',
+                title: 'Completado',
+                description: 'Variación eliminada correctamente',
+            })
+        } catch (error) {
+            sileo.error({
+                fill: 'var(--toast-error)',
+                title: 'Error',
+                description: error.message || 'Error al eliminar la variación',
+            })
+        }
+    }
+
     const handleSearch = (e) => {
         setSearchTerm(e.target.value)
         setVisibleCount(20)
@@ -299,6 +362,14 @@ export const Products = () => {
                     editProductData={editProductData}
                     categories={categories}
                     products={products}
+                />
+            )}
+
+            {editingVariation && (
+                <VariationEditModal
+                    variation={editingVariation}
+                    onClose={() => setEditingVariation(null)}
+                    onSaved={handleVariationSaved}
                 />
             )}
 
@@ -678,15 +749,26 @@ export const Products = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {displayedProducts.map((product, index) => (
+                                {displayedProducts.map((product) => (
+                                    <Fragment key={product.id}>
                                     <tr
-                                        key={index}
-                                        className='border-b border-divider-light hover:bg-hover cursor-pointer'
+                                        className={`border-b border-divider-light hover:bg-hover cursor-pointer ${expandedProductId === product.id ? 'bg-accent/5' : ''}`}
                                         onClick={(e) =>
-                                            onEditProduct(product.id, e)
+                                            handleRowClick(product, e)
                                         }>
                                         <td className='py-3 px-4 font-medium text-on-surface'>
-                                            {product.sku}
+                                            {product.product_variations?.length > 0 ? (
+                                                <span className='flex items-center gap-1'>
+                                                    {expandedProductId === product.id ? (
+                                                        <ChevronDown className='w-3.5 h-3.5 text-accent shrink-0' />
+                                                    ) : (
+                                                        <ChevronRight className='w-3.5 h-3.5 text-muted shrink-0' />
+                                                    )}
+                                                    {product.sku}
+                                                </span>
+                                            ) : (
+                                                product.sku
+                                            )}
                                         </td>
                                         <td className='py-3 px-4 text-on-body'>
                                             {product.name}
@@ -754,6 +836,15 @@ export const Products = () => {
                                                 <span className='px-2.5 py-0.5 text-xs font-medium bg-subtle text-muted rounded-full whitespace-nowrap'>
                                                     No
                                                 </span>
+                                            )}
+                                        </td>
+                                        <td className='py-3 px-4 whitespace-nowrap'>
+                                            {product.product_variations?.length > 0 ? (
+                                                <span className='px-2.5 py-0.5 text-xs font-medium bg-accent/10 text-accent rounded-full whitespace-nowrap'>
+                                                    {product.product_variations.length} {product.variation_type?.toLowerCase() || 'vars'}
+                                                </span>
+                                            ) : (
+                                                <span className='text-faint italic text-xs'>—</span>
                                             )}
                                         </td>
                                         <td className='py-3 px-4 whitespace-nowrap'>
@@ -847,6 +938,75 @@ export const Products = () => {
                                             </section>
                                         </td>
                                     </tr>
+                                    {expandedProductId === product.id && product.product_variations
+                                        ?.filter(v => v.is_active !== false)
+                                        .map((v) => (
+                                        <tr
+                                            key={v.id}
+                                            className='border-b border-divider-light bg-accent/5 hover:bg-accent/10 cursor-pointer'
+                                            onClick={(e) => onEditVariation(v, e)}>
+                                            <td className='py-2 px-4'></td>
+                                            <td className='py-2 px-4'>
+                                                <span className='flex items-center gap-2 text-sm'>
+                                                    <span className='w-1.5 h-1.5 rounded-full bg-accent shrink-0' />
+                                                    <span className='font-medium text-on-surface'>{v.variation_name}</span>
+                                                </span>
+                                            </td>
+                                            <td className='py-2 px-4 text-xs text-muted'>
+                                                —
+                                            </td>
+                                            <td className='py-2 px-4 text-sm font-bold text-on-body text-right'>
+                                                ${new Intl.NumberFormat('es-CO').format(v.price)}
+                                            </td>
+                                            <td className='py-2 px-4 text-right'>
+                                                {v.unit_cost ? (
+                                                    <span className='text-sm font-medium text-on-body'>
+                                                        ${new Intl.NumberFormat('es-CO').format(v.unit_cost)}
+                                                    </span>
+                                                ) : (
+                                                    <span className='text-faint italic text-xs'>—</span>
+                                                )}
+                                            </td>
+                                            <td className='py-2 px-4 text-right'>
+                                                {v.unit_cost && v.price > 0 ? (
+                                                    <span className={`px-2 py-0.5 text-[10px] font-medium rounded-full ${
+                                                        Math.round(((v.price - v.unit_cost) / v.price) * 100) >= 30
+                                                            ? 'bg-green-100 text-green-800'
+                                                            : Math.round(((v.price - v.unit_cost) / v.price) * 100) >= 10
+                                                            ? 'bg-amber-100 text-amber-800'
+                                                            : 'bg-red-100 text-red-800'
+                                                    }`}>
+                                                        {Math.round(((v.price - v.unit_cost) / v.price) * 100)}%
+                                                    </span>
+                                                ) : (
+                                                    <span className='text-faint italic text-xs'>—</span>
+                                                )}
+                                            </td>
+                                            <td className='py-2 px-4 whitespace-nowrap'>
+                                                <span className='text-xs text-muted'>{v.stock || 0} uds</span>
+                                            </td>
+                                            <td className='py-2 px-4 whitespace-nowrap'>
+                                                <span className='text-xs text-muted'>—</span>
+                                            </td>
+                                            <td className='py-2 px-4 whitespace-nowrap'>
+                                                <div className='flex items-center gap-1.5'>
+                                                <button
+                                                    onClick={(e) => onEditVariation(v, e)}
+                                                    className='bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-800 p-1 rounded-sm cursor-pointer'
+                                                    title='Editar Variación'>
+                                                    <Edit2 className='w-3.5 h-3.5 text-accent' />
+                                                </button>
+                                                <button
+                                                    onClick={(e) => handleDeleteVariation(v.id, e)}
+                                                    className='hover:bg-red-500 bg-red-400 text-white p-1 rounded-sm cursor-pointer'
+                                                    title='Eliminar Variación'>
+                                                    <Trash2 className='w-3.5 h-3.5' />
+                                                </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    </Fragment>
                                 ))}
                             </tbody>
                         </table>

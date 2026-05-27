@@ -166,7 +166,7 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
                                         className='flex justify-between items-start gap-1'>
                                         <div className='flex-1 min-w-0'>
                                             <p className='text-on-surface font-bold leading-tight uppercase text-[11px] break-words'>
-                                                {item.name}
+                                                {item.variation_name ? `${item.name} - ${item.variation_name}` : item.name}
                                             </p>
                                             <p className='text-[10px] text-on-body mt-0.5'>
                                                 {item.quantity}x{' '}

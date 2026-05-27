@@ -2,11 +2,42 @@ import { Package, Boxes, AlertTriangle, DollarSign, AlertCircle } from 'lucide-r
 
 export const InventorySummary = ({ products = [] }) => {
     // Cálculos
+    const getStock = (p) => {
+        if (p.product_variations?.length > 0) {
+            return p.product_variations
+                .filter(v => v.is_active !== false)
+                .reduce((sum, v) => sum + (v.stock || 0), 0)
+        }
+        return p.inventory?.[0]?.stock || 0
+    }
+
+    const getUnitCost = (p) => {
+        if (p.product_variations?.length > 0) {
+            const active = p.product_variations.filter(v => v.is_active !== false)
+            if (active.length === 0) return 0
+            const totalStock = active.reduce((sum, v) => sum + (v.stock || 0), 0)
+            if (totalStock === 0) return 0
+            const totalValue = active.reduce((sum, v) => sum + ((v.stock || 0) * (v.unit_cost || 0)), 0)
+            return totalValue / totalStock
+        }
+        return p.unit_cost || 0
+    }
+
     const totalProducts = products.length
-    const stockTotal = products.reduce((acc, p) => acc + (p.inventory?.[0]?.stock || 0), 0)
-    const lowStockProducts = products.filter(p => p.track_stock !== false && (p.inventory?.[0]?.stock || 0) <= (p.inventory?.[0]?.min_stock || 0))
+    const stockTotal = products.reduce((acc, p) => acc + getStock(p), 0)
+    const lowStockProducts = products.filter(p => {
+        if (p.track_stock === false) return false
+        if (p.product_variations?.length > 0) {
+            return p.product_variations
+                .filter(v => v.is_active !== false)
+                .some(v => (v.stock || 0) <= (v.min_stock || 0))
+        }
+        const stock = getStock(p)
+        const minStock = p.inventory?.[0]?.min_stock || 0
+        return stock <= minStock
+    })
     const lowStockCount = lowStockProducts.length
-    const inventoryValue = products.reduce((acc, p) => acc + ((p.inventory?.[0]?.stock || 0) * (p.unit_cost || 0)), 0)
+    const inventoryValue = products.reduce((acc, p) => acc + (getStock(p) * getUnitCost(p)), 0)
 
     const cards = [
         {
