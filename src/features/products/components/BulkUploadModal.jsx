@@ -134,11 +134,11 @@ export const BulkUploadModal = ({ onClose, onComplete }) => {
                                     <tr><td className='py-1 pr-2 font-medium'>Nombre</td><td className='py-1 pr-2 text-red-500'>Sí</td><td className='py-1'>Nombre del producto</td></tr>
                                     <tr><td className='py-1 pr-2 font-medium'>SKU</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Código único del producto</td></tr>
                                     <tr><td className='py-1 pr-2 font-medium'>Codigo de Barras</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Código de barras</td></tr>
-                                    <tr><td className='py-1 pr-2 font-medium'>Precio</td><td className='py-1 pr-2 text-red-500'>Sí</td><td className='py-1'>Precio de venta</td></tr>
-                                    <tr><td className='py-1 pr-2 font-medium'>Costo Unitario</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Costo unitario</td></tr>
+                                    <tr><td className='py-1 pr-2 font-medium'>Precio</td><td className='py-1 pr-2 text-red-500'>Sí</td><td className='py-1'>Precio de venta (en moneda local)</td></tr>
+                                    <tr><td className='py-1 pr-2 font-medium'>Costo Unitario</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Costo unitario (en moneda local)</td></tr>
                                     <tr><td className='py-1 pr-2 font-medium'>Categoria</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Nombre de la categoría</td></tr>
                                     <tr><td className='py-1 pr-2 font-medium'>Stock Inicial</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Stock inicial (si se envía, habilita control de stock)</td></tr>
-                                    <tr><td className='py-1 pr-2 font-medium'>Stock Minimo</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Stock mínimo (opcional, se actualiza si se envía)</td></tr>
+                                    <tr><td className='py-1 pr-2 font-medium'>Stock Minimo</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Stock mínimo (opcional, para notificaciones de stock bajo)</td></tr>
                                 </tbody>
                             </table>
                         </div>
