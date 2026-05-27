@@ -22,7 +22,9 @@ export const UserFormModal = ({ mode, userData, onClose, onSuccess }) => {
         confirm_password: '',
         role: userData?.role || 'cajero',
     })
-    const [permissions, setPermissions] = useState(userData?.permissions || [])
+    const [permissions, setPermissions] = useState(
+        userData?.permissions ?? getDefaultPermissions(userData?.role || 'cajero')
+    )
     const [submitting, setSubmitting] = useState(false)
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
     const [deleting, setDeleting] = useState(false)

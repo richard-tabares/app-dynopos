@@ -66,7 +66,7 @@ export const SideBar = () => {
     ]
 
     const role = user?.profile?.role
-    const permissions = user?.profile?.permissions
+    const permissions = user?.profile?.permissions?.length
         ? user.profile.permissions
         : getDefaultPermissions(role)
 

@@ -16,6 +16,7 @@ import {
     PackageX,
     Save,
     Loader,
+    Upload,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { sileo } from 'sileo'
@@ -33,6 +34,7 @@ import { getCategories } from '../../categories/helpers/getCategories'
 import { createCategory } from '../../categories/helpers/createCategory'
 import { useEscape } from '../../../shared/helpers/useEscape'
 import { normalizeSearch } from '../../../shared/helpers/normalizeSearch'
+import { BulkUploadModal } from '../components/BulkUploadModal'
 
 export const Products = () => {
     const [openModal, setOpenModal] = useState(false)
@@ -46,6 +48,8 @@ export const Products = () => {
     const { user, products, setProducts, categories, setCategories } =
         useStore()
     const navigate = useNavigate()
+    const [showNewProductDropdown, setShowNewProductDropdown] = useState(false)
+    const [showBulkUploadModal, setShowBulkUploadModal] = useState(false)
     const [showCategoryModal, setShowCategoryModal] = useState(false)
     const [categoryName, setCategoryName] = useState('')
     const [savingCategory, setSavingCategory] = useState(false)
@@ -306,6 +310,24 @@ export const Products = () => {
                 message='Esta acción no se puede deshacer. El producto se eliminará permanentemente de tu inventario.'
             />
 
+            {showBulkUploadModal && (
+                <BulkUploadModal
+                    onClose={() => setShowBulkUploadModal(false)}
+                    onComplete={() => {
+                        const loadProductsAndCategories = async () => {
+                            if (!businessId) return
+                            try {
+                                const products = await getProducts(businessId)
+                                setProducts(products)
+                            } catch {
+                                setProducts([])
+                            }
+                        }
+                        loadProductsAndCategories()
+                    }}
+                />
+            )}
+
             {/* Modal crear categoría */}
             {showCategoryModal && (
                 <SharedModal
@@ -433,12 +455,42 @@ export const Products = () => {
                                     <ClipboardList className='w-4 h-5 mr-2' />
                                     Inventario
                                 </button>
-                                <button
-                                    className='flex items-center font-medium px-4 py-2 bg-accent text-surface text-sm rounded-lg hover:bg-accent/85 transition cursor-pointer'
-                                    onClick={handleOpenModal}>
-                                    <Package className='w-4 h-5 mr-2' />
-                                    Nuevo Producto
-                                </button>
+                                <section className='relative'>
+                                    <button
+                                        onClick={() => setShowNewProductDropdown(!showNewProductDropdown)}
+                                        className='flex items-center font-medium px-4 py-2 bg-accent text-surface text-sm rounded-lg hover:bg-accent/85 transition cursor-pointer'>
+                                        <Package className='w-4 h-5 mr-2' />
+                                        Nuevo Producto
+                                        <ChevronDown className='w-4 h-4 ml-1' />
+                                    </button>
+                                    {showNewProductDropdown && (
+                                        <section
+                                            className='fixed inset-0 z-40'
+                                            onClick={() => setShowNewProductDropdown(false)}
+                                        />
+                                    )}
+                                    <section
+                                        className={`absolute right-0 mt-2 w-56 bg-surface border border-divider rounded-lg shadow-lg z-50 ${showNewProductDropdown ? 'block' : 'hidden'}`}>
+                                        <button
+                                            onClick={(e) => {
+                                                setShowNewProductDropdown(false)
+                                                handleOpenModal(e)
+                                            }}
+                                            className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-on-body hover:bg-hover rounded-t-lg cursor-pointer'>
+                                            <Package className='w-4 h-4' />
+                                            Nuevo Producto
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                setShowNewProductDropdown(false)
+                                                setShowBulkUploadModal(true)
+                                            }}
+                                            className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-on-body hover:bg-hover rounded-b-lg cursor-pointer'>
+                                            <Upload className='w-4 h-4' />
+                                            Carga Masiva
+                                        </button>
+                                    </section>
+                                </section>
                             </section>
                             <section className='relative sm:hidden'>
                                 <button
@@ -470,6 +522,15 @@ export const Products = () => {
                                         className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-on-body hover:bg-hover rounded-t-lg cursor-pointer'>
                                         <Package className='w-4 h-4' />
                                         Nuevo Producto
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setShowBulkUploadModal(true)
+                                            setShowMobileActions(null)
+                                        }}
+                                        className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-on-body hover:bg-hover cursor-pointer'>
+                                        <Upload className='w-4 h-4' />
+                                        Carga Masiva
                                     </button>
                                     <button
                                         onClick={() => {
