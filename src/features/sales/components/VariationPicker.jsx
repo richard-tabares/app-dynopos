@@ -5,6 +5,8 @@ import { getActiveVariations } from '../../../shared/helpers/productHelpers'
 export const VariationPicker = ({ product, onClose }) => {
     const addToCart = useStore((state) => state.addToCart)
     const cart = useStore((state) => state.cart)
+    const currentLabel = useStore((state) => state.currentLabel)
+    const initCurrentOrder = useStore((state) => state.initCurrentOrder)
 
     if (!product) return null
 
@@ -18,6 +20,9 @@ export const VariationPicker = ({ product, onClose }) => {
     }
 
     const handleSelect = (variation) => {
+        if (currentLabel === null) {
+            initCurrentOrder()
+        }
         addToCart(product, variation)
         onClose()
     }

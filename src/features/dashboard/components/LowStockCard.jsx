@@ -16,7 +16,9 @@ export const LowStockCard = ({ items = [] }) => {
                 {items.length > 0 ? (
                     items.map((item) => (
                         <div key={item.id} className='flex justify-between items-center text-sm border-b border-divider-light pb-2 last:border-0'>
-                            <span className='text-on-body font-medium truncate pr-2'>{item.name}</span>
+                            <span className='text-on-body font-medium truncate pr-2'>
+                                {item.name}{item.variationName ? ` - ${item.variationName}` : ''}
+                            </span>
                             <div className='flex items-center gap-1 shrink-0'>
                                 <span className='text-muted'>Stock:</span>
                                 <span className='font-bold text-red-600'>{item.stock}</span>
