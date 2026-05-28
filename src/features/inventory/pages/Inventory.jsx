@@ -27,7 +27,7 @@ export const Inventory = () => {
     const [selectedProduct, setSelectedProduct] = useState(null)
     const [selectedVariation, setSelectedVariation] = useState(null)
     const [openModal, setOpenModal] = useState(false)
-    const [visibleCount, setVisibleCount] = useState(10)
+    const [visibleCount, setVisibleCount] = useState(20)
     const [expandedProductId, setExpandedProductId] = useState(null)
 
     const businessId = user?.profile?.business_id || user?.data?.user?.id
@@ -96,6 +96,7 @@ export const Inventory = () => {
             normalizeSearch(product.sku).includes(term) ||
             (product.barcode && normalizeSearch(product.barcode).includes(term))
 
+        const hasVariations = productHasActiveVariations(product)
         const stock = getProductStock(product)
         const minStock = getProductMinStock(product)
 
@@ -103,18 +104,43 @@ export const Inventory = () => {
         if (filterStatus === 'noStockControl') {
             matchesFilter = product.track_stock === false
         } else if (filterStatus === 'noStock') {
-            matchesFilter = product.track_stock !== false && stock === 0
+            if (hasVariations) {
+                matchesFilter =
+                    product.track_stock !== false &&
+                    getActiveVariations(product).some((v) => v.stock === 0)
+            } else {
+                matchesFilter =
+                    product.track_stock !== false && stock === 0
+            }
         } else if (filterStatus === 'lowStock') {
-            matchesFilter =
-                product.track_stock !== false &&
-                stock > 0 &&
-                minStock > 0 &&
-                stock < minStock
+            if (hasVariations) {
+                matchesFilter =
+                    product.track_stock !== false &&
+                    getActiveVariations(product).some((v) => {
+                        const vm = v.min_stock ?? minStock
+                        return v.stock > 0 && vm > 0 && v.stock < vm
+                    })
+            } else {
+                matchesFilter =
+                    product.track_stock !== false &&
+                    stock > 0 &&
+                    minStock > 0 &&
+                    stock < minStock
+            }
         } else if (filterStatus === 'withStock') {
-            matchesFilter =
-                product.track_stock !== false &&
-                stock > 0 &&
-                (minStock === 0 || stock >= minStock)
+            if (hasVariations) {
+                matchesFilter =
+                    product.track_stock !== false &&
+                    getActiveVariations(product).every((v) => {
+                        const vm = v.min_stock ?? minStock
+                        return v.stock > 0 && (vm === 0 || v.stock >= vm)
+                    })
+            } else {
+                matchesFilter =
+                    product.track_stock !== false &&
+                    stock > 0 &&
+                    (minStock === 0 || stock >= minStock)
+            }
         }
 
         return matchesSearch && matchesFilter
@@ -180,7 +206,7 @@ export const Inventory = () => {
     }
 
     const handleLoadMore = () => {
-        setVisibleCount((prev) => prev + 10)
+        setVisibleCount((prev) => prev + 20)
     }
 
     const headers = [
