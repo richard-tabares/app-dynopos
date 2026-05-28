@@ -8,7 +8,7 @@ export const ProductCard = ({ product, onAddToCart }) => {
     const addToCart = onAddToCart || storeAddToCart
     const [showVariationPicker, setShowVariationPicker] = useState(false)
 
-    const hasVariations = product.product_variations?.length > 0
+    const hasVariations = !product.variations_disabled && product.variation_type && product.product_variations?.length > 0
     const originalStock = product.inventory?.[0]?.stock || 0
     const cartQuantity = cart.find(item => item.product_id === product.id)?.quantity || 0
     const availableStock = originalStock - cartQuantity

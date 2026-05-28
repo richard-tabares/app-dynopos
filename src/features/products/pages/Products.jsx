@@ -146,6 +146,10 @@ export const Products = () => {
                             : product,
                     ),
                 )
+                const activeVariations = updatedProduct.product_variations?.filter(v => v.is_active !== false) || []
+                if ((updatedProduct.variations_disabled || !updatedProduct.variation_type || activeVariations.length === 0) && expandedProductId === updatedProduct.id) {
+                    setExpandedProductId(null)
+                }
                 sileo.success({
                     fill: 'var(--toast-success)',
                     title: 'Completado',
@@ -254,7 +258,8 @@ export const Products = () => {
 
     const handleRowClick = (product, e) => {
         if (e.target.closest('button')) return
-        if (product.product_variations?.length > 0) {
+        const activeVariations = product.product_variations?.filter(v => v.is_active !== false) || []
+        if (!product.variations_disabled && product.variation_type && activeVariations.length > 0) {
             setExpandedProductId(expandedProductId === product.id ? null : product.id)
         } else {
             onEditProduct(product.id, e)
@@ -757,7 +762,7 @@ export const Products = () => {
                                             handleRowClick(product, e)
                                         }>
                                         <td className='py-3 px-4 font-medium text-on-surface'>
-                                            {product.product_variations?.length > 0 ? (
+                                            {!product.variations_disabled && product.variation_type && product.product_variations?.filter(v => v.is_active !== false).length > 0 ? (
                                                 <span className='flex items-center gap-1'>
                                                     {expandedProductId === product.id ? (
                                                         <ChevronDown className='w-3.5 h-3.5 text-accent shrink-0' />
@@ -839,9 +844,9 @@ export const Products = () => {
                                             )}
                                         </td>
                                         <td className='py-3 px-4 whitespace-nowrap'>
-                                            {product.product_variations?.length > 0 ? (
+                                            {!product.variations_disabled && product.variation_type && product.product_variations?.filter(v => v.is_active !== false).length > 0 ? (
                                                 <span className='px-2.5 py-0.5 text-xs font-medium bg-accent/10 text-accent rounded-full whitespace-nowrap'>
-                                                    {product.product_variations.length} {product.variation_type?.toLowerCase() || 'vars'}
+                                                    {product.product_variations.filter(v => v.is_active !== false).length} {product.variation_type.toLowerCase()}
                                                 </span>
                                             ) : (
                                                 <span className='text-faint italic text-xs'>—</span>

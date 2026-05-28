@@ -53,6 +53,8 @@ export const Inventory = () => {
 
     const getVariationsStock = (product) => {
         if (
+            product.variations_disabled ||
+            !product.variation_type ||
             !product.product_variations ||
             product.product_variations.length === 0
         )
@@ -63,7 +65,7 @@ export const Inventory = () => {
     }
 
     const getProductStock = (product) => {
-        const hasVariations = product.product_variations?.length > 0
+        const hasVariations = !product.variations_disabled && product.variation_type && product.product_variations?.length > 0
         if (hasVariations) {
             return getVariationsStock(product) || 0
         }
@@ -129,7 +131,7 @@ export const Inventory = () => {
 
     const handleRowClick = (product, e) => {
         if (e.target.closest('button')) return
-        const hasVariations = product.product_variations?.length > 0
+        const hasVariations = !product.variations_disabled && product.variation_type && product.product_variations?.length > 0
         if (hasVariations) {
             setExpandedProductId(
                 expandedProductId === product.id ? null : product.id,
@@ -316,7 +318,7 @@ export const Inventory = () => {
                             <tbody>
                                 {displayedProducts.map((product) => {
                                     const hasVariations =
-                                        product.product_variations?.length > 0
+                                        !product.variations_disabled && product.variation_type && product.product_variations?.length > 0
                                     const isExpanded =
                                         expandedProductId === product.id
                                     const stock = getProductStock(product)

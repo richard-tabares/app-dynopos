@@ -29,7 +29,9 @@ export const Modal = ({
         variation_type: editProductData.variation_type || '',
     })
 
-    const [hasVariations, setHasVariations] = useState(existingVariations.length > 0)
+    const [hasVariations, setHasVariations] = useState(
+        !editProductData.variations_disabled && !!editProductData.variation_type && existingVariations.filter(v => v.is_active !== false).length > 0
+    )
     const [variations, setVariations] = useState(
             existingVariations.length > 0
                 ? existingVariations.map(v => ({
@@ -39,13 +41,15 @@ export const Modal = ({
                       unit_cost: v.unit_cost || '',
                       sku: v.sku || '',
                       barcode: v.barcode || '',
+                      stock: v.stock || 0,
+                      min_stock: v.min_stock || 0,
                       is_active: v.is_active !== false,
                   }))
-                : [{ variation_name: '', price: '', unit_cost: '', sku: '', barcode: '' }],
+                : [{ variation_name: '', price: '', unit_cost: '', sku: '', barcode: '', stock: 0, min_stock: 0 }],
     )
 
     const isFormValid = hasVariations
-        ? formData.name.trim() && variations.some(v => v.variation_name.trim() && Number(v.price) > 0)
+        ? formData.name.trim() && formData.variation_type.trim() && variations.some(v => v.variation_name.trim() && Number(v.price) > 0)
         : formData.name.trim() && Number(formData.price) > 0
     const [submitting, setSubmitting] = useState(false)
 
@@ -69,7 +73,7 @@ export const Modal = ({
     const addVariation = () => {
         setVariations((prev) => [
             ...prev,
-            { variation_name: '', price: '', unit_cost: '', sku: '', barcode: '' },
+            { variation_name: '', price: '', unit_cost: '', sku: '', barcode: '', stock: 0, min_stock: 0 },
         ])
     }
 
@@ -101,18 +105,32 @@ export const Modal = ({
             ...formData,
             category_id: formData.category_id || null,
             price: hasVariations ? 0 : (formData.price === '' ? null : formData.price),
-            unit_cost: formData.unit_cost === '' ? null : formData.unit_cost,
+            unit_cost: hasVariations ? 0 : (formData.unit_cost === '' ? 0 : formData.unit_cost),
             business_id: businessId,
             id: editProductData.id || undefined,
-            variation_type: hasVariations ? formData.variation_type : null,
+            variation_type: hasVariations ? formData.variation_type : (editProductData.variation_type || null),
+            variations_disabled: !hasVariations,
             variations: hasVariations
-                ? variations
-                      .filter(v => v.variation_name.trim())
-                      .map(v => ({
-                          ...v,
-                          price: Number(v.price),
-                          unit_cost: Number(v.unit_cost) || 0,
-                      }))
+                ? (variations.some(v => v.variation_name.trim())
+                    ? variations
+                          .filter(v => v.variation_name.trim())
+                          .map(v => ({
+                              ...v,
+                              price: Number(v.price),
+                              unit_cost: Number(v.unit_cost) || 0,
+                          }))
+                    : existingVariations
+                          .filter(v => v.variation_name.trim())
+                          .map(v => ({
+                              id: v.id,
+                              variation_name: v.variation_name,
+                              price: Number(v.price),
+                              unit_cost: Number(v.unit_cost) || 0,
+                              sku: v.sku || null,
+                              barcode: v.barcode || null,
+                              min_stock: v.min_stock || 0,
+                          }))
+                  )
                 : [],
         }
         await handleSubmit(sanitizedData)

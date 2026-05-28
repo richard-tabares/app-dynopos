@@ -3,7 +3,7 @@ import { Package, Boxes, AlertTriangle, DollarSign, AlertCircle } from 'lucide-r
 export const InventorySummary = ({ products = [] }) => {
     // Cálculos
     const getStock = (p) => {
-        if (p.product_variations?.length > 0) {
+        if (!p.variations_disabled && p.variation_type && p.product_variations?.length > 0) {
             return p.product_variations
                 .filter(v => v.is_active !== false)
                 .reduce((sum, v) => sum + (v.stock || 0), 0)
@@ -12,7 +12,7 @@ export const InventorySummary = ({ products = [] }) => {
     }
 
     const getUnitCost = (p) => {
-        if (p.product_variations?.length > 0) {
+        if (!p.variations_disabled && p.variation_type && p.product_variations?.length > 0) {
             const active = p.product_variations.filter(v => v.is_active !== false)
             if (active.length === 0) return 0
             const totalStock = active.reduce((sum, v) => sum + (v.stock || 0), 0)
@@ -27,7 +27,7 @@ export const InventorySummary = ({ products = [] }) => {
     const stockTotal = products.reduce((acc, p) => acc + getStock(p), 0)
     const lowStockProducts = products.filter(p => {
         if (p.track_stock === false) return false
-        if (p.product_variations?.length > 0) {
+        if (!p.variations_disabled && p.variation_type && p.product_variations?.length > 0) {
             return p.product_variations
                 .filter(v => v.is_active !== false)
                 .some(v => (v.stock || 0) <= (v.min_stock || 0))
