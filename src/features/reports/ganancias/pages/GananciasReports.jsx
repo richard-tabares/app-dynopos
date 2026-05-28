@@ -92,7 +92,10 @@ export const GananciasReports = () => {
     const filteredMargins = useMemo(() => {
         if (!searchTerm.trim()) return productMargins
         const term = normalizeSearch(searchTerm)
-        return productMargins.filter(p => normalizeSearch(p.name).includes(term))
+        return productMargins.filter(p =>
+            normalizeSearch(p.name).includes(term) ||
+            normalizeSearch(p.variation_name || '').includes(term)
+        )
     }, [productMargins, searchTerm])
     const visibleMargins = filteredMargins.slice(0, visibleCount)
 
@@ -230,7 +233,17 @@ export const GananciasReports = () => {
                                     <tbody>
                                         {visibleMargins.map((p, i) => (
                                             <tr key={i} className='border-b border-divider-light hover:bg-hover'>
-                                                <td className='py-3 px-4 font-medium text-on-surface'>{p.name}</td>
+                                                <td className='py-3 px-4 font-medium text-on-surface'>
+                                                    {p.variation_name ? (
+                                                        <span className='inline-flex items-center gap-2'>
+                                                            <span>{p.name}</span>
+                                                            <span className='w-1.5 h-1.5 rounded-full bg-accent shrink-0' />
+                                                            <span className='font-medium text-on-surface'>{p.variation_name}</span>
+                                                        </span>
+                                                    ) : (
+                                                        p.name
+                                                    )}
+                                                </td>
                                                 <td className='py-3 px-4 text-right text-on-body'>{p.totalQuantity}</td>
                                                 <td className='py-3 px-4 text-right'>
                                                     <span className={`px-2.5 py-0.5 text-xs font-medium rounded-full ${

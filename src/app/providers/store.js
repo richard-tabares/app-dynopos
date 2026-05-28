@@ -107,6 +107,7 @@ export const useStore = create(
                               cartKey,
                               product_id: product.id,
                               price: variation.price,
+                              stock: variation.stock,
                               variation_id: variation.id,
                               variation_name: variation.variation_name,
                               variation_sku: variation.sku,
