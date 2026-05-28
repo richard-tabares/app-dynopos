@@ -18,6 +18,7 @@ export const InventoryValuation = ({ data = [] }) => {
         const term = normalizeSearch(search)
         return data.filter(item =>
             normalizeSearch(item.product_name).includes(term) ||
+            normalizeSearch(item.variation_name || '').includes(term) ||
             normalizeSearch(item.sku).includes(term) ||
             (item.barcode && normalizeSearch(item.barcode).includes(term))
         )
@@ -62,7 +63,17 @@ export const InventoryValuation = ({ data = [] }) => {
                             <tbody>
                                 {visible.map((item, i) => (
                                     <tr key={i} className='border-b border-divider-light hover:bg-hover'>
-                                        <td className='py-3 px-4 font-medium text-on-surface'>{item.product_name}</td>
+                                        <td className='py-3 px-4 font-medium text-on-surface'>
+                                            {item.variation_name ? (
+                                                <span className='inline-flex items-center gap-2'>
+                                                    <span>{item.product_name}</span>
+                                                    <span className='w-1.5 h-1.5 rounded-full bg-accent shrink-0' />
+                                                    <span className='font-medium text-on-surface'>{item.variation_name}</span>
+                                                </span>
+                                            ) : (
+                                                <span className='font-medium text-on-surface'>{item.product_name}</span>
+                                            )}
+                                        </td>
                                         <td className='py-3 px-4 text-right'>{item.current_stock}</td>
                                         <td className='py-3 px-4 text-right'>{formatCurrency(item.unit_cost)}</td>
                                         <td className='py-3 px-4 text-right font-semibold'>{formatCurrency(item.total_value)}</td>

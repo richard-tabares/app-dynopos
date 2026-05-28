@@ -137,6 +137,7 @@ export const InventoryMovements = () => {
             normalizeSearch(m.products?.name || '').includes(term) ||
             normalizeSearch(m.products?.sku || '').includes(term) ||
             normalizeSearch(m.products?.barcode || '').includes(term) ||
+            normalizeSearch(m.product_variations?.variation_name || '').includes(term) ||
             normalizeSearch(m.notes || '').includes(term)
         )
     })
@@ -231,7 +232,15 @@ export const InventoryMovements = () => {
                                         <tr key={m.id} className='border-b border-divider-light hover:bg-hover'>
                                             <td className='py-3 px-4 text-on-body whitespace-nowrap'>{formatDate(m.created_at)}</td>
                                             <td className='py-3 px-4 font-medium text-on-surface'>
-                                                {m.products?.name || '—'}
+                                                {m.product_variations?.variation_name ? (
+                                                    <span className='inline-flex items-center gap-2'>
+                                                        <span>{m.products?.name || '—'}</span>
+                                                        <span className='w-1.5 h-1.5 rounded-full bg-accent shrink-0' />
+                                                        <span className='font-medium text-on-surface'>{m.product_variations.variation_name}</span>
+                                                    </span>
+                                                ) : (
+                                                    <span className='font-medium text-on-surface'>{m.products?.name || '—'}</span>
+                                                )}
                                                 {m.products?.sku && <span className='text-muted text-xs ml-1'>({m.products.sku})</span>}
                                             </td>
                                             <td className='py-3 px-4'>

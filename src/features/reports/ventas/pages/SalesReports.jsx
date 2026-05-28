@@ -4,7 +4,7 @@ import { SalesLineChart } from '../components/SalesLineChart'
 import { SalesCountChart } from '../components/SalesCountChart'
 import { PaymentPieChart } from '../components/PaymentPieChart'
 import { CategorySalesTable } from '../components/CategorySalesTable'
-import { TopBottomProducts } from '../components/TopBottomProducts'
+import { ProductsRanking } from '../../../../shared/components/ProductsRanking'
 
 import { AvgTicketCard } from '../components/AvgTicketCard'
 import { RecentSalesTable } from '../components/RecentSalesTable'
@@ -162,7 +162,7 @@ export const SalesReports = () => {
 
             <div className='grid grid-cols-3 max-xl:grid-cols-1 gap-6'>
                 <div className='col-span-1 max-xl:col-span-1'>
-                    <TopBottomProducts
+                    <ProductsRanking
                         data={data?.topProducts || []}
                         type='top'
                     />

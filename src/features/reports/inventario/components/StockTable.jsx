@@ -31,6 +31,7 @@ export const StockTable = ({ data = [] }) => {
             const term = normalizeSearch(search)
             result = result.filter(d =>
                 normalizeSearch(d.product_name).includes(term) ||
+                normalizeSearch(d.variation_name || '').includes(term) ||
                 (d.sku && normalizeSearch(d.sku).includes(term)) ||
                 (d.barcode && normalizeSearch(d.barcode).includes(term))
             )
@@ -97,7 +98,17 @@ export const StockTable = ({ data = [] }) => {
                             <tbody>
                                 {visible.map((item, i) => (
                                     <tr key={i} className='border-b border-divider-light hover:bg-hover' onclick={() => {}}>
-                                        <td className='py-3 px-4 font-medium text-on-surface'>{item.product_name}</td>
+                                        <td className='py-3 px-4 font-medium text-on-surface'>
+                                            {item.variation_name ? (
+                                                <span className='inline-flex items-center gap-2'>
+                                                    <span>{item.product_name}</span>
+                                                    <span className='w-1.5 h-1.5 rounded-full bg-accent shrink-0' />
+                                                    <span className='font-medium text-on-surface'>{item.variation_name}</span>
+                                                </span>
+                                            ) : (
+                                                <span className='font-medium text-on-surface'>{item.product_name}</span>
+                                            )}
+                                        </td>
                                         <td className='py-3 px-4 text-muted'>{item.category_name || 'Sin categoría'}</td>
                                         <td className='py-3 px-4 text-right'>{item.stock_status === 'sin_control' ? '—' : item.current_stock}</td>
                                         <td className='py-3 px-4 text-right'>{item.stock_status === 'sin_control' ? '—' : item.min_stock}</td>

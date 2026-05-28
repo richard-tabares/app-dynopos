@@ -124,8 +124,8 @@ export const BulkUploadModal = ({ onClose, onComplete }) => {
 
                         <div className='bg-subtle border border-divider rounded-lg p-4 text-sm'>
                             <h4 className='font-medium text-on-body flex items-center gap-2 mb-2'>
-                                <AlertTriangle className='w-4 h-4 text-amber-500' />
-                                Columnas esperadas
+                                <FileSpreadsheet className='w-4 h-4 text-accent' />
+                                Columnas del archivo
                             </h4>
                             <table className='w-full text-xs'>
                                 <thead>
@@ -139,13 +139,16 @@ export const BulkUploadModal = ({ onClose, onComplete }) => {
                                     <tr><td className='py-1 pr-2 font-medium'>Codigo de Barras</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Código de barras</td></tr>
                                     <tr><td className='py-1 pr-2 font-medium'>SKU</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Código único del producto</td></tr>
                                     <tr><td className='py-1 pr-2 font-medium'>Nombre</td><td className='py-1 pr-2 text-red-500'>Sí</td><td className='py-1'>Nombre del producto</td></tr>
-                                    <tr><td className='py-1 pr-2 font-medium'>Costo Unitario</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Costo unitario (en moneda local)</td></tr>
-                                    <tr><td className='py-1 pr-2 font-medium'>Precio</td><td className='py-1 pr-2 text-red-500'>Sí</td><td className='py-1'>Precio de venta (en moneda local)</td></tr>
+                                    <tr><td className='py-1 pr-2 font-medium'>Tipo Variacion</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Tipo de variación (ej: Talla, Color). Si se llena, el producto se toma como variante</td></tr>
+                                    <tr><td className='py-1 pr-2 font-medium'>Nombre Variacion</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Nombre de la variante (ej: S, M, L). Si se llena, el producto se toma como variante</td></tr>
+                                    <tr><td className='py-1 pr-2 font-medium'>Costo Unitario</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Costo unitario</td></tr>
+                                    <tr><td className='py-1 pr-2 font-medium'>Precio</td><td className='py-1 pr-2 text-red-500'>Sí</td><td className='py-1'>Precio de venta</td></tr>
                                     <tr><td className='py-1 pr-2 font-medium'>Categoria</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Nombre de la categoría</td></tr>
-                                    <tr><td className='py-1 pr-2 font-medium'>Stock Minimo</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Stock mínimo (opcional, para notificaciones de stock bajo)</td></tr>
-                                    <tr><td className='py-1 pr-2 font-medium'>Stock Inicial</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Stock inicial (si se envía, habilita control de stock)</td></tr>
+                                    <tr><td className='py-1 pr-2 font-medium'>Stock Inicial</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Stock inicial (si tiene valor, habilita control de stock)</td></tr>
+                                    <tr><td className='py-1 pr-2 font-medium'>Stock Minimo</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Stock mínimo (notificaciones)</td></tr>
                                 </tbody>
                             </table>
+                            <p className='text-xs text-muted mt-2'>Producto <strong>simple</strong>: dejar <strong>Tipo Variacion</strong> y <strong>Nombre Variacion</strong> vacíos.<br />Producto con <strong>variaciones</strong>: varias filas con el mismo <strong>Nombre</strong> + <strong>Tipo Variacion</strong> crean un producto con múltiples variantes.</p>
                         </div>
                     </>
                 ) : (

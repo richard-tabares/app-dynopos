@@ -3,7 +3,7 @@ import { Metrics } from '../components/Metrics'
 import { WeeklySalesChart } from '../components/WeeklySalesChart'
 import { LowStockCard } from '../components/LowStockCard'
 import { RecentSalesCard } from '../components/RecentSalesCard'
-import { TopProductsChart } from '../components/TopProductsChart'
+import { ProductsRanking } from '../../../shared/components/ProductsRanking'
 import {
     MetricsSkeleton,
     ChartSkeleton,
@@ -81,7 +81,7 @@ export const Dashboard = () => {
 
             <div className='grid grid-cols-3 max-xl:grid-cols-1 gap-6'>
                 <div className='col-span-2 max-xl:col-span-1 h-fit'>
-                    {data?.topProducts ? <TopProductsChart data={data.topProducts} /> : <TopProductsSkeleton />}
+                    {data?.topProducts ? <ProductsRanking data={data.topProducts} title='Top 10 Productos' /> : <TopProductsSkeleton />}
                 </div>
                 <div className='col-span-1 max-xl:col-span-1'>
                     {data?.recentSales ? <RecentSalesCard sales={data.recentSales} /> : <RecentSalesSkeleton />}
