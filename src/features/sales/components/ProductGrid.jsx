@@ -65,23 +65,21 @@ export const ProductCard = ({ product, onAddToCart }) => {
                                 {product.product_variations.length} {variationType.toLowerCase()}
                             </span>
                         )}
-                        <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-                            hasVariations
-                                ? 'bg-subtle text-on-body'
-                                : noStockControl
-                                ? 'bg-subtle text-on-body'
-                                : availableStock <= 0
-                                ? 'bg-red-100 text-red-800'
-                                : 'bg-green-100 text-green-800'
-                        }`}>
-                            {hasVariations
-                                ? `${variationType}s`
-                                : noStockControl
-                                ? 'Sin control'
-                                : availableStock <= 0
-                                ? 'Sin Stock'
-                                : `Stock: ${availableStock}`}
-                        </span>
+                        {!hasVariations && (
+                            <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+                                noStockControl
+                                    ? 'bg-subtle text-on-body'
+                                    : availableStock <= 0
+                                    ? 'bg-red-100 text-red-800'
+                                    : 'bg-green-100 text-green-800'
+                            }`}>
+                                {noStockControl
+                                    ? 'Sin control'
+                                    : availableStock <= 0
+                                    ? 'Sin Stock'
+                                    : `Stock: ${availableStock}`}
+                            </span>
+                        )}
                     </div>
                     <p className='text-lg font-bold text-accent'>
                         {priceDisplay}

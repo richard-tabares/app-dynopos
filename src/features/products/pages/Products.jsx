@@ -98,8 +98,8 @@ export const Products = () => {
         'Código',
         'Nombre',
         'Categoría',
-        'Precio',
         'Costo',
+        'Precio',
         'Margen',
         'Maneja Stock',
         'Variaciones',
@@ -762,7 +762,7 @@ export const Products = () => {
                                                     {expandedProductId === product.id ? (
                                                         <ChevronDown className='w-3.5 h-3.5 text-accent shrink-0' />
                                                     ) : (
-                                                        <ChevronRight className='w-3.5 h-3.5 text-muted shrink-0' />
+                                                        <ChevronRight className='w-3.5 h-3.5 text-accent shrink-0' />
                                                     )}
                                                     {product.sku}
                                                 </span>
@@ -777,12 +777,6 @@ export const Products = () => {
                                             {product.categories?.name ||
                                                 'Sin categoría'}
                                         </td>
-                                        <td className='py-3 px-4 text-on-body font-bold text-right'>
-                                            $
-                                            {new Intl.NumberFormat(
-                                                'es-CO',
-                                            ).format(product.price)}
-                                        </td>
                                         <td className='py-3 px-4 text-right'>
                                             {product.unit_cost != null ? (
                                                 <span className='font-medium text-on-body'>
@@ -796,6 +790,12 @@ export const Products = () => {
                                                     —
                                                 </span>
                                             )}
+                                        </td>
+                                        <td className='py-3 px-4 text-on-body font-bold text-right'>
+                                            $
+                                            {new Intl.NumberFormat(
+                                                'es-CO',
+                                            ).format(product.price)}
                                         </td>
                                         <td className='py-3 px-4 text-right'>
                                             {product.unit_cost != null &&
@@ -955,9 +955,6 @@ export const Products = () => {
                                             <td className='py-2 px-4 text-xs text-muted'>
                                                 —
                                             </td>
-                                            <td className='py-2 px-4 text-sm font-bold text-on-body text-right'>
-                                                ${new Intl.NumberFormat('es-CO').format(v.price)}
-                                            </td>
                                             <td className='py-2 px-4 text-right'>
                                                 {v.unit_cost ? (
                                                     <span className='text-sm font-medium text-on-body'>
@@ -967,9 +964,12 @@ export const Products = () => {
                                                     <span className='text-faint italic text-xs'>—</span>
                                                 )}
                                             </td>
+                                            <td className='py-2 px-4 text-sm font-bold text-on-body text-right'>
+                                                ${new Intl.NumberFormat('es-CO').format(v.price)}
+                                            </td>
                                             <td className='py-2 px-4 text-right'>
                                                 {v.unit_cost && v.price > 0 ? (
-                                                    <span className={`px-2 py-0.5 text-[10px] font-medium rounded-full ${
+                                                    <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${
                                                         Math.round(((v.price - v.unit_cost) / v.price) * 100) >= 30
                                                             ? 'bg-green-100 text-green-800'
                                                             : Math.round(((v.price - v.unit_cost) / v.price) * 100) >= 10

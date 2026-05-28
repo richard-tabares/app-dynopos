@@ -1,5 +1,16 @@
 import { Fragment, useEffect, useState } from 'react'
-import { Package, Search, AlertCircle, Settings2, AlertTriangle, PackageCheck, PackageX, Layers, ChevronDown, ChevronRight } from 'lucide-react'
+import {
+    Package,
+    Search,
+    AlertCircle,
+    Settings2,
+    AlertTriangle,
+    PackageCheck,
+    PackageX,
+    Layers,
+    ChevronDown,
+    ChevronRight,
+} from 'lucide-react'
 import { sileo } from 'sileo'
 import { useStore } from '../../../app/providers/store'
 import { getProducts } from '../../products/helpers/getProducts'
@@ -27,18 +38,27 @@ export const Inventory = () => {
                 const data = await getProducts(businessId)
                 setProducts(data)
             } catch (error) {
-                sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al cargar el inventario'})
+                sileo.error({
+                    fill: 'var(--toast-error)',
+                    title: 'Error',
+                    description:
+                        error.message || 'Error al cargar el inventario',
+                })
             }
         }
         loadInventory()
     }, [businessId, setProducts])
 
-    const activeProducts = products.filter(p => p.is_active !== false)
+    const activeProducts = products.filter((p) => p.is_active !== false)
 
     const getVariationsStock = (product) => {
-        if (!product.product_variations || product.product_variations.length === 0) return null
+        if (
+            !product.product_variations ||
+            product.product_variations.length === 0
+        )
+            return null
         return product.product_variations
-            .filter(v => v.is_active !== false)
+            .filter((v) => v.is_active !== false)
             .reduce((sum, v) => sum + (v.stock || 0), 0)
     }
 
@@ -55,9 +75,23 @@ export const Inventory = () => {
     }
 
     const getStockStatus = (stock, minStock) => {
-        if (stock <= 0) return { label: 'Sin Stock', cls: 'text-red-600 bg-red-100', icon: true }
-        if (minStock > 0 && stock < minStock) return { label: 'Bajo', cls: 'text-orange-600 bg-orange-100', icon: true }
-        return { label: 'Normal', cls: 'text-green-600 bg-green-100', icon: false }
+        if (stock <= 0)
+            return {
+                label: 'Sin Stock',
+                cls: 'text-red-600 bg-red-100',
+                icon: true,
+            }
+        if (minStock > 0 && stock < minStock)
+            return {
+                label: 'Bajo',
+                cls: 'text-orange-600 bg-orange-100',
+                icon: true,
+            }
+        return {
+            label: 'Normal',
+            cls: 'text-green-600 bg-green-100',
+            icon: false,
+        }
     }
 
     const filteredProducts = activeProducts.filter((product) => {
@@ -76,9 +110,16 @@ export const Inventory = () => {
         } else if (filterStatus === 'noStock') {
             matchesFilter = product.track_stock !== false && stock === 0
         } else if (filterStatus === 'lowStock') {
-            matchesFilter = product.track_stock !== false && stock > 0 && minStock > 0 && stock < minStock
+            matchesFilter =
+                product.track_stock !== false &&
+                stock > 0 &&
+                minStock > 0 &&
+                stock < minStock
         } else if (filterStatus === 'withStock') {
-            matchesFilter = product.track_stock !== false && stock > 0 && (minStock === 0 || stock >= minStock)
+            matchesFilter =
+                product.track_stock !== false &&
+                stock > 0 &&
+                (minStock === 0 || stock >= minStock)
         }
 
         return matchesSearch && matchesFilter
@@ -90,7 +131,9 @@ export const Inventory = () => {
         if (e.target.closest('button')) return
         const hasVariations = product.product_variations?.length > 0
         if (hasVariations) {
-            setExpandedProductId(expandedProductId === product.id ? null : product.id)
+            setExpandedProductId(
+                expandedProductId === product.id ? null : product.id,
+            )
         } else {
             handleOpenModal(product, null, e)
         }
@@ -118,13 +161,26 @@ export const Inventory = () => {
                         p.id === updatedProduct.id ? updatedProduct : p,
                     ),
                 )
-                sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Inventario actualizado correctamente'})
+                sileo.success({
+                    fill: 'var(--toast-success)',
+                    title: 'Completado',
+                    description: 'Inventario actualizado correctamente',
+                })
                 handleCloseModal()
             } else {
-                sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: 'No se pudo actualizar el inventario'})
+                sileo.error({
+                    fill: 'var(--toast-error)',
+                    title: 'Error',
+                    description: 'No se pudo actualizar el inventario',
+                })
             }
         } catch (error) {
-            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error de red al actualizar el inventario'})
+            sileo.error({
+                fill: 'var(--toast-error)',
+                title: 'Error',
+                description:
+                    error.message || 'Error de red al actualizar el inventario',
+            })
         }
     }
 
@@ -132,7 +188,17 @@ export const Inventory = () => {
         setVisibleCount((prev) => prev + 10)
     }
 
-    const headers = ['Código', 'Producto', 'Categoría', 'Stock', 'Mínimo', 'Costo Unit.', 'Valor Total', 'Estado', 'Acciones']
+    const headers = [
+        'Código',
+        'Producto',
+        'Categoría',
+        'Stock',
+        'Mínimo',
+        'Costo Unit.',
+        'Valor Total',
+        'Estado',
+        'Acciones',
+    ]
 
     return (
         <>
@@ -220,7 +286,9 @@ export const Inventory = () => {
                                 Con Stock
                             </button>
                             <button
-                                onClick={() => setFilterStatus('noStockControl')}
+                                onClick={() =>
+                                    setFilterStatus('noStockControl')
+                                }
                                 className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer ${
                                     filterStatus === 'noStockControl'
                                         ? 'bg-surface shadow-xs text-on-surface'
@@ -247,148 +315,257 @@ export const Inventory = () => {
                             </thead>
                             <tbody>
                                 {displayedProducts.map((product) => {
-                                    const hasVariations = product.product_variations?.length > 0
-                                    const isExpanded = expandedProductId === product.id
+                                    const hasVariations =
+                                        product.product_variations?.length > 0
+                                    const isExpanded =
+                                        expandedProductId === product.id
                                     const stock = getProductStock(product)
                                     const minStock = getProductMinStock(product)
-                                    const isUntracked = product.track_stock === false
-                                    const status = getStockStatus(stock, minStock)
+                                    const isUntracked =
+                                        product.track_stock === false
+                                    const status = getStockStatus(
+                                        stock,
+                                        minStock,
+                                    )
 
                                     return (
-                                    <Fragment key={product.id}>
-                                        <tr
-                                            className={`border-b border-divider-light hover:bg-hover cursor-pointer ${isExpanded ? 'bg-accent/5' : ''}`}
-                                            onClick={(e) => handleRowClick(product, e)}>
-                                            <td className='py-3 px-4 font-medium text-on-surface'>
-                                                {hasVariations ? (
-                                                    <span className='flex items-center gap-1'>
-                                                        {isExpanded ? (
-                                                            <ChevronDown className='w-3.5 h-3.5 text-accent shrink-0' />
-                                                        ) : (
-                                                            <ChevronRight className='w-3.5 h-3.5 text-muted shrink-0' />
-                                                        )}
-                                                        {product.sku}
-                                                    </span>
-                                                ) : (
-                                                    product.sku
-                                                )}
-                                            </td>
-                                            <td className='py-3 px-4 text-on-body'>
-                                                {product.name}
-                                            </td>
-                                            <td className='py-3 px-4 text-muted'>
-                                                {product.categories?.name ||
-                                                    'Sin categoría'}
-                                            </td>
-                                            <td
-                                                className={`py-3 px-4 text-right font-bold ${isUntracked ? 'text-muted' : status.label === 'Normal' ? 'text-on-body' : 'text-red-600'}`}>
-                                                {isUntracked ? '—' : stock}
-                                            </td>
-                                            <td className='py-3 px-4 text-right text-muted'>
-                                                {isUntracked ? '—' : minStock}
-                                            </td>
-                                            <td className='py-3 px-4 text-right'>
-                                                {product.unit_cost != null && product.unit_cost > 0 ? (
-                                                    <span className='text-on-body font-medium'>
-                                                        ${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(product.unit_cost)}
-                                                    </span>
-                                                ) : hasVariations ? (
-                                                    <span className='text-faint italic text-xs'>—</span>
-                                                ) : (
-                                                    <span className='text-faint italic'>—</span>
-                                                )}
-                                            </td>
-                                            <td className='py-3 px-4 text-right font-bold text-on-surface'>
-                                                {!isUntracked && product.unit_cost != null && !hasVariations
-                                                    ? `$${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(stock * product.unit_cost)}`
-                                                    : hasVariations
-                                                    ? `$${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(
-                                                        (product.product_variations || [])
-                                                            .filter(v => v.is_active !== false)
-                                                            .reduce((sum, v) => sum + ((v.stock || 0) * (v.unit_cost || 0)), 0)
-                                                    )}`
-                                                    : '—'}
-                                            </td>
-                                            <td className='py-3 px-4'>
-                                                {isUntracked ? (
-                                                    <span className='inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-body text-muted'>
-                                                        Sin Control
-                                                    </span>
-                                                ) : (
-                                                    <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${status.cls}`}>
-                                                        {status.icon && <AlertCircle className='w-3 h-3' />}
-                                                        {status.label}
-                                                    </span>
-                                                )}
-                                            </td>
-                                            <td className='py-3 px-2 text-right whitespace-nowrap'>
-                                                {!isUntracked && !hasVariations && (
-                                                    <button
-                                                        onClick={(e) =>
-                                                            handleOpenModal(product, null, e)
-                                                        }
-                                                        className='bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-800 p-1.5 rounded-sm cursor-pointer'
-                                                        title='Ajustar Inventario'>
-                                                        <Settings2 className='w-4 h-4 text-accent' />
-                                                    </button>
-                                                )}
-                                            </td>
-                                        </tr>
-                                        {isExpanded && hasVariations && product.product_variations
-                                            .filter(v => v.is_active !== false)
-                                            .map((v) => {
-                                                const vStatus = getStockStatus(v.stock || 0, v.min_stock || minStock)
-                                                return (
-                                                <tr
-                                                    key={v.id}
-                                                    className='border-b border-divider-light bg-accent/5 hover:bg-accent/10 cursor-pointer'
-                                                    onClick={(e) => handleOpenModal(product, v, e)}>
-                                                    <td className='py-2 px-4'></td>
-                                                    <td className='py-2 px-4'>
-                                                        <span className='flex items-center gap-2 text-sm'>
-                                                            <span className='w-1.5 h-1.5 rounded-full bg-accent shrink-0' />
-                                                            <span className='font-medium text-on-surface'>{v.variation_name}</span>
+                                        <Fragment key={product.id}>
+                                            <tr
+                                                className={`border-b border-divider-light hover:bg-hover cursor-pointer ${isExpanded ? 'bg-accent/5' : ''}`}
+                                                onClick={(e) =>
+                                                    handleRowClick(product, e)
+                                                }>
+                                                <td className='py-3 px-4 font-medium text-on-surface'>
+                                                    {hasVariations ? (
+                                                        <span className='flex items-center gap-1'>
+                                                            {isExpanded ? (
+                                                                <ChevronDown className='w-3.5 h-3.5 text-accent shrink-0' />
+                                                            ) : (
+                                                                <ChevronRight className='w-3.5 h-3.5 text-accent shrink-0' />
+                                                            )}
+                                                            {product.sku}
                                                         </span>
-                                                    </td>
-                                                    <td className='py-2 px-4 text-xs text-muted'>—</td>
-                                                    <td className={`py-2 px-4 text-sm font-bold text-right ${vStatus.label === 'Normal' ? 'text-on-body' : 'text-red-600'}`}>
-                                                        {v.stock || 0}
-                                                    </td>
-                                                    <td className='py-2 px-4 text-right text-xs text-muted'>
-                                                        {v.min_stock != null ? v.min_stock : (minStock || '—')}
-                                                    </td>
-                                                    <td className='py-2 px-4 text-right'>
-                                                        {v.unit_cost ? (
-                                                            <span className='text-sm font-medium text-on-body'>
-                                                                ${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(v.unit_cost)}
-                                                            </span>
-                                                        ) : (
-                                                            <span className='text-faint italic text-xs'>—</span>
-                                                        )}
-                                                    </td>
-                                                    <td className='py-2 px-4 text-right text-sm font-bold text-on-surface'>
-                                                        {v.unit_cost
-                                                            ? `$${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format((v.stock || 0) * v.unit_cost)}`
-                                                            : '—'}
-                                                    </td>
-                                                    <td className='py-2 px-4'>
-                                                        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium ${vStatus.cls}`}>
-                                                            {vStatus.icon && <AlertCircle className='w-2.5 h-2.5' />}
-                                                            {vStatus.label}
+                                                    ) : (
+                                                        product.sku
+                                                    )}
+                                                </td>
+                                                <td className='py-3 px-4 text-on-body'>
+                                                    {product.name}
+                                                </td>
+                                                <td className='py-3 px-4 text-muted'>
+                                                    {product.categories?.name ||
+                                                        'Sin categoría'}
+                                                </td>
+                                                <td
+                                                    className={`py-3 px-4 text-right font-bold ${isUntracked ? 'text-muted' : status.label === 'Normal' ? 'text-on-body' : 'text-red-600'}`}>
+                                                    {isUntracked ? '—' : stock}
+                                                </td>
+                                                <td className='py-3 px-4 text-right text-muted'>
+                                                    {isUntracked
+                                                        ? '—'
+                                                        : minStock}
+                                                </td>
+                                                <td className='py-3 px-4 text-right'>
+                                                    {product.unit_cost !=
+                                                        null &&
+                                                    product.unit_cost > 0 ? (
+                                                        <span className='text-on-body font-medium'>
+                                                            $
+                                                            {new Intl.NumberFormat(
+                                                                'es-CO',
+                                                                {
+                                                                    maximumFractionDigits: 0,
+                                                                },
+                                                            ).format(
+                                                                product.unit_cost,
+                                                            )}
                                                         </span>
-                                                    </td>
-                                                    <td className='py-2 px-2 text-right whitespace-nowrap'>
-                                                        <button
-                                                            onClick={(e) => handleOpenModal(product, v, e)}
-                                                            className='bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-800 p-1 rounded-sm cursor-pointer'
-                                                            title='Ajustar Inventario'>
-                                                            <Settings2 className='w-3.5 h-3.5 text-accent' />
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                                )
-                                            })}
-                                    </Fragment>
+                                                    ) : hasVariations ? (
+                                                        <span className='text-faint italic text-xs'>
+                                                            —
+                                                        </span>
+                                                    ) : (
+                                                        <span className='text-faint italic'>
+                                                            —
+                                                        </span>
+                                                    )}
+                                                </td>
+                                                <td className='py-3 px-4 text-right font-bold text-on-surface'>
+                                                    {!isUntracked &&
+                                                    product.unit_cost != null &&
+                                                    !hasVariations
+                                                        ? `$${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(stock * product.unit_cost)}`
+                                                        : hasVariations
+                                                          ? `$${new Intl.NumberFormat(
+                                                                'es-CO',
+                                                                {
+                                                                    maximumFractionDigits: 0,
+                                                                },
+                                                            ).format(
+                                                                (
+                                                                    product.product_variations ||
+                                                                    []
+                                                                )
+                                                                    .filter(
+                                                                        (v) =>
+                                                                            v.is_active !==
+                                                                            false,
+                                                                    )
+                                                                    .reduce(
+                                                                        (
+                                                                            sum,
+                                                                            v,
+                                                                        ) =>
+                                                                            sum +
+                                                                            (v.stock ||
+                                                                                0) *
+                                                                                (v.unit_cost ||
+                                                                                    0),
+                                                                        0,
+                                                                    ),
+                                                            )}`
+                                                          : '—'}
+                                                </td>
+                                                <td className='py-3 px-4'>
+                                                    {isUntracked ? (
+                                                        <span className='inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-body text-muted'>
+                                                            Sin Control
+                                                        </span>
+                                                    ) : (
+                                                        <span
+                                                            className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${status.cls}`}>
+                                                            {status.icon && (
+                                                                <AlertCircle className='w-3 h-3' />
+                                                            )}
+                                                            {status.label}
+                                                        </span>
+                                                    )}
+                                                </td>
+                                                <td className='py-3 px-2 text-right whitespace-nowrap'>
+                                                    {!isUntracked &&
+                                                        !hasVariations && (
+                                                            <button
+                                                                onClick={(e) =>
+                                                                    handleOpenModal(
+                                                                        product,
+                                                                        null,
+                                                                        e,
+                                                                    )
+                                                                }
+                                                                className='bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-800 p-1.5 rounded-sm cursor-pointer'
+                                                                title='Ajustar Inventario'>
+                                                                <Settings2 className='w-4 h-4 text-accent' />
+                                                            </button>
+                                                        )}
+                                                </td>
+                                            </tr>
+                                            {isExpanded &&
+                                                hasVariations &&
+                                                product.product_variations
+                                                    .filter(
+                                                        (v) =>
+                                                            v.is_active !==
+                                                            false,
+                                                    )
+                                                    .map((v) => {
+                                                        const vStatus =
+                                                            getStockStatus(
+                                                                v.stock || 0,
+                                                                v.min_stock ||
+                                                                    minStock,
+                                                            )
+                                                        return (
+                                                            <tr
+                                                                key={v.id}
+                                                                className='border-b border-divider-light bg-accent/5 hover:bg-accent/10 cursor-pointer'
+                                                                onClick={(e) =>
+                                                                    handleOpenModal(
+                                                                        product,
+                                                                        v,
+                                                                        e,
+                                                                    )
+                                                                }>
+                                                                <td className='py-2 px-4'></td>
+                                                                <td className='py-2 px-4'>
+                                                                    <span className='flex items-center gap-2 text-sm'>
+                                                                        <span className='w-1.5 h-1.5 rounded-full bg-accent shrink-0' />
+                                                                        <span className='font-medium text-on-surface'>
+                                                                            {
+                                                                                v.variation_name
+                                                                            }
+                                                                        </span>
+                                                                    </span>
+                                                                </td>
+                                                                <td className='py-2 px-4 text-xs text-muted'>
+                                                                    —
+                                                                </td>
+                                                                <td
+                                                                    className={`py-2 px-4 text-sm font-bold text-right ${vStatus.label === 'Normal' ? 'text-on-body' : 'text-red-600'}`}>
+                                                                    {v.stock ||
+                                                                        0}
+                                                                </td>
+                                                                <td className='py-2 px-4 text-right text-xs text-muted'>
+                                                                    {v.min_stock !=
+                                                                    null
+                                                                        ? v.min_stock
+                                                                        : minStock ||
+                                                                          '—'}
+                                                                </td>
+                                                                <td className='py-2 px-4 text-right'>
+                                                                    {v.unit_cost ? (
+                                                                        <span className='text-sm font-medium text-on-body'>
+                                                                            $
+                                                                            {new Intl.NumberFormat(
+                                                                                'es-CO',
+                                                                                {
+                                                                                    maximumFractionDigits: 0,
+                                                                                },
+                                                                            ).format(
+                                                                                v.unit_cost,
+                                                                            )}
+                                                                        </span>
+                                                                    ) : (
+                                                                        <span className='text-faint italic text-xs'>
+                                                                            —
+                                                                        </span>
+                                                                    )}
+                                                                </td>
+                                                                <td className='py-2 px-4 text-right text-sm font-bold text-on-surface'>
+                                                                    {v.unit_cost
+                                                                        ? `$${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format((v.stock || 0) * v.unit_cost)}`
+                                                                        : '—'}
+                                                                </td>
+                                                                <td className='py-2 px-4'>
+                                                                    <span
+                                                                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium ${vStatus.cls}`}>
+                                                                        {vStatus.icon && (
+                                                                            <AlertCircle className='w-2.5 h-2.5' />
+                                                                        )}
+                                                                        {
+                                                                            vStatus.label
+                                                                        }
+                                                                    </span>
+                                                                </td>
+                                                                <td className='py-2 px-2 text-right whitespace-nowrap'>
+                                                                    <button
+                                                                        onClick={(
+                                                                            e,
+                                                                        ) =>
+                                                                            handleOpenModal(
+                                                                                product,
+                                                                                v,
+                                                                                e,
+                                                                            )
+                                                                        }
+                                                                        className='bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-800 p-1 rounded-sm cursor-pointer'
+                                                                        title='Ajustar Inventario'>
+                                                                        <Settings2 className='w-3.5 h-3.5 text-accent' />
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        )
+                                                    })}
+                                        </Fragment>
                                     )
                                 })}
                             </tbody>
@@ -399,7 +576,8 @@ export const Inventory = () => {
                         <button
                             onClick={handleLoadMore}
                             className='w-full mt-4 py-2 text-sm font-medium text-on-surface hover:text-surface hover:bg-accent rounded-lg border border-accent transition-colors cursor-pointer px-6 flex items-center justify-center gap-2'>
-                            <ChevronDown className='w-4 h-4' /> Cargar más ({filteredProducts.length - visibleCount} restantes)
+                            <ChevronDown className='w-4 h-4 text-accent' /> Cargar más (
+                            {filteredProducts.length - visibleCount} restantes)
                         </button>
                     )}
 

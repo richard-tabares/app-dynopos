@@ -56,7 +56,15 @@ export const ReturnDetailModal = ({ isOpen, onClose, data }) => {
                                 <div key={index} className='flex justify-between items-start gap-2'>
                                     <div className='flex-1 min-w-0'>
                                         <p className='text-sm font-bold text-on-surface uppercase truncate'>
-                                            {item.products?.name || 'Producto eliminado'}
+                                            {item.product_variations?.variation_name ? (
+                                                <span className='inline-flex items-center gap-2'>
+                                                    <span>{item.products?.name || 'Producto eliminado'}</span>
+                                                    <span className='w-1.5 h-1.5 rounded-full bg-accent shrink-0' />
+                                                    <span>{item.product_variations.variation_name}</span>
+                                                </span>
+                                            ) : (
+                                                item.products?.name || 'Producto eliminado'
+                                            )}
                                         </p>
                                         <p className='text-xs text-muted'>{item.quantity}x {formatCurrency(item.unit_price)}</p>
                                     </div>

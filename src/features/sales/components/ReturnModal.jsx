@@ -120,8 +120,14 @@ export const ReturnModal = ({ isOpen, sale, onClose, onConfirm }) => {
                                                 item.price,
                                         )}
                                     </p>
-                                    <p className='text-sm font-medium text-on-surface truncate'>
+                                    <p className='text-sm font-medium text-on-surface truncate flex items-center gap-1'>
                                         {item.name}
+                                        {item.variation_name && (
+                                            <span className='inline-flex items-center gap-2 ml-1'>
+                                                <span className='w-1.5 h-1.5 rounded-full bg-accent shrink-0' />
+                                                <span className='font-medium text-on-surface'>{item.variation_name}</span>
+                                            </span>
+                                        )}
                                     </p>
                                     <div className='flex flex-wrap gap-x-2'>
                                         <p className='text-xs text-muted'>

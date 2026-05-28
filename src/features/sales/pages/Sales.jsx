@@ -256,14 +256,6 @@ export const Sales = () => {
                                 </button>
                             )}
                         </div>
-
-                        {/* Category Filters */}
-                        {/* <CategoryTabs 
-                            categories={categories} 
-                            activeCategory={activeCategory} 
-                            onSelectCategory={setActiveCategory} 
-                        /> */}
-
                         {/* Product Grid */}
                         <div className='min-h-100'>
                             {searchTerm.trim() ? (
