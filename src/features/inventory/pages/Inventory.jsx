@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 import { sileo } from 'sileo'
 import { useStore } from '../../../app/providers/store'
+import { productHasActiveVariations, getActiveVariations } from '../../../shared/helpers/productHelpers'
 import { getProducts } from '../../products/helpers/getProducts'
 import { AdjustmentModal } from '../components/AdjustmentModal'
 import { updateInventory } from '../helpers/updateInventory'
@@ -52,20 +53,12 @@ export const Inventory = () => {
     const activeProducts = products.filter((p) => p.is_active !== false)
 
     const getVariationsStock = (product) => {
-        if (
-            product.variations_disabled ||
-            !product.variation_type ||
-            !product.product_variations ||
-            product.product_variations.length === 0
-        )
-            return null
-        return product.product_variations
-            .filter((v) => v.is_active !== false)
-            .reduce((sum, v) => sum + (v.stock || 0), 0)
+        if (!productHasActiveVariations(product)) return null
+        return getActiveVariations(product).reduce((sum, v) => sum + (v.stock || 0), 0)
     }
 
     const getProductStock = (product) => {
-        const hasVariations = !product.variations_disabled && product.variation_type && product.product_variations?.length > 0
+        const hasVariations = productHasActiveVariations(product)
         if (hasVariations) {
             return getVariationsStock(product) || 0
         }
@@ -131,7 +124,7 @@ export const Inventory = () => {
 
     const handleRowClick = (product, e) => {
         if (e.target.closest('button')) return
-        const hasVariations = !product.variations_disabled && product.variation_type && product.product_variations?.length > 0
+        const hasVariations = productHasActiveVariations(product)
         if (hasVariations) {
             setExpandedProductId(
                 expandedProductId === product.id ? null : product.id,
@@ -317,8 +310,7 @@ export const Inventory = () => {
                             </thead>
                             <tbody>
                                 {displayedProducts.map((product) => {
-                                    const hasVariations =
-                                        !product.variations_disabled && product.variation_type && product.product_variations?.length > 0
+                                    const hasVariations = productHasActiveVariations(product)
                                     const isExpanded =
                                         expandedProductId === product.id
                                     const stock = getProductStock(product)

@@ -38,6 +38,7 @@ import { createCategory } from '../../categories/helpers/createCategory'
 import { useEscape } from '../../../shared/helpers/useEscape'
 import { normalizeSearch } from '../../../shared/helpers/normalizeSearch'
 import { BulkUploadModal } from '../components/BulkUploadModal'
+import { productHasActiveVariations, getActiveVariations } from '../../../shared/helpers/productHelpers'
 
 export const Products = () => {
     const [openModal, setOpenModal] = useState(false)
@@ -146,8 +147,7 @@ export const Products = () => {
                             : product,
                     ),
                 )
-                const activeVariations = updatedProduct.product_variations?.filter(v => v.is_active !== false) || []
-                if ((updatedProduct.variations_disabled || !updatedProduct.variation_type || activeVariations.length === 0) && expandedProductId === updatedProduct.id) {
+                if (!productHasActiveVariations(updatedProduct) && expandedProductId === updatedProduct.id) {
                     setExpandedProductId(null)
                 }
                 sileo.success({
@@ -258,8 +258,7 @@ export const Products = () => {
 
     const handleRowClick = (product, e) => {
         if (e.target.closest('button')) return
-        const activeVariations = product.product_variations?.filter(v => v.is_active !== false) || []
-        if (!product.variations_disabled && product.variation_type && activeVariations.length > 0) {
+        if (productHasActiveVariations(product)) {
             setExpandedProductId(expandedProductId === product.id ? null : product.id)
         } else {
             onEditProduct(product.id, e)
@@ -762,7 +761,7 @@ export const Products = () => {
                                             handleRowClick(product, e)
                                         }>
                                         <td className='py-3 px-4 font-medium text-on-surface'>
-                                            {!product.variations_disabled && product.variation_type && product.product_variations?.filter(v => v.is_active !== false).length > 0 ? (
+                                            {productHasActiveVariations(product) ? (
                                                 <span className='flex items-center gap-1'>
                                                     {expandedProductId === product.id ? (
                                                         <ChevronDown className='w-3.5 h-3.5 text-accent shrink-0' />
@@ -844,9 +843,9 @@ export const Products = () => {
                                             )}
                                         </td>
                                         <td className='py-3 px-4 whitespace-nowrap'>
-                                            {!product.variations_disabled && product.variation_type && product.product_variations?.filter(v => v.is_active !== false).length > 0 ? (
+                                            {productHasActiveVariations(product) ? (
                                                 <span className='px-2.5 py-0.5 text-xs font-medium bg-accent/10 text-accent rounded-full whitespace-nowrap'>
-                                                    {product.product_variations.filter(v => v.is_active !== false).length} {product.variation_type.toLowerCase()}
+                                                    {getActiveVariations(product).length} {product.variation_type.toLowerCase()}
                                                 </span>
                                             ) : (
                                                 <span className='text-faint italic text-xs'>—</span>

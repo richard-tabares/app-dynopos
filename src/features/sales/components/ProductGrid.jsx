@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useStore } from '../../../app/providers/store'
 import { VariationPicker } from './VariationPicker'
+import { productHasActiveVariations, getActiveVariations } from '../../../shared/helpers/productHelpers'
 
 export const ProductCard = ({ product, onAddToCart }) => {
     const storeAddToCart = useStore((state) => state.addToCart)
@@ -8,7 +9,7 @@ export const ProductCard = ({ product, onAddToCart }) => {
     const addToCart = onAddToCart || storeAddToCart
     const [showVariationPicker, setShowVariationPicker] = useState(false)
 
-    const hasVariations = !product.variations_disabled && product.variation_type && product.product_variations?.length > 0
+    const hasVariations = productHasActiveVariations(product)
     const originalStock = product.inventory?.[0]?.stock || 0
     const cartQuantity = cart.find(item => item.product_id === product.id)?.quantity || 0
     const availableStock = originalStock - cartQuantity
@@ -25,9 +26,7 @@ export const ProductCard = ({ product, onAddToCart }) => {
     const variationType = product.variation_type || 'Variación'
     const priceDisplay = hasVariations
         ? (() => {
-              const prices = product.product_variations
-                  .filter(v => v.is_active !== false)
-                  .map(v => v.price)
+              const prices = getActiveVariations(product).map(v => v.price)
               const min = Math.min(...prices)
               const max = Math.max(...prices)
               return min === max

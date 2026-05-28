@@ -2,6 +2,7 @@ import { Loader, Package, Save, Plus, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { sileo } from 'sileo'
 import { Modal as SharedModal } from '../../../shared/components/Modal'
+import { productHasActiveVariations } from '../../../shared/helpers/productHelpers'
 
 export const Modal = ({
     handleSubmit,
@@ -30,7 +31,7 @@ export const Modal = ({
     })
 
     const [hasVariations, setHasVariations] = useState(
-        !editProductData.variations_disabled && !!editProductData.variation_type && existingVariations.filter(v => v.is_active !== false).length > 0
+        productHasActiveVariations(editProductData)
     )
     const [variations, setVariations] = useState(
             existingVariations.length > 0

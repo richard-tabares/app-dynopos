@@ -1,19 +1,17 @@
 import { Package, Boxes, AlertTriangle, DollarSign, AlertCircle } from 'lucide-react'
+import { productHasActiveVariations, getActiveVariations } from '../../../shared/helpers/productHelpers'
 
 export const InventorySummary = ({ products = [] }) => {
-    // Cálculos
     const getStock = (p) => {
-        if (!p.variations_disabled && p.variation_type && p.product_variations?.length > 0) {
-            return p.product_variations
-                .filter(v => v.is_active !== false)
-                .reduce((sum, v) => sum + (v.stock || 0), 0)
+        if (productHasActiveVariations(p)) {
+            return getActiveVariations(p).reduce((sum, v) => sum + (v.stock || 0), 0)
         }
         return p.inventory?.[0]?.stock || 0
     }
 
     const getUnitCost = (p) => {
-        if (!p.variations_disabled && p.variation_type && p.product_variations?.length > 0) {
-            const active = p.product_variations.filter(v => v.is_active !== false)
+        if (productHasActiveVariations(p)) {
+            const active = getActiveVariations(p)
             if (active.length === 0) return 0
             const totalStock = active.reduce((sum, v) => sum + (v.stock || 0), 0)
             if (totalStock === 0) return 0
@@ -27,10 +25,8 @@ export const InventorySummary = ({ products = [] }) => {
     const stockTotal = products.reduce((acc, p) => acc + getStock(p), 0)
     const lowStockProducts = products.filter(p => {
         if (p.track_stock === false) return false
-        if (!p.variations_disabled && p.variation_type && p.product_variations?.length > 0) {
-            return p.product_variations
-                .filter(v => v.is_active !== false)
-                .some(v => (v.stock || 0) <= (v.min_stock || 0))
+        if (productHasActiveVariations(p)) {
+            return getActiveVariations(p).some(v => (v.stock || 0) <= (v.min_stock || 0))
         }
         const stock = getStock(p)
         const minStock = p.inventory?.[0]?.min_stock || 0

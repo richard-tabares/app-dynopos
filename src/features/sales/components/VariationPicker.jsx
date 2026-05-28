@@ -1,5 +1,6 @@
 import { X, ShoppingCart } from 'lucide-react'
 import { useStore } from '../../../app/providers/store'
+import { getActiveVariations } from '../../../shared/helpers/productHelpers'
 
 export const VariationPicker = ({ product, onClose }) => {
     const addToCart = useStore((state) => state.addToCart)
@@ -7,7 +8,6 @@ export const VariationPicker = ({ product, onClose }) => {
 
     if (!product) return null
 
-    const variations = product.product_variations || []
     const variationType = product.variation_type || 'Variación'
 
     const getAvailableStock = (variation) => {
@@ -47,9 +47,7 @@ export const VariationPicker = ({ product, onClose }) => {
                     </p>
 
                     <div className='flex flex-col gap-3'>
-                        {variations
-                            .filter((v) => v.is_active !== false)
-                            .map((variation) => {
+                        {getActiveVariations(product).map((variation) => {
                                 const availableStock = getAvailableStock(variation)
                                 const noStockControl = product.track_stock === false
                                 const outOfStock = !noStockControl && availableStock <= 0
