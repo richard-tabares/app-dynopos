@@ -1,9 +1,8 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
-import { TrendingUp, DollarSign, Package, Percent, BarChart4, ArrowUpDown, Search, ChevronDown } from 'lucide-react'
+import { TrendingUp, DollarSign, Package, Percent, ArrowUpDown, Search, ChevronDown } from 'lucide-react'
 import { DateRangeFilter } from '../../shared/components/DateRangeFilter'
 import { getReports } from '../../shared/helpers/getReports'
 import { useStore } from '../../../../app/providers/store'
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, Legend } from 'recharts'
 import { normalizeSearch } from '../../../../shared/helpers/normalizeSearch'
 
 const formatCurrency = (value) =>
@@ -87,7 +86,6 @@ export const GananciasReports = () => {
     }
 
     const summary = data?.summary
-    const dailyProfit = data?.dailyProfit || []
     const productMargins = useMemo(() => data?.productMargins || [], [data])
     const filteredMargins = useMemo(() => {
         if (!searchTerm.trim()) return productMargins
@@ -176,30 +174,7 @@ export const GananciasReports = () => {
                         </section>
                     </section>
 
-                    <section className='bg-surface border border-outline p-6 rounded-lg shadow-xs'>
-                        <div className='flex items-center gap-2 text-accent mb-6'>
-                            <BarChart4 className='w-5 h-5' />
-                            <h3 className='text-lg font-semibold text-on-surface'>Costo vs Ingresos vs Ganancia</h3>
-                        </div>
-                        {dailyProfit.length > 0 ? (
-                            <ResponsiveContainer width='100%' height={300}>
-                                <LineChart data={dailyProfit}>
-                                    <CartesianGrid strokeDasharray='3 3' />
-                                    <XAxis dataKey='date' tick={{ fontSize: 12 }} />
-                                    <YAxis tick={{ fontSize: 12 }} />
-                                    <Tooltip formatter={(value) => formatCurrency(value)} />
-                                    <Legend />
-                                    {/* <Line type='monotone' dataKey='cost' name='Costos' stroke='#f97316' strokeWidth={2} dot={false} /> */}
-                                    <Line type='monotone' dataKey='revenue' name='Ingresos' stroke='#0ea5e9' strokeWidth={2} dot={false} />
-                                    <Line type='monotone' dataKey='profit' name='Ganancia' stroke='#10b981' strokeWidth={2} dot={false} />
-                                </LineChart>
-                            </ResponsiveContainer>
-                        ) : (
-                            <div className='text-center text-faint italic py-12'>
-                                No hay datos en el período seleccionado
-                            </div>
-                        )}
-                    </section>
+
 
                     <section className='bg-surface border border-outline p-6 rounded-lg shadow-xs'>
                         <div className='flex items-center gap-2 text-accent mb-4'>
