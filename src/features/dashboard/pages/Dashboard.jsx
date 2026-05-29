@@ -71,20 +71,21 @@ export const Dashboard = () => {
             {data?.metrics ? <Metrics data={data.metrics} /> : <MetricsSkeleton />}
 
             <div className='grid grid-cols-3 max-xl:grid-cols-1 gap-6'>
-                <div className='col-span-2 max-xl:col-span-1'>
-                    {data?.weeklySales ? <WeeklySalesChart data={data.weeklySales} /> : <ChartSkeleton />}
+                <div className='col-span-2 max-xl:col-span-1 space-y-6'>
+                    <div>
+                        {data?.weeklySales ? <WeeklySalesChart data={data.weeklySales} /> : <ChartSkeleton />}
+                    </div>
+                    <div>
+                        {data?.topProducts ? <ProductsRanking data={data.topProducts} title='Top 10 Productos' /> : <TopProductsSkeleton />}
+                    </div>
                 </div>
-                <div>
-                    {data?.lowStockItems ? <LowStockCard items={data.lowStockItems} /> : <LowStockSkeleton />}
-                </div>
-            </div>
-
-            <div className='grid grid-cols-3 max-xl:grid-cols-1 gap-6'>
-                <div className='col-span-2 max-xl:col-span-1 h-fit'>
-                    {data?.topProducts ? <ProductsRanking data={data.topProducts} title='Top 10 Productos' /> : <TopProductsSkeleton />}
-                </div>
-                <div className='col-span-1 max-xl:col-span-1'>
-                    {data?.recentSales ? <RecentSalesCard sales={data.recentSales} /> : <RecentSalesSkeleton />}
+                <div className='space-y-6'>
+                    <div>
+                        {data?.lowStockItems ? <LowStockCard items={data.lowStockItems} /> : <LowStockSkeleton />}
+                    </div>
+                    <div>
+                        {data?.recentSales ? <RecentSalesCard sales={data.recentSales} /> : <RecentSalesSkeleton />}
+                    </div>
                 </div>
             </div>
         </section>

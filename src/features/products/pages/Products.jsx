@@ -171,7 +171,7 @@ export const Products = () => {
                     ...formData,
                     business_id: businessId,
                 })
-                setProducts([...products, newProduct])
+                setProducts([newProduct, ...products])
                 sileo.success({
                     fill: 'var(--toast-success)',
                     title: 'Completado',
