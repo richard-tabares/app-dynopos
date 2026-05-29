@@ -30,6 +30,9 @@ export const Modal = ({
         variation_type: editProductData.variation_type || '',
     })
 
+    const [initialStock, setInitialStock] = useState('')
+    const [minStock, setMinStock] = useState('')
+
     const [hasVariations, setHasVariations] = useState(
         productHasActiveVariations(editProductData)
     )
@@ -46,7 +49,7 @@ export const Modal = ({
                       min_stock: v.min_stock || 0,
                       is_active: v.is_active !== false,
                   }))
-                : [{ variation_name: '', price: '', unit_cost: '', sku: '', barcode: '', stock: 0, min_stock: 0 }],
+                : [{ variation_name: '', price: '', unit_cost: '', sku: '', barcode: '', stock: '', min_stock: '' }],
     )
 
     const isFormValid = hasVariations
@@ -74,7 +77,7 @@ export const Modal = ({
     const addVariation = () => {
         setVariations((prev) => [
             ...prev,
-            { variation_name: '', price: '', unit_cost: '', sku: '', barcode: '', stock: 0, min_stock: 0 },
+            { variation_name: '', price: '', unit_cost: '', sku: '', barcode: '', stock: '', min_stock: '' },
         ])
     }
 
@@ -111,6 +114,8 @@ export const Modal = ({
             id: editProductData.id || undefined,
             variation_type: hasVariations ? formData.variation_type : (editProductData.variation_type || null),
             variations_disabled: !hasVariations,
+            initial_stock: hasVariations ? 0 : (Number(initialStock) || 0),
+            min_stock_inicial: hasVariations ? 0 : (Number(minStock) || 0),
             variations: hasVariations
                 ? (variations.some(v => v.variation_name.trim())
                     ? variations
@@ -239,6 +244,36 @@ export const Modal = ({
                             placeholder='Ingrese el costo del producto (opcional)'
                         />
                     </section>
+                    {!editProductData.id && (
+                        <>
+                            <section>
+                                <label className='block text-sm font-medium text-on-body mb-1'>
+                                    Stock Inicial
+                                </label>
+                                <input
+                                    type='number'
+                                    value={initialStock}
+                                    onChange={(e) => setInitialStock(e.target.value === '' ? '' : Number(e.target.value))}
+                                    min='0'
+                                    className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
+                                    placeholder='Stock inicial del producto'
+                                />
+                            </section>
+                            <section>
+                                <label className='block text-sm font-medium text-on-body mb-1'>
+                                    Stock Mínimo
+                                </label>
+                                <input
+                                    type='number'
+                                    value={minStock}
+                                    onChange={(e) => setMinStock(e.target.value === '' ? '' : Number(e.target.value))}
+                                    min='0'
+                                    className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
+                                    placeholder='Stock mínimo (opcional)'
+                                />
+                            </section>
+                        </>
+                    )}
                     </>
                 )}
                 <section className='flex items-center justify-between'>
@@ -374,6 +409,26 @@ export const Modal = ({
                                             onChange={(e) => handleVariationChange(index, 'barcode', e.target.value)}
                                             className='px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
                                         />
+                                        {!editProductData.id && (
+                                            <>
+                                                <input
+                                                    type='number'
+                                                    placeholder='Stock inicial'
+                                                    value={v.stock}
+                                                    min='0'
+                                                    onChange={(e) => handleVariationChange(index, 'stock', e.target.value === '' ? '' : Number(e.target.value))}
+                                                    className='px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                />
+                                                <input
+                                                    type='number'
+                                                    placeholder='Stock mínimo'
+                                                    value={v.min_stock}
+                                                    min='0'
+                                                    onChange={(e) => handleVariationChange(index, 'min_stock', e.target.value === '' ? '' : Number(e.target.value))}
+                                                    className='px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                />
+                                            </>
+                                        )}
                                     </div>
                                 </div>
                             ))}
