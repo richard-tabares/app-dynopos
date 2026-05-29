@@ -154,7 +154,7 @@ export const StockAdjustmentModal = ({
                     )}
 
                     {selected && !searchTerm && (
-                        <div className='flex items-center justify-between mt-2 px-4 py-3 border border-divider rounded-md bg-subtle'>
+                        <div className='flex items-center justify-between mt-2 px-4 py-3 border border-accent/85 rounded-md bg-subtle'>
                             <span className='text-sm text-on-surface font-medium truncate'>
                                 {selected.product.name} - {selected.variation.variation_name}
                                 {selected.variation.sku && (
@@ -166,7 +166,7 @@ export const StockAdjustmentModal = ({
                             <button
                                 type='button'
                                 onClick={handleClearSelection}
-                                className='text-xs text-accent hover:underline cursor-pointer flex items-center gap-1 shrink-0 ml-2'>
+                                className='text-xs text-accent border border-accent/85 rounded-md p-2 hover:bg-accent/10 cursor-pointer flex items-center gap-1 shrink-0 ml-2'>
                                 <X className='w-3 h-3' /> Cambiar
                             </button>
                         </div>

@@ -112,7 +112,6 @@ export const Modal = ({
 
     const addVariation = () => {
         setVariations((prev) => [
-            ...prev,
             {
                 variation_name: '',
                 price: '',
@@ -123,6 +122,7 @@ export const Modal = ({
                 min_stock: '',
                 is_active: true,
             },
+            ...prev,
         ])
     }
 
@@ -269,7 +269,7 @@ export const Modal = ({
                         <label className='block text-sm font-medium text-on-body mb-2'>
                             Tipo de Producto
                         </label>
-                        <div className='grid grid-cols-2 gap-2'>
+                        <div className='grid grid-cols-2 gap-2 border-b pb-4 border-divider'>
                             <button
                                 type='button'
                                 onClick={() => setProductType('simple')}
@@ -519,7 +519,7 @@ export const Modal = ({
                                     placeholder='ej: Talla, Color, Tamaño'
                                 />
                             </section>
-                            <div className='space-y-3 bg-accent/0 border border-accent/85 p-4 rounded-md'>
+                            <div className='space-y-3 p-4 rounded-md'>
                                 <div className='flex items-center justify-between'>
                                     <span className='text-sm font-medium text-on-body'>
                                         Variaciones
@@ -527,7 +527,7 @@ export const Modal = ({
                                     <button
                                         type='button'
                                         onClick={addVariation}
-                                        className='flex items-center gap-1 text-xs font-medium text-accent rounded-md border border-accent/85 p-2 hover:text-accent/85 cursor-pointer'>
+                                        className='flex items-center gap-1 text-xs font-medium text-accent rounded-md border border-accent/85 p-2 hover:bg-accent/10 cursor-pointer'>
                                         <Plus className='w-3.5 h-3.5' /> Agregar
                                     </button>
                                 </div>
@@ -536,13 +536,14 @@ export const Modal = ({
                                         key={index}
                                         className={`border ${v.is_active ? 'border-accent/85' : 'border-divider'} rounded-lg p-3 space-y-2`}>
                                         <div className='flex items-center justify-between'>
-                                            <span className={`text-xs font-medium ${v.is_active ? 'text-accent' : 'text-muted'}`}>
-                                                Variación{' '}
+                                            <span
+                                                className={`text-sm font-medium my-1.5 ${v.is_active ? 'text-accent' : 'text-muted'}`}>
+                                                Variación{' - '}
                                                 {v.variation_name ||
                                                     'Sin nombre'}
                                             </span>
                                             <div className='flex items-center gap-2'>
-                                                <label className='flex items-center gap-1.5 text-xs text-on-body cursor-pointer'>
+                                                <label className='flex items-center gap-2.5 text-xs text-on-body cursor-pointer'>
                                                     <input
                                                         type='checkbox'
                                                         checked={
@@ -559,31 +560,20 @@ export const Modal = ({
                                                         }
                                                         className='sr-only peer'
                                                     />
-                                                    <div className="w-8 h-4 bg-hover-icon peer-focus:outline-none peer-focus:ring-0 peer-focus:ring-accent rounded-full peer-checked:after:translate-x-full peer-checked:after:border-surface after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-surface after:border-outline after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-accent relative"></div>
+                                                    <div className="w-9 h-5 bg-hover-icon peer-focus:outline-none peer-focus:ring-0 peer-focus:ring-accent rounded-full peer-checked:after:translate-x-full peer-checked:after:border-surface after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-surface after:border-outline after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-accent relative"></div>
                                                     <span
-                                                        className={
+                                                        className={`text-sm ${
                                                             v.is_active !==
                                                             false
                                                                 ? 'text-accent'
                                                                 : 'text-muted'
-                                                        }>
+                                                        }
+                                                        `}>
                                                         {v.is_active !== false
                                                             ? 'Activo'
                                                             : 'Inactivo'}
                                                     </span>
                                                 </label>
-                                                {variations.length > 1 && (
-                                                    <button
-                                                        type='button'
-                                                        onClick={() =>
-                                                            removeVariation(
-                                                                index,
-                                                            )
-                                                        }
-                                                        className='text-red-500 hover:text-red-700 cursor-pointer'>
-                                                        <Trash2 className='w-3.5 h-3.5' />
-                                                    </button>
-                                                )}
                                             </div>
                                         </div>
                                         <div className='grid grid-cols-2 gap-2'>
@@ -703,22 +693,37 @@ export const Modal = ({
                                                 </>
                                             )}
                                         </div>
-                                        {editProductData.id && onOpenStockAdjust && (
-                                            <div className='flex items-center justify-between pt-2 border-t border-divider mt-2'>
-                                                <span className='text-sm text-accent font-medium'>
-                                                    Stock actual:{' '}
-                                                    <span className='font-semibold'>
-                                                        {v.stock ?? 0}
+                                        {editProductData.id &&
+                                            onOpenStockAdjust && (
+                                                <div className='flex items-center justify-between pt-2 border-t border-divider mt-2'>
+                                                    <span className='text-sm text-accent font-medium'>
+                                                        Stock actual:{' '}
+                                                        <span className='font-semibold'>
+                                                            {v.stock ?? 0}
+                                                        </span>
                                                     </span>
-                                                </span>
+                                                    <button
+                                                        type='button'
+                                                        onClick={() =>
+                                                            onOpenStockAdjust(
+                                                                v,
+                                                            )
+                                                        }
+                                                        className='flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-accent/5 border border-accent/85 text-accent hover:bg-hover rounded-lg transition cursor-pointer'>
+                                                        <Settings2 className='w-3.5 h-3.5' />
+                                                        Ajustar Stock
+                                                    </button>
+                                                </div>
+                                            )}
+                                        {variations.length > 1 && (
+                                            <div className='flex justify-end pt-2'>
                                                 <button
                                                     type='button'
                                                     onClick={() =>
-                                                        onOpenStockAdjust(v)
+                                                        removeVariation(index)
                                                     }
-                                                    className='flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-accent/5 border border-accent/85 text-accent hover:bg-hover rounded-lg transition cursor-pointer'>
-                                                    <Settings2 className='w-3.5 h-3.5' />
-                                                    Ajustar Stock
+                                                    className='text-red-500 bg-danger/10 hover:bg-danger/30 border border-danger px-2 py-1.5 rounded-sm hover:text-danger-700 cursor-pointer'>
+                                                    <Trash2 className='w-3.5 h-3.5' />
                                                 </button>
                                             </div>
                                         )}
@@ -728,21 +733,25 @@ export const Modal = ({
                         </>
                     )}
                     <section className='flex flex-col gap-3 pt-4 border-t border-divider'>
-                        {editProductData.id && onOpenStockAdjust && productType === 'simple' && (
-                            <section className='flex flex-row justify-between gap-3'>
-                                <div className='w-1/2 px-4 py-3 border border-accent/85 text-accent rounded-md text-sm flex items-center justify-between'>
-                                    <span>Stock actual</span>
-                                    <span className='font-semibold text-accent'>{defaultVar?.stock ?? 0}</span>
-                                </div>
-                                <button
-                                    type='button'
-                                    onClick={onOpenStockAdjust}
-                                    className='w-1/2 flex items-center justify-center gap-2 px-4 py-3 bg-accent/5 border border-accent/85 text-accent hover:bg-hover rounded-lg transition cursor-pointer font-medium'>
-                                    <Settings2 className='w-4 h-4' />
-                                    Ajustar Stock
-                                </button>
-                            </section>
-                        )}
+                        {editProductData.id &&
+                            onOpenStockAdjust &&
+                            productType === 'simple' && (
+                                <section className='flex flex-row justify-between gap-3'>
+                                    <div className='w-1/2 px-4 py-3 border border-accent/85 text-accent rounded-md text-sm flex items-center justify-between'>
+                                        <span>Stock actual</span>
+                                        <span className='font-semibold text-accent'>
+                                            {defaultVar?.stock ?? 0}
+                                        </span>
+                                    </div>
+                                    <button
+                                        type='button'
+                                        onClick={onOpenStockAdjust}
+                                        className='w-1/2 flex items-center justify-center gap-2 px-4 py-3 bg-accent/5 border border-accent/85 text-accent hover:bg-hover rounded-lg transition cursor-pointer font-medium'>
+                                        <Settings2 className='w-4 h-4' />
+                                        Ajustar Stock
+                                    </button>
+                                </section>
+                            )}
                         <div className='flex justify-end gap-4'>
                             <button
                                 type='button'
