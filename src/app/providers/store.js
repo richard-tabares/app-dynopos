@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { getActiveVariations } from '../../shared/helpers/productHelpers'
 
 const migrateToken = () => {
     try {
@@ -85,9 +86,10 @@ export const useStore = create(
             setProducts: (payload) => set({ products: payload }),
             addToCart: (product, variation = null) =>
                 set((state) => {
-                    const cartKey = variation
-                        ? `${product.id}-${variation.id}`
-                        : product.id
+                    const v = variation || getActiveVariations(product)[0]
+                    if (!v) return state
+
+                    const cartKey = `${product.id}-${v.id}`
                     const existingItem = state.cart.find(
                         (item) => item.cartKey === cartKey,
                     )
@@ -100,21 +102,22 @@ export const useStore = create(
                             ),
                         }
                     }
-                    const cartItem = variation
-                        ? {
-                              ...product,
-                              id: cartKey,
-                              cartKey,
-                              product_id: product.id,
-                              price: variation.price,
-                              stock: variation.stock,
-                              variation_id: variation.id,
-                              variation_name: variation.variation_name,
-                              variation_sku: variation.sku,
-                              variation_barcode: variation.barcode,
-                              name: `${product.name} - ${variation.variation_name}`,
-                          }
-                        : { ...product, cartKey, product_id: product.id }
+                    const displayName = v.variation_name === 'Default'
+                        ? product.name
+                        : `${product.name} - ${v.variation_name}`
+                    const cartItem = {
+                        ...product,
+                        id: cartKey,
+                        cartKey,
+                        product_id: product.id,
+                        price: v.price,
+                        stock: v.stock,
+                        variation_id: v.id,
+                        variation_name: v.variation_name,
+                        variation_sku: v.sku,
+                        variation_barcode: v.barcode,
+                        name: displayName,
+                    }
                     return {
                         cart: [...state.cart, { ...cartItem, quantity: 1 }],
                     }

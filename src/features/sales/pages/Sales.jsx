@@ -4,15 +4,16 @@ import { sileo } from 'sileo'
 import { useStore } from '../../../app/providers/store'
 import { getProducts } from '../../products/helpers/getProducts'
 import { getCategories } from '../../categories/helpers/getCategories'
-// import { CategoryTabs } from '../components/CategoryTabs'
 import { ProductGrid } from '../components/ProductGrid'
 import { OrderTabs } from '../components/OrderTabs'
 import { OrderSidebar } from '../components/OrderSidebar'
+import { VariationPicker } from '../components/VariationPicker'
 import { Modal } from '../../../shared/components/Modal'
 import { SaleConfirmationModal } from '../components/SaleConfirmationModal'
 import { SalesHistoryCard } from '../components/SalesHistoryCard'
 import { apiFetch } from '../../../shared/helpers/apiFetch'
 import { normalizeSearch } from '../../../shared/helpers/normalizeSearch'
+import { getActiveVariations, productHasActiveVariations } from '../../../shared/helpers/productHelpers'
 import { createSale } from '../helpers/createSale'
 import { getSales } from '../helpers/getSales'
 import { returnSale } from '../helpers/returnSale'
@@ -26,11 +27,10 @@ export const Sales = () => {
     const [, setLastSaleTicket] = useState(null)
     const [showConfirmationModal, setShowConfirmationModal] = useState(false)
     const [saleSummaryData, setSaleSummaryData] = useState(null)
+    const [variationPickerProduct, setVariationPickerProduct] = useState(null)
 
     const [salesList, setSalesList] = useState([])
-
     const [visibleCount, setVisibleCount] = useState(10)
-
     const [showClearModal, setShowClearModal] = useState(false)
 
     const businessId = user?.profile?.business_id || user?.data?.user?.id
@@ -65,20 +65,17 @@ export const Sales = () => {
     const filteredProducts = products
         .filter((product) => {
             const term = normalizeSearch(searchTerm)
-            const matchesSearch = normalizeSearch(product.name).includes(term) || 
-                                 normalizeSearch(product.sku).includes(term) ||
-                                 (product.barcode && normalizeSearch(product.barcode).includes(term))
+            const variations = getActiveVariations(product)
+            const matchesProduct = normalizeSearch(product.name).includes(term)
+            const matchesVariation = variations.some(v =>
+                normalizeSearch(v.sku || '').includes(term) ||
+                normalizeSearch(v.barcode || '').includes(term)
+            )
             const isActive = product.is_active !== false
 
-            return matchesSearch && isActive
+            return isActive && (matchesProduct || matchesVariation)
         })
-        .sort((a, b) => {
-            // Sort by ID descending (assuming larger ID = more recent, or use created_at if available)
-            // Ideally, use a 'created_at' date if it exists in your product object.
-            // For now, assuming newer products are added to the end of the array or have higher IDs.
-            // Adjust this if you have a specific 'date_added' or 'created_at' field.
-            return (b.id > a.id) ? 1 : ((b.id < a.id) ? -1 : 0)
-        })
+        .sort((a, b) => (b.created_at || '').localeCompare(a.created_at || ''))
 
     const displayedProducts = filteredProducts.slice(0, visibleCount)
 
@@ -102,27 +99,19 @@ export const Sales = () => {
         return result
     }, [salesList, products])
 
-    const handleLoadMore = () => {
-        setVisibleCount((prev) => prev + 10)
-    }
+    const handleLoadMore = () => setVisibleCount((prev) => prev + 10)
 
     const handleProcessSale = (paymentMethod, total, saleDate) => {
         if (cart.length === 0) {
             sileo.warning({ fill: 'var(--toast-warning)', title: 'Atención', description: 'El carrito está vacío'})
             return
         }
-
-        setSaleSummaryData({
-            total,
-            paymentMethod,
-            date: saleDate
-        })
+        setSaleSummaryData({ total, paymentMethod, date: saleDate })
         setShowConfirmationModal(true)
     }
 
     const confirmSaleHandler = async () => {
         if (!saleSummaryData) return
-
         setLoading(true)
         const saleData = {
             business_id: businessId,
@@ -132,22 +121,21 @@ export const Sales = () => {
             status: 'completed',
             created_at: saleSummaryData.date,
             salesItems: cart.map(item => ({
-                product_id: item.product_id || item.id,
+                product_id: item.product_id,
                 quantity: item.quantity,
-                variation_id: item.variation_id || null,
+                variation_id: item.variation_id,
             }))
         }
 
         try {
             const response = await createSale(saleData)
             sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Venta procesada exitosamente'})
-            
-            // Prepare ticket data from response
+
             const sale = response.data
             setLastSaleTicket({
                 id: sale.id,
                 total: sale.total_amount,
-                date: sale.created_at.split('T')[0], // Extract only date
+                date: sale.created_at.split('T')[0],
                 paymentMethod: sale.payment_method,
                 items: sale.salesItems.map(item => ({
                     quantity: item.quantity,
@@ -156,7 +144,7 @@ export const Sales = () => {
                     name: item.products?.name || 'Producto'
                 }))
             })
-            
+
             clearCart()
             finalizeCurrentOrder()
 
@@ -205,11 +193,20 @@ export const Sales = () => {
         setTodayRevenue(revenueData.todayRevenue)
     }
 
-    const handleAddProduct = (product) => {
-        if (currentLabel === null) {
-            initCurrentOrder()
+    const handleAddProduct = (product, preSelectedVariation = null) => {
+        if (currentLabel === null) initCurrentOrder()
+
+        if (preSelectedVariation) {
+            addToCart(product, preSelectedVariation)
+            return
         }
-        addToCart(product)
+
+        const variations = getActiveVariations(product)
+        if (variations.length === 1) {
+            addToCart(product, variations[0])
+        } else if (variations.length > 1) {
+            setVariationPickerProduct(product)
+        }
     }
 
     return (
@@ -237,10 +234,23 @@ export const Sales = () => {
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                     onKeyDown={(e) => {
-                                        if (e.key === 'Enter' && searchTerm.trim() && filteredProducts.length === 1) {
+                                        if (e.key === 'Enter' && searchTerm.trim()) {
                                             e.preventDefault()
-                                            handleAddProduct(filteredProducts[0])
-                                            setSearchTerm('')
+                                            const isBarcode = /^\d{8,14}$/.test(searchTerm.trim())
+                                            if (isBarcode) {
+                                                const found = products.flatMap(p =>
+                                                    (getActiveVariations(p) || []).map(v => ({ product: p, variation: v }))
+                                                ).find(({ variation }) => variation.barcode === searchTerm.trim())
+                                                if (found) {
+                                                    handleAddProduct(found.product, found.variation)
+                                                    setSearchTerm('')
+                                                    return
+                                                }
+                                            }
+                                            if (filteredProducts.length === 1) {
+                                                handleAddProduct(filteredProducts[0])
+                                                setSearchTerm('')
+                                            }
                                         }
                                     }}
                                     placeholder='Buscar por código o nombre...'
@@ -325,6 +335,13 @@ export const Sales = () => {
                     onConfirm={confirmSaleHandler}
                     onCancel={() => setShowConfirmationModal(false)}
                     loading={loading}
+                />
+            )}
+
+            {variationPickerProduct && (
+                <VariationPicker
+                    product={variationPickerProduct}
+                    onClose={() => setVariationPickerProduct(null)}
                 />
             )}
 

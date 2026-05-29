@@ -6,7 +6,7 @@ import {
     Search,
     Tags,
     Layers,
-    ClipboardList,
+    Settings2,
     ChevronDown,
     ChevronRight,
     EllipsisVertical,
@@ -18,6 +18,7 @@ import {
     Save,
     Loader,
     Upload,
+    AlertTriangle,
 } from 'lucide-react'
 import { Fragment, useEffect, useState } from 'react'
 import { sileo } from 'sileo'
@@ -38,7 +39,9 @@ import { createCategory } from '../../categories/helpers/createCategory'
 import { useEscape } from '../../../shared/helpers/useEscape'
 import { normalizeSearch } from '../../../shared/helpers/normalizeSearch'
 import { BulkUploadModal } from '../components/BulkUploadModal'
-import { productHasActiveVariations, getActiveVariations } from '../../../shared/helpers/productHelpers'
+import { StockAdjustmentModal } from '../components/StockAdjustmentModal'
+import { updateInventory } from '../../inventory/helpers/updateInventory'
+import { productHasActiveVariations, getActiveVariations, getDefaultVariation } from '../../../shared/helpers/productHelpers'
 
 export const Products = () => {
     const [openModal, setOpenModal] = useState(false)
@@ -47,7 +50,7 @@ export const Products = () => {
     const [editProductData, setEditProductData] = useState({})
     const [searchTerm, setSearchTerm] = useState('')
     const [activeStatus, setActiveStatus] = useState('all')
-    const [activeStock, setActiveStock] = useState('all')
+    const [stockFilter, setStockFilter] = useState('all')
     const [visibleCount, setVisibleCount] = useState(20)
     const { user, products, setProducts, categories, setCategories } =
         useStore()
@@ -61,6 +64,8 @@ export const Products = () => {
     const [showMobileActions, setShowMobileActions] = useState(null)
     const [expandedProductId, setExpandedProductId] = useState(null)
     const [editingVariation, setEditingVariation] = useState(null)
+    const [showStockModal, setShowStockModal] = useState(false)
+    const [stockPreselect, setStockPreselect] = useState(null)
 
     useEscape(
         showCategoryModal
@@ -83,10 +88,28 @@ export const Products = () => {
                 activeStatus === 'all' ||
                 (activeStatus === 'active' && product.is_active !== false) ||
                 (activeStatus === 'inactive' && product.is_active === false)
-            const matchesStock =
-                activeStock === 'all' ||
-                (activeStock === 'with' && product.track_stock !== false) ||
-                (activeStock === 'without' && product.track_stock === false)
+            let matchesStock = true
+            if (stockFilter === 'noStockControl') {
+                matchesStock = product.track_stock === false
+            } else if (stockFilter === 'noStock') {
+                matchesStock =
+                    product.track_stock !== false &&
+                    getActiveVariations(product).some((v) => v.stock === 0)
+            } else if (stockFilter === 'lowStock') {
+                matchesStock =
+                    product.track_stock !== false &&
+                    getActiveVariations(product).some((v) => {
+                        const vm = v.min_stock ?? 0
+                        return v.stock > 0 && vm > 0 && v.stock < vm
+                    })
+            } else if (stockFilter === 'withStock') {
+                matchesStock =
+                    product.track_stock !== false &&
+                    getActiveVariations(product).every((v) => {
+                        const vm = v.min_stock ?? 0
+                        return v.stock > 0 && (vm === 0 || v.stock >= vm)
+                    })
+            }
 
             return matchesSearch && matchesStatus && matchesStock
         })
@@ -96,13 +119,12 @@ export const Products = () => {
     const displayedProducts = filteredProducts.slice(0, visibleCount)
 
     const productsHeaders = [
-        'Código',
         'Nombre',
         'Categoría',
         'Costo',
         'Precio',
         'Margen',
-        'Maneja Stock',
+        'Stock',
         'Variaciones',
         'Estado',
         'Acciones',
@@ -147,7 +169,7 @@ export const Products = () => {
                             : product,
                     ),
                 )
-                if (!productHasActiveVariations(updatedProduct) && expandedProductId === updatedProduct.id) {
+                if (expandedProductId === updatedProduct.id && getActiveVariations(updatedProduct).length <= 1) {
                     setExpandedProductId(null)
                 }
                 sileo.success({
@@ -260,8 +282,9 @@ export const Products = () => {
         if (e.target.closest('button')) return
         if (productHasActiveVariations(product)) {
             setExpandedProductId(expandedProductId === product.id ? null : product.id)
-        } else {
-            onEditProduct(product.id, e)
+        } else if (getActiveVariations(product).length === 1) {
+            setEditProductData(product)
+            setOpenModal(true)
         }
     }
 
@@ -313,6 +336,57 @@ export const Products = () => {
         }
     }
 
+    const handleStockAdjust = async (productId, formData) => {
+        try {
+            const updatedProduct = await updateInventory(productId, formData)
+            if (updatedProduct) {
+                setProducts(
+                    products.map((p) =>
+                        p.id === updatedProduct.id ? updatedProduct : p,
+                    ),
+                )
+                sileo.success({
+                    fill: 'var(--toast-success)',
+                    title: 'Completado',
+                    description: 'Inventario actualizado correctamente',
+                })
+                setShowStockModal(false)
+                setStockPreselect(null)
+            } else {
+                sileo.error({
+                    fill: 'var(--toast-error)',
+                    title: 'Error',
+                    description: 'No se pudo actualizar el inventario',
+                })
+            }
+        } catch (error) {
+            sileo.error({
+                fill: 'var(--toast-error)',
+                title: 'Error',
+                description:
+                    error.message || 'Error de red al actualizar el inventario',
+            })
+        }
+    }
+
+    const handleOpenStockFromProduct = () => {
+        const defaultVar = getDefaultVariation(editProductData)
+        if (defaultVar) {
+            setStockPreselect({ product: editProductData, variation: defaultVar })
+            setShowStockModal(true)
+        }
+    }
+
+    const handleOpenStockFromVariation = () => {
+        const product = products.find((p) =>
+            p.product_variations?.some((v) => v.id === editingVariation.id),
+        )
+        if (product) {
+            setStockPreselect({ product, variation: editingVariation })
+            setShowStockModal(true)
+        }
+    }
+
     const handleSearch = (e) => {
         setSearchTerm(e.target.value)
         setVisibleCount(20)
@@ -356,6 +430,160 @@ export const Products = () => {
         setVisibleCount((prev) => prev + 20)
     }
 
+    const renderProductRow = (product) => {
+        const defaultVar = getDefaultVariation(product)
+        const allVariations = getActiveVariations(product)
+        const defaultVariation = product.product_variations?.find(v => v.variation_name === 'Default')
+        const isDefaultActive = defaultVariation?.is_active !== false
+        const cost = isDefaultActive ? (defaultVar?.unit_cost ?? 0) : null
+        const price = isDefaultActive ? (defaultVar?.price ?? 0) : null
+        const margin = price > 0 ? Math.round(((price - cost) / price) * 100) : null
+        const hasMultipleVars = productHasActiveVariations(product)
+        const skuDisplay = defaultVar?.sku || ''
+        const totalStock = product.track_stock !== false
+            ? getActiveVariations(product).reduce((sum, v) => sum + (v.stock || 0), 0)
+            : null
+        const stockBelowMin = product.track_stock !== false && getActiveVariations(product).some((v) => {
+            const vm = v.min_stock ?? 0
+            return vm > 0 && (v.stock || 0) < vm
+        })
+
+        return (
+            <Fragment key={product.id}>
+                <tr
+                    className={`border-b border-divider-light hover:bg-hover cursor-pointer ${expandedProductId === product.id ? 'bg-accent/5' : ''}`}
+                    onClick={(e) => handleRowClick(product, e)}>
+                    <td className='py-3 px-4 text-on-body'>
+                        <span className='flex items-center gap-1'>
+                            {hasMultipleVars && (
+                                <>
+                                    {expandedProductId === product.id ? (
+                                        <ChevronDown className='w-3.5 h-3.5 text-accent shrink-0' />
+                                    ) : (
+                                        <ChevronRight className='w-3.5 h-3.5 text-accent shrink-0' />
+                                    )}
+                                </>
+                            )}
+                            {product.name}
+                        </span>
+                        {skuDisplay && (
+                            <span className='text-xs text-muted block mt-0.5'>{skuDisplay}</span>
+                        )}
+                    </td>
+                    <td className='py-3 px-4 text-muted'>{product.categories?.name || 'Sin categoría'}</td>
+                    <td className='py-3 px-4 text-right'>
+                        {cost > 0 ? (
+                            <span className='font-medium text-on-body'>${new Intl.NumberFormat('es-CO').format(cost)}</span>
+                        ) : (
+                            <span className='text-faint italic'>—</span>
+                        )}
+                    </td>
+                    <td className='py-3 px-4 text-on-body font-bold text-right'>
+                        {price > 0 ? (
+                            `$${new Intl.NumberFormat('es-CO').format(price)}`
+                        ) : (
+                            <span className='text-faint italic'>—</span>
+                        )}
+                    </td>
+                    <td className='py-3 px-4 text-right'>
+                        {margin !== null ? (
+                            <span className={`px-2.5 py-0.5 text-xs font-medium rounded-full ${margin >= 30 ? 'bg-green-100 text-green-800' : margin >= 10 ? 'bg-amber-100 text-amber-800' : 'bg-red-100 text-red-800'}`}>
+                                {margin}%
+                            </span>
+                        ) : (
+                            <span className='text-faint italic'>—</span>
+                        )}
+                    </td>
+                    <td className='py-3 px-4 whitespace-nowrap text-right'>
+                        {totalStock !== null ? (
+                            <span className={`font-medium ${stockBelowMin ? 'text-red-600' : 'text-on-body'}`}>{totalStock} uds</span>
+                        ) : (
+                            <span className='text-faint italic'>—</span>
+                        )}
+                    </td>
+                    <td className='py-3 px-4 whitespace-nowrap'>
+                        <span className='px-2.5 py-0.5 text-xs font-medium bg-accent/10 text-accent rounded-full'>
+                            {allVariations.length} {product.variation_type ? product.variation_type.toLowerCase() : 'variante'}
+                        </span>
+                    </td>
+                    <td className='py-3 px-4 whitespace-nowrap'>
+                        {product.is_active ? (
+                            <span className='px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full'>Activo</span>
+                        ) : (
+                            <span className='px-2.5 py-0.5 text-xs font-medium bg-red-100 text-red-800 rounded-full'>Inactivo</span>
+                        )}
+                    </td>
+                    <td className='py-3 px-2 text-right whitespace-nowrap'>
+                        <section className='hidden sm:flex items-center justify-end gap-3'>
+                            <button onClick={(e) => onEditProduct(product.id, e)} className='bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-800 p-1.5 rounded-sm cursor-pointer' title='Editar Producto'>
+                                <Edit2 className='w-4 h-4 text-accent' />
+                            </button>
+                            <button onClick={(e) => onDeleteProduct(product.id, e)} className='hover:bg-red-500 bg-red-400 text-white p-1.5 rounded-sm cursor-pointer' title='Eliminar Producto'>
+                                <Trash2 className='w-4 h-4' />
+                            </button>
+                        </section>
+                        <section className='relative sm:hidden'>
+                            <button onClick={() => setShowMobileActions(showMobileActions === product.id ? null : product.id)} className='p-1 text-on-body hover:bg-hover-strong rounded-lg transition cursor-pointer'>
+                                <EllipsisVertical className='w-5 h-5' />
+                            </button>
+                            {showMobileActions === product.id && (
+                                <section className='fixed inset-0 z-40' onClick={() => setShowMobileActions(null)} />
+                            )}
+                            <section className={`absolute right-0 mt-1 w-40 bg-surface border border-divider rounded-lg shadow-lg z-50 ${showMobileActions === product.id ? 'block' : 'hidden'}`}>
+                                <button onClick={(e) => { onEditProduct(product.id, e); setShowMobileActions(null) }} className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-on-body hover:bg-hover rounded-t-lg cursor-pointer'>
+                                    <Edit2 className='w-4 h-4 text-accent' /> Editar
+                                </button>
+                                <button onClick={(e) => { onDeleteProduct(product.id, e); setShowMobileActions(null) }} className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-red-600 hover:bg-hover rounded-b-lg cursor-pointer'>
+                                    <Trash2 className='w-4 h-4' /> Eliminar
+                                </button>
+                            </section>
+                        </section>
+                    </td>
+                </tr>
+                {expandedProductId === product.id && product.product_variations
+                    ?.filter(v => v.is_active !== false && v.variation_name !== 'Default')
+                    .map(v => (
+                    <tr key={v.id}
+                        className='border-b border-divider-light bg-accent/5 hover:bg-accent/10 cursor-pointer'
+                        onClick={(e) => onEditVariation(v, e)}>
+                        <td className='py-2 px-4'>
+                            <span className='flex items-center gap-2 text-sm'>
+                                <span className='w-1.5 h-1.5 rounded-full bg-accent shrink-0' />
+                                <span className='font-medium text-on-surface'>{v.variation_name}</span>
+                            </span>
+                        </td>
+                        <td className='py-2 px-4 text-xs text-muted'>—</td>
+                        <td className='py-2 px-4 text-right'>{v.unit_cost ? <span className='text-sm font-medium text-on-body'>${new Intl.NumberFormat('es-CO').format(v.unit_cost)}</span> : <span className='text-faint italic text-xs'>—</span>}</td>
+                        <td className='py-2 px-4 text-sm font-bold text-on-body text-right'>${new Intl.NumberFormat('es-CO').format(v.price)}</td>
+                        <td className='py-2 px-4 text-right'>
+                            {v.unit_cost && v.price > 0 ? (
+                                <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${
+                                    Math.round(((v.price - v.unit_cost) / v.price) * 100) >= 30 ? 'bg-green-100 text-green-800'
+                                    : Math.round(((v.price - v.unit_cost) / v.price) * 100) >= 10 ? 'bg-amber-100 text-amber-800'
+                                    : 'bg-red-100 text-red-800'
+                                }`}>
+                                    {Math.round(((v.price - v.unit_cost) / v.price) * 100)}%
+                                </span>
+                            ) : <span className='text-faint italic text-xs'>—</span>}
+                        </td>
+                        <td className='py-2 px-4 whitespace-nowrap text-right'><span className={`text-xs ${(v.stock || 0) < (v.min_stock ?? 0) ? 'text-red-600 font-medium' : 'text-muted'}`}>{v.stock || 0} uds</span></td>
+                        <td className='py-2 px-4 whitespace-nowrap'><span className='text-xs text-muted'>—</span></td>
+                        <td className='py-2 px-4 whitespace-nowrap'>
+                            <div className='flex items-center gap-1.5'>
+                                <button onClick={(e) => onEditVariation(v, e)} className='bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-800 p-1 rounded-sm cursor-pointer' title='Editar Variación'>
+                                    <Edit2 className='w-3.5 h-3.5 text-accent' />
+                                </button>
+                                <button onClick={(e) => handleDeleteVariation(v.id, e)} className='hover:bg-red-500 bg-red-400 text-white p-1 rounded-sm cursor-pointer' title='Eliminar Variación'>
+                                    <Trash2 className='w-3.5 h-3.5' />
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                ))}
+            </Fragment>
+        )
+    }
+
     return (
         <>
             {/* Modal */}
@@ -366,6 +594,7 @@ export const Products = () => {
                     editProductData={editProductData}
                     categories={categories}
                     products={products}
+                    onOpenStockAdjust={handleOpenStockFromProduct}
                 />
             )}
 
@@ -374,6 +603,19 @@ export const Products = () => {
                     variation={editingVariation}
                     onClose={() => setEditingVariation(null)}
                     onSaved={handleVariationSaved}
+                    onOpenStockAdjust={handleOpenStockFromVariation}
+                />
+            )}
+
+            {showStockModal && (
+                <StockAdjustmentModal
+                    products={products}
+                    preselect={stockPreselect}
+                    handleClose={() => {
+                        setShowStockModal(false)
+                        setStockPreselect(null)
+                    }}
+                    handleSubmit={handleStockAdjust}
                 />
             )}
 
@@ -530,10 +772,10 @@ export const Products = () => {
                                     </section>
                                 </section>
                                 <button
-                                    onClick={() => navigate('/inventory')}
+                                    onClick={() => setShowStockModal(true)}
                                     className='flex items-center font-medium px-4 py-2 border border-outline text-on-body text-sm rounded-lg hover:bg-hover-strong transition cursor-pointer'>
-                                    <ClipboardList className='w-4 h-5 mr-2' />
-                                    Inventario
+                                    <Settings2 className='w-4 h-5 mr-2' />
+                                    Ajusta Stock
                                 </button>
                                 <section className='relative'>
                                     <button
@@ -632,12 +874,12 @@ export const Products = () => {
                                     </button>
                                     <button
                                         onClick={() => {
-                                            navigate('/inventory')
+                                            setShowStockModal(true)
                                             setShowMobileActions(null)
                                         }}
                                         className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-on-body hover:bg-hover rounded-b-lg cursor-pointer'>
-                                        <ClipboardList className='w-4 h-4' />
-                                        Inventario
+                                        <Settings2 className='w-4 h-4' />
+                                        Ajusta Stock
                                     </button>
                                 </section>
                             </section>
@@ -698,42 +940,53 @@ export const Products = () => {
                             </div>
                             <div className='flex gap-1 bg-disabled/70 rounded-lg p-1 w-fit'>
                                 <button
-                                    onClick={() => {
-                                        setActiveStock('all')
-                                        setVisibleCount(20)
-                                    }}
+                                    onClick={() => { setStockFilter('all'); setVisibleCount(20) }}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
-                                        activeStock === 'all'
-                                            ? 'bg-surface shadow-xs text-accent'
-                                            : 'text-muted hover:text-on-body hover:bg-surface'
+                                        stockFilter === 'all'
+                                            ? 'bg-surface shadow-xs text-on-surface'
+                                            : 'text-muted hover:text-on-body hover:bg-hover'
                                     }`}>
-                                    <Layers className='w-4 h-4' />
+                                    <Layers className='w-4 h-4 text-accent' />
                                     Todos
                                 </button>
                                 <button
-                                    onClick={() => {
-                                        setActiveStock('with')
-                                        setVisibleCount(20)
-                                    }}
+                                    onClick={() => { setStockFilter('noStock'); setVisibleCount(20) }}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
-                                        activeStock === 'with'
-                                            ? 'bg-surface shadow-xs text-accent'
-                                            : 'text-muted hover:text-on-body hover:bg-surface'
+                                        stockFilter === 'noStock'
+                                            ? 'bg-surface shadow-xs text-on-surface'
+                                            : 'text-muted hover:text-on-body hover:bg-hover'
                                     }`}>
-                                    <PackageCheck className='w-4 h-4' />
-                                    Con control
+                                    <PackageX className='w-4 h-4 text-red-500' />
+                                    Sin Stock
                                 </button>
                                 <button
-                                    onClick={() => {
-                                        setActiveStock('without')
-                                        setVisibleCount(20)
-                                    }}
+                                    onClick={() => { setStockFilter('lowStock'); setVisibleCount(20) }}
                                     className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
-                                        activeStock === 'without'
-                                            ? 'bg-surface shadow-xs text-accent'
-                                            : 'text-muted hover:text-on-body hover:bg-surface'
+                                        stockFilter === 'lowStock'
+                                            ? 'bg-surface shadow-xs text-on-surface'
+                                            : 'text-muted hover:text-on-body hover:bg-hover'
                                     }`}>
-                                    <PackageX className='w-4 h-4' />
+                                    <AlertTriangle className='w-4 h-4 text-red-500' />
+                                    Stock Bajo
+                                </button>
+                                <button
+                                    onClick={() => { setStockFilter('withStock'); setVisibleCount(20) }}
+                                    className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
+                                        stockFilter === 'withStock'
+                                            ? 'bg-surface shadow-xs text-on-surface'
+                                            : 'text-muted hover:text-on-body hover:bg-hover'
+                                    }`}>
+                                    <PackageCheck className='w-4 h-4 text-emerald-500' />
+                                    Con Stock
+                                </button>
+                                <button
+                                    onClick={() => { setStockFilter('noStockControl'); setVisibleCount(20) }}
+                                    className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
+                                        stockFilter === 'noStockControl'
+                                            ? 'bg-surface shadow-xs text-on-surface'
+                                            : 'text-muted hover:text-on-body hover:bg-hover'
+                                    }`}>
+                                    <Package className='w-4 h-4 text-muted' />
                                     Sin control
                                 </button>
                             </div>
@@ -746,272 +999,14 @@ export const Products = () => {
                                     {productsHeaders.map((header, index) => (
                                         <th
                                             key={index}
-                                            className={`py-3 px-4 font-medium ${header === 'Precio' || header === 'Acciones' || header === 'Control Stock' || header === 'Costo' || header === 'Margen' ? 'text-right' : 'text-left'}`}>
+                                            className={`py-3 px-4 font-medium ${header === 'Precio' || header === 'Acciones' || header === 'Stock' || header === 'Costo' || header === 'Margen' ? 'text-right' : 'text-left'}`}>
                                             {header}
                                         </th>
                                     ))}
                                 </tr>
                             </thead>
                             <tbody>
-                                {displayedProducts.map((product) => (
-                                    <Fragment key={product.id}>
-                                    <tr
-                                        className={`border-b border-divider-light hover:bg-hover cursor-pointer ${expandedProductId === product.id ? 'bg-accent/5' : ''}`}
-                                        onClick={(e) =>
-                                            handleRowClick(product, e)
-                                        }>
-                                        <td className='py-3 px-4 font-medium text-on-surface'>
-                                            {productHasActiveVariations(product) ? (
-                                                <span className='flex items-center gap-1'>
-                                                    {expandedProductId === product.id ? (
-                                                        <ChevronDown className='w-3.5 h-3.5 text-accent shrink-0' />
-                                                    ) : (
-                                                        <ChevronRight className='w-3.5 h-3.5 text-accent shrink-0' />
-                                                    )}
-                                                    {product.sku}
-                                                </span>
-                                            ) : (
-                                                product.sku
-                                            )}
-                                        </td>
-                                        <td className='py-3 px-4 text-on-body'>
-                                            {product.name}
-                                        </td>
-                                        <td className='py-3 px-4 text-muted'>
-                                            {product.categories?.name ||
-                                                'Sin categoría'}
-                                        </td>
-                                        <td className='py-3 px-4 text-right'>
-                                            {product.unit_cost != null ? (
-                                                <span className='font-medium text-on-body'>
-                                                    $
-                                                    {new Intl.NumberFormat(
-                                                        'es-CO',
-                                                    ).format(product.unit_cost)}
-                                                </span>
-                                            ) : (
-                                                <span className='text-faint italic'>
-                                                    —
-                                                </span>
-                                            )}
-                                        </td>
-                                        <td className='py-3 px-4 text-on-body font-bold text-right'>
-                                            $
-                                            {new Intl.NumberFormat(
-                                                'es-CO',
-                                            ).format(product.price)}
-                                        </td>
-                                        <td className='py-3 px-4 text-right'>
-                                            {product.unit_cost != null &&
-                                            product.price > 0 ? (
-                                                (() => {
-                                                    const margin = Math.round(
-                                                        ((product.price -
-                                                            product.unit_cost) /
-                                                            product.price) *
-                                                            100,
-                                                    )
-                                                    return (
-                                                        <span
-                                                            className={`px-2.5 py-0.5 text-xs font-medium rounded-full ${
-                                                                margin >= 30
-                                                                    ? 'bg-green-100 text-green-800'
-                                                                    : margin >=
-                                                                        10
-                                                                      ? 'bg-amber-100 text-amber-800'
-                                                                      : 'bg-red-100 text-red-800'
-                                                            }`}>
-                                                            {margin}%
-                                                        </span>
-                                                    )
-                                                })()
-                                            ) : (
-                                                <span className='text-faint italic'>
-                                                    —
-                                                </span>
-                                            )}
-                                        </td>
-                                        <td className='py-3 px-4 whitespace-nowrap'>
-                                            {product.track_stock !== false ? (
-                                                <span className='px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 rounded-full whitespace-nowrap'>
-                                                    Sí
-                                                </span>
-                                            ) : (
-                                                <span className='px-2.5 py-0.5 text-xs font-medium bg-subtle text-muted rounded-full whitespace-nowrap'>
-                                                    No
-                                                </span>
-                                            )}
-                                        </td>
-                                        <td className='py-3 px-4 whitespace-nowrap'>
-                                            {productHasActiveVariations(product) ? (
-                                                <span className='px-2.5 py-0.5 text-xs font-medium bg-accent/10 text-accent rounded-full whitespace-nowrap'>
-                                                    {getActiveVariations(product).length} {product.variation_type.toLowerCase()}
-                                                </span>
-                                            ) : (
-                                                <span className='text-faint italic text-xs'>—</span>
-                                            )}
-                                        </td>
-                                        <td className='py-3 px-4 whitespace-nowrap'>
-                                            {product.is_active ? (
-                                                <span className='px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full'>
-                                                    Activo
-                                                </span>
-                                            ) : (
-                                                <span className='px-2.5 py-0.5 text-xs font-medium bg-red-100 text-red-800 rounded-full'>
-                                                    Inactivo
-                                                </span>
-                                            )}
-                                        </td>
-                                        <td className='py-3 px-2 text-right whitespace-nowrap'>
-                                            <section className='hidden sm:flex items-center justify-end gap-3'>
-                                                <button
-                                                    onClick={(e) =>
-                                                        onEditProduct(
-                                                            product.id,e
-                                                        )
-                                                    }
-                                                    className='bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-800 p-1.5 rounded-sm cursor-pointer'
-                                                    title='Editar Producto'>
-                                                    <Edit2 className='w-4 h-4 text-accent' />
-                                                </button>
-                                                <button
-                                                    onClick={(e) =>
-                                                        onDeleteProduct(
-                                                            product.id,
-                                                            e
-                                                        )
-                                                    }
-                                                    className='hover:bg-red-500 bg-red-400 text-white p-1.5 rounded-sm cursor-pointer'
-                                                    title='Eliminar Producto'>
-                                                    <Trash2 className='w-4 h-4' />
-                                                </button>
-                                            </section>
-                                            <section className='relative sm:hidden'>
-                                                <button
-                                                    onClick={() =>
-                                                        setShowMobileActions(
-                                                            showMobileActions ===
-                                                                product.id
-                                                                ? null
-                                                                : product.id,
-                                                        )
-                                                    }
-                                                    className='p-1 text-on-body hover:bg-hover-strong rounded-lg transition cursor-pointer'>
-                                                    <EllipsisVertical className='w-5 h-5' />
-                                                </button>
-                                                {showMobileActions ===
-                                                    product.id && (
-                                                    <section
-                                                        className='fixed inset-0 z-40'
-                                                        onClick={() =>
-                                                            setShowMobileActions(
-                                                                null,
-                                                            )
-                                                        }
-                                                    />
-                                                )}
-                                                <section
-                                                    className={`absolute right-0 mt-1 w-40 bg-surface border border-divider rounded-lg shadow-lg z-50 ${showMobileActions === product.id ? 'block' : 'hidden'}`}>
-                                                    <button
-                                                        onClick={(e) => {
-                                                            onEditProduct(
-                                                                product.id,e
-                                                            )
-                                                            setShowMobileActions(
-                                                                null,
-                                                            )
-                                                        }}
-                                                        className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-on-body hover:bg-hover rounded-t-lg cursor-pointer'>
-                                                        <Edit2 className='w-4 h-4 text-accent' />
-                                                        Editar
-                                                    </button>
-                                                    <button
-                                                        onClick={(e) => {
-                                                            onDeleteProduct(
-                                                                product.id,e
-                                                            )
-                                                            setShowMobileActions(
-                                                                null,
-                                                            )
-                                                        }}
-                                                        className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-red-600 hover:bg-hover rounded-b-lg cursor-pointer'>
-                                                        <Trash2 className='w-4 h-4' />
-                                                        Eliminar
-                                                    </button>
-                                                </section>
-                                            </section>
-                                        </td>
-                                    </tr>
-                                    {expandedProductId === product.id && product.product_variations
-                                        ?.filter(v => v.is_active !== false)
-                                        .map((v) => (
-                                        <tr
-                                            key={v.id}
-                                            className='border-b border-divider-light bg-accent/5 hover:bg-accent/10 cursor-pointer'
-                                            onClick={(e) => onEditVariation(v, e)}>
-                                            <td className='py-2 px-4'></td>
-                                            <td className='py-2 px-4'>
-                                                <span className='flex items-center gap-2 text-sm'>
-                                                    <span className='w-1.5 h-1.5 rounded-full bg-accent shrink-0' />
-                                                    <span className='font-medium text-on-surface'>{v.variation_name}</span>
-                                                </span>
-                                            </td>
-                                            <td className='py-2 px-4 text-xs text-muted'>
-                                                —
-                                            </td>
-                                            <td className='py-2 px-4 text-right'>
-                                                {v.unit_cost ? (
-                                                    <span className='text-sm font-medium text-on-body'>
-                                                        ${new Intl.NumberFormat('es-CO').format(v.unit_cost)}
-                                                    </span>
-                                                ) : (
-                                                    <span className='text-faint italic text-xs'>—</span>
-                                                )}
-                                            </td>
-                                            <td className='py-2 px-4 text-sm font-bold text-on-body text-right'>
-                                                ${new Intl.NumberFormat('es-CO').format(v.price)}
-                                            </td>
-                                            <td className='py-2 px-4 text-right'>
-                                                {v.unit_cost && v.price > 0 ? (
-                                                    <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${
-                                                        Math.round(((v.price - v.unit_cost) / v.price) * 100) >= 30
-                                                            ? 'bg-green-100 text-green-800'
-                                                            : Math.round(((v.price - v.unit_cost) / v.price) * 100) >= 10
-                                                            ? 'bg-amber-100 text-amber-800'
-                                                            : 'bg-red-100 text-red-800'
-                                                    }`}>
-                                                        {Math.round(((v.price - v.unit_cost) / v.price) * 100)}%
-                                                    </span>
-                                                ) : (
-                                                    <span className='text-faint italic text-xs'>—</span>
-                                                )}
-                                            </td>
-                                            <td className='py-2 px-4 whitespace-nowrap'>
-                                                <span className='text-xs text-muted'>{v.stock || 0} uds</span>
-                                            </td>
-                                            <td className='py-2 px-4 whitespace-nowrap'>
-                                                <span className='text-xs text-muted'>—</span>
-                                            </td>
-                                            <td className='py-2 px-4 whitespace-nowrap'>
-                                                <div className='flex items-center gap-1.5'>
-                                                <button
-                                                    onClick={(e) => onEditVariation(v, e)}
-                                                    className='bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-800 p-1 rounded-sm cursor-pointer'
-                                                    title='Editar Variación'>
-                                                    <Edit2 className='w-3.5 h-3.5 text-accent' />
-                                                </button>
-                                                <button
-                                                    onClick={(e) => handleDeleteVariation(v.id, e)}
-                                                    className='hover:bg-red-500 bg-red-400 text-white p-1 rounded-sm cursor-pointer'
-                                                    title='Eliminar Variación'>
-                                                    <Trash2 className='w-3.5 h-3.5' />
-                                                </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                    </Fragment>
-                                ))}
+                                    {displayedProducts.map(renderProductRow)}
                             </tbody>
                         </table>
                     </div>

@@ -8,6 +8,8 @@ import { useStore } from '../../../../app/providers/store'
 import { History, Search, ArrowDownCircle, ArrowUpCircle, ShoppingCart, Undo2, List, ChevronDown } from 'lucide-react'
 import { useFormatDate } from '../../../../shared/helpers/useFormatDate'
 import { normalizeSearch } from '../../../../shared/helpers/normalizeSearch'
+import { getProducts } from '../../../products/helpers/getProducts'
+import { InventorySummary } from '../../../inventory/components/InventorySummary'
 
 const typeConfig = {
     entry: { label: 'Entrada', icon: ArrowDownCircle, cls: 'bg-emerald-100 text-emerald-700' },
@@ -47,6 +49,9 @@ export const InventoryMovements = () => {
     const { user } = useStore()
     const businessId = user?.profile?.business_id || user?.data?.user?.id
 
+    const [allProducts, setAllProducts] = useState([])
+    const [productsLoading, setProductsLoading] = useState(true)
+
     const [filter, setFilter] = useState('month')
     const [rangeStart, setRangeStart] = useState('')
     const [rangeEnd, setRangeEnd] = useState('')
@@ -67,6 +72,23 @@ export const InventoryMovements = () => {
     const formatDate = useFormatDate()
 
     const initialLoad = useRef(true)
+
+    useEffect(() => {
+        if (!businessId) return
+        const loadProducts = async () => {
+            try {
+                const data = await getProducts(businessId)
+                setAllProducts(data)
+            } catch (err) {
+                console.error(err)
+            } finally {
+                setProductsLoading(false)
+            }
+        }
+        loadProducts()
+    }, [businessId])
+
+    const activeProducts = allProducts.filter((p) => p.is_active !== false)
 
     useEffect(() => {
         if (!businessId) return
@@ -147,10 +169,20 @@ export const InventoryMovements = () => {
 
     return (
         <section className='space-y-6 pb-12'>
+
             <section>
                 <h1 className='text-2xl font-bold'>Inventario y Movimientos</h1>
                 <p className='text-on-body'>Estado del stock, valorización e historial de movimientos</p>
             </section>
+            {productsLoading ? (
+                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4'>
+                    {[1, 2, 3, 4].map(i => (
+                        <div key={i} className='h-28 bg-gray-100 rounded-lg animate-pulse' />
+                    ))}
+                </div>
+            ) : (
+                <InventorySummary products={activeProducts} />
+            )}
 
             {invLoading ? (
                 <ReportSkeletons type='inventory' />

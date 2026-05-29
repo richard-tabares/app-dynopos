@@ -9,39 +9,48 @@ export const ProductCard = ({ product, onAddToCart }) => {
     const addToCart = onAddToCart || storeAddToCart
     const [showVariationPicker, setShowVariationPicker] = useState(false)
 
-    const hasVariations = productHasActiveVariations(product)
-    const originalStock = product.inventory?.[0]?.stock || 0
-    const cartQuantity = cart.find(item => item.product_id === product.id)?.quantity || 0
-    const availableStock = originalStock - cartQuantity
+    const variations = getActiveVariations(product)
+    const hasMultipleVariations = productHasActiveVariations(product)
+
+    const defaultVar = variations[0]
     const noStockControl = product.track_stock === false
 
+    let stockDisplay = null
+    if (defaultVar && !hasMultipleVariations) {
+        const cartQty = cart.reduce((sum, item) => {
+            return item.product_id === product.id ? sum + item.quantity : sum
+        }, 0)
+        const availStock = defaultVar.stock - cartQty
+        stockDisplay = { stock: defaultVar.stock, available: availStock }
+    } else if (defaultVar) {
+        stockDisplay = { stock: defaultVar.stock, available: defaultVar.stock }
+    }
+
     const handleClick = () => {
-        if (hasVariations) {
+        if (hasMultipleVariations) {
             setShowVariationPicker(true)
-        } else {
-            addToCart(product)
+        } else if (defaultVar) {
+            addToCart(product, defaultVar)
         }
     }
 
     const variationType = product.variation_type || 'Variación'
-    const priceDisplay = hasVariations
-        ? (() => {
-              const prices = getActiveVariations(product).map(v => v.price)
-              const min = Math.min(...prices)
-              const max = Math.max(...prices)
-              return min === max
-                  ? `$${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(min)}`
-                  : `Desde $${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(min)}`
-          })()
-        : `$${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(product.price)}`
+    const prices = variations.map(v => v.price)
+    const minPrice = Math.min(...prices)
+    const maxPrice = Math.max(...prices)
+    const priceDisplay = minPrice === maxPrice
+        ? `$${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(minPrice)}`
+        : `Desde $${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(minPrice)}`
+
+    const isDisabled = !hasMultipleVariations && defaultVar && !noStockControl && (stockDisplay?.available ?? 1) <= 0
 
     return (
         <>
             <button
                 onClick={handleClick}
-                disabled={!hasVariations && !noStockControl && availableStock <= 0}
+                disabled={isDisabled}
                 className={`bg-surface p-4 rounded-lg border transition-all duration-300 flex items-center justify-between group ${
-                    !hasVariations && !noStockControl && availableStock <= 0
+                    isDisabled
                         ? 'border-divider opacity-50 cursor-not-allowed bg-subtle grayscale' 
                         : 'border-divider hover:border-accent/85 hover:bg-hover cursor-pointer'
                 }`}
@@ -59,24 +68,24 @@ export const ProductCard = ({ product, onAddToCart }) => {
                 
                 <div className='flex items-center gap-4'>
                     <div className='flex flex-col items-end gap-1'>
-                        {hasVariations && (
+                        {hasMultipleVariations && (
                             <span className='text-[10px] px-2 py-0.5 rounded-full font-medium bg-accent/10 text-accent'>
-                                {product.product_variations.length} {variationType.toLowerCase()}
+                                {variations.length} {variationType.toLowerCase()}
                             </span>
                         )}
-                        {!hasVariations && (
+                        {!hasMultipleVariations && defaultVar && (
                             <span className={`text-xs px-2 py-1 rounded-full font-medium ${
                                 noStockControl
                                     ? 'bg-subtle text-on-body'
-                                    : availableStock <= 0
+                                    : (stockDisplay?.available ?? 0) <= 0
                                     ? 'bg-red-100 text-red-800'
                                     : 'bg-green-100 text-green-800'
                             }`}>
                                 {noStockControl
                                     ? 'Sin control'
-                                    : availableStock <= 0
+                                    : (stockDisplay?.available ?? 0) <= 0
                                     ? 'Sin Stock'
-                                    : `Stock: ${availableStock}`}
+                                    : `Stock: ${stockDisplay.available}`}
                             </span>
                         )}
                     </div>

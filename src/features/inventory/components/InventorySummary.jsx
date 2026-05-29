@@ -3,34 +3,23 @@ import { productHasActiveVariations, getActiveVariations } from '../../../shared
 
 export const InventorySummary = ({ products = [] }) => {
     const getStock = (p) => {
-        if (productHasActiveVariations(p)) {
-            return getActiveVariations(p).reduce((sum, v) => sum + (v.stock || 0), 0)
-        }
-        return p.inventory?.[0]?.stock || 0
+        return getActiveVariations(p).reduce((sum, v) => sum + (v.stock || 0), 0)
     }
 
     const getUnitCost = (p) => {
-        if (productHasActiveVariations(p)) {
-            const active = getActiveVariations(p)
-            if (active.length === 0) return 0
-            const totalStock = active.reduce((sum, v) => sum + (v.stock || 0), 0)
-            if (totalStock === 0) return 0
-            const totalValue = active.reduce((sum, v) => sum + ((v.stock || 0) * (v.unit_cost || 0)), 0)
-            return totalValue / totalStock
-        }
-        return p.unit_cost || 0
+        const active = getActiveVariations(p)
+        if (active.length === 0) return 0
+        const totalStock = active.reduce((sum, v) => sum + (v.stock || 0), 0)
+        if (totalStock === 0) return 0
+        const totalValue = active.reduce((sum, v) => sum + ((v.stock || 0) * (v.unit_cost || 0)), 0)
+        return totalValue / totalStock
     }
 
     const totalProducts = products.length
     const stockTotal = products.reduce((acc, p) => acc + getStock(p), 0)
     const lowStockProducts = products.filter(p => {
         if (p.track_stock === false) return false
-        if (productHasActiveVariations(p)) {
-            return getActiveVariations(p).some(v => (v.stock || 0) <= (v.min_stock || 0))
-        }
-        const stock = getStock(p)
-        const minStock = p.inventory?.[0]?.min_stock || 0
-        return stock <= minStock
+        return getActiveVariations(p).some(v => (v.stock || 0) <= (v.min_stock || 0))
     })
     const lowStockCount = lowStockProducts.length
     const inventoryValue = products.reduce((acc, p) => acc + (getStock(p) * getUnitCost(p)), 0)

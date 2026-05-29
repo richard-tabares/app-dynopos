@@ -12,12 +12,12 @@ export const AdjustmentModal = ({
     const [movementType, setMovementType] = useState('entry')
     const [formData, setFormData] = useState({
         quantity: '',
-        unit_cost: variation ? (variation.unit_cost ?? '') : (product.unit_cost ?? ''),
-        min_stock: variation ? (variation.min_stock ?? '') : (product.inventory?.[0]?.min_stock ?? ''),
+        unit_cost: variation?.unit_cost ?? '',
+        min_stock: variation?.min_stock ?? '',
         notes: '',
     })
 
-    const currentStock = variation ? (variation.stock || 0) : (product.inventory?.[0]?.stock || 0)
+    const currentStock = variation?.stock || 0
     const isFormValid = formData.quantity !== '' && parseInt(formData.quantity) > 0
 
     const handleChange = (e) => {
@@ -49,7 +49,7 @@ export const AdjustmentModal = ({
                 min_stock: formData.min_stock === '' ? undefined : parseInt(formData.min_stock),
                 notes: formData.notes || null,
                 business_id: product.business_id,
-                variation_id: variation ? variation.id : undefined,
+                variation_id: variation.id,
             })
         } finally {
             setLoading(false)

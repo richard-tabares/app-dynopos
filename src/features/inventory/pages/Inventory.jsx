@@ -17,7 +17,6 @@ import { productHasActiveVariations, getActiveVariations } from '../../../shared
 import { getProducts } from '../../products/helpers/getProducts'
 import { AdjustmentModal } from '../components/AdjustmentModal'
 import { updateInventory } from '../helpers/updateInventory'
-import { InventorySummary } from '../components/InventorySummary'
 import { normalizeSearch } from '../../../shared/helpers/normalizeSearch'
 
 export const Inventory = () => {
@@ -52,21 +51,14 @@ export const Inventory = () => {
 
     const activeProducts = products.filter((p) => p.is_active !== false)
 
-    const getVariationsStock = (product) => {
-        if (!productHasActiveVariations(product)) return null
+    const getProductStock = (product) => {
         return getActiveVariations(product).reduce((sum, v) => sum + (v.stock || 0), 0)
     }
 
-    const getProductStock = (product) => {
-        const hasVariations = productHasActiveVariations(product)
-        if (hasVariations) {
-            return getVariationsStock(product) || 0
-        }
-        return product.inventory?.[0]?.stock || 0
-    }
-
     const getProductMinStock = (product) => {
-        return product.inventory?.[0]?.min_stock || 0
+        const variations = getActiveVariations(product)
+        if (variations.length === 0) return 0
+        return Math.min(...variations.map(v => v.min_stock || 0))
     }
 
     const getStockStatus = (stock, minStock) => {
@@ -104,43 +96,23 @@ export const Inventory = () => {
         if (filterStatus === 'noStockControl') {
             matchesFilter = product.track_stock === false
         } else if (filterStatus === 'noStock') {
-            if (hasVariations) {
-                matchesFilter =
-                    product.track_stock !== false &&
-                    getActiveVariations(product).some((v) => v.stock === 0)
-            } else {
-                matchesFilter =
-                    product.track_stock !== false && stock === 0
-            }
+            matchesFilter =
+                product.track_stock !== false &&
+                getActiveVariations(product).some((v) => v.stock === 0)
         } else if (filterStatus === 'lowStock') {
-            if (hasVariations) {
-                matchesFilter =
-                    product.track_stock !== false &&
-                    getActiveVariations(product).some((v) => {
-                        const vm = v.min_stock ?? minStock
-                        return v.stock > 0 && vm > 0 && v.stock < vm
-                    })
-            } else {
-                matchesFilter =
-                    product.track_stock !== false &&
-                    stock > 0 &&
-                    minStock > 0 &&
-                    stock < minStock
-            }
+            matchesFilter =
+                product.track_stock !== false &&
+                getActiveVariations(product).some((v) => {
+                    const vm = v.min_stock ?? 0
+                    return v.stock > 0 && vm > 0 && v.stock < vm
+                })
         } else if (filterStatus === 'withStock') {
-            if (hasVariations) {
-                matchesFilter =
-                    product.track_stock !== false &&
-                    getActiveVariations(product).every((v) => {
-                        const vm = v.min_stock ?? minStock
-                        return v.stock > 0 && (vm === 0 || v.stock >= vm)
-                    })
-            } else {
-                matchesFilter =
-                    product.track_stock !== false &&
-                    stock > 0 &&
-                    (minStock === 0 || stock >= minStock)
-            }
+            matchesFilter =
+                product.track_stock !== false &&
+                getActiveVariations(product).every((v) => {
+                    const vm = v.min_stock ?? 0
+                    return v.stock > 0 && (vm === 0 || v.stock >= vm)
+                })
         }
 
         return matchesSearch && matchesFilter
@@ -150,13 +122,11 @@ export const Inventory = () => {
 
     const handleRowClick = (product, e) => {
         if (e.target.closest('button')) return
-        const hasVariations = productHasActiveVariations(product)
-        if (hasVariations) {
-            setExpandedProductId(
-                expandedProductId === product.id ? null : product.id,
-            )
-        } else {
-            handleOpenModal(product, null, e)
+        const vars = getActiveVariations(product)
+        if (vars.length > 1) {
+            setExpandedProductId(expandedProductId === product.id ? null : product.id)
+        } else if (vars.length === 1) {
+            handleOpenModal(product, vars[0], e)
         }
     }
 
@@ -240,8 +210,6 @@ export const Inventory = () => {
                         alertas de stock bajo.
                     </p>
                 </section>
-
-                <InventorySummary products={activeProducts} />
 
                 <section className='bg-surface border border-outline shadow-xs rounded-lg'>
                     <section className='border-b border-outline flex justify-between items-center px-6 py-4 bg-subtle'>
@@ -336,115 +304,61 @@ export const Inventory = () => {
                             </thead>
                             <tbody>
                                 {displayedProducts.map((product) => {
-                                    const hasVariations = productHasActiveVariations(product)
-                                    const isExpanded =
-                                        expandedProductId === product.id
+                                    const variations = getActiveVariations(product)
+                                    const hasMultiple = variations.length > 1
+                                    const isExpanded = expandedProductId === product.id
                                     const stock = getProductStock(product)
                                     const minStock = getProductMinStock(product)
-                                    const isUntracked =
-                                        product.track_stock === false
-                                    const status = getStockStatus(
-                                        stock,
-                                        minStock,
-                                    )
+                                    const isUntracked = product.track_stock === false
+                                    const status = getStockStatus(stock, minStock)
+                                    const defVar = variations[0]
 
                                     return (
                                         <Fragment key={product.id}>
                                             <tr
                                                 className={`border-b border-divider-light hover:bg-hover cursor-pointer ${isExpanded ? 'bg-accent/5' : ''}`}
-                                                onClick={(e) =>
-                                                    handleRowClick(product, e)
-                                                }>
+                                                onClick={(e) => handleRowClick(product, e)}>
                                                 <td className='py-3 px-4 font-medium text-on-surface'>
-                                                    {hasVariations ? (
+                                                    {hasMultiple ? (
                                                         <span className='flex items-center gap-1'>
                                                             {isExpanded ? (
                                                                 <ChevronDown className='w-3.5 h-3.5 text-accent shrink-0' />
                                                             ) : (
                                                                 <ChevronRight className='w-3.5 h-3.5 text-accent shrink-0' />
                                                             )}
-                                                            {product.sku}
+                                                            {defVar?.sku || ''}
                                                         </span>
                                                     ) : (
-                                                        product.sku
+                                                        defVar?.sku || ''
                                                     )}
                                                 </td>
                                                 <td className='py-3 px-4 text-on-body'>
                                                     {product.name}
                                                 </td>
                                                 <td className='py-3 px-4 text-muted'>
-                                                    {product.categories?.name ||
-                                                        'Sin categoría'}
+                                                    {product.categories?.name || 'Sin categoría'}
                                                 </td>
-                                                <td
-                                                    className={`py-3 px-4 text-right font-bold ${isUntracked ? 'text-muted' : status.label === 'Normal' ? 'text-on-body' : 'text-red-600'}`}>
+                                                <td className={`py-3 px-4 text-right font-bold ${isUntracked ? 'text-muted' : status.label === 'Normal' ? 'text-on-body' : 'text-red-600'}`}>
                                                     {isUntracked ? '—' : stock}
                                                 </td>
                                                 <td className='py-3 px-4 text-right text-muted'>
-                                                    {isUntracked
-                                                        ? '—'
-                                                        : minStock}
+                                                    {isUntracked ? '—' : minStock}
                                                 </td>
                                                 <td className='py-3 px-4 text-right'>
-                                                    {product.unit_cost !=
-                                                        null &&
-                                                    product.unit_cost > 0 ? (
+                                                    {defVar?.unit_cost ? (
                                                         <span className='text-on-body font-medium'>
-                                                            $
-                                                            {new Intl.NumberFormat(
-                                                                'es-CO',
-                                                                {
-                                                                    maximumFractionDigits: 0,
-                                                                },
-                                                            ).format(
-                                                                product.unit_cost,
-                                                            )}
-                                                        </span>
-                                                    ) : hasVariations ? (
-                                                        <span className='text-faint italic text-xs'>
-                                                            —
+                                                            ${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(defVar.unit_cost)}
                                                         </span>
                                                     ) : (
-                                                        <span className='text-faint italic'>
-                                                            —
-                                                        </span>
+                                                        <span className='text-faint italic'>—</span>
                                                     )}
                                                 </td>
                                                 <td className='py-3 px-4 text-right font-bold text-on-surface'>
-                                                    {!isUntracked &&
-                                                    product.unit_cost != null &&
-                                                    !hasVariations
-                                                        ? `$${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(stock * product.unit_cost)}`
-                                                        : hasVariations
-                                                          ? `$${new Intl.NumberFormat(
-                                                                'es-CO',
-                                                                {
-                                                                    maximumFractionDigits: 0,
-                                                                },
-                                                            ).format(
-                                                                (
-                                                                    product.product_variations ||
-                                                                    []
-                                                                )
-                                                                    .filter(
-                                                                        (v) =>
-                                                                            v.is_active !==
-                                                                            false,
-                                                                    )
-                                                                    .reduce(
-                                                                        (
-                                                                            sum,
-                                                                            v,
-                                                                        ) =>
-                                                                            sum +
-                                                                            (v.stock ||
-                                                                                0) *
-                                                                                (v.unit_cost ||
-                                                                                    0),
-                                                                        0,
-                                                                    ),
-                                                            )}`
-                                                          : '—'}
+                                                    {!isUntracked
+                                                        ? `$${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(
+                                                              variations.reduce((sum, v) => sum + (v.stock || 0) * (v.unit_cost || 0), 0)
+                                                          )}`
+                                                        : '—'}
                                                 </td>
                                                 <td className='py-3 px-4'>
                                                     {isUntracked ? (
@@ -452,42 +366,24 @@ export const Inventory = () => {
                                                             Sin Control
                                                         </span>
                                                     ) : (
-                                                        <span
-                                                            className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${status.cls}`}>
-                                                            {status.icon && (
-                                                                <AlertCircle className='w-3 h-3' />
-                                                            )}
+                                                        <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${status.cls}`}>
+                                                            {status.icon && <AlertCircle className='w-3 h-3' />}
                                                             {status.label}
                                                         </span>
                                                     )}
                                                 </td>
                                                 <td className='py-3 px-2 text-right whitespace-nowrap'>
-                                                    {!isUntracked &&
-                                                        !hasVariations && (
-                                                            <button
-                                                                onClick={(e) =>
-                                                                    handleOpenModal(
-                                                                        product,
-                                                                        null,
-                                                                        e,
-                                                                    )
-                                                                }
-                                                                className='bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-800 p-1.5 rounded-sm cursor-pointer'
-                                                                title='Ajustar Inventario'>
-                                                                <Settings2 className='w-4 h-4 text-accent' />
-                                                            </button>
-                                                        )}
+                                                    {!isUntracked && defVar && (
+                                                        <button
+                                                            onClick={(e) => handleOpenModal(product, defVar, e)}
+                                                            className='bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-800 p-1.5 rounded-sm cursor-pointer'
+                                                            title='Ajustar Inventario'>
+                                                            <Settings2 className='w-4 h-4 text-accent' />
+                                                        </button>
+                                                    )}
                                                 </td>
                                             </tr>
-                                            {isExpanded &&
-                                                hasVariations &&
-                                                product.product_variations
-                                                    .filter(
-                                                        (v) =>
-                                                            v.is_active !==
-                                                            false,
-                                                    )
-                                                    .map((v) => {
+                                            {isExpanded && hasMultiple && variations.map((v) => {
                                                         const vStatus =
                                                             getStockStatus(
                                                                 v.stock || 0,
