@@ -4,7 +4,6 @@ import {
     ShoppingCart,
     Package,
     BarChart3,
-    Tags,
     Settings,
     X,
     LogOut,
@@ -87,12 +86,6 @@ export const SideBar = () => {
             label: 'Productos',
             icon: Package,
             path: '/products',
-        },
-        {
-            id: 'categories',
-            label: 'Categorías',
-            icon: Tags,
-            path: '/categories',
         },
         {
             id: 'reports',

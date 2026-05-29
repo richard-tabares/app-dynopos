@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Tag, Plus, Edit2, Trash2, Search, Loader, Save, ChevronDown } from 'lucide-react'
+import { Tag, Plus, Edit2, Trash2, Search, Loader, Save, ChevronDown, ArrowLeft } from 'lucide-react'
+import { Link } from 'react-router'
 import { sileo } from 'sileo'
 import { useStore } from '../../../app/providers/store'
 import { Modal } from '../../../shared/components/Modal'
@@ -249,6 +250,17 @@ export const Categories = () => {
             )}
 
             <section className='flex flex-col gap-6'>
+                {/* Migas de pan / breadcrumb */}
+                <nav className='flex items-center gap-2 text-sm text-muted'>
+                    <Link
+                        to='/products'
+                        className='flex items-center gap-1 text-accent hover:text-accent/80 transition font-medium'>
+                        <ArrowLeft className='w-4 h-4' />
+                        Productos
+                    </Link>
+                    <span>/</span>
+                    <span className='text-on-body font-medium'>Categorías</span>
+                </nav>
                 {/* Titulo de la sección categorías */}
                 <section>
                     <h1 className='text-2xl font-bold'>Categorías</h1>

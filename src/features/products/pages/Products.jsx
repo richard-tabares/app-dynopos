@@ -800,7 +800,7 @@ export const Products = () => {
                                             }}
                                             className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-on-body hover:bg-hover rounded-t-lg cursor-pointer'>
                                             <Package className='w-4 h-4' />
-                                            Nuevo Producto
+                                            Crear Producto
                                         </button>
                                         <button
                                             onClick={() => {
