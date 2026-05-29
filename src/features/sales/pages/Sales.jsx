@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, useRef } from 'react'
 import { Search, TrendingUp, DollarSign, Bell, History, X, ChevronDown, AlertTriangle, Trash2 } from 'lucide-react'
 import { sileo } from 'sileo'
 import { useStore } from '../../../app/providers/store'
@@ -21,6 +21,7 @@ import { getTodayRevenue } from '../helpers/getTodayRevenue'
 export const Sales = () => {
     const { user, products, setProducts, cart, clearCart, setTodayRevenue, setCategories, setSubscription, addToCart, pendingOrders, currentLabel, initCurrentOrder, holdCurrentOrder, switchToOrder, finalizeCurrentOrder, resetOrderState } = useStore()
     const [searchTerm, setSearchTerm] = useState('')
+    const searchInputRef = useRef(null)
     const [loading, setLoading] = useState(false)
     const [, setLastSaleTicket] = useState(null)
     const [showConfirmationModal, setShowConfirmationModal] = useState(false)
@@ -231,6 +232,7 @@ export const Sales = () => {
                             <div className='relative'>
                                 <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-faint' />
                                 <input
+                                    ref={searchInputRef}
                                     type='search'
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -248,7 +250,7 @@ export const Sales = () => {
                             </div>
                             {searchTerm.trim() && (
                                 <button
-                                    onClick={() => { setSearchTerm(''); setVisibleCount(10) }}
+                                    onClick={() => { setSearchTerm(''); setVisibleCount(10); searchInputRef.current?.focus() }}
                                     className='flex items-center gap-2 px-3 py-1.5 bg-accent self-start text-sm font-medium rounded-md transition-colors cursor-pointer text-surface hover:bg-accent/85'
                                 >
                                     <X className='w-4 h-4' />
