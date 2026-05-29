@@ -3,7 +3,12 @@ import { Loader, Save, Layers, Settings2 } from 'lucide-react'
 import { Modal } from '../../../shared/components/Modal'
 import { updateVariation as updateVariationApi } from '../helpers/updateVariation'
 
-export const VariationEditModal = ({ variation, onClose, onSaved, onOpenStockAdjust }) => {
+export const VariationEditModal = ({
+    variation,
+    onClose,
+    onSaved,
+    onOpenStockAdjust,
+}) => {
     const [formData, setFormData] = useState({
         variation_name: variation.variation_name || '',
         price: variation.price ?? '',
@@ -14,7 +19,8 @@ export const VariationEditModal = ({ variation, onClose, onSaved, onOpenStockAdj
     })
     const [submitting, setSubmitting] = useState(false)
 
-    const isFormValid = formData.variation_name.trim() && Number(formData.price) > 0
+    const isFormValid =
+        formData.variation_name.trim() && Number(formData.price) > 0
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target
@@ -45,15 +51,15 @@ export const VariationEditModal = ({ variation, onClose, onSaved, onOpenStockAdj
     }
 
     return (
-        <Modal onClose={onClose} title='Editar Variación' icon={Layers} size='xl'>
+        <Modal
+            onClose={onClose}
+            title='Editar Variación'
+            icon={Layers}
+            size='xl'>
             <div className='p-6'>
-                <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
-                    <section>
-                        <div className='px-4 py-3 bg-accent/5 border border-accent/85 rounded-md text-sm text-muted flex items-center justify-between'>
-                            <span>Stock actual</span>
-                            <span className='font-semibold text-on-body'>{variation.stock ?? 0}</span>
-                        </div>
-                    </section>
+                <form
+                    className='flex flex-col gap-4'
+                    onSubmit={handleSubmit}>
                     <div className='grid grid-cols-2 gap-4'>
                         <section>
                             <label className='block text-sm font-medium text-on-body mb-1'>
@@ -127,7 +133,10 @@ export const VariationEditModal = ({ variation, onClose, onSaved, onOpenStockAdj
                         </section>
                     </div>
                     <section className='flex items-center justify-between'>
-                        <span className={`text-sm font-medium ${formData.is_active ? 'text-accent' : 'text-muted'}`}>{formData.is_active ? 'Activo' : 'Inactivo'}</span>
+                        <span
+                            className={`text-sm font-medium ${formData.is_active ? 'text-accent' : 'text-muted'}`}>
+                            {formData.is_active ? 'Activo' : 'Inactivo'}
+                        </span>
                         <label className='relative inline-flex items-center cursor-pointer'>
                             <input
                                 type='checkbox'
@@ -141,15 +150,23 @@ export const VariationEditModal = ({ variation, onClose, onSaved, onOpenStockAdj
                     </section>
                     <section className='flex flex-col gap-3 pt-4 border-t border-divider'>
                         {onOpenStockAdjust && (
-                            <button
-                                type='button'
-                                onClick={onOpenStockAdjust}
-                                className='w-full flex items-center justify-center gap-2 px-4 py-3 border border-accent/85 text-accent hover:bg-hover rounded-lg transition cursor-pointer font-medium'>
-                                <Settings2 className='w-4 h-4' />
-                                Ajustar Stock
-                            </button>
+                            <section className='flex flex-row justify-between gap-3'>
+                                <div className='w-1/2 px-4 py-3 border border-accent/85 text-accent rounded-md text-sm flex items-center justify-between'>
+                                    <span>Stock actual</span>
+                                    <span className='font-semibold'>
+                                        {variation.stock ?? 0}
+                                    </span>
+                                </div>
+                                <button
+                                    type='button'
+                                    onClick={onOpenStockAdjust}
+                                    className='w-1/2 flex items-center justify-center gap-2 px-4 py-3 bg-accent/5 border border-accent/85 text-accent hover:bg-hover rounded-lg transition cursor-pointer font-medium'>
+                                    <Settings2 className='w-4 h-4' />
+                                    Ajustar Stock
+                                </button>
+                            </section>
                         )}
-                        <div className='flex justify-end gap-4'>
+                        <div className='flex justify-end gap-4 border-t border-divider pt-4'>
                             <button
                                 type='button'
                                 className='px-4 py-2 border border-outline text-on-body hover:bg-hover font-medium rounded-lg transition cursor-pointer'
@@ -160,9 +177,16 @@ export const VariationEditModal = ({ variation, onClose, onSaved, onOpenStockAdj
                                 type='submit'
                                 disabled={!isFormValid || submitting}
                                 className='px-4 py-2 bg-accent text-surface rounded-lg hover:bg-accent/85 font-medium transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
-                                {submitting
-                                    ? <><Loader className='w-5 h-5 animate-spin text-surface' /> Guardando...</>
-                                    : <><Save className='w-5 h-5' /> Guardar</>}
+                                {submitting ? (
+                                    <>
+                                        <Loader className='w-5 h-5 animate-spin text-surface' />{' '}
+                                        Guardando...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Save className='w-5 h-5' /> Guardar
+                                    </>
+                                )}
                             </button>
                         </div>
                     </section>
