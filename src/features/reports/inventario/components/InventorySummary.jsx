@@ -1,5 +1,5 @@
 import { Package, Boxes, AlertTriangle, DollarSign, AlertCircle } from 'lucide-react'
-import { productHasActiveVariations, getActiveVariations } from '../../../shared/helpers/productHelpers'
+import { getActiveVariations } from '../../../shared/helpers/productHelpers'
 
 export const InventorySummary = ({ products = [] }) => {
     const getStock = (p) => {

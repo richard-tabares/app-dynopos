@@ -11,7 +11,6 @@ const pageInfo = [
     { path: '/sales', title: 'Punto de Venta', description: 'Gestiona tus ventas y transacciones' },
     { path: '/categories', title: 'Categorías', description: 'Administra las categorías de tus productos' },
     { path: '/products', title: 'Productos', description: 'Administra tu catálogo de productos' },
-    { path: '/inventory', title: 'Inventario', description: 'Controla el stock de tus productos' },
     { path: '/reports', title: 'Reportes', description: 'Visualiza análisis y estadísticas de ventas' },
     { path: '/settings/account', title: 'Configuraciones', description: 'Ajusta la configuración de tu negocio' },
     { path: '/settings/billing', title: 'Facturación', description: 'Gestiona tu suscripción y métodos de pago' },

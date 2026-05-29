@@ -9,7 +9,7 @@ import { History, Search, ArrowDownCircle, ArrowUpCircle, ShoppingCart, Undo2, L
 import { useFormatDate } from '../../../../shared/helpers/useFormatDate'
 import { normalizeSearch } from '../../../../shared/helpers/normalizeSearch'
 import { getProducts } from '../../../products/helpers/getProducts'
-import { InventorySummary } from '../../../inventory/components/InventorySummary'
+import { InventorySummary } from '../components/InventorySummary'
 
 const typeConfig = {
     entry: { label: 'Entrada', icon: ArrowDownCircle, cls: 'bg-emerald-100 text-emerald-700' },

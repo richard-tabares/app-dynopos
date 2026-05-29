@@ -703,26 +703,41 @@ export const Modal = ({
                                                 </>
                                             )}
                                         </div>
+                                        {editProductData.id && onOpenStockAdjust && (
+                                            <div className='flex items-center justify-between pt-2 border-t border-divider mt-2'>
+                                                <span className='text-sm text-accent font-medium'>
+                                                    Stock actual:{' '}
+                                                    <span className='font-semibold'>
+                                                        {v.stock ?? 0}
+                                                    </span>
+                                                </span>
+                                                <button
+                                                    type='button'
+                                                    onClick={() =>
+                                                        onOpenStockAdjust(v)
+                                                    }
+                                                    className='flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-accent/5 border border-accent/85 text-accent hover:bg-hover rounded-lg transition cursor-pointer'>
+                                                    <Settings2 className='w-3.5 h-3.5' />
+                                                    Ajustar Stock
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                 ))}
                             </div>
                         </>
                     )}
                     <section className='flex flex-col gap-3 pt-4 border-t border-divider'>
-                        {editProductData.id && onOpenStockAdjust && (
+                        {editProductData.id && onOpenStockAdjust && productType === 'simple' && (
                             <section className='flex flex-row justify-between gap-3'>
-                                {productType === 'simple' && defaultVar && (
-                                    <div className='w-1/2 px-4 py-3 border border-accent/85 text-accent rounded-md text-sm flex items-center justify-between'>
-                                        <span>Stock actual</span>
-                                        <span className='font-semibold text-accent'>{defaultVar.stock ?? 0}</span>
-                                    </div>
-                                )}
+                                <div className='w-1/2 px-4 py-3 border border-accent/85 text-accent rounded-md text-sm flex items-center justify-between'>
+                                    <span>Stock actual</span>
+                                    <span className='font-semibold text-accent'>{defaultVar?.stock ?? 0}</span>
+                                </div>
                                 <button
                                     type='button'
                                     onClick={onOpenStockAdjust}
-                                    className={`flex items-center justify-center gap-2 px-4 py-3 bg-accent/5 border border-accent/85 text-accent hover:bg-hover rounded-lg transition cursor-pointer font-medium ${
-                                        productType === 'simple' && defaultVar ? 'w-1/2' : 'w-full'
-                                    }`}>
+                                    className='w-1/2 flex items-center justify-center gap-2 px-4 py-3 bg-accent/5 border border-accent/85 text-accent hover:bg-hover rounded-lg transition cursor-pointer font-medium'>
                                     <Settings2 className='w-4 h-4' />
                                     Ajustar Stock
                                 </button>

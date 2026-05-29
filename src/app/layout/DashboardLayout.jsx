@@ -11,7 +11,6 @@ const PATH_TO_PERMISSION = {
     '/sales': 'sales',
     '/products': 'products',
     '/categories': 'categories',
-    '/inventory': 'inventory',
     '/reports': 'reports',
     '/settings': 'settings',
 }

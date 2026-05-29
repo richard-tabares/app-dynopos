@@ -8,7 +8,6 @@ import {
     Settings,
     X,
     LogOut,
-    ClipboardList,
     PanelLeftOpen,
     PanelLeftClose,
     ChevronDown,
@@ -94,12 +93,6 @@ export const SideBar = () => {
             label: 'Categorías',
             icon: Tags,
             path: '/categories',
-        },
-        {
-            id: 'inventory',
-            label: 'Inventario',
-            icon: ClipboardList,
-            path: '/inventory',
         },
         {
             id: 'reports',

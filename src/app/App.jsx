@@ -4,7 +4,6 @@ import { Dashboard } from '../features/dashboard/pages/Dashboard'
 import { DashboardLayout } from './layout/DashboardLayout'
 import { Sales } from '../features/sales/pages/Sales'
 import { Categories } from '../features/categories/pages/Categories'
-import { Inventory } from '../features/inventory/pages/Inventory'
 import { Reports } from '../features/reports/pages/Reports'
 import { SalesReports } from '../features/reports/ventas/pages/SalesReports'
 import { InventoryMovements } from '../features/reports/inventario/pages/InventoryMovements'
@@ -109,10 +108,6 @@ export const App = () => {
                             <Route
                                 path='/products'
                                 element={<Products />}
-                            />
-                            <Route
-                                path='/inventory'
-                                element={<Inventory />}
                             />
                             <Route
                                 path='/reports'

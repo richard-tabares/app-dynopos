@@ -3,7 +3,6 @@ export const ALL_SECTIONS = [
   { id: 'sales', label: 'Ventas' },
   { id: 'products', label: 'Productos' },
   { id: 'categories', label: 'Categorías' },
-  { id: 'inventory', label: 'Inventario' },
   {
     id: 'reports',
     label: 'Reportes',
@@ -27,7 +26,7 @@ export const ALL_SECTIONS = [
 
 const ROLE_PRESETS = {
   admin: ALL_SECTIONS.flatMap((s) => [s.id, ...(s.subs || []).map((sub) => `${s.id}.${sub.id}`)]),
-  supervisor: ['sales', 'products', 'categories', 'inventory'],
+  supervisor: ['sales', 'products', 'categories'],
   cajero: ['sales'],
 }
 

@@ -35,7 +35,7 @@ export const LowStockCard = ({ items = [] }) => {
             </div>
 
             <Link 
-                to='/inventory'
+                to='/products'
                 className='mt-6 text-center py-2 text-sm font-medium text-on-surface hover:text-surface hover:bg-accent rounded-lg border border-accent transition-colors'
             >
                 Ver más

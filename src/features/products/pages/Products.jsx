@@ -40,7 +40,7 @@ import { useEscape } from '../../../shared/helpers/useEscape'
 import { normalizeSearch } from '../../../shared/helpers/normalizeSearch'
 import { BulkUploadModal } from '../components/BulkUploadModal'
 import { StockAdjustmentModal } from '../components/StockAdjustmentModal'
-import { updateInventory } from '../../inventory/helpers/updateInventory'
+import { updateInventory } from '../helpers/updateInventory'
 import { productHasActiveVariations, getActiveVariations, getDefaultVariation } from '../../../shared/helpers/productHelpers'
 
 export const Products = () => {
@@ -369,10 +369,10 @@ export const Products = () => {
         }
     }
 
-    const handleOpenStockFromProduct = () => {
-        const defaultVar = getDefaultVariation(editProductData)
-        if (defaultVar) {
-            setStockPreselect({ product: editProductData, variation: defaultVar })
+    const handleOpenStockFromProduct = (variation) => {
+        const varToAdjust = variation || getDefaultVariation(editProductData)
+        if (varToAdjust) {
+            setStockPreselect({ product: editProductData, variation: varToAdjust })
             setShowStockModal(true)
         }
     }
