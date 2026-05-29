@@ -721,7 +721,7 @@ export const Products = () => {
                         <section className='flex items-center gap-2'>
                             <Package className='w-5 h-5 text-accent' />
                             <h2 className='text-lg font-semibold flex flex-col'>
-                                Lista de Productos
+                                Gestión de Productos
                                 <span className='text-sm text-muted font-medium'>
                                     Total ({filteredProducts.length})
                                 </span>
@@ -896,8 +896,8 @@ export const Products = () => {
                                 placeholder='Buscar por código o nombre...'
                             />
                         </div>
-                        <div className='flex flex-wrap items-center gap-2 max-w-full overflow-x-auto scrollbar-none'>
-                            <div className='flex gap-1 bg-disabled/70 rounded-lg p-1 w-fit ml-0 xl:ml-4'>
+                        <div className='flex flex-wrap items-center gap-4 max-w-full overflow-x-auto scrollbar-none'>
+                            <div className='flex gap-1 bg-disabled/70 rounded-lg p-1 w-fit ml-0'>
                                 <button
                                     onClick={() => {
                                         setActiveStatus('all')

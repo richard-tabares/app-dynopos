@@ -269,14 +269,14 @@ export const Modal = ({
                         <label className='block text-sm font-medium text-on-body mb-2'>
                             Tipo de Producto
                         </label>
-                        <div className='grid grid-cols-2 gap-2 border-b pb-4 border-divider'>
+                        <div className='grid grid-cols-2 gap-2'>
                             <button
                                 type='button'
                                 onClick={() => setProductType('simple')}
                                 className={`flex items-center justify-center gap-2 p-3 border rounded-lg transition-colors cursor-pointer ${
                                     productType === 'simple'
                                         ? 'border-accent bg-accent/5 text-accent'
-                                        : 'border-outline bg-surface text-on-body hover:bg-hover'
+                                        : 'border-outline bg-surface text-on-body hover:bg-accent/10'
                                 }`}>
                                 <Package className='w-5 h-5' />
                                 <span className='font-medium'>
