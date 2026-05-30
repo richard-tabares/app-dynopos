@@ -14,6 +14,7 @@ import {
     productHasActiveVariations,
     getDefaultVariation,
 } from '../../../shared/helpers/productHelpers'
+import { procesarCodigoUniversal } from '../../../shared/helpers/procesarCodigoUniversal'
 
 export const Modal = ({
     handleSubmit,
@@ -203,10 +204,15 @@ export const Modal = ({
             }
         }
 
+        const barcodeNormalizado = formData.barcode
+            ? procesarCodigoUniversal(formData.barcode).idBusqueda
+            : formData.barcode
+
         const businessId = JSON.parse(localStorage.getItem('dynopos-store'))
             .state.user.data.user.id
         const sanitizedData = {
             ...formData,
+            barcode: barcodeNormalizado,
             category_id: formData.category_id || null,
             price:
                 productType === 'variant'
@@ -238,6 +244,9 @@ export const Modal = ({
                               .filter((v) => v.variation_name.trim())
                               .map((v) => ({
                                   ...v,
+                                  barcode: v.barcode
+                                      ? procesarCodigoUniversal(v.barcode).idBusqueda
+                                      : null,
                                   price: Number(v.price),
                                   unit_cost: Number(v.unit_cost) || 0,
                               }))
@@ -250,7 +259,9 @@ export const Modal = ({
                                     price: Number(v.price),
                                     unit_cost: Number(v.unit_cost) || 0,
                                     sku: v.sku || null,
-                                    barcode: v.barcode || null,
+                                    barcode: v.barcode
+                                        ? procesarCodigoUniversal(v.barcode).idBusqueda
+                                        : null,
                                     min_stock: v.min_stock || 0,
                                 }))
                           : []

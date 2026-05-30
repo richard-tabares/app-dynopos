@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Loader, Save, Layers, Settings2 } from 'lucide-react'
 import { Modal } from '../../../shared/components/Modal'
 import { updateVariation as updateVariationApi } from '../helpers/updateVariation'
+import { procesarCodigoUniversal } from '../../../shared/helpers/procesarCodigoUniversal'
 
 export const VariationEditModal = ({
     variation,
@@ -40,8 +41,13 @@ export const VariationEditModal = ({
         setSubmitting(true)
 
         try {
+            const barcodeNormalizado = formData.barcode
+                ? procesarCodigoUniversal(formData.barcode).idBusqueda
+                : formData.barcode
+
             const updated = await updateVariationApi(variation.id, {
                 ...formData,
+                barcode: barcodeNormalizado,
                 price: Number(formData.price),
                 unit_cost: Number(formData.unit_cost) || 0,
             })

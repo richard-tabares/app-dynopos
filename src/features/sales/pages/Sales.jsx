@@ -13,6 +13,7 @@ import { SaleConfirmationModal } from '../components/SaleConfirmationModal'
 import { SalesHistoryCard } from '../components/SalesHistoryCard'
 import { apiFetch } from '../../../shared/helpers/apiFetch'
 import { normalizeSearch } from '../../../shared/helpers/normalizeSearch'
+import { procesarCodigoUniversal } from '../../../shared/helpers/procesarCodigoUniversal'
 import { getActiveVariations, productHasActiveVariations } from '../../../shared/helpers/productHelpers'
 import { createSale } from '../helpers/createSale'
 import { getSales } from '../helpers/getSales'
@@ -69,7 +70,7 @@ export const Sales = () => {
             const matchesProduct = normalizeSearch(product.name).includes(term)
             const matchesVariation = variations.some(v =>
                 normalizeSearch(v.sku || '').includes(term) ||
-                normalizeSearch(v.barcode || '').includes(term)
+                normalizeSearch(procesarCodigoUniversal(v.barcode || '').idBusqueda).includes(term)
             )
             const isActive = product.is_active !== false
 
@@ -236,11 +237,13 @@ export const Sales = () => {
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter' && searchTerm.trim()) {
                                             e.preventDefault()
-                                            const isBarcode = /^\d{8,14}$/.test(searchTerm.trim())
+                                            const entrada = searchTerm.trim()
+                                            const codigoNormalizado = procesarCodigoUniversal(entrada).idBusqueda
+                                            const isBarcode = /^\d{8,14}$/.test(entrada)
                                             if (isBarcode) {
                                                 const found = products.flatMap(p =>
                                                     (getActiveVariations(p) || []).map(v => ({ product: p, variation: v }))
-                                                ).find(({ variation }) => variation.barcode === searchTerm.trim())
+                                                ).find(({ variation }) => variation.barcode === codigoNormalizado)
                                                 if (found) {
                                                     handleAddProduct(found.product, found.variation)
                                                     setSearchTerm('')
