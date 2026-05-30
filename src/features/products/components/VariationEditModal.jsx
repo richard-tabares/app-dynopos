@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Loader, Save, Layers, Settings2 } from 'lucide-react'
 import { Modal } from '../../../shared/components/Modal'
 import { updateVariation as updateVariationApi } from '../helpers/updateVariation'
@@ -18,6 +18,10 @@ export const VariationEditModal = ({
         is_active: variation.is_active ?? true,
     })
     const [submitting, setSubmitting] = useState(false)
+
+    useEffect(() => {
+        setFormData(prev => ({ ...prev, unit_cost: variation.unit_cost ?? '' }))
+    }, [variation.unit_cost])
 
     const isFormValid =
         formData.variation_name.trim() && Number(formData.price) > 0

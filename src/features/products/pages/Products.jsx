@@ -345,6 +345,15 @@ export const Products = () => {
                         p.id === updatedProduct.id ? updatedProduct : p,
                     ),
                 )
+                if (editProductData?.id === updatedProduct.id) {
+                    setEditProductData(updatedProduct)
+                }
+                if (editingVariation && formData.variation_id) {
+                    const updatedVar = updatedProduct.product_variations?.find(
+                        v => v.id === formData.variation_id,
+                    )
+                    if (updatedVar) setEditingVariation(updatedVar)
+                }
                 sileo.success({
                     fill: 'var(--toast-success)',
                     title: 'Completado',

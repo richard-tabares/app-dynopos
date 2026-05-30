@@ -7,7 +7,7 @@ import {
     Trash2,
     Settings2,
 } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { sileo } from 'sileo'
 import { Modal as SharedModal } from '../../../shared/components/Modal'
 import {
@@ -94,6 +94,11 @@ export const Modal = ({
               )
             : formData.name.trim() && Number(formData.price) > 0
     const [submitting, setSubmitting] = useState(false)
+
+    useEffect(() => {
+        // eslint-disable-next-line
+        setFormData(prev => ({ ...prev, unit_cost: defaultVar?.unit_cost ?? '' }))
+    }, [defaultVar?.unit_cost])
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target
@@ -745,7 +750,7 @@ export const Modal = ({
                                     </div>
                                     <button
                                         type='button'
-                                        onClick={onOpenStockAdjust}
+                                        onClick={() => onOpenStockAdjust()}
                                         className='w-1/2 flex items-center justify-center gap-2 px-4 py-3 bg-accent/5 border border-accent/85 text-accent hover:bg-hover rounded-lg transition cursor-pointer font-medium'>
                                         <Settings2 className='w-4 h-4' />
                                         Ajustar Stock

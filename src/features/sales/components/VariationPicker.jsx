@@ -1,4 +1,5 @@
 import { X, ShoppingCart } from 'lucide-react'
+import { useEscape } from '../../../shared/helpers/useEscape'
 import { useStore } from '../../../app/providers/store'
 import { getActiveVariations } from '../../../shared/helpers/productHelpers'
 
@@ -7,6 +8,8 @@ export const VariationPicker = ({ product, onClose }) => {
     const cart = useStore((state) => state.cart)
     const currentLabel = useStore((state) => state.currentLabel)
     const initCurrentOrder = useStore((state) => state.initCurrentOrder)
+
+    useEscape(onClose)
 
     if (!product) return null
 
@@ -29,8 +32,7 @@ export const VariationPicker = ({ product, onClose }) => {
 
     return (
         <section
-            className='fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex flex-col items-center justify-center z-[70] p-4'
-            onClick={onClose}>
+            className='fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex flex-col items-center justify-center z-[70] p-4'>
             <section
                 className='bg-surface border border-outline rounded-xl w-full max-w-sm relative max-h-[90vh] overflow-y-auto scrollbar-none'
                 onClick={(e) => e.stopPropagation()}>
