@@ -157,8 +157,8 @@ export const InventoryMovements = () => {
         const term = normalizeSearch(searchTerm)
         return (
             normalizeSearch(m.products?.name || '').includes(term) ||
-            normalizeSearch(m.products?.sku || '').includes(term) ||
-            normalizeSearch(m.products?.barcode || '').includes(term) ||
+            normalizeSearch(m.product_variations?.sku || '').includes(term) ||
+            normalizeSearch(m.product_variations?.barcode || '').includes(term) ||
             normalizeSearch(m.product_variations?.variation_name || '').includes(term) ||
             normalizeSearch(m.notes || '').includes(term)
         )
@@ -273,7 +273,7 @@ export const InventoryMovements = () => {
                                                 ) : (
                                                     <span className='font-medium text-on-surface'>{m.products?.name || '—'}</span>
                                                 )}
-                                                {m.products?.sku && <span className='text-muted text-xs ml-1'>({m.products.sku})</span>}
+                                                {m.product_variations?.sku && <span className='text-muted text-xs ml-1'>({m.product_variations.sku})</span>}
                                             </td>
                                             <td className='py-3 px-4'>
                                                 <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-medium rounded-full ${config.cls}`}>
