@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router'
-import { Store, Shield, Receipt, Bell, Save, Loader, Palette, Lock, Eye, EyeClosed } from 'lucide-react'
+import { Store, Shield, Receipt, Bell, Save, Loader, Palette, Lock, Eye, EyeClosed, Printer, CheckCircle, XCircle, RotateCw } from 'lucide-react'
 import { sileo } from 'sileo'
 import { useStore } from '../../../../app/providers/store'
 import { updateBusiness } from '../helpers/updateBusiness'
 import { uploadLogo } from '../helpers/uploadLogo'
 import { changePassword } from '../helpers/changePassword'
+import { checkAgent, getPrinters, printTicket, setStoredPrinter, getStoredPrinter } from '../../../../shared/helpers/printEngine'
 
 export const Account = () => {
     const { user, setBusiness, setLogOut, isDarkMode, toggleDarkMode } = useStore()
@@ -32,6 +33,70 @@ export const Account = () => {
     const [uploadingLogo, setUploadingLogo] = useState(false)
     const [showPasswords, setShowPasswords] = useState({ current: false, new: false, confirm: false })
     const isPasswordFormEmpty = !passwordData.currentPassword && !passwordData.newPassword && !passwordData.confirmPassword
+
+    const [agentStatus, setAgentStatus] = useState(null)
+    const [availablePrinters, setAvailablePrinters] = useState([])
+    const [selectedPrinter, setSelectedPrinter] = useState(getStoredPrinter() || '')
+    const [checkingAgent, setCheckingAgent] = useState(false)
+    const [testingPrint, setTestingPrint] = useState(false)
+
+    const refreshAgentStatus = useCallback(async () => {
+        setCheckingAgent(true)
+        try {
+            const health = await checkAgent()
+            if (health) {
+                setAgentStatus('connected')
+                const result = await getPrinters()
+                setAvailablePrinters(result.printers || [])
+            } else {
+                setAgentStatus('disconnected')
+                setAvailablePrinters([])
+            }
+        } catch {
+            setAgentStatus('disconnected')
+            setAvailablePrinters([])
+        } finally {
+            setCheckingAgent(false)
+        }
+    }, [])
+
+    useEffect(() => {
+        refreshAgentStatus()
+    }, [refreshAgentStatus])
+
+    const handlePrinterChange = (e) => {
+        const name = e.target.value
+        setSelectedPrinter(name)
+        if (name) {
+            setStoredPrinter(name)
+        } else {
+            setStoredPrinter(null)
+        }
+    }
+
+    const handleTestPrint = async () => {
+        if (!selectedPrinter) {
+            sileo.warning({ fill: 'var(--toast-warning)', title: 'Atención', description: 'Selecciona una impresora primero' })
+            return
+        }
+        setTestingPrint(true)
+        try {
+            await printTicket(selectedPrinter, {
+                businessName: user?.business?.business_name || 'DynoPOS',
+                ticketNumber: 'TEST',
+                date: new Date().toLocaleDateString('es-CO'),
+                paymentMethod: '---',
+                items: [{ name: 'Prueba de impresión', quantity: 1, price: 0, subtotal: 0 }],
+                total: 0,
+                footer: 'Impresión de prueba exitosa',
+            })
+            sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Impresión de prueba exitosa' })
+        } catch (err) {
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: err.message || 'Error en la impresión de prueba' })
+        } finally {
+            setTestingPrint(false)
+        }
+    }
 
     const togglePasswordVisibility = (field) => {
         setShowPasswords((prev) => ({ ...prev, [field]: !prev[field] }))
@@ -362,6 +427,98 @@ export const Account = () => {
                     </div>
                 </section>
             </div>
+
+            {/* Card: Impresora Térmica */}
+            <section className='bg-surface border border-outline shadow-sm rounded-lg'>
+                <div className='px-6 py-4 border-b border-divider bg-body/50'>
+                    <h2 className='text-lg font-semibold flex items-center gap-2'>
+                        <Printer className='w-5 h-5 text-accent' />
+                        Impresora Térmica
+                    </h2>
+                </div>
+                <div className='p-6 space-y-4'>
+                    <div className='flex items-center justify-between'>
+                        <div>
+                            <p className='text-on-body font-medium'>Estado del Agente</p>
+                            <p className='text-muted text-sm'>Agente local de impresión en esta computadora</p>
+                        </div>
+                        <div className='flex items-center gap-2'>
+                            {checkingAgent ? (
+                                <Loader className='w-5 h-5 animate-spin text-accent' />
+                            ) : agentStatus === 'connected' ? (
+                                <div className='flex items-center gap-1.5 text-accent'>
+                                    <CheckCircle className='w-4 h-4' />
+                                    <span className='text-sm font-medium'>Conectado</span>
+                                </div>
+                            ) : (
+                                <div className='flex items-center gap-1.5 text-danger'>
+                                    <XCircle className='w-4 h-4' />
+                                    <span className='text-sm font-medium'>Desconectado</span>
+                                </div>
+                            )}
+                            <button
+                                onClick={refreshAgentStatus}
+                                className='p-1.5 border border-outline rounded-md hover:bg-hover transition cursor-pointer'
+                                title='Actualizar estado'>
+                                <RotateCw className='w-3.5 h-3.5 text-muted' />
+                            </button>
+                        </div>
+                    </div>
+
+                    {agentStatus === 'connected' && (
+                        <>
+                            <div>
+                                <label className='block text-sm font-medium text-on-body mb-1'>
+                                    Impresora predeterminada
+                                </label>
+                                <select
+                                    value={selectedPrinter}
+                                    onChange={handlePrinterChange}
+                                    className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'>
+                                    <option value=''>Seleccionar impresora...</option>
+                                    {availablePrinters.map((p) => (
+                                        <option key={p.name} value={p.name}>
+                                            {p.name}{p.autoDetected ? ' (USB)' : ''}
+                                        </option>
+                                    ))}
+                                </select>
+                                <p className='text-xs text-muted mt-1'>
+                                    Se usará esta impresora para imprimir tickets de venta automáticamente
+                                </p>
+                            </div>
+
+                            <div className='flex justify-end'>
+                                <button
+                                    onClick={handleTestPrint}
+                                    disabled={testingPrint || !selectedPrinter}
+                                    className='flex items-center gap-2 px-4 py-2 border border-accent text-accent text-sm font-medium rounded-lg hover:bg-accent/5 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer'>
+                                    {testingPrint ? (
+                                        <Loader className='w-4 h-4 animate-spin' />
+                                    ) : (
+                                        <Printer className='w-4 h-4' />
+                                    )}
+                                    Probar impresión
+                                </button>
+                            </div>
+                        </>
+                    )}
+
+                    {agentStatus === 'disconnected' && (
+                        <div className='rounded-lg bg-danger/5 border border-danger/20 p-4'>
+                            <p className='text-sm text-on-body'>
+                                El agente de impresión no está corriendo en esta computadora.{' '}
+                                <a
+                                    href='/docs/agente-impresion'
+                                    className='text-accent hover:underline'
+                                    target='_blank'
+                                    rel='noopener noreferrer'>
+                                    ¿Cómo instalarlo?
+                                </a>
+                            </p>
+                        </div>
+                    )}
+                </div>
+            </section>
 
             {/* Card: Notificaciones */}
             <section className='bg-surface border border-outline shadow-sm rounded-lg'>

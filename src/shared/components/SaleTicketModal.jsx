@@ -1,5 +1,5 @@
-import { useRef } from 'react'
-import { X, FileDown, Printer, ReceiptText, Calendar } from 'lucide-react'
+import { useRef, useState, useEffect } from 'react'
+import { X, FileDown, Printer, ReceiptText, Calendar, Loader } from 'lucide-react'
 import { sileo } from 'sileo'
 import { useStore } from '../../app/providers/store'
 import { useEscape } from '../helpers/useEscape'
@@ -7,6 +7,11 @@ import { useFormatDate } from '../helpers/useFormatDate'
 import { updateSaleDate } from '../../features/sales/helpers/updateSaleDate'
 import { getTodayRevenue } from '../../features/sales/helpers/getTodayRevenue'
 import { PrintTicket } from './PrintTicket'
+import {
+    handlePrint,
+    setStoredPrinter,
+    printTicket,
+} from '../helpers/printEngine'
 
 export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
     const business = useStore((state) => state.user.business)
@@ -20,9 +25,97 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
     const dateInputRef = useRef(null)
     const printRef = useRef(null)
 
+    const [printing, setPrinting] = useState(false)
+    const [showPrinterPicker, setShowPrinterPicker] = useState(false)
+    const [printers, setPrinters] = useState([])
+
     const formatDate = useFormatDate()
 
     useEscape(onClose)
+
+    useEffect(() => {
+        if (isOpen) {
+            setPrinting(false)
+            setShowPrinterPicker(false)
+        }
+    }, [isOpen])
+
+    const handlePrintClick = async () => {
+        if (printing) return
+        setPrinting(true)
+
+        try {
+            const result = await handlePrint(sale, business)
+
+            if (result.success) {
+                sileo.success({
+                    fill: 'var(--toast-success)',
+                    title: 'Completado',
+                    description: 'Ticket impreso correctamente',
+                })
+            } else if (result.needsSelection) {
+                setPrinters(result.printers || [])
+                setShowPrinterPicker(true)
+            } else {
+                sileo.warning({
+                    fill: 'var(--toast-warning)',
+                    title: 'Impresora no disponible',
+                    description: result.error
+                        ? `No se pudo imprimir: ${result.error}`
+                        : 'Agente de impresión no detectado. Verifica que el servicio esté activo.',
+                })
+            }
+        } catch (err) {
+            sileo.error({
+                fill: 'var(--toast-error)',
+                title: 'Error',
+                description: err.message || 'Error al imprimir',
+            })
+        } finally {
+            setPrinting(false)
+        }
+    }
+
+    const handleSelectPrinter = async (name) => {
+        setStoredPrinter(name)
+        setShowPrinterPicker(false)
+        setPrinting(true)
+
+        try {
+            const ticketData = {
+                businessName: business?.business_name || '',
+                ticketNumber: sale.ticketNumber || sale.id,
+                date: sale.date || '',
+                paymentMethod: sale.paymentMethod || '',
+                salesperson: sale.salesperson || '',
+                items: (sale.items || []).map((item) => ({
+                    name: item.name || '',
+                    variationName: item.variation_name || '',
+                    quantity: item.quantity || 0,
+                    price: item.price || 0,
+                    subtotal: item.subtotal || 0,
+                })),
+                total: sale.total || 0,
+                footer: ticketFooter,
+            }
+
+            await printTicket(name, ticketData)
+
+            sileo.success({
+                fill: 'var(--toast-success)',
+                title: 'Completado',
+                description: 'Ticket impreso correctamente',
+            })
+        } catch (err) {
+            sileo.error({
+                fill: 'var(--toast-error)',
+                title: 'Error',
+                description: err.message || 'Error al imprimir',
+            })
+        } finally {
+            setPrinting(false)
+        }
+    }
 
     if (!isOpen || !sale) return null
 
@@ -201,12 +294,53 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
                             PDF
                         </button>
                         <button
-                            className='flex-1 flex items-center justify-center gap-2 bg-surface text-on-surface border border-outline py-2 rounded-lg font-bold transition text-sm cursor-not-allowed opacity-60'
-                            disabled>
-                            <Printer className='w-4 h-4' />
-                            Imprimir
+                            className='flex-1 flex items-center justify-center gap-2 bg-surface text-on-surface border border-outline py-2 rounded-lg font-bold transition text-sm hover:bg-hover cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'
+                            onClick={handlePrintClick}
+                            disabled={printing}>
+                            {printing ? (
+                                <Loader className='w-4 h-4 animate-spin' />
+                            ) : (
+                                <Printer className='w-4 h-4' />
+                            )}
+                            {printing ? 'Imprimiendo...' : 'Imprimir'}
                         </button>
                     </div>
+
+                    {showPrinterPicker && (
+                        <section
+                            className='absolute inset-0 bg-overlay/40 backdrop-blur-xs z-50 flex items-center justify-center p-4'
+                            onClick={() => setShowPrinterPicker(false)}>
+                            <section
+                                className='bg-surface border border-outline rounded-xl shadow-2xl w-full max-w-sm overflow-hidden'
+                                onClick={(e) => e.stopPropagation()}>
+                                <div className='px-6 py-4 border-b border-divider'>
+                                    <h3 className='font-semibold text-on-surface'>
+                                        Seleccionar Impresora
+                                    </h3>
+                                    <p className='text-sm text-muted mt-1'>
+                                        Elige la impresora para este ticket
+                                    </p>
+                                </div>
+                                <div className='p-4 space-y-2'>
+                                    {printers.map((p) => (
+                                        <button
+                                            key={p.name}
+                                            className='w-full text-left px-4 py-3 border border-outline rounded-lg hover:bg-hover transition cursor-pointer'
+                                            onClick={() => handleSelectPrinter(p.name)}>
+                                            <span className='font-medium text-on-surface'>
+                                                {p.name}
+                                            </span>
+                                            {p.autoDetected && (
+                                                <span className='ml-2 text-[10px] px-1.5 py-0.5 rounded-full bg-accent/10 text-accent font-medium'>
+                                                    USB
+                                                </span>
+                                            )}
+                                        </button>
+                                    ))}
+                                </div>
+                            </section>
+                        </section>
+                    )}
                 </section>
             </PrintTicket>
         </section>

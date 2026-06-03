@@ -19,6 +19,7 @@ import { createSale } from '../helpers/createSale'
 import { getSales } from '../helpers/getSales'
 import { returnSale } from '../helpers/returnSale'
 import { getTodayRevenue } from '../helpers/getTodayRevenue'
+import { checkAgent, getStoredPrinter, printTicket } from '../../../shared/helpers/printEngine'
 
 export const Sales = () => {
     const { user, products, setProducts, cart, clearCart, setTodayRevenue, setCategories, setSubscription, addToCart, pendingOrders, currentLabel, initCurrentOrder, holdCurrentOrder, switchToOrder, finalizeCurrentOrder, resetOrderState } = useStore()
@@ -133,6 +134,35 @@ export const Sales = () => {
             sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Venta procesada exitosamente'})
 
             const sale = response.data
+
+            const autoPrint = async () => {
+                const agent = await checkAgent()
+                if (!agent) return
+                const printerName = getStoredPrinter()
+                if (!printerName) return
+                const ticketData = {
+                    businessName: user?.business?.business_name || '',
+                    ticketNumber: sale.ticket_number,
+                    date: sale.created_at?.split('T')[0] || '',
+                    paymentMethod: sale.payment_method,
+                    salesperson: user?.profile?.full_name || user?.data?.user?.email || '',
+                    items: (sale.salesItems || []).map(item => ({
+                        name: item.products?.name || '',
+                        variationName: item.variation_name || '',
+                        quantity: item.quantity || 0,
+                        price: item.unit_price || 0,
+                        subtotal: item.subtotal || 0,
+                    })),
+                    total: sale.total_amount || 0,
+                    footer: user?.business?.ticket_footer || '',
+                }
+                try {
+                    await printTicket(printerName, ticketData)
+                } catch {
+                    // Silently ignore printer errors in auto-print
+                }
+            }
+            autoPrint()
             setLastSaleTicket({
                 id: sale.id,
                 total: sale.total_amount,
