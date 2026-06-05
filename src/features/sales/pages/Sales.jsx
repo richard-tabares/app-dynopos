@@ -136,6 +136,7 @@ export const Sales = () => {
             const sale = response.data
 
             const autoPrint = async () => {
+                if (!(user?.profile?.thermal_printing_enabled ?? true)) return
                 const agent = await checkAgent()
                 if (!agent) return
                 const printerName = getStoredPrinter()

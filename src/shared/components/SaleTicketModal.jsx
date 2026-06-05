@@ -20,6 +20,9 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
         (state) =>
             state.user?.profile?.business_id || state.user?.data?.user?.id,
     )
+    const thermalPrintingEnabled = useStore(
+        (state) => state.user?.profile?.thermal_printing_enabled ?? true,
+    )
     const currentSaleDate = sale?.date || ''
     const ticketFooter = business?.ticket_footer || ''
     const dateInputRef = useRef(null)
@@ -296,7 +299,7 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
                         <button
                             className='flex-1 flex items-center justify-center gap-2 bg-surface text-on-surface border border-outline py-2 rounded-lg font-bold transition text-sm hover:bg-hover cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'
                             onClick={handlePrintClick}
-                            disabled={printing}>
+                            disabled={printing || !thermalPrintingEnabled}>
                             {printing ? (
                                 <Loader className='w-4 h-4 animate-spin' />
                             ) : (

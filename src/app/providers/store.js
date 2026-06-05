@@ -79,6 +79,13 @@ export const useStore = create(
                         business: { ...state.user.business, ...payload },
                     },
                 })),
+            setProfile: (payload) =>
+                set((state) => ({
+                    user: {
+                        ...state.user,
+                        profile: { ...state.user.profile, ...payload },
+                    },
+                })),
             setIsMobile: (payload) => set({ isMobile: payload }),
             toggleDarkMode: () =>
                 set((state) => ({ isDarkMode: !state.isDarkMode })),

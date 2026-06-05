@@ -7,9 +7,10 @@ import { updateBusiness } from '../helpers/updateBusiness'
 import { uploadLogo } from '../helpers/uploadLogo'
 import { changePassword } from '../helpers/changePassword'
 import { checkAgent, getPrinters, printTicket, setStoredPrinter, getStoredPrinter } from '../../../../shared/helpers/printEngine'
+import { updateProfile } from '../helpers/updateProfile'
 
 export const Account = () => {
-    const { user, setBusiness, setLogOut, isDarkMode, toggleDarkMode } = useStore()
+    const { user, setBusiness, setLogOut, isDarkMode, toggleDarkMode, setProfile } = useStore()
     const navigate = useNavigate()
     const businessId = user?.profile?.business_id || user?.data?.user?.id
 
@@ -39,6 +40,22 @@ export const Account = () => {
     const [selectedPrinter, setSelectedPrinter] = useState(getStoredPrinter() || '')
     const [checkingAgent, setCheckingAgent] = useState(false)
     const [testingPrint, setTestingPrint] = useState(false)
+    const [thermalPrintingEnabled, setThermalPrintingEnabled] = useState(
+        user?.profile?.thermal_printing_enabled ?? true
+    )
+
+    const handleTogglePrinting = async () => {
+        const newValue = !thermalPrintingEnabled
+        const profileId = user?.profile?.id || user?.data?.user?.id
+        if (!profileId) return
+        try {
+            await updateProfile(profileId, { thermal_printing_enabled: newValue })
+            setProfile({ thermal_printing_enabled: newValue })
+            setThermalPrintingEnabled(newValue)
+        } catch (err) {
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: err.message || 'Error al actualizar la configuración' })
+        }
+    }
 
     const refreshAgentStatus = useCallback(async () => {
         setCheckingAgent(true)
@@ -439,6 +456,23 @@ export const Account = () => {
                 <div className='p-6 space-y-4'>
                     <div className='flex items-center justify-between'>
                         <div>
+                            <p className='text-on-body font-medium'>Habilitar impresión térmica</p>
+                            <p className='text-muted text-sm'>Permite imprimir tickets automáticamente al confirmar ventas</p>
+                        </div>
+                        <label className='relative inline-flex items-center cursor-pointer'>
+                            <input
+                                type='checkbox'
+                                className='sr-only peer'
+                                checked={thermalPrintingEnabled}
+                                onChange={handleTogglePrinting}
+                            />
+                            <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-0 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-surface after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-surface after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
+                        </label>
+                    </div>
+
+                    <div className={`${!thermalPrintingEnabled ? 'opacity-50 pointer-events-none' : ''} space-y-4`}>
+                    <div className='flex items-center justify-between'>
+                        <div>
                             <p className='text-on-body font-medium'>Estado del Agente</p>
                             <p className='text-muted text-sm'>Agente local de impresión en esta computadora</p>
                         </div>
@@ -474,7 +508,8 @@ export const Account = () => {
                                 <select
                                     value={selectedPrinter}
                                     onChange={handlePrinterChange}
-                                    className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'>
+                                    disabled={!thermalPrintingEnabled}
+                                    className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0 disabled:opacity-50 disabled:cursor-not-allowed'>
                                     <option value=''>Seleccionar impresora...</option>
                                     {availablePrinters.map((p) => (
                                         <option key={p.name} value={p.name}>
@@ -490,7 +525,7 @@ export const Account = () => {
                             <div className='flex justify-end'>
                                 <button
                                     onClick={handleTestPrint}
-                                    disabled={testingPrint || !selectedPrinter}
+                                    disabled={testingPrint || !selectedPrinter || !thermalPrintingEnabled}
                                     className='flex items-center gap-2 px-4 py-2 border border-accent text-accent text-sm font-medium rounded-lg hover:bg-accent/5 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer'>
                                     {testingPrint ? (
                                         <Loader className='w-4 h-4 animate-spin' />
@@ -517,6 +552,7 @@ export const Account = () => {
                             </p>
                         </div>
                     )}
+                    </div>
                 </div>
             </section>
 
