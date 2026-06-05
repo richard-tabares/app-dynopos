@@ -16,6 +16,7 @@ export const VariationEditModal = ({
         unit_cost: variation.unit_cost ?? '',
         sku: variation.sku || '',
         barcode: variation.barcode || '',
+        min_stock: variation.min_stock ?? '',
         is_active: variation.is_active ?? true,
     })
     const [submitting, setSubmitting] = useState(false)
@@ -50,6 +51,7 @@ export const VariationEditModal = ({
                 barcode: barcodeNormalizado,
                 price: Number(formData.price),
                 unit_cost: Number(formData.unit_cost) || 0,
+                min_stock: Number(formData.min_stock) || 0,
             })
             onSaved(updated)
             onClose()
@@ -112,7 +114,7 @@ export const VariationEditModal = ({
                             placeholder='Ej: S, M, L, XL'
                         />
                     </section>
-                    <div className='grid grid-cols-2 gap-4'>
+                    <div className='grid grid-cols-3 gap-4'>
                         <section>
                             <label className='block text-sm font-medium text-on-body mb-1'>
                                 Costo Unitario
@@ -124,7 +126,7 @@ export const VariationEditModal = ({
                                 onChange={handleChange}
                                 min='0'
                                 className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
-                                placeholder='Costo de la variación (opcional)'
+                                placeholder='Costo (opcional)'
                             />
                         </section>
                         <section>
@@ -138,7 +140,21 @@ export const VariationEditModal = ({
                                 onChange={handleChange}
                                 min='0'
                                 className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
-                                placeholder='Precio de la variación'
+                                placeholder='Precio'
+                            />
+                        </section>
+                        <section>
+                            <label className='block text-sm font-medium text-on-body mb-1'>
+                                Stock Mínimo
+                            </label>
+                            <input
+                                type='number'
+                                name='min_stock'
+                                value={formData.min_stock}
+                                onChange={handleChange}
+                                min='0'
+                                className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
+                                placeholder='Stock mínimo (opcional)'
                             />
                         </section>
                     </div>

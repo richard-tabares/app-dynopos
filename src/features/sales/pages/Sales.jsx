@@ -14,7 +14,7 @@ import { SalesHistoryCard } from '../components/SalesHistoryCard'
 import { apiFetch } from '../../../shared/helpers/apiFetch'
 import { normalizeSearch } from '../../../shared/helpers/normalizeSearch'
 import { procesarCodigoUniversal } from '../../../shared/helpers/procesarCodigoUniversal'
-import { getActiveVariations, productHasActiveVariations } from '../../../shared/helpers/productHelpers'
+import { getActiveVariations } from '../../../shared/helpers/productHelpers'
 import { createSale } from '../helpers/createSale'
 import { getSales } from '../helpers/getSales'
 import { returnSale } from '../helpers/returnSale'
@@ -63,6 +63,25 @@ export const Sales = () => {
         }
         loadData()
     }, [businessId, setProducts, setSubscription])
+
+    useEffect(() => {
+        const term = searchTerm.trim()
+        if (!term || products.length === 0) return
+
+        const { idBusqueda, tipo } = procesarCodigoUniversal(term)
+        if (!tipo || !['EAN-13', 'UPC-A', 'EAN-8', 'GS1-Segmentado'].includes(tipo)) return
+
+        const matches = products.flatMap(p =>
+            (getActiveVariations(p) || []).map(v => ({ product: p, variation: v }))
+        ).filter(({ variation }) => variation.barcode === idBusqueda)
+
+        if (matches.length === 1) {
+            const { product, variation } = matches[0]
+            if (currentLabel === null) initCurrentOrder()
+            addToCart(product, variation)
+            setSearchTerm('')
+        }
+    }, [searchTerm, products, currentLabel, initCurrentOrder, addToCart])
 
     const filteredProducts = products
         .filter((product) => {
@@ -231,6 +250,17 @@ export const Sales = () => {
         if (preSelectedVariation) {
             addToCart(product, preSelectedVariation)
             return
+        }
+
+        const term = searchTerm.trim()
+        if (term) {
+            const { idBusqueda } = procesarCodigoUniversal(term)
+            const variations = getActiveVariations(product)
+            const barcodeMatch = variations.find(v => v.barcode === idBusqueda)
+            if (barcodeMatch) {
+                addToCart(product, barcodeMatch)
+                return
+            }
         }
 
         const variations = getActiveVariations(product)

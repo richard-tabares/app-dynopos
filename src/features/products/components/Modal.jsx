@@ -379,7 +379,7 @@ export const Modal = ({
                                     ))}
                                 </select>
                             </section>
-                            <div className='grid grid-cols-2 gap-4'>
+                            <div className={`grid ${editProductData.id ? 'grid-cols-3' : 'grid-cols-2'} gap-4`}>
                                 <section>
                                     <label className='block text-sm font-medium text-on-body mb-1'>
                                         Costo Unitario
@@ -391,12 +391,12 @@ export const Modal = ({
                                         onChange={handleChange}
                                         min='0'
                                         className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
-                                        placeholder='Costo del producto (opcional)'
+                                        placeholder='Costo (opcional)'
                                     />
                                 </section>
                                 <section>
                                     <label className='block text-sm font-medium text-on-body mb-1'>
-                                        Precio
+                                        Precio Unitario
                                     </label>
                                     <input
                                         type='number'
@@ -405,9 +405,32 @@ export const Modal = ({
                                         onChange={handleChange}
                                         min='0'
                                         className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
-                                        placeholder='Ingrese el precio del producto'
+                                        placeholder='Precio del producto'
                                     />
                                 </section>
+                                {editProductData.id && (
+                                    <section>
+                                        <label className='block text-sm font-medium text-on-body mb-1'>
+                                            Stock Mínimo
+                                        </label>
+                                        <input
+                                            type='number'
+                                            value={minStock}
+                                            onChange={(e) =>
+                                                setMinStock(
+                                                    e.target.value === ''
+                                                        ? ''
+                                                        : Number(
+                                                              e.target.value,
+                                                          ),
+                                                )
+                                            }
+                                            min='0'
+                                            className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
+                                            placeholder='Stock mínimo (opcional)'
+                                        />
+                                    </section>
+                                )}
                             </div>
                             {!editProductData.id && (
                                 <div className='grid grid-cols-2 gap-4'>
@@ -550,7 +573,7 @@ export const Modal = ({
                                 {variations.map((v, index) => (
                                     <div
                                         key={index}
-                                        className={`border ${v.is_active ? 'border-accent/85' : 'border-divider'} rounded-lg p-3 space-y-2`}>
+                                        className={`border ${v.is_active ? 'border-accent/85' : 'border-divider'} rounded-lg p-3 py-4`}>
                                         <div className='flex items-center justify-between'>
                                             <span
                                                 className={`text-sm font-medium my-1.5 ${v.is_active ? 'text-accent' : 'text-muted'}`}>
@@ -592,76 +615,230 @@ export const Modal = ({
                                                 </label>
                                             </div>
                                         </div>
-                                        <div className='grid grid-cols-2 gap-2'>
-                                            <input
-                                                type='text'
-                                                placeholder='Nombre de la Variación (ej: S, M, Rojo)'
-                                                value={v.variation_name}
-                                                onChange={(e) =>
-                                                    handleVariationChange(
-                                                        index,
-                                                        'variation_name',
-                                                        e.target.value,
-                                                    )
-                                                }
-                                                className='col-span-2 px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
-                                            />
-                                            <input
-                                                type='text'
-                                                placeholder='SKU (opcional)'
-                                                value={v.sku}
-                                                onChange={(e) =>
-                                                    handleVariationChange(
-                                                        index,
-                                                        'sku',
-                                                        e.target.value,
-                                                    )
-                                                }
-                                                className='px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
-                                            />
-                                            <input
-                                                type='text'
-                                                placeholder='Código barras (opcional)'
-                                                value={v.barcode}
-                                                onChange={(e) =>
-                                                    handleVariationChange(
-                                                        index,
-                                                        'barcode',
-                                                        e.target.value,
-                                                    )
-                                                }
-                                                className='px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
-                                            />
-                                            <input
-                                                type='number'
-                                                placeholder='Costo Unitario'
-                                                value={v.unit_cost}
-                                                min='0'
-                                                onChange={(e) =>
-                                                    handleVariationChange(
-                                                        index,
-                                                        'unit_cost',
-                                                        e.target.value,
-                                                    )
-                                                }
-                                                className='px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
-                                            />
-                                            <input
-                                                type='number'
-                                                placeholder='Precio Unitario'
-                                                value={v.price}
-                                                min='0'
-                                                onChange={(e) =>
-                                                    handleVariationChange(
-                                                        index,
-                                                        'price',
-                                                        e.target.value,
-                                                    )
-                                                }
-                                                className='px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
-                                            />
-                                            {!editProductData.id && (
-                                                <>
+                                        {editProductData.id ? (
+                                            <div className='space-y-3'>
+                                                <div className='grid grid-cols-3 gap-x-3'>
+                                                    <section>
+                                                        <label className='block text-xs font-medium text-on-body mb-1'>
+                                                            Nombre
+                                                        </label>
+                                                        <input
+                                                            type='text'
+                                                            placeholder='Ej: S, M, Rojo'
+                                                            value={v.variation_name}
+                                                            onChange={(e) =>
+                                                                handleVariationChange(
+                                                                    index,
+                                                                    'variation_name',
+                                                                    e.target.value,
+                                                                )
+                                                            }
+                                                            className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                        />
+                                                    </section>
+                                                    <section>
+                                                        <label className='block text-xs font-medium text-on-body mb-1'>
+                                                            SKU
+                                                        </label>
+                                                        <input
+                                                            type='text'
+                                                            placeholder='SKU (opcional)'
+                                                            value={v.sku}
+                                                            onChange={(e) =>
+                                                                handleVariationChange(
+                                                                    index,
+                                                                    'sku',
+                                                                    e.target.value,
+                                                                )
+                                                            }
+                                                            className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                        />
+                                                    </section>
+                                                    <section>
+                                                        <label className='block text-xs font-medium text-on-body mb-1'>
+                                                            Código de Barras
+                                                        </label>
+                                                        <input
+                                                            type='text'
+                                                            placeholder='Código (opcional)'
+                                                            value={v.barcode}
+                                                            onChange={(e) =>
+                                                                handleVariationChange(
+                                                                    index,
+                                                                    'barcode',
+                                                                    e.target.value,
+                                                                )
+                                                            }
+                                                            className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                        />
+                                                    </section>
+                                                </div>
+                                                <div className='grid grid-cols-3 gap-x-3'>
+                                                    <section>
+                                                        <label className='block text-xs font-medium text-on-body mb-1'>
+                                                            Costo Unitario
+                                                        </label>
+                                                        <input
+                                                            type='number'
+                                                            placeholder='Costo (opcional)'
+                                                            value={v.unit_cost}
+                                                            min='0'
+                                                            onChange={(e) =>
+                                                                handleVariationChange(
+                                                                    index,
+                                                                    'unit_cost',
+                                                                    e.target.value,
+                                                                )
+                                                            }
+                                                            className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                        />
+                                                    </section>
+                                                    <section>
+                                                        <label className='block text-xs font-medium text-on-body mb-1'>
+                                                            Precio Unitario
+                                                        </label>
+                                                        <input
+                                                            type='number'
+                                                            placeholder='Precio'
+                                                            value={v.price}
+                                                            min='0'
+                                                            onChange={(e) =>
+                                                                handleVariationChange(
+                                                                    index,
+                                                                    'price',
+                                                                    e.target.value,
+                                                                )
+                                                            }
+                                                            className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                        />
+                                                    </section>
+                                                    <section>
+                                                        <label className='block text-xs font-medium text-on-body mb-1'>
+                                                            Stock Mínimo
+                                                        </label>
+                                                        <input
+                                                            type='number'
+                                                            placeholder='Stock mínimo'
+                                                            value={v.min_stock}
+                                                            min='0'
+                                                            onChange={(e) =>
+                                                                handleVariationChange(
+                                                                    index,
+                                                                    'min_stock',
+                                                                    e.target
+                                                                        .value ===
+                                                                        ''
+                                                                        ? ''
+                                                                        : Number(
+                                                                              e
+                                                                                  .target
+                                                                                  .value,
+                                                                          ),
+                                                                )
+                                                            }
+                                                            className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                        />
+                                                    </section>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className='grid grid-cols-2 gap-x-3 gap-y-3'>
+                                                <section className='col-span-2'>
+                                                    <label className='block text-xs font-medium text-on-body mb-1'>
+                                                        Nombre de la Variación
+                                                    </label>
+                                                    <input
+                                                        type='text'
+                                                        placeholder='Ej: S, M, Rojo'
+                                                        value={v.variation_name}
+                                                        onChange={(e) =>
+                                                            handleVariationChange(
+                                                                index,
+                                                                'variation_name',
+                                                                e.target.value,
+                                                            )
+                                                        }
+                                                        className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                    />
+                                                </section>
+                                                <section>
+                                                    <label className='block text-xs font-medium text-on-body mb-1'>
+                                                        SKU
+                                                    </label>
+                                                    <input
+                                                        type='text'
+                                                        placeholder='SKU (opcional)'
+                                                        value={v.sku}
+                                                        onChange={(e) =>
+                                                            handleVariationChange(
+                                                                index,
+                                                                'sku',
+                                                                e.target.value,
+                                                            )
+                                                        }
+                                                        className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                    />
+                                                </section>
+                                                <section>
+                                                    <label className='block text-xs font-medium text-on-body mb-1'>
+                                                        Código de Barras
+                                                    </label>
+                                                    <input
+                                                        type='text'
+                                                        placeholder='Código (opcional)'
+                                                        value={v.barcode}
+                                                        onChange={(e) =>
+                                                            handleVariationChange(
+                                                                index,
+                                                                'barcode',
+                                                                e.target.value,
+                                                            )
+                                                        }
+                                                        className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                    />
+                                                </section>
+                                                <section>
+                                                    <label className='block text-xs font-medium text-on-body mb-1'>
+                                                        Costo Unitario
+                                                    </label>
+                                                    <input
+                                                        type='number'
+                                                        placeholder='Costo (opcional)'
+                                                        value={v.unit_cost}
+                                                        min='0'
+                                                        onChange={(e) =>
+                                                            handleVariationChange(
+                                                                index,
+                                                                'unit_cost',
+                                                                e.target.value,
+                                                            )
+                                                        }
+                                                        className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                    />
+                                                </section>
+                                                <section>
+                                                    <label className='block text-xs font-medium text-on-body mb-1'>
+                                                        Precio Unitario
+                                                    </label>
+                                                    <input
+                                                        type='number'
+                                                        placeholder='Precio'
+                                                        value={v.price}
+                                                        min='0'
+                                                        onChange={(e) =>
+                                                            handleVariationChange(
+                                                                index,
+                                                                'price',
+                                                                e.target.value,
+                                                            )
+                                                        }
+                                                        className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                    />
+                                                </section>
+                                                <section>
+                                                    <label className='block text-xs font-medium text-on-body mb-1'>
+                                                        Stock Inicial
+                                                    </label>
                                                     <input
                                                         type='number'
                                                         placeholder='Stock inicial'
@@ -682,8 +859,13 @@ export const Modal = ({
                                                                       ),
                                                             )
                                                         }
-                                                        className='px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                        className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
                                                     />
+                                                </section>
+                                                <section>
+                                                    <label className='block text-xs font-medium text-on-body mb-1'>
+                                                        Stock Mínimo
+                                                    </label>
                                                     <input
                                                         type='number'
                                                         placeholder='Stock mínimo'
@@ -704,34 +886,48 @@ export const Modal = ({
                                                                       ),
                                                             )
                                                         }
-                                                        className='px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                        className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
                                                     />
-                                                </>
-                                            )}
-                                        </div>
+                                                </section>
+                                            </div>
+                                        )}
                                         {editProductData.id &&
                                             onOpenStockAdjust && (
-                                                <div className='flex items-center justify-between pt-2 border-t border-divider mt-2'>
+                                                <div className='flex items-center justify-between py-2 mt-4'>
                                                     <span className='text-sm text-accent font-medium'>
                                                         Stock actual:{' '}
                                                         <span className='font-semibold'>
                                                             {v.stock ?? 0}
                                                         </span>
                                                     </span>
-                                                    <button
-                                                        type='button'
-                                                        onClick={() =>
-                                                            onOpenStockAdjust(
-                                                                v,
-                                                            )
-                                                        }
-                                                        className='flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-accent/5 border border-accent/85 text-accent hover:bg-hover rounded-lg transition cursor-pointer'>
-                                                        <Settings2 className='w-3.5 h-3.5' />
-                                                        Ajustar Stock
-                                                    </button>
+                                                    <div className='flex items-center gap-2'>
+                                                        <button
+                                                            type='button'
+                                                            onClick={() =>
+                                                                onOpenStockAdjust(
+                                                                    v,
+                                                                )
+                                                            }
+                                                            className='flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-accent/5 border border-accent/85 text-accent hover:bg-hover rounded-lg transition cursor-pointer'>
+                                                            <Settings2 className='w-3.5 h-3.5' />
+                                                            Ajustar Stock
+                                                        </button>
+                                                        {variations.length > 1 && (
+                                                            <button
+                                                                type='button'
+                                                                onClick={() =>
+                                                                    removeVariation(
+                                                                        index,
+                                                                    )
+                                                                }
+                                                                className='text-red-500 bg-danger/10 hover:bg-danger/30 border border-danger px-2 py-1.5 rounded-sm hover:text-danger-700 cursor-pointer'>
+                                                                <Trash2 className='w-3.5 h-3.5' />
+                                                            </button>
+                                                        )}
+                                                    </div>
                                                 </div>
                                             )}
-                                        {variations.length > 1 && (
+                                        {!editProductData.id && variations.length > 1 && (
                                             <div className='flex justify-end pt-2'>
                                                 <button
                                                     type='button'

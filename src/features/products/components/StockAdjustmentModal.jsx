@@ -42,6 +42,7 @@ export const StockAdjustmentModal = ({
         return results
     }, [eligibleProducts, searchTerm])
 
+    const showSearch = !preselect
     const currentStock = selected?.variation?.stock || 0
     const isFormValid =
         selected &&
@@ -106,19 +107,21 @@ export const StockAdjustmentModal = ({
                     <label className='block text-sm font-medium text-on-body mb-1'>
                         Producto
                     </label>
-                    <div className='relative'>
-                        <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-faint' />
-                        <input
-                            type='search'
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            autoFocus
-                            className='w-full border border-divider rounded-md pl-10 pr-3 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
-                            placeholder='Buscar por código o nombre...'
-                        />
-                    </div>
+                    {showSearch && (
+                        <div className='relative'>
+                            <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-faint' />
+                            <input
+                                type='search'
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                autoFocus
+                                className='w-full border border-divider rounded-md pl-10 pr-3 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
+                                placeholder='Buscar por código o nombre...'
+                            />
+                        </div>
+                    )}
 
-                    {searchResults.length > 0 && (
+                    {showSearch && searchResults.length > 0 && (
                         <div className='mt-2 border border-divider rounded-md max-h-60 overflow-y-auto divide-y divide-divider-light'>
                             {searchResults.map(({ product, variation }) => (
                                 <button
@@ -147,7 +150,7 @@ export const StockAdjustmentModal = ({
                         </div>
                     )}
 
-                    {searchTerm && searchResults.length === 0 && (
+                    {showSearch && searchTerm && searchResults.length === 0 && (
                         <p className='text-sm text-muted mt-2 italic'>
                             No se encontraron productos
                         </p>
@@ -163,12 +166,14 @@ export const StockAdjustmentModal = ({
                                     </span>
                                 )}
                             </span>
-                            <button
-                                type='button'
-                                onClick={handleClearSelection}
-                                className='text-xs text-accent border border-accent/85 rounded-md p-2 hover:bg-accent/10 cursor-pointer flex items-center gap-1 shrink-0 ml-2'>
-                                <X className='w-3 h-3' /> Cambiar
-                            </button>
+                            {showSearch && (
+                                <button
+                                    type='button'
+                                    onClick={handleClearSelection}
+                                    className='text-xs text-accent border border-accent/85 rounded-md p-2 hover:bg-accent/10 cursor-pointer flex items-center gap-1 shrink-0 ml-2'>
+                                    <X className='w-3 h-3' /> Cambiar
+                                </button>
+                            )}
                         </div>
                     )}
                 </section>
