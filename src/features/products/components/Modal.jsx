@@ -615,7 +615,7 @@ export const Modal = ({
                                                 </label>
                                             </div>
                                         </div>
-                                        {editProductData.id ? (
+                                        {v.id ? (
                                             <div className='space-y-3'>
                                                 <div className='grid grid-cols-3 gap-x-3'>
                                                     <section>
@@ -892,7 +892,7 @@ export const Modal = ({
                                             </div>
                                         )}
                                         {editProductData.id &&
-                                            onOpenStockAdjust && (
+                                            onOpenStockAdjust && v.id && (
                                                 <div className='flex items-center justify-between py-2 mt-4'>
                                                     <span className='text-sm text-accent font-medium'>
                                                         Stock actual:{' '}
@@ -927,7 +927,7 @@ export const Modal = ({
                                                     </div>
                                                 </div>
                                             )}
-                                        {!editProductData.id && variations.length > 1 && (
+                                        {!v.id && variations.length > 1 && (
                                             <div className='flex justify-end pt-2'>
                                                 <button
                                                     type='button'
