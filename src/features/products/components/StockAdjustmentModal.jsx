@@ -21,7 +21,7 @@ export const StockAdjustmentModal = ({
     })
 
     const eligibleProducts = useMemo(
-        () => products.filter((p) => p.is_active !== false && p.track_stock !== false),
+        () => products.filter((p) => p.is_active !== false),
         [products],
     )
 
@@ -31,6 +31,7 @@ export const StockAdjustmentModal = ({
         const results = []
         for (const p of eligibleProducts) {
             for (const v of getActiveVariations(p)) {
+                if (v.track_stock === false) continue
                 const match =
                     normalizeSearch(p.name).includes(term) ||
                     (v.sku && normalizeSearch(v.sku).includes(term)) ||

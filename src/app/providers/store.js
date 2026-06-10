@@ -123,6 +123,7 @@ export const useStore = create(
                         variation_name: v.variation_name,
                         variation_sku: v.sku,
                         variation_barcode: v.barcode,
+                        track_stock: v.track_stock,
                         name: displayName,
                     }
                     return {

@@ -13,7 +13,7 @@ export const ProductCard = ({ product, onAddToCart }) => {
     const hasMultipleVariations = productHasActiveVariations(product)
 
     const defaultVar = variations[0]
-    const noStockControl = product.track_stock === false
+    const noStockControl = defaultVar?.track_stock === false
 
     let stockDisplay = null
     if (defaultVar && !hasMultipleVariations) {

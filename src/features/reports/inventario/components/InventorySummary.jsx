@@ -18,8 +18,9 @@ export const InventorySummary = ({ products = [] }) => {
     const totalProducts = products.length
     const stockTotal = products.reduce((acc, p) => acc + getStock(p), 0)
     const lowStockProducts = products.filter(p => {
-        if (p.track_stock === false) return false
-        return getActiveVariations(p).some(v => (v.stock || 0) <= (v.min_stock || 0))
+        const activeVariations = getActiveVariations(p)
+        if (activeVariations.every(v => v.track_stock === false)) return false
+        return activeVariations.some(v => v.track_stock !== false && (v.stock || 0) <= (v.min_stock || 0))
     })
     const lowStockCount = lowStockProducts.length
     const inventoryValue = products.reduce((acc, p) => acc + (getStock(p) * getUnitCost(p)), 0)

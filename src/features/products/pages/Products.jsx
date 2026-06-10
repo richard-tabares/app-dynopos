@@ -89,23 +89,28 @@ export const Products = () => {
                 (activeStatus === 'active' && product.is_active !== false) ||
                 (activeStatus === 'inactive' && product.is_active === false)
             let matchesStock = true
+            const activeVariations = getActiveVariations(product)
+            const allNoTrackStock = activeVariations.every((v) => v.track_stock === false)
+            const anyTrackStock = activeVariations.some((v) => v.track_stock !== false)
             if (stockFilter === 'noStockControl') {
-                matchesStock = product.track_stock === false
+                matchesStock = allNoTrackStock
             } else if (stockFilter === 'noStock') {
                 matchesStock =
-                    product.track_stock !== false &&
-                    getActiveVariations(product).some((v) => v.stock === 0)
+                    anyTrackStock &&
+                    activeVariations.some((v) => v.track_stock !== false && v.stock === 0)
             } else if (stockFilter === 'lowStock') {
                 matchesStock =
-                    product.track_stock !== false &&
-                    getActiveVariations(product).some((v) => {
+                    anyTrackStock &&
+                    activeVariations.some((v) => {
+                        if (v.track_stock === false) return false
                         const vm = v.min_stock ?? 0
                         return v.stock > 0 && vm > 0 && v.stock < vm
                     })
             } else if (stockFilter === 'withStock') {
                 matchesStock =
-                    product.track_stock !== false &&
-                    getActiveVariations(product).every((v) => {
+                    anyTrackStock &&
+                    activeVariations.every((v) => {
+                        if (v.track_stock === false) return true
                         const vm = v.min_stock ?? 0
                         return v.stock > 0 && (vm === 0 || v.stock >= vm)
                     })
@@ -449,10 +454,13 @@ export const Products = () => {
         const margin = price > 0 ? Math.round(((price - cost) / price) * 100) : null
         const hasMultipleVars = productHasActiveVariations(product)
         const skuDisplay = defaultVar?.sku || ''
-        const totalStock = product.track_stock !== false
-            ? getActiveVariations(product).reduce((sum, v) => sum + (v.stock || 0), 0)
+        const activeVariations = getActiveVariations(product)
+        const anyTrackStock = activeVariations.some((v) => v.track_stock !== false)
+        const totalStock = anyTrackStock
+            ? activeVariations.reduce((sum, v) => sum + (v.stock || 0), 0)
             : null
-        const stockBelowMin = product.track_stock !== false && getActiveVariations(product).some((v) => {
+        const stockBelowMin = anyTrackStock && activeVariations.some((v) => {
+            if (v.track_stock === false) return false
             const vm = v.min_stock ?? 0
             return vm > 0 && (v.stock || 0) < vm
         })
@@ -507,7 +515,7 @@ export const Products = () => {
                         {totalStock !== null ? (
                             <span className={`font-medium ${stockBelowMin ? 'text-red-600' : 'text-on-body'}`}>{totalStock} uds</span>
                         ) : (
-                            <span className='text-faint italic'>—</span>
+                            <span className='text-xs text-muted italic'>Sin control</span>
                         )}
                     </td>
                     <td className='py-3 px-4 whitespace-nowrap'>

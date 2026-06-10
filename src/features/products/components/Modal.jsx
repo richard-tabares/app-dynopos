@@ -70,6 +70,7 @@ export const Modal = ({
                       barcode: v.barcode || '',
                       stock: v.stock || 0,
                       min_stock: v.min_stock || 0,
+                      track_stock: v.track_stock ?? true,
                       is_active: v.is_active !== false,
                   }))
             : [
@@ -81,6 +82,7 @@ export const Modal = ({
                       barcode: '',
                       stock: '',
                       min_stock: '',
+                      track_stock: true,
                       is_active: true,
                   },
               ],
@@ -263,6 +265,7 @@ export const Modal = ({
                                         ? procesarCodigoUniversal(v.barcode).idBusqueda
                                         : null,
                                     min_stock: v.min_stock || 0,
+                                    track_stock: v.track_stock ?? true,
                                 }))
                           : []
                     : [],
@@ -408,7 +411,7 @@ export const Modal = ({
                                         placeholder='Precio del producto'
                                     />
                                 </section>
-                                {editProductData.id && (
+                                {editProductData.id && formData.track_stock !== false && (
                                     <section>
                                         <label className='block text-sm font-medium text-on-body mb-1'>
                                             Stock Mínimo
@@ -432,7 +435,7 @@ export const Modal = ({
                                     </section>
                                 )}
                             </div>
-                            {!editProductData.id && (
+                            {!editProductData.id && formData.track_stock !== false && (
                                 <div className='grid grid-cols-2 gap-4'>
                                     <section>
                                         <label className='block text-sm font-medium text-on-body mb-1'>
@@ -613,6 +616,33 @@ export const Modal = ({
                                                             : 'Inactivo'}
                                                     </span>
                                                 </label>
+                                                <label className='flex items-center gap-2.5 text-xs text-on-body cursor-pointer'>
+                                                    <input
+                                                        type='checkbox'
+                                                        checked={
+                                                            v.track_stock !== false
+                                                        }
+                                                        onChange={(e) =>
+                                                            handleVariationChange(
+                                                                index,
+                                                                'track_stock',
+                                                                e.target.checked,
+                                                            )
+                                                        }
+                                                        className='sr-only peer'
+                                                    />
+                                                    <div className="w-9 h-5 bg-hover-icon peer-focus:outline-none peer-focus:ring-0 peer-focus:ring-accent rounded-full peer-checked:after:translate-x-full peer-checked:after:border-surface after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-surface after:border-outline after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-accent relative"></div>
+                                                    <span
+                                                        className={`text-sm ${
+                                                            v.track_stock !== false
+                                                                ? 'text-accent'
+                                                                : 'text-muted'
+                                                        }`}>
+                                                        {v.track_stock !== false
+                                                            ? 'Control stock'
+                                                            : 'Sin control'}
+                                                    </span>
+                                                </label>
                                             </div>
                                         </div>
                                         {v.id ? (
@@ -712,33 +742,35 @@ export const Modal = ({
                                                             className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
                                                         />
                                                     </section>
-                                                    <section>
-                                                        <label className='block text-xs font-medium text-on-body mb-1'>
-                                                            Stock Mínimo
-                                                        </label>
-                                                        <input
-                                                            type='number'
-                                                            placeholder='Stock mínimo'
-                                                            value={v.min_stock}
-                                                            min='0'
-                                                            onChange={(e) =>
-                                                                handleVariationChange(
-                                                                    index,
-                                                                    'min_stock',
-                                                                    e.target
-                                                                        .value ===
-                                                                        ''
-                                                                        ? ''
-                                                                        : Number(
-                                                                              e
-                                                                                  .target
-                                                                                  .value,
-                                                                          ),
-                                                                )
-                                                            }
-                                                            className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
-                                                        />
-                                                    </section>
+                                                    {v.track_stock !== false && (
+                                                        <section>
+                                                            <label className='block text-xs font-medium text-on-body mb-1'>
+                                                                Stock Mínimo
+                                                            </label>
+                                                            <input
+                                                                type='number'
+                                                                placeholder='Stock mínimo'
+                                                                value={v.min_stock}
+                                                                min='0'
+                                                                onChange={(e) =>
+                                                                    handleVariationChange(
+                                                                        index,
+                                                                        'min_stock',
+                                                                        e.target
+                                                                            .value ===
+                                                                            ''
+                                                                            ? ''
+                                                                            : Number(
+                                                                                  e
+                                                                                      .target
+                                                                                      .value,
+                                                                              ),
+                                                                    )
+                                                                }
+                                                                className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                            />
+                                                        </section>
+                                                    )}
                                                 </div>
                                             </div>
                                         ) : (
@@ -835,64 +867,68 @@ export const Modal = ({
                                                         className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
                                                     />
                                                 </section>
-                                                <section>
-                                                    <label className='block text-xs font-medium text-on-body mb-1'>
-                                                        Stock Inicial
-                                                    </label>
-                                                    <input
-                                                        type='number'
-                                                        placeholder='Stock inicial'
-                                                        value={v.stock}
-                                                        min='0'
-                                                        onChange={(e) =>
-                                                            handleVariationChange(
-                                                                index,
-                                                                'stock',
-                                                                e.target
-                                                                    .value ===
-                                                                    ''
-                                                                    ? ''
-                                                                    : Number(
-                                                                          e
-                                                                              .target
-                                                                              .value,
-                                                                      ),
-                                                            )
-                                                        }
-                                                        className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
-                                                    />
-                                                </section>
-                                                <section>
-                                                    <label className='block text-xs font-medium text-on-body mb-1'>
-                                                        Stock Mínimo
-                                                    </label>
-                                                    <input
-                                                        type='number'
-                                                        placeholder='Stock mínimo'
-                                                        value={v.min_stock}
-                                                        min='0'
-                                                        onChange={(e) =>
-                                                            handleVariationChange(
-                                                                index,
-                                                                'min_stock',
-                                                                e.target
-                                                                    .value ===
-                                                                    ''
-                                                                    ? ''
-                                                                    : Number(
-                                                                          e
-                                                                              .target
-                                                                              .value,
-                                                                      ),
-                                                            )
-                                                        }
-                                                        className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
-                                                    />
-                                                </section>
+                                                {v.track_stock !== false && (
+                                                    <section>
+                                                        <label className='block text-xs font-medium text-on-body mb-1'>
+                                                            Stock Inicial
+                                                        </label>
+                                                        <input
+                                                            type='number'
+                                                            placeholder='Stock inicial'
+                                                            value={v.stock}
+                                                            min='0'
+                                                            onChange={(e) =>
+                                                                handleVariationChange(
+                                                                    index,
+                                                                    'stock',
+                                                                    e.target
+                                                                        .value ===
+                                                                        ''
+                                                                        ? ''
+                                                                        : Number(
+                                                                              e
+                                                                                  .target
+                                                                                  .value,
+                                                                          ),
+                                                                )
+                                                            }
+                                                            className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                        />
+                                                    </section>
+                                                )}
+                                                {v.track_stock !== false && (
+                                                    <section>
+                                                        <label className='block text-xs font-medium text-on-body mb-1'>
+                                                            Stock Mínimo
+                                                        </label>
+                                                        <input
+                                                            type='number'
+                                                            placeholder='Stock mínimo'
+                                                            value={v.min_stock}
+                                                            min='0'
+                                                            onChange={(e) =>
+                                                                handleVariationChange(
+                                                                    index,
+                                                                    'min_stock',
+                                                                    e.target
+                                                                        .value ===
+                                                                        ''
+                                                                        ? ''
+                                                                        : Number(
+                                                                              e
+                                                                                  .target
+                                                                                  .value,
+                                                                          ),
+                                                                )
+                                                            }
+                                                            className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                        />
+                                                    </section>
+                                                )}
                                             </div>
                                         )}
                                         {editProductData.id &&
-                                            onOpenStockAdjust && v.id && (
+                                            onOpenStockAdjust && v.id && v.track_stock !== false && (
                                                 <div className='flex items-center justify-between py-2 mt-4'>
                                                     <span className='text-sm text-accent font-medium'>
                                                         Stock actual:{' '}
@@ -947,7 +983,8 @@ export const Modal = ({
                     <section className='flex flex-col gap-3 pt-4 border-t border-divider'>
                         {editProductData.id &&
                             onOpenStockAdjust &&
-                            productType === 'simple' && (
+                            productType === 'simple' &&
+                            formData.track_stock !== false && (
                                 <section className='flex flex-row justify-between gap-3'>
                                     <div className='w-1/2 px-4 py-3 border border-accent/85 text-accent rounded-md text-sm flex items-center justify-between'>
                                         <span>Stock actual</span>

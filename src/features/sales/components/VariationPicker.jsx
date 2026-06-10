@@ -56,7 +56,7 @@ export const VariationPicker = ({ product, onClose }) => {
                     <div className='flex flex-col gap-3'>
                         {getActiveVariations(product).map((variation) => {
                                 const availableStock = getAvailableStock(variation)
-                                const noStockControl = product.track_stock === false
+                                const noStockControl = variation.track_stock === false
                                 const outOfStock = !noStockControl && availableStock <= 0
 
                                 return (

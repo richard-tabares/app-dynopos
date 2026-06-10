@@ -17,6 +17,7 @@ export const VariationEditModal = ({
         sku: variation.sku || '',
         barcode: variation.barcode || '',
         min_stock: variation.min_stock ?? '',
+        track_stock: variation.track_stock ?? true,
         is_active: variation.is_active ?? true,
     })
     const [submitting, setSubmitting] = useState(false)
@@ -143,20 +144,22 @@ export const VariationEditModal = ({
                                 placeholder='Precio'
                             />
                         </section>
-                        <section>
-                            <label className='block text-sm font-medium text-on-body mb-1'>
-                                Stock Mínimo
-                            </label>
-                            <input
-                                type='number'
-                                name='min_stock'
-                                value={formData.min_stock}
-                                onChange={handleChange}
-                                min='0'
-                                className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
-                                placeholder='Stock mínimo (opcional)'
-                            />
-                        </section>
+                        {formData.track_stock !== false && (
+                            <section>
+                                <label className='block text-sm font-medium text-on-body mb-1'>
+                                    Stock Mínimo
+                                </label>
+                                <input
+                                    type='number'
+                                    name='min_stock'
+                                    value={formData.min_stock}
+                                    onChange={handleChange}
+                                    min='0'
+                                    className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
+                                    placeholder='Stock mínimo (opcional)'
+                                />
+                            </section>
+                        )}
                     </div>
                     <section className='flex items-center justify-between'>
                         <span
@@ -174,8 +177,23 @@ export const VariationEditModal = ({
                             <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-0 peer-focus:ring-accent rounded-full peer-checked:after:translate-x-full peer-checked:after:border-surface after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-surface after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
                         </label>
                     </section>
+                    <section className='flex items-center justify-between'>
+                        <span className={`text-sm font-medium ${formData.track_stock !== false ? 'text-accent' : 'text-muted'}`}>
+                            {formData.track_stock !== false ? 'Controlar stock' : 'Sin control'}
+                        </span>
+                        <label className='relative inline-flex items-center cursor-pointer'>
+                            <input
+                                type='checkbox'
+                                name='track_stock'
+                                checked={formData.track_stock !== false}
+                                onChange={handleChange}
+                                className='sr-only peer'
+                            />
+                            <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-0 peer-focus:ring-accent rounded-full peer-checked:after:translate-x-full peer-checked:after:border-surface after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-surface after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
+                        </label>
+                    </section>
                     <section className='flex flex-col gap-3 pt-4 border-t border-divider'>
-                        {onOpenStockAdjust && (
+                        {onOpenStockAdjust && formData.track_stock !== false && (
                             <section className='flex flex-row justify-between gap-3'>
                                 <div className='w-1/2 px-4 py-3 border border-accent/85 text-accent rounded-md text-sm flex items-center justify-between'>
                                     <span>Stock actual</span>
