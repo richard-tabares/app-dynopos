@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router'
 import { Dashboard } from '../features/dashboard/pages/Dashboard'
 import { DashboardLayout } from './layout/DashboardLayout'
@@ -28,12 +28,53 @@ import { Products } from '../features/products/pages/Products'
 import { Toaster } from 'sileo'
 
 export const App = () => {
+    const [isInitializing, setIsInitializing] = useState(true)
     const user = useStore((state) => state.user)
     const isDarkMode = useStore((state) => state.isDarkMode)
+    const setToken = useStore((state) => state.setToken)
+    const setRefreshToken = useStore((state) => state.setRefreshToken)
+    const setSessionExpired = useStore((state) => state.setSessionExpired)
 
     useEffect(() => {
         document.documentElement.classList.toggle('dark', isDarkMode)
     }, [isDarkMode])
+
+    useEffect(() => {
+        const initSession = async () => {
+            const { token, refreshToken } = useStore.getState()
+            if (!token || !refreshToken) {
+                setIsInitializing(false)
+                return
+            }
+            try {
+                const apiUrl = import.meta.env.VITE_API_URL
+                const res = await fetch(`${apiUrl}/api/auth/refresh`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ refresh_token: refreshToken }),
+                })
+                if (!res.ok) {
+                    setSessionExpired(true)
+                } else {
+                    const data = await res.json()
+                    setToken(data.access_token)
+                    setRefreshToken(data.refresh_token)
+                }
+            } catch {
+                setSessionExpired(true)
+            }
+            setIsInitializing(false)
+        }
+        initSession()
+    }, [setToken, setRefreshToken, setSessionExpired])
+
+    if (isInitializing) {
+        return (
+            <section className='bg-body w-full h-screen flex items-center justify-center'>
+                <div className='animate-spin rounded-full h-10 w-10 border-2 border-accent border-t-transparent' />
+            </section>
+        )
+    }
 
     return (
         <BrowserRouter>

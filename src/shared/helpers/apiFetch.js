@@ -70,8 +70,7 @@ export const apiFetch = async (url, options = {}) => {
             config.headers['Authorization'] = `Bearer ${newToken}`
             response = await fetch(url, config)
         } else {
-            useStore.getState().setLogOut()
-            window.location.href = '/login'
+            useStore.getState().setSessionExpired(true)
             throw new Error('Sesión expirada')
         }
     }

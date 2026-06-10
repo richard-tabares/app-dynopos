@@ -5,6 +5,8 @@ import { useEffect } from 'react'
 import { useStore } from '../providers/store'
 import { getDashboardData } from '../../features/dashboard/helpers/getDashboardData'
 import { getDefaultPermissions } from '../../shared/helpers/permissions'
+import { useSessionKeepalive } from '../../shared/hooks/useSessionKeepalive'
+import { SessionExpiredModal } from '../../shared/components/SessionExpiredModal'
 
 const PATH_TO_PERMISSION = {
     '/dashboard': 'dashboard',
@@ -16,6 +18,7 @@ const PATH_TO_PERMISSION = {
 }
 
 export const DashboardLayout = () => {
+    useSessionKeepalive()
     const { user, isCollapsed, setTodayRevenue, todayRevenue } = useStore()
     const businessId = user?.profile?.business_id || user?.data?.user?.id
     const businessName = `${user?.business?.business_name} - POS`
@@ -60,6 +63,7 @@ export const DashboardLayout = () => {
             <main className={`p-6 mt-16 transition-all duration-300 ${isCollapsed ? 'ml-20' : 'ml-64'} max-lg:ml-0`}>
                 <Outlet />
             </main>
+            <SessionExpiredModal />
         </section>
     )
 }
