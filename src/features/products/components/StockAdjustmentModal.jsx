@@ -3,6 +3,7 @@ import { useState, useMemo } from 'react'
 import { Modal } from '../../../shared/components/Modal'
 import { getActiveVariations } from '../../../shared/helpers/productHelpers'
 import { normalizeSearch } from '../../../shared/helpers/normalizeSearch'
+import { useIsMobileDevice } from '../../../shared/hooks/useIsMobileDevice'
 
 export const StockAdjustmentModal = ({
     products,
@@ -10,6 +11,7 @@ export const StockAdjustmentModal = ({
     handleClose,
     handleSubmit,
 }) => {
+    const isMobileDevice = useIsMobileDevice()
     const [loading, setLoading] = useState(false)
     const [searchTerm, setSearchTerm] = useState('')
     const [selected, setSelected] = useState(preselect || null)
@@ -115,7 +117,7 @@ export const StockAdjustmentModal = ({
                                 type='search'
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                autoFocus
+                                autoFocus={!isMobileDevice}
                                 className='w-full border border-divider rounded-md pl-10 pr-3 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                                 placeholder='Buscar por código o nombre...'
                             />

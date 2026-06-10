@@ -162,6 +162,11 @@ export const BulkUploadModal = ({ onClose, onComplete }) => {
                                 <p className='text-sm text-muted'>
                                     De un total de {result.total} registros procesados
                                 </p>
+                                {result.autoSkusCreated > 0 && (
+                                    <p className='text-xs text-muted mt-1'>
+                                        {result.autoSkusCreated} con SKU generado automáticamente
+                                    </p>
+                                )}
                             </div>
                         </div>
 

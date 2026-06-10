@@ -10,6 +10,7 @@ import {
 import { useState, useEffect } from 'react'
 import { sileo } from 'sileo'
 import { Modal as SharedModal } from '../../../shared/components/Modal'
+import { useIsMobileDevice } from '../../../shared/hooks/useIsMobileDevice'
 import {
     productHasActiveVariations,
     getDefaultVariation,
@@ -24,6 +25,7 @@ export const Modal = ({
     products = [],
     onOpenStockAdjust,
 }) => {
+    const isMobileDevice = useIsMobileDevice()
     const generalCategory = Array.isArray(categories)
         ? categories.find((cat) => cat.name === 'General')
         : null
@@ -46,7 +48,7 @@ export const Modal = ({
         price: defaultVar?.price ?? '',
         unit_cost: defaultVar?.unit_cost ?? '',
         is_active: editProductData.is_active ?? true,
-        track_stock: editProductData.track_stock ?? true,
+        track_stock: defaultVar?.track_stock ?? true,
         variation_type: editProductData.variation_type || '',
     })
 
@@ -87,6 +89,19 @@ export const Modal = ({
                   },
               ],
     )
+
+    const getSkuPreview = (name) => {
+        if (!name || typeof name !== 'string') return 'XXX-000001'
+        const cleaned = name
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-zA-Z0-9\s]/g, '')
+            .trim()
+            .toUpperCase()
+        const letters = cleaned.replace(/[^A-Z]/g, '')
+        const prefix = letters.slice(0, 3).padEnd(3, 'X')
+        return `${prefix}-000001`
+    }
 
     const isFormValid =
         productType === 'variant'
@@ -191,7 +206,7 @@ export const Modal = ({
                     (v) =>
                         v.sku?.toLowerCase() ===
                             formData.sku.trim().toLowerCase() &&
-                        v.id !== (defaultVar?.id || ''),
+                        v.id !== (existingVariations.find(v => v.variation_name === 'Default')?.id || defaultVar?.id || ''),
                 ),
             )
 
@@ -235,8 +250,14 @@ export const Modal = ({
                     ? formData.variation_type
                     : editProductData.variation_type || null,
             variations_disabled: productType !== 'variant',
-            initial_stock:
-                productType === 'variant' ? 0 : Number(initialStock) || 0,
+            ...(editProductData.id
+                ? {}
+                : {
+                      initial_stock:
+                          productType === 'variant'
+                              ? 0
+                              : Number(initialStock) || 0,
+                  }),
             min_stock_inicial:
                 productType === 'variant' ? 0 : Number(minStock) || 0,
             variations:
@@ -330,9 +351,13 @@ export const Modal = ({
                                         name='sku'
                                         value={formData.sku}
                                         onChange={handleChange}
-                                        autoFocus
+                                        autoFocus={!isMobileDevice}
                                         className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
-                                        placeholder='Ingrese el SKU o código del producto'
+                                        placeholder={
+                                            formData.sku || !formData.name.trim()
+                                                ? 'Ingrese el SKU o código del producto'
+                                                : `Auto: ${getSkuPreview(formData.name)}`
+                                        }
                                     />
                                 </section>
                                 <section>
@@ -523,7 +548,7 @@ export const Modal = ({
                                     name='name'
                                     value={formData.name}
                                     onChange={handleChange}
-                                    autoFocus
+                                    autoFocus={!isMobileDevice}
                                     className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
                                     placeholder='Ingrese el nombre del producto'
                                 />
@@ -672,7 +697,11 @@ export const Modal = ({
                                                         </label>
                                                         <input
                                                             type='text'
-                                                            placeholder='SKU (opcional)'
+                                                            placeholder={
+                                                                v.sku || !formData.name.trim()
+                                                                    ? 'SKU (opcional)'
+                                                                    : `Auto: ${getSkuPreview(formData.name)}`
+                                                            }
                                                             value={v.sku}
                                                             onChange={(e) =>
                                                                 handleVariationChange(

@@ -20,8 +20,10 @@ import { getSales } from '../helpers/getSales'
 import { returnSale } from '../helpers/returnSale'
 import { getTodayRevenue } from '../helpers/getTodayRevenue'
 import { checkAgent, getStoredPrinter, printTicket } from '../../../shared/helpers/printEngine'
+import { useIsMobileDevice } from '../../../shared/hooks/useIsMobileDevice'
 
 export const Sales = () => {
+    const isMobileDevice = useIsMobileDevice()
     const { user, products, setProducts, cart, clearCart, setTodayRevenue, setCategories, setSubscription, addToCart, pendingOrders, currentLabel, initCurrentOrder, holdCurrentOrder, switchToOrder, finalizeCurrentOrder, resetOrderState } = useStore()
     const [searchTerm, setSearchTerm] = useState('')
     const searchInputRef = useRef(null)
@@ -319,7 +321,7 @@ export const Sales = () => {
                                     }}
                                     placeholder='Buscar por código o nombre...'
                                     className='w-full border border-divider rounded-md pl-10 pr-3 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
-                                    autoFocus
+                                    autoFocus={!isMobileDevice}
                                 />
                             </div>
                             {searchTerm.trim() && (

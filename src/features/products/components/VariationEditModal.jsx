@@ -3,6 +3,7 @@ import { Loader, Save, Layers, Settings2 } from 'lucide-react'
 import { Modal } from '../../../shared/components/Modal'
 import { updateVariation as updateVariationApi } from '../helpers/updateVariation'
 import { procesarCodigoUniversal } from '../../../shared/helpers/procesarCodigoUniversal'
+import { useIsMobileDevice } from '../../../shared/hooks/useIsMobileDevice'
 
 export const VariationEditModal = ({
     variation,
@@ -10,6 +11,7 @@ export const VariationEditModal = ({
     onSaved,
     onOpenStockAdjust,
 }) => {
+    const isMobileDevice = useIsMobileDevice()
     const [formData, setFormData] = useState({
         variation_name: variation.variation_name || '',
         price: variation.price ?? '',
@@ -110,7 +112,7 @@ export const VariationEditModal = ({
                             name='variation_name'
                             value={formData.variation_name}
                             onChange={handleChange}
-                            autoFocus
+                            autoFocus={!isMobileDevice}
                             className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
                             placeholder='Ej: S, M, L, XL'
                         />

@@ -2,6 +2,7 @@ import { Loader, Send, MessageCircleQuestionMark } from 'lucide-react'
 import { useState } from 'react'
 import { sileo } from 'sileo'
 import { Modal } from '../../../shared/components/Modal'
+import { useIsMobileDevice } from '../../../shared/hooks/useIsMobileDevice'
 import { createSupportTicket } from '../helpers/createSupportTicket'
 
 const reportTypes = [
@@ -12,6 +13,7 @@ const reportTypes = [
 ]
 
 export const SupportModal = ({ onClose }) => {
+    const isMobileDevice = useIsMobileDevice()
     const [formData, setFormData] = useState({
         type: '',
         subject: '',
@@ -74,7 +76,7 @@ export const SupportModal = ({ onClose }) => {
                             name='subject'
                             value={formData.subject}
                             onChange={handleChange}
-                            autoFocus
+                            autoFocus={!isMobileDevice}
                             className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
                             placeholder='Describa brevemente el problema'
                         />

@@ -7,6 +7,7 @@ import { updateUser } from '../helpers/updateUser'
 import { deleteUser } from '../helpers/deleteUser'
 import { PermissionSelector } from '../../../shared/components/PermissionSelector'
 import { getDefaultPermissions } from '../../../shared/helpers/permissions'
+import { useIsMobileDevice } from '../../../shared/hooks/useIsMobileDevice'
 
 const roles = [
     { value: 'cajero', label: 'Cajero' },
@@ -14,6 +15,7 @@ const roles = [
 ]
 
 export const UserFormModal = ({ mode, userData, onClose, onSuccess }) => {
+    const isMobileDevice = useIsMobileDevice()
     const isEdit = mode === 'edit'
     const [formData, setFormData] = useState({
         display_name: userData?.display_name || '',
@@ -153,7 +155,7 @@ export const UserFormModal = ({ mode, userData, onClose, onSuccess }) => {
                         name='display_name'
                         value={formData.display_name}
                         onChange={handleChange}
-                        autoFocus
+                        autoFocus={!isMobileDevice}
                         className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
                         placeholder='Nombre del usuario'
                     />

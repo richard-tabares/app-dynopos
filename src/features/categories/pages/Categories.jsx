@@ -10,8 +10,10 @@ import { updateCategory } from '../../categories/helpers/updateCategory'
 import { deleteCategory } from '../../categories/helpers/deleteCategory'
 import { useEscape } from '../../../shared/helpers/useEscape'
 import { normalizeSearch } from '../../../shared/helpers/normalizeSearch'
+import { useIsMobileDevice } from '../../../shared/hooks/useIsMobileDevice'
 
 export const Categories = () => {
+    const isMobileDevice = useIsMobileDevice()
     const { user, categories, setCategories } = useStore()
     const [loading, setLoading] = useState(false)
     const [searchTerm, setSearchTerm] = useState('')
@@ -177,7 +179,7 @@ export const Categories = () => {
                             }}
                             placeholder='Nombre de la categoría'
                             className='w-full border border-divider rounded-md py-3 px-4 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
-                            autoFocus
+                            autoFocus={!isMobileDevice}
                         />
                     </div>
                     <div className='px-6 pb-6 flex gap-3'>

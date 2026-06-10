@@ -42,8 +42,10 @@ import { BulkUploadModal } from '../components/BulkUploadModal'
 import { StockAdjustmentModal } from '../components/StockAdjustmentModal'
 import { updateInventory } from '../helpers/updateInventory'
 import { productHasActiveVariations, getActiveVariations, getDefaultVariation } from '../../../shared/helpers/productHelpers'
+import { useIsMobileDevice } from '../../../shared/hooks/useIsMobileDevice'
 
 export const Products = () => {
+    const isMobileDevice = useIsMobileDevice()
     const [openModal, setOpenModal] = useState(false)
     const [openConfirmModal, setOpenConfirmModal] = useState(false)
     const [productToDelete, setProductToDelete] = useState(null)
@@ -583,7 +585,11 @@ export const Products = () => {
                                 </span>
                             ) : <span className='text-faint italic text-xs'>—</span>}
                         </td>
-                        <td className='py-2 px-4 whitespace-nowrap text-right'><span className={`text-xs ${(v.stock || 0) < (v.min_stock ?? 0) ? 'text-red-600 font-medium' : 'text-muted'}`}>{v.stock || 0} uds</span></td>
+                        <td className='py-2 px-4 whitespace-nowrap text-right'>{
+    v.track_stock === false
+        ? <span className='text-xs text-muted italic'>Sin control</span>
+        : <span className={`text-xs ${(v.stock || 0) < (v.min_stock ?? 0) ? 'text-red-600 font-medium' : 'text-muted'}`}>{v.stock || 0} uds</span>
+}</td>
                         <td className='py-2 px-4 whitespace-nowrap'><span className='text-xs text-muted'>—</span></td>
                         <td className='py-2 px-4 whitespace-nowrap'>
                             <div className='flex items-center gap-1.5'>
@@ -692,7 +698,7 @@ export const Products = () => {
                             }}
                             placeholder='Nombre de la categoría'
                             className='w-full border border-divider rounded-md py-3 px-4 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
-                            autoFocus
+                            autoFocus={!isMobileDevice}
                         />
                     </div>
                     <div className='px-6 pb-6 flex gap-3'>
