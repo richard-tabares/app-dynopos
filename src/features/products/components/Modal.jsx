@@ -201,13 +201,14 @@ export const Modal = ({
         setSubmitting(true)
 
         if (formData.sku.trim()) {
-            const skuDuplicate = products.some((p) =>
-                (p.product_variations || []).some(
-                    (v) =>
-                        v.sku?.toLowerCase() ===
-                            formData.sku.trim().toLowerCase() &&
-                        v.id !== (existingVariations.find(v => v.variation_name === 'Default')?.id || defaultVar?.id || ''),
-                ),
+            const skuDuplicate = products.some(
+                (p) =>
+                    p.id !== editProductData.id &&
+                    (p.product_variations || []).some(
+                        (v) =>
+                            v.sku?.toLowerCase() ===
+                            formData.sku.trim().toLowerCase(),
+                    ),
             )
 
             if (skuDuplicate) {

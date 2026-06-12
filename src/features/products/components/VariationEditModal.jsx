@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Loader, Save, Layers, Settings2 } from 'lucide-react'
+import { sileo } from 'sileo'
 import { Modal } from '../../../shared/components/Modal'
 import { updateVariation as updateVariationApi } from '../helpers/updateVariation'
 import { procesarCodigoUniversal } from '../../../shared/helpers/procesarCodigoUniversal'
@@ -58,8 +59,16 @@ export const VariationEditModal = ({
             })
             onSaved(updated)
             onClose()
+            sileo.success({
+                title: 'Completado',
+                description: 'Variación actualizada correctamente',
+            })
         } catch (error) {
             console.error('Error updating variation:', error)
+            sileo.error({
+                title: 'Error',
+                description: error.message || 'Error al actualizar la variación',
+            })
         } finally {
             setSubmitting(false)
         }
