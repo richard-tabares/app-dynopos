@@ -20,7 +20,7 @@ export const SessionExpiredModal = () => {
                 <section className='flex flex-col items-center px-6 py-6'>
                     <LogOut className='w-12 h-12 text-danger mb-4' />
                     <h2 className='text-lg font-semibold text-title mb-2'>Sesi&oacute;n expirada</h2>
-                    <p className='text-body text-sm text-center'>
+                    <p className='text-on-body text-sm text-center'>
                         Tu sesi&oacute;n ha expirado. Inicia sesi&oacute;n nuevamente para continuar trabajando.
                     </p>
                 </section>
