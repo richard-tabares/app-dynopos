@@ -158,14 +158,15 @@ export const Sales = () => {
             const sale = response.data
 
             const autoPrint = async () => {
-                if (!(user?.profile?.thermal_printing_enabled ?? true)) return
+                const { user: currentUser } = useStore.getState()
+                if (!(currentUser?.profile?.thermal_printing_enabled ?? true)) return
                 const ticketData = {
-                    businessName: user?.business?.business_name || '',
-                    printerWidth: user?.profile?.printer_width || 32,
+                    businessName: currentUser?.business?.business_name || '',
+                    printerWidth: currentUser?.profile?.printer_width || 32,
                     ticketNumber: sale.ticket_number,
                     date: sale.created_at?.split('T')[0] || '',
                     paymentMethod: sale.payment_method,
-                    salesperson: user?.profile?.full_name || user?.data?.user?.email || '',
+                    salesperson: currentUser?.profile?.full_name || currentUser?.data?.user?.email || '',
                     items: (sale.salesItems || []).map(item => ({
                         name: item.products?.name || '',
                         variationName: item.variation_name || '',
@@ -174,7 +175,7 @@ export const Sales = () => {
                         subtotal: item.subtotal || 0,
                     })),
                     total: sale.total_amount || 0,
-                    footer: user?.business?.ticket_footer || '',
+                    footer: currentUser?.business?.ticket_footer || '',
                 }
                 try {
                     if (isAndroid()) {

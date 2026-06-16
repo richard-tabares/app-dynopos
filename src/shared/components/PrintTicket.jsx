@@ -1,6 +1,7 @@
 import { useRef, useEffect, useCallback } from 'react'
 import html2pdf from 'html2pdf.js'
 import { sileo } from 'sileo'
+import { useStore } from '../../app/providers/store'
 
 const formatCurrency = (value) =>
     new Intl.NumberFormat('es-CO', {
@@ -26,7 +27,9 @@ export const PrintTicket = ({ children, printRef, sale, business, ticketFooter }
     const wrapperRef = useRef(null)
 
     const handlePrint = useCallback(async () => {
-        if (!sale || !business) return
+        if (!sale) return
+        const activeBusiness = business || useStore.getState().user?.business
+        if (!activeBusiness) return
 
         const pdfWindow = window.open('', '_blank')
         if (!pdfWindow) {
@@ -64,7 +67,7 @@ export const PrintTicket = ({ children, printRef, sale, business, ticketFooter }
             <div style="width:215px;background:white;font-family:monospace;font-size:12px;padding:16px 12px;">
                 <div style="text-align:center;border-bottom:1px dashed #d1d5db;padding-bottom:8px;margin-bottom:16px;">
                     <h2 style="margin:0;font-size:16px;font-weight:700;text-transform:uppercase;color:#111827;">
-                        ${business.business_name || ''}
+                        ${activeBusiness.business_name || ''}
                     </h2>
                     <p style="margin:4px 0 0;font-size:10px;color:#6b7280;">
                         Comprobante No Fiscal

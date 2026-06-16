@@ -88,8 +88,10 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
         setPrinting(true)
 
         try {
+            const storeState = useStore.getState()
+            const bizName = storeState?.user?.business?.business_name || business?.business_name || ''
             const ticketData = {
-                businessName: business?.business_name || '',
+                businessName: bizName,
                 printerWidth: printerWidth,
                 ticketNumber: sale.ticketNumber || sale.id,
                 date: sale.date || '',

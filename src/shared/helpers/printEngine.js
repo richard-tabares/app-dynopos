@@ -61,13 +61,24 @@ export function setStoredPrinter(name) {
   }
 }
 
-export async function handlePrint(sale, business) {
-  const ticketFooter = business?.ticket_footer || ''
-  const profile = useStore.getState().user?.profile
+export async function handlePrint(sale, businessFallback = null) {
+  const { user: currentUser } = useStore.getState()
+  const userBiz = currentUser?.business
+  const business = userBiz || businessFallback || {}
+  const profile = currentUser?.profile || {}
+
+  if (!userBiz && !businessFallback) {
+    console.warn('[PrintEngine] business NO disponible en store', {
+      userKeys: Object.keys(currentUser || {}),
+      currentUserType: typeof currentUser,
+      userBiz,
+      businessFallback,
+    })
+  }
 
   const ticketData = {
-    businessName: business?.business_name || '',
-    printerWidth: profile?.printer_width || 32,
+    businessName: business.business_name || '',
+    printerWidth: profile.printer_width || 32,
     ticketNumber: sale.ticketNumber || sale.id,
     date: sale.date || '',
     paymentMethod: sale.paymentMethod || '',
@@ -80,7 +91,7 @@ export async function handlePrint(sale, business) {
       subtotal: item.subtotal || 0,
     })),
     total: sale.total || 0,
-    footer: ticketFooter,
+    footer: business.ticket_footer || '',
   }
 
   if (isAndroid()) {
@@ -121,6 +132,7 @@ export async function handlePrint(sale, business) {
     }
   }
 
+  console.warn('[PrintEngine] Enviando ticketData al agente:', { printerName, businessName: ticketData.businessName, ticketData })
   try {
     await printTicket(printerName, ticketData)
     return { success: true }
