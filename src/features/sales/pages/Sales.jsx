@@ -20,6 +20,7 @@ import { getSales } from '../helpers/getSales'
 import { returnSale } from '../helpers/returnSale'
 import { getTodayRevenue } from '../helpers/getTodayRevenue'
 import { checkAgent, getStoredPrinter, printTicket } from '../../../shared/helpers/printEngine'
+import { isAndroid, getRawBTBase64, launchRawBT } from '../../../shared/helpers/rawbtPrint'
 import { useIsMobileDevice } from '../../../shared/hooks/useIsMobileDevice'
 
 export const Sales = () => {
@@ -158,10 +159,6 @@ export const Sales = () => {
 
             const autoPrint = async () => {
                 if (!(user?.profile?.thermal_printing_enabled ?? true)) return
-                const agent = await checkAgent()
-                if (!agent) return
-                const printerName = getStoredPrinter()
-                if (!printerName) return
                 const ticketData = {
                     businessName: user?.business?.business_name || '',
                     ticketNumber: sale.ticket_number,
@@ -179,7 +176,16 @@ export const Sales = () => {
                     footer: user?.business?.ticket_footer || '',
                 }
                 try {
-                    await printTicket(printerName, ticketData)
+                    if (isAndroid()) {
+                        const base64 = await getRawBTBase64(ticketData)
+                        launchRawBT(base64)
+                    } else {
+                        const agent = await checkAgent()
+                        if (!agent) return
+                        const printerName = getStoredPrinter()
+                        if (!printerName) return
+                        await printTicket(printerName, ticketData)
+                    }
                 } catch {
                     // Silently ignore printer errors in auto-print
                 }

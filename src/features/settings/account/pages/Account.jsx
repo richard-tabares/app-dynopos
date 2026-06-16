@@ -7,6 +7,7 @@ import { updateBusiness } from '../helpers/updateBusiness'
 import { uploadLogo } from '../helpers/uploadLogo'
 import { changePassword } from '../helpers/changePassword'
 import { checkAgent, getPrinters, printTicket, setStoredPrinter, getStoredPrinter } from '../../../../shared/helpers/printEngine'
+import { isAndroid, getRawBTPlayStoreUrl } from '../../../../shared/helpers/rawbtPrint'
 import { updateProfile } from '../helpers/updateProfile'
 
 export const Account = () => {
@@ -471,86 +472,112 @@ export const Account = () => {
                     </div>
 
                     <div className={`${!thermalPrintingEnabled ? 'opacity-50 pointer-events-none' : ''} space-y-4`}>
-                    <div className='flex items-center justify-between'>
-                        <div>
-                            <p className='text-on-body font-medium'>Estado del Agente</p>
-                            <p className='text-muted text-sm'>Agente local de impresión en esta computadora</p>
-                        </div>
-                        <div className='flex items-center gap-2'>
-                            {checkingAgent ? (
-                                <Loader className='w-5 h-5 animate-spin text-accent' />
-                            ) : agentStatus === 'connected' ? (
-                                <div className='flex items-center gap-1.5 text-accent'>
-                                    <CheckCircle className='w-4 h-4' />
-                                    <span className='text-sm font-medium'>Conectado</span>
-                                </div>
-                            ) : (
-                                <div className='flex items-center gap-1.5 text-danger'>
-                                    <XCircle className='w-4 h-4' />
-                                    <span className='text-sm font-medium'>Desconectado</span>
-                                </div>
-                            )}
-                            <button
-                                onClick={refreshAgentStatus}
-                                className='p-1.5 border border-outline rounded-md hover:bg-hover transition cursor-pointer'
-                                title='Actualizar estado'>
-                                <RotateCw className='w-3.5 h-3.5 text-muted' />
-                            </button>
-                        </div>
-                    </div>
-
-                    {agentStatus === 'connected' && (
+                    {isAndroid() ? (
                         <>
-                            <div>
-                                <label className='block text-sm font-medium text-on-body mb-1'>
-                                    Impresora predeterminada
-                                </label>
-                                <select
-                                    value={selectedPrinter}
-                                    onChange={handlePrinterChange}
-                                    disabled={!thermalPrintingEnabled}
-                                    className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0 disabled:opacity-50 disabled:cursor-not-allowed'>
-                                    <option value=''>Seleccionar impresora...</option>
-                                    {availablePrinters.map((p) => (
-                                        <option key={p.name} value={p.name}>
-                                            {p.name}{p.autoDetected ? ' (USB)' : ''}
-                                        </option>
-                                    ))}
-                                </select>
-                                <p className='text-xs text-muted mt-1'>
-                                    Se usará esta impresora para imprimir tickets de venta automáticamente
+                            <div className='rounded-lg bg-accent/5 border border-accent/20 p-4'>
+                                <p className='text-sm text-on-body font-medium mb-1'>
+                                    Impresión vía rawBT (Android)
+                                </p>
+                                <p className='text-sm text-muted'>
+                                    Se usará la app rawBT para imprimir en tu impresora Bluetooth.
+                                    Asegúrate de tenerla instalada y configurada.
                                 </p>
                             </div>
-
                             <div className='flex justify-end'>
-                                <button
-                                    onClick={handleTestPrint}
-                                    disabled={testingPrint || !selectedPrinter || !thermalPrintingEnabled}
-                                    className='flex items-center gap-2 px-4 py-2 border border-accent text-accent text-sm font-medium rounded-lg hover:bg-accent/5 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer'>
-                                    {testingPrint ? (
-                                        <Loader className='w-4 h-4 animate-spin' />
-                                    ) : (
-                                        <Printer className='w-4 h-4' />
-                                    )}
-                                    Probar impresión
-                                </button>
+                                <a
+                                    href={getRawBTPlayStoreUrl()}
+                                    target='_blank'
+                                    rel='noopener noreferrer'
+                                    className='inline-flex items-center gap-2 px-4 py-2 border border-accent text-accent text-sm font-medium rounded-lg hover:bg-accent/5 transition cursor-pointer'>
+                                    <Printer className='w-4 h-4' />
+                                    Instalar rawBT
+                                </a>
                             </div>
                         </>
-                    )}
-
-                    {agentStatus === 'disconnected' && (
-                        <div className='rounded-lg bg-danger/5 border border-danger/20 p-4'>
-                            <p className='text-sm text-on-body'>
-                                El agente de impresión no está corriendo en esta computadora.{' '}
-                                <a
-                                    href='/docs/agente-impresion'
-                                    className='text-accent hover:underline'
-                                    target='_blank'
-                                    rel='noopener noreferrer'>
-                                    ¿Cómo instalarlo?
-                                </a>
-                            </p>
+                    ) : (
+                        <>
+                        <div className='flex items-center justify-between'>
+                            <div>
+                                <p className='text-on-body font-medium'>Estado del Agente</p>
+                                <p className='text-muted text-sm'>Agente local de impresión en esta computadora</p>
+                            </div>
+                            <div className='flex items-center gap-2'>
+                                {checkingAgent ? (
+                                    <Loader className='w-5 h-5 animate-spin text-accent' />
+                                ) : agentStatus === 'connected' ? (
+                                    <div className='flex items-center gap-1.5 text-accent'>
+                                        <CheckCircle className='w-4 h-4' />
+                                        <span className='text-sm font-medium'>Conectado</span>
+                                    </div>
+                                ) : (
+                                    <div className='flex items-center gap-1.5 text-danger'>
+                                        <XCircle className='w-4 h-4' />
+                                        <span className='text-sm font-medium'>Desconectado</span>
+                                    </div>
+                                )}
+                                <button
+                                    onClick={refreshAgentStatus}
+                                    className='p-1.5 border border-outline rounded-md hover:bg-hover transition cursor-pointer'
+                                    title='Actualizar estado'>
+                                    <RotateCw className='w-3.5 h-3.5 text-muted' />
+                                </button>
+                            </div>
                         </div>
+
+                        {agentStatus === 'connected' && (
+                            <>
+                                <div>
+                                    <label className='block text-sm font-medium text-on-body mb-1'>
+                                        Impresora predeterminada
+                                    </label>
+                                    <select
+                                        value={selectedPrinter}
+                                        onChange={handlePrinterChange}
+                                        disabled={!thermalPrintingEnabled}
+                                        className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0 disabled:opacity-50 disabled:cursor-not-allowed'>
+                                        <option value=''>Seleccionar impresora...</option>
+                                        {availablePrinters.map((p) => (
+                                            <option key={p.name} value={p.name}>
+                                                {p.name}{p.autoDetected ? ' (USB)' : ''}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <p className='text-xs text-muted mt-1'>
+                                        Se usará esta impresora para imprimir tickets de venta automáticamente
+                                    </p>
+                                </div>
+
+                                <div className='flex justify-end'>
+                                    <button
+                                        onClick={handleTestPrint}
+                                        disabled={testingPrint || !selectedPrinter || !thermalPrintingEnabled}
+                                        className='flex items-center gap-2 px-4 py-2 border border-accent text-accent text-sm font-medium rounded-lg hover:bg-accent/5 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer'>
+                                        {testingPrint ? (
+                                            <Loader className='w-4 h-4 animate-spin' />
+                                        ) : (
+                                            <Printer className='w-4 h-4' />
+                                        )}
+                                        Probar impresión
+                                    </button>
+                                </div>
+                            </>
+                        )}
+
+                        {agentStatus === 'disconnected' && (
+                            <div className='rounded-lg bg-danger/5 border border-danger/20 p-4'>
+                                <p className='text-sm text-on-body'>
+                                    El agente de impresión no está corriendo en esta computadora.{' '}
+                                    <a
+                                        href='/docs/agente-impresion'
+                                        className='text-accent hover:underline'
+                                        target='_blank'
+                                        rel='noopener noreferrer'>
+                                        ¿Cómo instalarlo?
+                                    </a>
+                                </p>
+                            </div>
+                        )}
+                        </>
                     )}
                     </div>
                 </div>

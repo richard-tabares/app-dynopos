@@ -162,7 +162,7 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
                 business={business}
                 ticketFooter={ticketFooter}>
                 <section
-                    className='bg-surface border border-outline rounded-xl w-full max-w-sm relative overflow-hidden'
+                    className='bg-surface border border-outline rounded-xl w-full max-w-sm relative overflow-y-auto scrollbar-none max-h-[85vh]'
                     onClick={(e) => e.stopPropagation()}
                     onKeyDown={(e) =>
                         e.key === 'Enter' && printRef.current?.()

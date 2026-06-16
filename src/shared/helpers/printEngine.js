@@ -1,3 +1,5 @@
+import { getRawBTBase64, launchRawBT, isAndroid } from './rawbtPrint'
+
 const AGENT_URL = 'http://localhost:9400'
 const STORAGE_KEY = 'bykorpos-printer'
 const TIMEOUT = 800
@@ -76,6 +78,16 @@ export async function handlePrint(sale, business) {
     })),
     total: sale.total || 0,
     footer: ticketFooter,
+  }
+
+  if (isAndroid()) {
+    try {
+      const base64 = await getRawBTBase64(ticketData)
+      launchRawBT(base64)
+      return { success: true }
+    } catch (err) {
+      return { success: false, fallback: true, error: err.message || 'Error al imprimir en Android' }
+    }
   }
 
   const agent = await checkAgent()
