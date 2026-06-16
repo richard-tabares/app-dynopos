@@ -23,6 +23,9 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
     const thermalPrintingEnabled = useStore(
         (state) => state.user?.profile?.thermal_printing_enabled ?? true,
     )
+    const printerWidth = useStore(
+        (state) => state.user?.profile?.printer_width ?? 32,
+    )
     const currentSaleDate = sale?.date || ''
     const ticketFooter = business?.ticket_footer || ''
     const dateInputRef = useRef(null)
@@ -87,7 +90,7 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
         try {
             const ticketData = {
                 businessName: business?.business_name || '',
-                businessLogo: business?.business_logo || '',
+                printerWidth: printerWidth,
                 ticketNumber: sale.ticketNumber || sale.id,
                 date: sale.date || '',
                 paymentMethod: sale.paymentMethod || '',

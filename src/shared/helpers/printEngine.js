@@ -1,4 +1,5 @@
 import { getRawBTBase64, launchRawBT, isAndroid } from './rawbtPrint'
+import { useStore } from '../../app/providers/store'
 
 const AGENT_URL = 'http://localhost:9400'
 const STORAGE_KEY = 'bykorpos-printer'
@@ -62,10 +63,11 @@ export function setStoredPrinter(name) {
 
 export async function handlePrint(sale, business) {
   const ticketFooter = business?.ticket_footer || ''
+  const profile = useStore.getState().user?.profile
 
   const ticketData = {
     businessName: business?.business_name || '',
-    businessLogo: business?.business_logo || '',
+    printerWidth: profile?.printer_width || 32,
     ticketNumber: sale.ticketNumber || sale.id,
     date: sale.date || '',
     paymentMethod: sale.paymentMethod || '',

@@ -44,6 +44,9 @@ export const Account = () => {
     const [thermalPrintingEnabled, setThermalPrintingEnabled] = useState(
         user?.profile?.thermal_printing_enabled ?? true
     )
+    const [printerWidth, setPrinterWidth] = useState(
+        user?.profile?.printer_width ?? 32
+    )
 
     const handleTogglePrinting = async () => {
         const newValue = !thermalPrintingEnabled
@@ -55,6 +58,28 @@ export const Account = () => {
             setThermalPrintingEnabled(newValue)
         } catch (err) {
             sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: err.message || 'Error al actualizar la configuración' })
+        }
+    }
+
+    const handlePrinterWidthChange = async (e) => {
+        const newValue = parseInt(e.target.value)
+        const profileId = user?.profile?.id || user?.data?.user?.id
+        if (!profileId) return
+        try {
+            await updateProfile(profileId, { printer_width: newValue })
+            setProfile({ printer_width: newValue })
+            setPrinterWidth(newValue)
+            sileo.success({
+                fill: 'var(--toast-success)',
+                title: 'Completado',
+                description: 'Ancho de impresión actualizado',
+            })
+        } catch (err) {
+            sileo.error({
+                fill: 'var(--toast-error)',
+                title: 'Error',
+                description: err.message || 'Error al actualizar el ancho de impresión',
+            })
         }
     }
 
@@ -469,6 +494,22 @@ export const Account = () => {
                             />
                             <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-0 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-surface after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-surface after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
                         </label>
+                    </div>
+
+                    <div>
+                        <label className='block text-sm font-medium text-on-body mb-1'>
+                            Ancho de impresión
+                        </label>
+                        <select
+                            value={printerWidth}
+                            onChange={handlePrinterWidthChange}
+                            className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'>
+                            <option value={32}>50mm (32 caracteres)</option>
+                            <option value={42}>80mm (42 caracteres)</option>
+                        </select>
+                        <p className='text-xs text-muted mt-1'>
+                            Selecciona el tamaño de papel de tu impresora térmica
+                        </p>
                     </div>
 
                     <div className={`${!thermalPrintingEnabled ? 'opacity-50 pointer-events-none' : ''} space-y-4`}>

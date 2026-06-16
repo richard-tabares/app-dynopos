@@ -161,6 +161,7 @@ export const Sales = () => {
                 if (!(user?.profile?.thermal_printing_enabled ?? true)) return
                 const ticketData = {
                     businessName: user?.business?.business_name || '',
+                    printerWidth: user?.profile?.printer_width || 32,
                     ticketNumber: sale.ticket_number,
                     date: sale.created_at?.split('T')[0] || '',
                     paymentMethod: sale.payment_method,
