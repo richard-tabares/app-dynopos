@@ -7,7 +7,7 @@ export const uploadLogo = async (businessId, file) => {
     try {
         const response = await apiFetch(`${apiUrl}/api/businesses/uploadLogo/${businessId}`, {
             method: 'POST',
-            contentType: '',
+            contentType: null,
             body: formData,
         })
         return await response.json()

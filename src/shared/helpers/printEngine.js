@@ -65,6 +65,7 @@ export async function handlePrint(sale, business) {
 
   const ticketData = {
     businessName: business?.business_name || '',
+    businessLogo: business?.business_logo || '',
     ticketNumber: sale.ticketNumber || sale.id,
     date: sale.date || '',
     paymentMethod: sale.paymentMethod || '',

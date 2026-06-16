@@ -3,7 +3,7 @@ import { useStore } from '../../app/providers/store'
 export const getAuthHeaders = (contentType) => {
     const token = useStore.getState().token
     const headers = {}
-    if (contentType !== undefined && contentType !== null) {
+    if (contentType) {
         headers['Content-Type'] = contentType
     }
     if (token) {

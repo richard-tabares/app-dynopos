@@ -87,6 +87,7 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
         try {
             const ticketData = {
                 businessName: business?.business_name || '',
+                businessLogo: business?.business_logo || '',
                 ticketNumber: sale.ticketNumber || sale.id,
                 date: sale.date || '',
                 paymentMethod: sale.paymentMethod || '',
