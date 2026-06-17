@@ -112,14 +112,6 @@ export async function handlePrint(sale, businessFallback = null) {
   let printerName = getStoredPrinter()
   const { printers: allPrinters } = await getPrinters()
 
-  if (printerName && printerName.startsWith('/dev/')) {
-    const cupsPrinter = allPrinters.find((p) => p.connection === 'cups')
-    if (cupsPrinter) {
-      printerName = cupsPrinter.name
-      setStoredPrinter(printerName)
-    }
-  }
-
   if (!printerName) {
     if (allPrinters.length === 0) {
       return { success: false, fallback: true, error: 'No hay impresoras disponibles' }
