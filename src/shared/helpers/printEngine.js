@@ -124,7 +124,6 @@ export async function handlePrint(sale, businessFallback = null) {
     }
   }
 
-  console.warn('[PrintEngine] Enviando ticketData al agente:', { printerName, businessName: ticketData.businessName, ticketData })
   try {
     await printTicket(printerName, ticketData)
     return { success: true }
