@@ -264,7 +264,7 @@ export const InventoryMovements = () => {
                                         <tr key={m.id} className='border-b border-divider-light hover:bg-hover'>
                                             <td className='py-3 px-4 text-on-body whitespace-nowrap'>{formatDate(m.created_at)}</td>
                                             <td className='py-3 px-4 font-medium text-on-surface'>
-                                                {m.product_variations?.variation_name ? (
+                                                {m.product_variations?.variation_name && m.product_variations?.variation_name !== 'Default' ? (
                                                     <span className='inline-flex items-center gap-2'>
                                                         <span>{m.products?.name || '—'}</span>
                                                         <span className='w-1.5 h-1.5 rounded-full bg-accent shrink-0' />

@@ -99,7 +99,7 @@ export const StockTable = ({ data = [] }) => {
                                 {visible.map((item, i) => (
                                     <tr key={i} className='border-b border-divider-light hover:bg-hover' onclick={() => {}}>
                                         <td className='py-3 px-4 font-medium text-on-surface'>
-                                            {item.variation_name ? (
+                                            {item.variation_name && item.variation_name !== 'Default' ? (
                                                 <span className='inline-flex items-center gap-2'>
                                                     <span>{item.product_name}</span>
                                                     <span className='w-1.5 h-1.5 rounded-full bg-accent shrink-0' />

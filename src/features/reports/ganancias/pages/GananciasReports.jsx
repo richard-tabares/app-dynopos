@@ -209,7 +209,7 @@ export const GananciasReports = () => {
                                         {visibleMargins.map((p, i) => (
                                             <tr key={i} className='border-b border-divider-light hover:bg-hover'>
                                                 <td className='py-3 px-4 font-medium text-on-surface'>
-                                                    {p.variation_name ? (
+                                                    {p.variation_name && p.variation_name !== 'Default' ? (
                                                         <span className='inline-flex items-center gap-2'>
                                                             <span>{p.name}</span>
                                                             <span className='w-1.5 h-1.5 rounded-full bg-accent shrink-0' />
