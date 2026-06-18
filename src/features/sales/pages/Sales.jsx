@@ -37,6 +37,7 @@ export const Sales = () => {
     const [salesList, setSalesList] = useState([])
     const [visibleCount, setVisibleCount] = useState(10)
     const [showClearModal, setShowClearModal] = useState(false)
+    const [saleCompleted, setSaleCompleted] = useState(false)
 
     const businessId = user?.profile?.business_id || user?.data?.user?.id
 
@@ -217,11 +218,10 @@ export const Sales = () => {
             setProducts(productsData)
             setSalesList(salesData)
             setTodayRevenue(revenueData.todayRevenue)
-            setShowConfirmationModal(false)
-            setSaleSummaryData(null)
+            setLoading(false)
+            setSaleCompleted(true)
         } catch (error) {
             sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al procesar la venta'})
-        } finally {
             setLoading(false)
         }
     }
@@ -407,8 +407,13 @@ export const Sales = () => {
                 <SaleConfirmationModal
                     orderSummary={saleSummaryData}
                     onConfirm={confirmSaleHandler}
-                    onCancel={() => setShowConfirmationModal(false)}
+                    onCancel={() => {
+                        setShowConfirmationModal(false)
+                        setSaleSummaryData(null)
+                        setSaleCompleted(false)
+                    }}
                     loading={loading}
+                    saleCompleted={saleCompleted}
                 />
             )}
 
