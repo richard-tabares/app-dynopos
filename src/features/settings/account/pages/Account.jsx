@@ -547,7 +547,7 @@ export const Account = () => {
                         <select
                             value={printerWidth}
                             onChange={handlePrinterWidthChange}
-                            className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'>
+                            className='w-full px-4 py-3 bg-surface text-on-body border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'>
                             <option value={32}>50mm (32 caracteres)</option>
                             <option value={42}>80mm (42 caracteres)</option>
                         </select>
@@ -619,7 +619,7 @@ export const Account = () => {
                                         value={selectedPrinter}
                                         onChange={handlePrinterChange}
                                         disabled={!thermalPrintingEnabled}
-                                        className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0 disabled:opacity-50 disabled:cursor-not-allowed'>
+                                        className='w-full px-4 py-3 bg-surface text-on-body border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0 disabled:opacity-50 disabled:cursor-not-allowed'>
                                         <option value=''>Seleccionar impresora...</option>
                                         {availablePrinters.map((p) => (
                                             <option key={p.name} value={p.name}>
