@@ -1,10 +1,12 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router'
-import { Store, Shield, Receipt, Bell, Save, Loader, Palette, Lock, Eye, EyeClosed, Printer, CheckCircle, XCircle, RotateCw } from 'lucide-react'
+import { Store, Shield, Receipt, Bell, Save, Loader, Palette, Lock, Eye, EyeClosed, Printer, CheckCircle, XCircle, RotateCw, Trash2, AlertTriangle } from 'lucide-react'
 import { sileo } from 'sileo'
+import { Modal } from '../../../../shared/components/Modal'
 import { useStore } from '../../../../app/providers/store'
 import { updateBusiness } from '../helpers/updateBusiness'
 import { uploadLogo } from '../helpers/uploadLogo'
+import { deleteLogo } from '../helpers/deleteLogo'
 import { changePassword } from '../helpers/changePassword'
 import { checkAgent, getPrinters, printTicket, setStoredPrinter, getStoredPrinter } from '../../../../shared/helpers/printEngine'
 import { isAndroid, getRawBTPlayStoreUrl } from '../../../../shared/helpers/rawbtPrint'
@@ -33,6 +35,8 @@ export const Account = () => {
     const [saving, setSaving] = useState(false)
     const [changingPassword, setChangingPassword] = useState(false)
     const [uploadingLogo, setUploadingLogo] = useState(false)
+    const [deletingLogo, setDeletingLogo] = useState(false)
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
     const [showPasswords, setShowPasswords] = useState({ current: false, new: false, confirm: false })
     const isPasswordFormEmpty = !passwordData.currentPassword && !passwordData.newPassword && !passwordData.confirmPassword
 
@@ -185,6 +189,31 @@ export const Account = () => {
         }
     }
 
+    const handleDeleteLogo = () => {
+        setShowDeleteConfirm(true)
+    }
+
+    const handleConfirmDelete = async () => {
+        if (!businessId) {
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: 'No se encontró el ID del negocio' })
+            return
+        }
+
+        setDeletingLogo(true)
+        try {
+            const updated = await deleteLogo(businessId)
+            setLogoPreview('')
+            setLogoFile(null)
+            setBusiness(updated)
+            setShowDeleteConfirm(false)
+            sileo.success({ fill: 'var(--toast-success)', title: 'Completado', description: 'Logo eliminado exitosamente' })
+        } catch (error) {
+            sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al eliminar el logo' })
+        } finally {
+            setDeletingLogo(false)
+        }
+    }
+
     const handleSave = async () => {
         if (!businessId) {
             sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: 'No se encontró el ID del negocio'})
@@ -282,15 +311,30 @@ export const Account = () => {
                             )}
                         </div>
                         <div>
-                            <label className='cursor-pointer inline-flex items-center gap-2 px-4 py-2 border border-outline text-on-body text-sm rounded-lg hover:bg-hover transition font-medium'>
-                                <input
-                                    type='file'
-                                    accept='image/*'
-                                    onChange={handleLogoChange}
-                                    className='hidden'
-                                />
-                                {uploadingLogo ? 'Subiendo...' : 'Cambiar Logo'}
-                            </label>
+                            <div className='flex items-center gap-2'>
+                                <label className='cursor-pointer inline-flex items-center gap-2 px-4 py-2 border border-outline text-on-body text-sm rounded-lg hover:bg-hover transition font-medium'>
+                                    <input
+                                        type='file'
+                                        accept='image/*'
+                                        onChange={handleLogoChange}
+                                        className='hidden'
+                                    />
+                                    {uploadingLogo ? 'Subiendo...' : 'Cambiar Logo'}
+                                </label>
+                                {logoPreview && (
+                                    <button
+                                        onClick={handleDeleteLogo}
+                                        disabled={deletingLogo}
+                                        className='p-2 border border-danger/50 text-danger rounded-lg hover:bg-danger/5 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer'
+                                        title='Eliminar Logo'>
+                                        {deletingLogo ? (
+                                            <Loader className='w-4 h-4 animate-spin' />
+                                        ) : (
+                                            <Trash2 className='w-4 h-4' />
+                                        )}
+                                    </button>
+                                )}
+                            </div>
                             <p className='text-xs text-muted mt-1'>PNG, JPG. Tamaño recomendado: 256x256px</p>
                         </div>
                     </div>
@@ -662,6 +706,37 @@ export const Account = () => {
                     Guardar Cambios
                 </button>
             </div>
+
+            {/* Modal Confirmar Eliminar Logo */}
+            <Modal
+                isOpen={showDeleteConfirm}
+                onClose={() => setShowDeleteConfirm(false)}
+                title='Eliminar Logo'
+                icon={AlertTriangle}
+                iconColor='text-red-600'
+                size='sm'>
+                <div className='p-6'>
+                    <p className='text-on-body mb-6'>¿Estás seguro de eliminar el logo del negocio?</p>
+                    <div className='flex justify-end gap-3'>
+                        <button
+                            onClick={() => setShowDeleteConfirm(false)}
+                            className='px-4 py-2 border border-outline text-on-body text-sm rounded-lg hover:bg-hover transition cursor-pointer'>
+                            Cancelar
+                        </button>
+                        <button
+                            onClick={handleConfirmDelete}
+                            disabled={deletingLogo}
+                            className='flex items-center gap-2 px-4 py-2 bg-danger text-surface text-sm rounded-lg hover:bg-danger/85 transition disabled:opacity-50 cursor-pointer'>
+                            {deletingLogo ? (
+                                <Loader className='w-4 h-4 animate-spin' />
+                            ) : (
+                                <Trash2 className='w-4 h-4' />
+                            )}
+                            Eliminar
+                        </button>
+                    </div>
+                </div>
+            </Modal>
         </section>
     )
 }
