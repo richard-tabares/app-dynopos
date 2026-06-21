@@ -212,7 +212,11 @@ export const GananciasReports = () => {
                                                     {p.variation_name && p.variation_name !== 'Default' ? (
                                                         <span className='inline-flex items-center gap-2'>
                                                             <span>{p.name}</span>
-                                                            <span className='w-1.5 h-1.5 rounded-full bg-accent shrink-0' />
+                                                            {p.variation_type && (
+                                                                <span className='px-2.5 py-0.5 text-xs font-medium bg-accent/10 text-accent rounded-full'>
+                                                                    {p.variation_type.toLowerCase()}
+                                                                </span>
+                                                            )}
                                                             <span className='font-medium text-on-surface'>{p.variation_name}</span>
                                                         </span>
                                                     ) : (

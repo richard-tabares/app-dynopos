@@ -267,7 +267,11 @@ export const InventoryMovements = () => {
                                                 {m.product_variations?.variation_name && m.product_variations?.variation_name !== 'Default' ? (
                                                     <span className='inline-flex items-center gap-2'>
                                                         <span>{m.products?.name || '—'}</span>
-                                                        <span className='w-1.5 h-1.5 rounded-full bg-accent shrink-0' />
+                                                        {m.products?.variation_type && (
+                                                            <span className='px-2.5 py-0.5 text-xs font-medium bg-accent/10 text-accent rounded-full'>
+                                                                {m.products.variation_type.toLowerCase()}
+                                                            </span>
+                                                        )}
                                                         <span className='font-medium text-on-surface'>{m.product_variations.variation_name}</span>
                                                     </span>
                                                 ) : (

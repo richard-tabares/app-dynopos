@@ -567,7 +567,11 @@ export const Products = () => {
                         onClick={(e) => onEditVariation(v, e)}>
                         <td className='py-2 px-4'>
                             <span className='flex items-center gap-2 text-sm'>
-                                <span className='w-1.5 h-1.5 rounded-full bg-accent shrink-0' />
+                                {product.variation_type && (
+                                    <span className='px-2.5 py-0.5 text-xs font-medium bg-accent/10 text-accent rounded-full'>
+                                        {product.variation_type.toLowerCase()}
+                                    </span>
+                                )}
                                 <span className='font-medium text-on-surface'>{v.variation_name}</span>
                             </span>
                         </td>

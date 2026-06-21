@@ -59,7 +59,11 @@ export const ReturnDetailModal = ({ isOpen, onClose, data }) => {
                                             {item.product_variations?.variation_name ? (
                                                 <span className='inline-flex items-center gap-2'>
                                                     <span>{item.products?.name || 'Producto eliminado'}</span>
-                                                    <span className='w-1.5 h-1.5 rounded-full bg-accent shrink-0' />
+                                                    {item.products?.variation_type && (
+                                                        <span className='px-2.5 py-0.5 text-xs font-medium bg-accent/10 text-accent rounded-full'>
+                                                            {item.products.variation_type.toLowerCase()}
+                                                        </span>
+                                                    )}
                                                     <span>{item.product_variations.variation_name}</span>
                                                 </span>
                                             ) : (

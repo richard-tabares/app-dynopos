@@ -67,7 +67,11 @@ export const InventoryValuation = ({ data = [] }) => {
                                             {item.variation_name && item.variation_name !== 'Default' ? (
                                                 <span className='inline-flex items-center gap-2'>
                                                     <span>{item.product_name}</span>
-                                                    <span className='w-1.5 h-1.5 rounded-full bg-accent shrink-0' />
+                                                    {item.variation_type && (
+                                                        <span className='px-2.5 py-0.5 text-xs font-medium bg-accent/10 text-accent rounded-full'>
+                                                            {item.variation_type.toLowerCase()}
+                                                        </span>
+                                                    )}
                                                     <span className='font-medium text-on-surface'>{item.variation_name}</span>
                                                 </span>
                                             ) : (
