@@ -120,11 +120,15 @@ export const ReturnModal = ({ isOpen, sale, onClose, onConfirm }) => {
                                                 item.price,
                                         )}
                                     </p>
-                                    <p className='text-sm font-medium text-on-surface truncate flex items-center gap-1'>
+                                    <p className='text-sm font-medium text-on-surface flex items-center gap-1 flex-wrap break-words'>
                                         {item.name}
-                                        {item.variation_name && (
+                                        {item.variation_name && item.variation_name !== 'Default' && (
                                             <span className='inline-flex items-center gap-2 ml-1'>
-                                                <span className='w-1.5 h-1.5 rounded-full bg-accent shrink-0' />
+                                                {item.variation_type && (
+                                                    <span className='px-2.5 py-0.5 text-xs font-medium bg-accent/10 text-accent rounded-full'>
+                                                        {item.variation_type.toLowerCase()}
+                                                    </span>
+                                                )}
                                                 <span className='font-medium text-on-surface'>{item.variation_name}</span>
                                             </span>
                                         )}
