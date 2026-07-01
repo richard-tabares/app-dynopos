@@ -13,19 +13,20 @@ import { getReports } from '../../shared/helpers/getReports'
 import { useStore } from '../../../../app/providers/store'
 
 const computeDates = (filter) => {
-    const now = new Date()
-    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+    const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Bogota' }).format(new Date())
     if (filter === 'day') return { startDate: today, endDate: today }
     if (filter === 'week') {
-        const weekAgo = new Date()
-        weekAgo.setDate(weekAgo.getDate() - 7)
-        const s = `${weekAgo.getFullYear()}-${String(weekAgo.getMonth() + 1).padStart(2, '0')}-${String(weekAgo.getDate()).padStart(2, '0')}`
+        const [y, m, d] = today.split('-').map(Number)
+        const weekAgo = new Date(Date.UTC(y, m - 1, d))
+        weekAgo.setUTCDate(weekAgo.getUTCDate() - 7)
+        const s = weekAgo.toISOString().slice(0, 10)
         return { startDate: s, endDate: today }
     }
     if (filter === 'month') {
-        const monthAgo = new Date()
-        monthAgo.setMonth(monthAgo.getMonth() - 1)
-        const s = `${monthAgo.getFullYear()}-${String(monthAgo.getMonth() + 1).padStart(2, '0')}-${String(monthAgo.getDate()).padStart(2, '0')}`
+        const [y, m, d] = today.split('-').map(Number)
+        const monthAgo = new Date(Date.UTC(y, m - 1, d))
+        monthAgo.setUTCMonth(monthAgo.getUTCMonth() - 1)
+        const s = monthAgo.toISOString().slice(0, 10)
         return { startDate: s, endDate: today }
     }
     return { startDate: '', endDate: '' }
