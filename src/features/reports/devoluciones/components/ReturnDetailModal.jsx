@@ -15,8 +15,6 @@ export const ReturnDetailModal = ({ isOpen, onClose, data }) => {
 
     if (!header) return null
 
-    const itemsByReturn = items.filter(i => i.return_id === header.id)
-
     return (
         <Modal
             isOpen={isOpen}
@@ -45,31 +43,33 @@ export const ReturnDetailModal = ({ isOpen, onClose, data }) => {
                     )}
                 </div>
 
-                {itemsByReturn.length > 0 && (
+                {items.length > 0 && (
                     <div className='border-t border-b border-dashed border-outline py-3 my-3'>
                         <div className='flex justify-between font-bold text-xs uppercase mb-2 text-muted'>
                             <span>Producto</span>
                             <span>Subtotal</span>
                         </div>
                         <div className='space-y-3'>
-                            {itemsByReturn.map((item, index) => (
+                            {items.map((item, index) => (
                                 <div key={index} className='flex justify-between items-start gap-2'>
                                     <div className='flex-1 min-w-0'>
-                                        <p className='text-sm font-bold text-on-surface uppercase truncate'>
+                                        <div className='text-sm font-bold text-on-surface uppercase'>
                                             {item.product_variations?.variation_name ? (
-                                                <span className='inline-flex items-center gap-2'>
-                                                    <span>{item.products?.name || 'Producto eliminado'}</span>
-                                                    {item.products?.variation_type && (
-                                                        <span className='px-2.5 py-0.5 text-xs font-medium bg-accent/10 text-accent rounded-full'>
-                                                            {item.products.variation_type.toLowerCase()}
-                                                        </span>
-                                                    )}
-                                                    <span>{item.product_variations.variation_name}</span>
-                                                </span>
+                                                <>
+                                                    <div>{item.products?.name || 'Producto eliminado'}</div>
+                                                    <div className='flex items-center gap-2 mt-0.5'>
+                                                        {item.products?.variation_type && (
+                                                            <span className='px-2.5 py-0.5 text-xs font-medium bg-accent/10 text-accent rounded-full'>
+                                                                {item.products.variation_type.toLowerCase()}
+                                                            </span>
+                                                        )}
+                                                        <span className='text-xs font-semibold'>{item.product_variations.variation_name}</span>
+                                                    </div>
+                                                </>
                                             ) : (
                                                 item.products?.name || 'Producto eliminado'
                                             )}
-                                        </p>
+                                        </div>
                                         <p className='text-xs text-muted'>{item.quantity}x {formatCurrency(item.unit_price)}</p>
                                     </div>
                                     <span className='text-sm font-bold shrink-0'>{formatCurrency(item.subtotal)}</span>

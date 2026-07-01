@@ -86,7 +86,7 @@ export const DevolucionesReports = () => {
         setDetailLoading(true)
         try {
             const API_URL = import.meta.env.VITE_API_URL
-            const response = await apiFetch(`${API_URL}/api/reports/${businessId}?section=return_detail&returnDate=${returnItem.return_date}`)
+            const response = await apiFetch(`${API_URL}/api/reports/${businessId}?section=return_detail&returnId=${returnItem.return_id}`)
             const result = await response.json()
             if (result.data) {
                 setReturnDetail(result.data)
