@@ -49,7 +49,7 @@ export const PrintTicket = ({ children, printRef, sale, business, ticketFooter }
         const itemsHtml = sale.items
             .map(
                 (item) => {
-                const displayName = item.variation_name ? `${item.name} - ${item.variation_name}` : item.name
+                const displayName = item.variation_name && item.variation_name !== 'Default' ? `${item.name} - ${item.variation_name}` : item.name
                 return `
             <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:4px;margin-bottom:8px;">
                 <div style="flex:1;min-width:0;">

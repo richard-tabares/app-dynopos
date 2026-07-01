@@ -54,7 +54,7 @@ export const ReturnDetailModal = ({ isOpen, onClose, data }) => {
                                 <div key={index} className='flex justify-between items-start gap-2'>
                                     <div className='flex-1 min-w-0'>
                                         <div className='text-sm font-bold text-on-surface uppercase'>
-                                            {item.product_variations?.variation_name ? (
+                                            {item.product_variations?.variation_name && item.product_variations?.variation_name !== 'Default' ? (
                                                 <>
                                                     <div>{item.products?.name || 'Producto eliminado'}</div>
                                                     <div className='flex items-center gap-2 mt-0.5'>
