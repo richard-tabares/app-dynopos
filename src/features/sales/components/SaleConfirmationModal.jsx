@@ -33,8 +33,7 @@ export const SaleConfirmationModal = ({
             icon={CircleDollarSign}
         >
             <section
-                className='flex flex-col flex-1 overflow-y-auto scrollbar-none max-h-[calc(90vh-65px)]'
-                onKeyDown={(e) => e.key === 'Enter' && !loading && !saleCompleted && onConfirm(paymentAmount)}>                
+                className='flex flex-col flex-1 overflow-y-auto scrollbar-none max-h-[calc(90vh-65px)]'>
                 <div className='p-6 flex flex-col flex-1'>
                     <p className='text-sm text-muted mb-4 flex-shrink-0'>
                         Revisa los detalles de la venta antes de confirmar.

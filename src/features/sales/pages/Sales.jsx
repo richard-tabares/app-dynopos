@@ -28,6 +28,7 @@ export const Sales = () => {
     const { user, products, setProducts, cart, clearCart, setTodayRevenue, setCategories, setSubscription, addToCart, pendingOrders, currentLabel, initCurrentOrder, holdCurrentOrder, switchToOrder, finalizeCurrentOrder, resetOrderState } = useStore()
     const [searchTerm, setSearchTerm] = useState('')
     const searchInputRef = useRef(null)
+    const processingSale = useRef(false)
     const [loading, setLoading] = useState(false)
     const [, setLastSaleTicket] = useState(null)
     const [showConfirmationModal, setShowConfirmationModal] = useState(false)
@@ -136,7 +137,8 @@ export const Sales = () => {
     }
 
     const confirmSaleHandler = async () => {
-        if (!saleSummaryData) return
+        if (!saleSummaryData || processingSale.current) return
+        processingSale.current = true
         setLoading(true)
         const saleData = {
             business_id: businessId,
@@ -218,11 +220,12 @@ export const Sales = () => {
             setProducts(productsData)
             setSalesList(salesData)
             setTodayRevenue(revenueData.todayRevenue)
-            setLoading(false)
             setSaleCompleted(true)
         } catch (error) {
             sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: error.message || 'Error al procesar la venta'})
+        } finally {
             setLoading(false)
+            processingSale.current = false
         }
     }
 
