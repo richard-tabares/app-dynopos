@@ -7,6 +7,8 @@ const formatCurrency = (value) =>
 const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
 
 export const SalesLineChart = ({ data = [], showDayNames = false }) => {
+    const totalSales = data.reduce((sum, item) => sum + Number(item.total_amount), 0)
+
     const formatTick = (val) => {
         if (showDayNames && val) {
             const d = new Date(val + 'T12:00:00')
@@ -17,9 +19,15 @@ export const SalesLineChart = ({ data = [], showDayNames = false }) => {
     }
     return (
         <section className='bg-surface border border-outline p-6 shadow-xs rounded-lg'>
-            <div className='flex items-center gap-2 text-accent mb-6'>
-                <TrendingUp className='w-5 h-5' />
-                <h3 className='text-lg font-semibold text-on-surface'>Ventas Totales</h3>
+            <div className='flex items-start justify-between mb-6'>
+                <div className='flex items-center gap-2 text-accent'>
+                    <TrendingUp className='w-5 h-5' />
+                    <h3 className='text-lg font-semibold text-on-surface'>Ventas Totales</h3>
+                </div>
+                <div className='text-right'>
+                    <p className='text-xs text-muted'>Total vendido</p>
+                    <p className='text-lg font-bold text-accent'>{formatCurrency(totalSales)}</p>
+                </div>
             </div>
             <div className='h-[300px] w-full' style={{ position: 'relative', overflow: 'hidden' }}>
                 {data.length > 0 ? (
