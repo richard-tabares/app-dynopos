@@ -36,7 +36,7 @@ export const AvgTicketCard = ({ overallAvgTicket = 0, tickets = [], showDayNames
                     </div>
                 </div>
                 <div className='text-right'>
-                    <p className='text-3xl font-bold text-accent'>{formatCurrency(overallAvgTicket)}</p>
+                    <p className='text-lg font-bold text-accent'>{formatCurrency(overallAvgTicket)}</p>
                 </div>
             </div>
 
