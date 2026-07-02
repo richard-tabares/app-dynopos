@@ -26,7 +26,11 @@ export const OrderSidebar = ({ onProcessSale }) => {
         currentLabel,
     } = useStore()
     const subscription = user?.subscription
-    const hasActiveSubscription = subscription?.status === 'active'
+    const hasActiveSubscription = subscription?.status === 'active' || subscription?.status === 'past_due'
+    const daysPastDue = subscription?.past_due_at
+        ? Math.floor((new Date().getTime() - new Date(subscription.past_due_at).getTime()) / (1000 * 60 * 60 * 24))
+        : 0
+    const graceRemaining = Math.max(0, 7 - daysPastDue)
 
     const [paymentMethod, setPaymentMethod] = useState('Efectivo')
     const today = new Date().toLocaleDateString('en-CA')
@@ -232,18 +236,37 @@ export const OrderSidebar = ({ onProcessSale }) => {
                     Procesar Venta
                 </button>
 
-                {!hasActiveSubscription && (
+                {subscription?.status === 'past_due' && (
                     <div className='mt-4 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-3'>
                         <AlertTriangle className='w-5 h-5 text-amber-600 shrink-0 mt-0.5' />
                         <div className='text-sm text-amber-800'>
                             <p className='font-semibold'>
-                                Suscripción inactiva
+                                Suscripción vencida
                             </p>
                             <p className='mt-1 text-amber-700'>
-                                Renueva tu plan para seguir procesando ventas.{' '}
+                                Tienes <span className='font-semibold'>{graceRemaining} días</span> de gracia para renovar.{' '}
                                 <Link
                                     to='/settings/billing'
                                     className='font-medium underline hover:text-amber-900'>
+                                    Ir a Facturación
+                                </Link>
+                            </p>
+                        </div>
+                    </div>
+                )}
+
+                {!hasActiveSubscription && subscription?.status !== 'past_due' && (
+                    <div className='mt-4 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3'>
+                        <AlertTriangle className='w-5 h-5 text-red-600 shrink-0 mt-0.5' />
+                        <div className='text-sm text-red-800'>
+                            <p className='font-semibold'>
+                                Suscripción inactiva
+                            </p>
+                            <p className='mt-1 text-red-700'>
+                                Renueva tu plan para seguir procesando ventas.{' '}
+                                <Link
+                                    to='/settings/billing'
+                                    className='font-medium underline hover:text-red-900'>
                                     Ir a Facturación
                                 </Link>
                             </p>

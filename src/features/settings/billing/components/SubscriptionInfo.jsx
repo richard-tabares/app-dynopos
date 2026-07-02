@@ -4,7 +4,8 @@ import { useFormatDate } from '../../../../shared/helpers/useFormatDate'
 const statusColors = {
     active: 'text-green-600 bg-green-50 dark:bg-green-900/20',
     cancelled: 'text-red-600 bg-red-50 dark:bg-red-900/20',
-    expired: 'text-yellow-600 bg-yellow-50 dark:bg-yellow-900/20',
+    expired: 'text-red-600 bg-red-50 dark:bg-red-900/20',
+    past_due: 'text-yellow-600 bg-yellow-50 dark:bg-yellow-900/20',
     trial: 'text-blue-600 bg-blue-50 dark:bg-blue-900/20',
 }
 
@@ -12,6 +13,7 @@ const statusLabels = {
     active: 'Activa',
     cancelled: 'Cancelada',
     expired: 'Expirada',
+    past_due: 'Vencida',
     trial: 'Prueba',
 }
 
@@ -70,14 +72,34 @@ export const SubscriptionInfo = ({ subscription, loading, onPayNow, isPaying, ha
             <div className='p-6'>
                 {(() => {
                     const today = new Date().toISOString().split('T')[0]
-                    const isExpired = subscription.current_period_end && subscription.current_period_end < today
-                    if (!isExpired && subscription.status !== 'expired') return null
+                    const isExpired = (subscription.current_period_end && subscription.current_period_end < today)
+                        || subscription.status === 'expired'
+                        || subscription.status === 'past_due'
+                    if (!isExpired) return null
+
+                    const pastDueMs = subscription.past_due_at ? new Date(subscription.past_due_at).getTime() : 0
+                    const daysPastDue = pastDueMs
+                        ? Math.floor((new Date().getTime() - pastDueMs) / (1000 * 60 * 60 * 24))
+                        : 0
+                    const graceRemaining = Math.max(0, 7 - daysPastDue)
 
                     return (
-                        <div className='flex items-center gap-3 p-3 mb-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg'>
-                            <AlertTriangle className='w-5 h-5 text-red-600 shrink-0' />
-                            <p className='text-sm text-red-700 dark:text-red-300'>
-                                Tu suscripción está <span className='font-semibold'>vencida o inactiva</span>. Renueva tu plan para seguir usando todas las funciones.
+                        <div className={`flex items-start gap-3 p-3 mb-4 rounded-lg border ${
+                            subscription.status === 'past_due'
+                                ? 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800'
+                                : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'
+                        }`}>
+                            <AlertTriangle className={`w-5 h-5 shrink-0 mt-0.5 ${
+                                subscription.status === 'past_due' ? 'text-yellow-600' : 'text-red-600'
+                            }`} />
+                            <p className={`text-sm ${
+                                subscription.status === 'past_due' ? 'text-yellow-700 dark:text-yellow-300' : 'text-red-700 dark:text-red-300'
+                            }`}>
+                                {subscription.status === 'past_due' ? (
+                                    <>Tu suscripción está <span className='font-semibold'>vencida</span>. Tienes <span className='font-semibold'>{graceRemaining} días</span> de gracia para renovar antes de que se desactive.</>
+                                ) : (
+                                    <>Tu suscripción está <span className='font-semibold'>vencida o inactiva</span>. Renueva tu plan para seguir usando todas las funciones.</>
+                                )}
                             </p>
                         </div>
                     )
@@ -133,9 +155,11 @@ export const SubscriptionInfo = ({ subscription, loading, onPayNow, isPaying, ha
                 )}
 
                 {(() => {
-                    const today = new Date().toISOString().split('T')[0]
-                    const isExpired = subscription.current_period_end && subscription.current_period_end < today
-                    if (!isExpired && subscription.status !== 'expired') return null
+                    const todayPay = new Date().toISOString().split('T')[0]
+                    const isExpiredPay = (subscription.current_period_end && subscription.current_period_end < todayPay)
+                        || subscription.status === 'expired'
+                        || subscription.status === 'past_due'
+                    if (!isExpiredPay) return null
 
                     return (
                         <div className='mt-4 pt-4 border-t border-divider'>
@@ -151,15 +175,7 @@ export const SubscriptionInfo = ({ subscription, loading, onPayNow, isPaying, ha
                                         <><CreditCard className='w-5 h-5' /> Pagar Ahora</>
                                     )}
                                 </button>
-                            ) : (
-                                <div className='flex items-center gap-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg'>
-                                    <AlertTriangle className='w-5 h-5 text-yellow-600 shrink-0' />
-                                    <p className='text-sm text-yellow-700 dark:text-yellow-300'>
-                                        Tu suscripción está vencida. Para pagar, primero{' '}
-                                        <span className='font-semibold'>actualiza tu método de pago</span>.
-                                    </p>
-                                </div>
-                            )}
+                            ) : null}
                         </div>
                     )
                 })()}
