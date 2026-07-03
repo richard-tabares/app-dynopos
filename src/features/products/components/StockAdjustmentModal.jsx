@@ -1,9 +1,11 @@
 import { ArrowDownCircle, ArrowUpCircle, Loader, Settings2, Search, X } from 'lucide-react'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Modal } from '../../../shared/components/Modal'
 import { getActiveVariations } from '../../../shared/helpers/productHelpers'
 import { normalizeSearch } from '../../../shared/helpers/normalizeSearch'
 import { useIsMobileDevice } from '../../../shared/hooks/useIsMobileDevice'
+import { useStore } from '../../../app/providers/store'
+import { getUnitLabel, ensureUnitsLoaded } from '../../../shared/helpers/unitsOfMeasure'
 
 export const StockAdjustmentModal = ({
     products,
@@ -12,10 +14,18 @@ export const StockAdjustmentModal = ({
     handleSubmit,
 }) => {
     const isMobileDevice = useIsMobileDevice()
+    const unitsOfMeasure = useStore((state) => state.unitsOfMeasure)
+    const setUnitsOfMeasure = useStore((state) => state.setUnitsOfMeasure)
+
+    useEffect(() => {
+        ensureUnitsLoaded(unitsOfMeasure, setUnitsOfMeasure)
+    }, [unitsOfMeasure, setUnitsOfMeasure])
+
     const [loading, setLoading] = useState(false)
     const [searchTerm, setSearchTerm] = useState('')
     const [selected, setSelected] = useState(preselect || null)
     const [movementType, setMovementType] = useState('entry')
+    const [isFocused, setIsFocused] = useState(false)
     const [formData, setFormData] = useState({
         quantity: '',
         unit_cost: preselect?.variation?.unit_cost ?? '',
@@ -47,10 +57,12 @@ export const StockAdjustmentModal = ({
 
     const showSearch = !preselect
     const currentStock = selected?.variation?.stock || 0
+    const selectedUnitId = selected?.variation?.unit_of_measure_id
+    const allowDecimals = selectedUnitId && selectedUnitId !== 1 && unitsOfMeasure.find(u => u.id === selectedUnitId)?.allow_decimals
     const isFormValid =
         selected &&
         formData.quantity !== '' &&
-        parseInt(formData.quantity) > 0
+        parseFloat(formData.quantity) > 0
 
     const handleSelect = (product, variation) => {
         setSelected({ product, variation })
@@ -64,10 +76,10 @@ export const StockAdjustmentModal = ({
 
     const handleChange = (e) => {
         const { name, value } = e.target
-        if (value !== '' && parseInt(value) < 0) return
+        if (value !== '' && parseFloat(value) < 0) return
         setFormData((prev) => ({
             ...prev,
-            [name]: value === '' ? '' : parseInt(value) || 0,
+            [name]: value === '' ? '' : parseFloat(value) || 0,
         }))
     }
 
@@ -87,7 +99,7 @@ export const StockAdjustmentModal = ({
         try {
             await handleSubmit(selected.product.id, {
                 movement_type: movementType,
-                quantity: parseInt(formData.quantity),
+                quantity: parseFloat(formData.quantity),
                 unit_cost: formData.unit_cost === '' ? null : Number(formData.unit_cost),
                 notes: formData.notes || null,
                 business_id: selected.product.business_id,
@@ -224,15 +236,31 @@ export const StockAdjustmentModal = ({
                     <label className='block text-sm font-medium text-on-body mb-1'>
                         Cantidad
                     </label>
-                    <input
-                        type='number'
-                        name='quantity'
-                        value={formData.quantity}
-                        onChange={handleChange}
-                        min='1'
-                        className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
-                        placeholder='Ingrese la cantidad'
-                    />
+                    <div className='flex w-full'>
+                        <input
+                            type='number'
+                            name='quantity'
+                            value={formData.quantity}
+                            onChange={handleChange}
+                            onFocus={() => setIsFocused(true)}
+                            onBlur={() => setIsFocused(false)}
+                            min='0'
+                            step={allowDecimals ? '0.001' : '1'}
+                            className={`flex-1 border border-divider px-4 py-3 transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                                selected ? 'border-r-0 rounded-l-md' : 'rounded-md'
+                            }`}
+                            placeholder='Ingrese la cantidad'
+                        />
+                        {selected && (
+                            <span className={`flex items-center justify-center px-2.5 border rounded-r-md text-sm font-medium transition-colors duration-300 ${
+                                isFocused
+                                    ? 'border-accent bg-accent/5 text-accent'
+                                    : 'border-divider bg-surface text-muted'
+                            }`}>
+                                {getUnitLabel(selectedUnitId, unitsOfMeasure)}
+                            </span>
+                        )}
+                    </div>
                 </section>
 
                 <section>
