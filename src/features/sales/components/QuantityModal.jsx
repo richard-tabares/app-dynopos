@@ -23,6 +23,7 @@ export const QuantityModal = ({ product, variation, onClose }) => {
     const inputRef = useRef(null)
     const [selectedUnitId, setSelectedUnitId] = useState(baseUnit?.id || 1)
     const [quantity, setQuantity] = useState('')
+    const [isFocused, setIsFocused] = useState(false)
 
     useEffect(() => {
         inputRef.current?.focus()
@@ -110,7 +111,7 @@ export const QuantityModal = ({ product, variation, onClose }) => {
                         <label className='block text-sm font-medium text-on-body mb-1'>
                             Cantidad
                         </label>
-                        <div className='relative'>
+                        <div className='flex w-full'>
                             <input
                                 ref={inputRef}
                                 type='number'
@@ -119,10 +120,16 @@ export const QuantityModal = ({ product, variation, onClose }) => {
                                 min='0'
                                 step={selectedUnit?.allow_decimals ? '0.001' : '1'}
                                 autoFocus
-                                className='w-full px-4 py-3 pr-16 border border-divider rounded-md text-lg font-bold text-right focus:outline-none focus:border-accent focus:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none'
+                                onFocus={() => setIsFocused(true)}
+                                onBlur={() => setIsFocused(false)}
+                                className='flex-1 border border-divider border-r-0 rounded-l-md px-4 py-3 text-lg font-bold text-right focus:outline-none focus:border-accent focus:ring-0 transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none'
                                 placeholder='0'
                             />
-                            <span className='absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium text-muted'>
+                            <span className={`flex items-center justify-center px-2.5 border rounded-r-md text-md font-medium transition-colors ${
+                                isFocused
+                                    ? 'border-accent bg-accent/5 text-accent'
+                                    : 'border-divider bg-surface text-muted'
+                            }`}>
                                 {selectedUnit?.short_name || 'und'}
                             </span>
                         </div>
