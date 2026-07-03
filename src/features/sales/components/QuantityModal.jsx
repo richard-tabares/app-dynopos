@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
 import { X, ShoppingCart, Ruler } from 'lucide-react'
 import { useEscape } from '../../../shared/helpers/useEscape'
 import { useStore } from '../../../app/providers/store'
@@ -20,8 +20,13 @@ export const QuantityModal = ({ product, variation, onClose }) => {
         return list
     }, [baseUnit, subUnits])
 
+    const inputRef = useRef(null)
     const [selectedUnitId, setSelectedUnitId] = useState(baseUnit?.id || 1)
     const [quantity, setQuantity] = useState('')
+
+    useEffect(() => {
+        inputRef.current?.focus()
+    }, [selectedUnitId])
 
     const selectedUnit = allUnits.find(u => u.id === selectedUnitId) || baseUnit
     const isSubUnit = selectedUnit?.base_unit_id !== null
@@ -107,6 +112,7 @@ export const QuantityModal = ({ product, variation, onClose }) => {
                         </label>
                         <div className='relative'>
                             <input
+                                ref={inputRef}
                                 type='number'
                                 value={quantity}
                                 onChange={(e) => setQuantity(e.target.value)}
@@ -127,14 +133,14 @@ export const QuantityModal = ({ product, variation, onClose }) => {
                             <span className='text-on-body'>Precio por {baseUnit?.short_name || 'und'}:</span>
                             <span className='font-semibold text-on-surface'>${nf(basePrice)}</span>
                         </div>
-                        {isSubUnit && (
+                        {subUnits.length > 0 && (
                             <div className='flex justify-between'>
-                                <span className='text-on-body'>Precio por {selectedUnit?.short_name}:</span>
-                                <span className='font-semibold text-on-surface'>${nf(effectiveUnitPrice)}</span>
+                                <span className='text-on-body'>Precio por {subUnits[0].short_name}:</span>
+                                <span className='font-semibold text-on-surface'>${nf(basePrice * subUnits[0].conversion_factor)}</span>
                             </div>
                         )}
                         <div className='flex justify-between pt-2 border-t border-divider'>
-                            <span className='font-semibold text-on-surface'>Total Línea:</span>
+                            <span className='font-semibold text-on-surface'>Total:</span>
                             <span className='text-lg font-bold text-accent'>${nf(subtotal)}</span>
                         </div>
                     </div>
