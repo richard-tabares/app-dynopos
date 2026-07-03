@@ -4,6 +4,7 @@ import { DateRangeFilter } from '../../shared/components/DateRangeFilter'
 import { getReports } from '../../shared/helpers/getReports'
 import { useStore } from '../../../../app/providers/store'
 import { normalizeSearch } from '../../../../shared/helpers/normalizeSearch'
+import { getUnitLabel, ensureUnitsLoaded } from '../../../../shared/helpers/unitsOfMeasure'
 
 const formatCurrency = (value) =>
     new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(value)
@@ -29,7 +30,7 @@ const computeDates = (filter) => {
 }
 
 export const GananciasReports = () => {
-    const { user } = useStore()
+    const { user, unitsOfMeasure, setUnitsOfMeasure } = useStore()
     const businessId = user?.profile?.business_id || user?.data?.user?.id
 
     const [filter, setFilter] = useState('month')
@@ -68,6 +69,10 @@ export const GananciasReports = () => {
         }
         fetchData()
     }, [fetchData])
+
+    useEffect(() => {
+        ensureUnitsLoaded(unitsOfMeasure, setUnitsOfMeasure)
+    }, [unitsOfMeasure, setUnitsOfMeasure])
 
     const handleFilterChange = ({ filter: newFilter, startDate, endDate }) => {
         setFilter(newFilter)
@@ -224,7 +229,7 @@ export const GananciasReports = () => {
                                                         p.name
                                                     )}
                                                 </td>
-                                                <td className='py-3 px-4 text-right text-on-body'>{p.totalQuantity}</td>
+                                                <td className='py-3 px-4 text-right text-on-body'>{p.totalQuantity} {getUnitLabel(p.unit_of_measure_id, unitsOfMeasure)}</td>
                                                 <td className='py-3 px-4 text-right'>
                                                     <span className={`px-2.5 py-0.5 text-xs font-medium rounded-full ${
                                                         p.margin >= 30 ? 'bg-green-100 text-green-800' :

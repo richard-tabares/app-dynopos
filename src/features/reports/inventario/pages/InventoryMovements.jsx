@@ -8,6 +8,7 @@ import { useStore } from '../../../../app/providers/store'
 import { History, Search, ArrowDownCircle, ArrowUpCircle, ShoppingCart, Undo2, List, ChevronDown } from 'lucide-react'
 import { useFormatDate } from '../../../../shared/helpers/useFormatDate'
 import { normalizeSearch } from '../../../../shared/helpers/normalizeSearch'
+import { getUnitLabel, ensureUnitsLoaded } from '../../../../shared/helpers/unitsOfMeasure'
 import { getProducts } from '../../../products/helpers/getProducts'
 import { InventorySummary } from '../components/InventorySummary'
 
@@ -47,7 +48,7 @@ const computeDates = (filter) => {
 }
 
 export const InventoryMovements = () => {
-    const { user } = useStore()
+    const { user, unitsOfMeasure, setUnitsOfMeasure } = useStore()
     const businessId = user?.profile?.business_id || user?.data?.user?.id
 
     const [allProducts, setAllProducts] = useState([])
@@ -88,6 +89,10 @@ export const InventoryMovements = () => {
         }
         loadProducts()
     }, [businessId])
+
+    useEffect(() => {
+        ensureUnitsLoaded(unitsOfMeasure, setUnitsOfMeasure)
+    }, [unitsOfMeasure, setUnitsOfMeasure])
 
     const activeProducts = allProducts.filter((p) => p.is_active !== false)
 
@@ -286,7 +291,7 @@ export const InventoryMovements = () => {
                                                     {config.label}
                                                 </span>
                                             </td>
-                                            <td className='py-3 px-4 text-right font-bold text-on-body'>{m.quantity}</td>
+                                            <td className='py-3 px-4 text-right font-bold text-on-body'>{m.quantity} {getUnitLabel(m.product_variations?.unit_of_measure_id, unitsOfMeasure)}</td>
                                             <td className='py-3 px-4 text-muted text-xs max-w-[200px] truncate'>{m.notes || '—'}</td>
                                         </tr>
                                     )

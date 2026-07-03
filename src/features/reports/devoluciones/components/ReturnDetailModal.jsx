@@ -1,12 +1,20 @@
+import { useEffect } from 'react'
 import { Undo2 } from 'lucide-react'
 import { useStore } from '../../../../app/providers/store'
 import { Modal } from '../../../../shared/components/Modal'
+import { getUnitLabel, ensureUnitsLoaded } from '../../../../shared/helpers/unitsOfMeasure'
 
 const formatCurrency = (value) =>
     new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(value)
 
 export const ReturnDetailModal = ({ isOpen, onClose, data }) => {
     const business = useStore((state) => state.user.business)
+    const unitsOfMeasure = useStore((state) => state.unitsOfMeasure)
+    const setUnitsOfMeasure = useStore((state) => state.setUnitsOfMeasure)
+
+    useEffect(() => {
+        ensureUnitsLoaded(unitsOfMeasure, setUnitsOfMeasure)
+    }, [unitsOfMeasure, setUnitsOfMeasure])
 
     if (!isOpen || !data) return null
 
@@ -70,7 +78,7 @@ export const ReturnDetailModal = ({ isOpen, onClose, data }) => {
                                                 item.products?.name || 'Producto eliminado'
                                             )}
                                         </div>
-                                        <p className='text-xs text-muted'>{item.quantity}x {formatCurrency(item.unit_price)}</p>
+                                        <p className='text-xs text-muted'>{item.quantity} {getUnitLabel(item.sold_in_unit_id || item.product_variations?.unit_of_measure_id, unitsOfMeasure)} x {formatCurrency(item.unit_price)}</p>
                                     </div>
                                     <span className='text-sm font-bold shrink-0'>{formatCurrency(item.subtotal)}</span>
                                 </div>

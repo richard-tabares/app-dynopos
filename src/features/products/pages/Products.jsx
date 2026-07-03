@@ -38,6 +38,7 @@ import { getCategories } from '../../categories/helpers/getCategories'
 import { createCategory } from '../../categories/helpers/createCategory'
 import { useEscape } from '../../../shared/helpers/useEscape'
 import { normalizeSearch } from '../../../shared/helpers/normalizeSearch'
+import { getUnitLabel, ensureUnitsLoaded } from '../../../shared/helpers/unitsOfMeasure'
 import { BulkUploadModal } from '../components/BulkUploadModal'
 import { StockAdjustmentModal } from '../components/StockAdjustmentModal'
 import { updateInventory } from '../helpers/updateInventory'
@@ -54,7 +55,7 @@ export const Products = () => {
     const [activeStatus, setActiveStatus] = useState('all')
     const [stockFilter, setStockFilter] = useState('all')
     const [visibleCount, setVisibleCount] = useState(20)
-    const { user, products, setProducts, categories, setCategories } =
+    const { user, products, setProducts, categories, setCategories, unitsOfMeasure, setUnitsOfMeasure } =
         useStore()
     const navigate = useNavigate()
     const [showNewProductDropdown, setShowNewProductDropdown] = useState(false)
@@ -153,6 +154,10 @@ export const Products = () => {
         }
         loadProductsAndCategories()
     }, [businessId, setProducts])
+
+    useEffect(() => {
+        ensureUnitsLoaded(unitsOfMeasure, setUnitsOfMeasure)
+    }, [unitsOfMeasure, setUnitsOfMeasure])
 
     const handleOpenModal = (e) => {
         if (e && e.stopPropagation) e.stopPropagation()
@@ -515,7 +520,7 @@ export const Products = () => {
                     </td>
                     <td className='py-3 px-4 whitespace-nowrap text-right'>
                         {totalStock !== null ? (
-                            <span className={`font-medium ${stockBelowMin ? 'text-red-600' : 'text-on-body'}`}>{totalStock} uds</span>
+                            <span className={`font-medium ${stockBelowMin ? 'text-red-600' : 'text-on-body'}`}>{totalStock} {getUnitLabel(activeVariations.find(v => v.track_stock !== false)?.unit_of_measure_id, unitsOfMeasure)}</span>
                         ) : (
                             <span className='text-xs text-muted italic'>Sin control</span>
                         )}
@@ -592,7 +597,7 @@ export const Products = () => {
                         <td className='py-2 px-4 whitespace-nowrap text-right'>{
     v.track_stock === false
         ? <span className='text-xs text-muted italic'>Sin control</span>
-        : <span className={`text-xs ${(v.stock || 0) < (v.min_stock ?? 0) ? 'text-red-600 font-medium' : 'text-muted'}`}>{v.stock || 0} uds</span>
+        : <span className={`text-xs ${(v.stock || 0) < (v.min_stock ?? 0) ? 'text-red-600 font-medium' : 'text-muted'}`}>{v.stock || 0} {getUnitLabel(v.unit_of_measure_id, unitsOfMeasure)}</span>
 }</td>
                         <td className='py-2 px-4 whitespace-nowrap'><span className='text-xs text-muted'>—</span></td>
                         <td className='py-2 px-4 whitespace-nowrap'>

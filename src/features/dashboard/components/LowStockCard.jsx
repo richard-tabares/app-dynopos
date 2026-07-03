@@ -1,7 +1,16 @@
+import { useEffect } from 'react'
 import { AlertTriangle } from 'lucide-react'
 import { Link } from 'react-router'
+import { useStore } from '../../../app/providers/store'
+import { getUnitLabel, ensureUnitsLoaded } from '../../../shared/helpers/unitsOfMeasure'
 
 export const LowStockCard = ({ items = [] }) => {
+    const unitsOfMeasure = useStore((state) => state.unitsOfMeasure)
+    const setUnitsOfMeasure = useStore((state) => state.setUnitsOfMeasure)
+
+    useEffect(() => {
+        ensureUnitsLoaded(unitsOfMeasure, setUnitsOfMeasure)
+    }, [unitsOfMeasure, setUnitsOfMeasure])
     return (
         <section className='bg-surface border border-outline p-6 shadow-xs rounded-lg flex flex-col h-full'>
             <div className='flex items-center gap-2 text-orange-600 mb-2'>
@@ -32,6 +41,7 @@ export const LowStockCard = ({ items = [] }) => {
                             <div className='flex items-center gap-1 shrink-0'>
                                 <span className='text-muted'>Stock:</span>
                                 <span className='font-bold text-red-600'>{item.stock}</span>
+                                <span className='text-muted'>{getUnitLabel(item.unit_of_measure_id, unitsOfMeasure)}</span>
                                 <span className='text-faint'>/</span>
                                 <span className='text-muted'>{item.min_stock}</span>
                             </div>

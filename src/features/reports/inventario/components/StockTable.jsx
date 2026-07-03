@@ -1,6 +1,8 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Search, AlertTriangle, PackageCheck, Package, PackageX, Layers, ClipboardList, ChevronDown } from 'lucide-react'
 import { normalizeSearch } from '../../../../shared/helpers/normalizeSearch'
+import { useStore } from '../../../../app/providers/store'
+import { getUnitLabel, ensureUnitsLoaded } from '../../../../shared/helpers/unitsOfMeasure'
 
 const formatCurrency = (value) =>
     new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(value)
@@ -21,9 +23,15 @@ const stockFilters = [
 ]
 
 export const StockTable = ({ data = [] }) => {
+    const unitsOfMeasure = useStore((state) => state.unitsOfMeasure)
+    const setUnitsOfMeasure = useStore((state) => state.setUnitsOfMeasure)
     const [filter, setFilter] = useState('all')
     const [search, setSearch] = useState('')
     const [visibleCount, setVisibleCount] = useState(10)
+
+    useEffect(() => {
+        ensureUnitsLoaded(unitsOfMeasure, setUnitsOfMeasure)
+    }, [unitsOfMeasure, setUnitsOfMeasure])
 
     const filtered = useMemo(() => {
         let result = filter === 'all' ? data : data.filter(d => d.stock_status === filter)
@@ -114,7 +122,7 @@ export const StockTable = ({ data = [] }) => {
                                             )}
                                         </td>
                                         <td className='py-3 px-4 text-muted'>{item.category_name || 'Sin categoría'}</td>
-                                        <td className='py-3 px-4 text-right'>{item.stock_status === 'sin_control' ? '—' : item.current_stock}</td>
+                                        <td className='py-3 px-4 text-right'>{item.stock_status === 'sin_control' ? '—' : `${item.current_stock} ${getUnitLabel(item.unit_of_measure_id, unitsOfMeasure)}`}</td>
                                         <td className='py-3 px-4 text-right'>{item.stock_status === 'sin_control' ? '—' : item.min_stock}</td>
                                         <td className='py-3 px-4 text-right'>{item.unit_cost != null ? formatCurrency(item.unit_cost) : '—'}</td>
                                         <td className='py-3 px-4 text-right'>

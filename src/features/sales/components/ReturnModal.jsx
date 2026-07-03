@@ -1,14 +1,22 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { RotateCcw, Loader } from 'lucide-react'
 import { Modal } from '../../../shared/components/Modal'
+import { useStore } from '../../../app/providers/store'
+import { getUnitLabel, ensureUnitsLoaded } from '../../../shared/helpers/unitsOfMeasure'
 
 const initialItemSelections = (items) =>
     items.map((item) => ({ ...item, returnQuantity: 0 }))
 
 export const ReturnModal = ({ isOpen, sale, onClose, onConfirm }) => {
+    const unitsOfMeasure = useStore((state) => state.unitsOfMeasure)
+    const setUnitsOfMeasure = useStore((state) => state.setUnitsOfMeasure)
     const [selectedItems, setSelectedItems] = useState([])
     const [returnReason, setReturnReason] = useState('')
     const [isReturning, setIsReturning] = useState(false)
+
+    useEffect(() => {
+        ensureUnitsLoaded(unitsOfMeasure, setUnitsOfMeasure)
+    }, [unitsOfMeasure, setUnitsOfMeasure])
 
     if (!isOpen || !sale) return null
 
@@ -136,7 +144,7 @@ export const ReturnModal = ({ isOpen, sale, onClose, onConfirm }) => {
                                     <div className='flex flex-wrap gap-x-2'>
                                         <p className='text-xs text-muted'>
                                             Cant:{' '}
-                                            {`${item.quantity} x $ ${new Intl.NumberFormat(
+                                            {`${item.quantity} ${getUnitLabel(item.sold_in_unit_id, unitsOfMeasure)} x $ ${new Intl.NumberFormat(
                                                 'es-CO',
                                                 {
                                                     maximumFractionDigits: 0,

@@ -1,13 +1,21 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Search, DollarSign, ChevronDown } from 'lucide-react'
 import { normalizeSearch } from '../../../../shared/helpers/normalizeSearch'
+import { useStore } from '../../../../app/providers/store'
+import { getUnitLabel, ensureUnitsLoaded } from '../../../../shared/helpers/unitsOfMeasure'
 
 const formatCurrency = (value) =>
     new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(value)
 
 export const InventoryValuation = ({ data = [] }) => {
+    const unitsOfMeasure = useStore((state) => state.unitsOfMeasure)
+    const setUnitsOfMeasure = useStore((state) => state.setUnitsOfMeasure)
     const [visibleCount, setVisibleCount] = useState(10)
     const [search, setSearch] = useState('')
+
+    useEffect(() => {
+        ensureUnitsLoaded(unitsOfMeasure, setUnitsOfMeasure)
+    }, [unitsOfMeasure, setUnitsOfMeasure])
 
     const totalValuation = useMemo(() =>
         data.reduce((sum, item) => sum + Number(item.total_value), 0),
@@ -78,7 +86,7 @@ export const InventoryValuation = ({ data = [] }) => {
                                                 <span className='font-medium text-on-surface'>{item.product_name}</span>
                                             )}
                                         </td>
-                                        <td className='py-3 px-4 text-right'>{item.current_stock}</td>
+                                        <td className='py-3 px-4 text-right'>{item.current_stock} {getUnitLabel(item.unit_of_measure_id, unitsOfMeasure)}</td>
                                         <td className='py-3 px-4 text-right'>{formatCurrency(item.unit_cost)}</td>
                                         <td className='py-3 px-4 text-right font-semibold'>{formatCurrency(item.total_value)}</td>
                                     </tr>

@@ -59,7 +59,7 @@ export const ReturnsTable = ({ data = [], onReturnClick }) => {
                                         onClick={() => onReturnClick && onReturnClick(item)}
                                     >
                                         <td className='py-3 px-4 font-medium text-on-surface'>#{String(item.ticket_number ?? item.return_id ?? '').padStart(4, '0')}</td>
-                                        <td className='py-3 px-4 text-right'>{item.total_items_returned}</td>
+                                        <td className='py-3 px-4 text-right'>{item.total_items_returned} uds</td>
                                         <td className='py-3 px-4 text-right'>{formatDate(item.return_date)}</td>
                                         <td className='py-3 px-4 text-right font-medium text-red-600'>{formatCurrency(item.total_amount)}</td>
                                     </tr>
