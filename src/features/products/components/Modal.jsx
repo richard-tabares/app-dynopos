@@ -6,7 +6,6 @@ import {
     Plus,
     Trash2,
     Settings2,
-    Ruler,
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { sileo } from 'sileo'
@@ -410,48 +409,49 @@ export const Modal = ({
                                     placeholder='Ingrese el nombre del producto'
                                 />
                             </section>
-                            <section>
-                                <label className='block text-sm font-medium text-on-body mb-1'>
-                                    Categoría
-                                </label>
-                                <select
-                                    name='category_id'
-                                    id='category_id'
-                                    value={formData.category_id}
-                                    onChange={handleChange}
-                                    className='w-full px-4 py-3 bg-surface border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0 text-on-body'>
-                                    {categories.map((category) => (
-                                        <option
-                                            className='text-on-body'
-                                            key={category.id}
-                                            value={category.id}>
-                                            {category.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </section>
-                            {variableUnitsEnabled && (
+                            <div className={`grid ${variableUnitsEnabled ? 'grid-cols-2' : 'grid-cols-1'} gap-4`}>
                                 <section>
-                                    <label className='block text-sm font-medium text-on-body mb-1 flex items-center gap-1'>
-                                        <Ruler className='w-4 h-4 text-accent' />
-                                        Unidad de Venta
+                                    <label className='block text-sm font-medium text-on-body mb-1'>
+                                        Categoría
                                     </label>
                                     <select
-                                        name='unit_of_measure_id'
-                                        value={formData.unit_of_measure_id}
+                                        name='category_id'
+                                        id='category_id'
+                                        value={formData.category_id}
                                         onChange={handleChange}
                                         className='w-full px-4 py-3 bg-surface border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0 text-on-body'>
-                                        {baseUnits.map((u) => (
+                                        {categories.map((category) => (
                                             <option
                                                 className='text-on-body'
-                                                key={u.id}
-                                                value={u.id}>
-                                                {u.name} ({u.short_name})
+                                                key={category.id}
+                                                value={category.id}>
+                                                {category.name}
                                             </option>
                                         ))}
                                     </select>
                                 </section>
-                            )}
+                                {variableUnitsEnabled && (
+                                    <section>
+                                        <label className='block text-sm font-medium text-on-body mb-1'>
+                                            Unidad de Venta
+                                        </label>
+                                        <select
+                                            name='unit_of_measure_id'
+                                            value={formData.unit_of_measure_id}
+                                            onChange={handleChange}
+                                            className='w-full px-4 py-3 bg-surface border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0 text-on-body'>
+                                            {baseUnits.map((u) => (
+                                                <option
+                                                    className='text-on-body'
+                                                    key={u.id}
+                                                    value={u.id}>
+                                                    {u.name} ({u.short_name})
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </section>
+                                )}
+                            </div>
                             <div className={`grid ${editProductData.id ? 'grid-cols-3' : 'grid-cols-2'} gap-4`}>
                                 <section>
                                     <label className='block text-sm font-medium text-on-body mb-1'>
@@ -784,8 +784,7 @@ export const Modal = ({
                                                 {variableUnitsEnabled && (
                                                     <div className='grid grid-cols-1 gap-x-3'>
                                                         <section>
-                                                            <label className='block text-xs font-medium text-on-body mb-1 flex items-center gap-1'>
-                                                                <Ruler className='w-3.5 h-3.5 text-accent' />
+                                                            <label className='block text-xs font-medium text-on-body mb-1'>
                                                                 Unidad de Venta
                                                             </label>
                                                             <select
@@ -938,8 +937,7 @@ export const Modal = ({
                                                 </section>
                                                 {variableUnitsEnabled && (
                                                     <section className='col-span-2'>
-                                                        <label className='block text-xs font-medium text-on-body mb-1 flex items-center gap-1'>
-                                                            <Ruler className='w-3.5 h-3.5 text-accent' />
+                                                        <label className='block text-xs font-medium text-on-body mb-1'>
                                                             Unidad de Venta
                                                         </label>
                                                         <select

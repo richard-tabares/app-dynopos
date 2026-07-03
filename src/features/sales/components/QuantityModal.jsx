@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef, useEffect } from 'react'
-import { X, ShoppingCart, Ruler } from 'lucide-react'
+import { X, ShoppingCart } from 'lucide-react'
 import { useEscape } from '../../../shared/helpers/useEscape'
 import { useStore } from '../../../app/providers/store'
 
@@ -76,14 +76,20 @@ export const QuantityModal = ({ product, variation, onClose }) => {
                     <div>
                         <h3 className='font-semibold text-on-surface'>{product.name}</h3>
                         {variation.variation_name !== 'Default' && (
-                            <p className='text-sm text-muted'>{variation.variation_name}</p>
+                            <p className='text-sm text-on-surface flex items-center gap-2 mt-1'>
+                                {product.variation_type && (
+                                    <span className='px-2.5 py-0.5 text-xs font-medium bg-accent/10 text-accent rounded-full'>
+                                        {product.variation_type?.toLowerCase()}
+                                    </span>
+                                )}
+                                <span className='font-medium'>{variation.variation_name}</span>
+                            </p>
                         )}
                     </div>
 
                     {allUnits.length > 1 && (
                         <section>
-                            <label className='block text-sm font-medium text-on-body mb-2 flex items-center gap-1'>
-                                <Ruler className='w-4 h-4 text-accent' />
+                            <label className='block text-sm font-medium text-on-body mb-2'>
                                 Unidad de venta
                             </label>
                             <div className='flex gap-2 flex-wrap'>

@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router'
-import { Store, Shield, Receipt, Bell, Save, Loader, Palette, Lock, Eye, EyeClosed, Printer, CheckCircle, XCircle, RotateCw, Trash2, AlertTriangle, Ruler } from 'lucide-react'
+import { Store, Shield, Receipt, Bell, Save, Loader, Palette, Lock, Eye, EyeClosed, Printer, CheckCircle, XCircle, RotateCw, Trash2, AlertTriangle } from 'lucide-react'
 import { sileo } from 'sileo'
 import { Modal } from '../../../../shared/components/Modal'
 import { useStore } from '../../../../app/providers/store'
@@ -700,8 +700,7 @@ export const Account = () => {
             {/* Card: Unidades de Medida */}
             <section className='bg-surface border border-outline shadow-sm rounded-lg'>
                 <div className='px-6 py-4 border-b border-divider bg-body/50'>
-                    <h2 className='text-lg font-semibold flex items-center gap-2'>
-                        <Ruler className='w-5 h-5 text-accent' />
+                    <h2 className='text-lg font-semibold'>
                         Unidades de Medida
                     </h2>
                 </div>
