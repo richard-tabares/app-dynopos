@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
-import { Outlet, useLocation } from 'react-router'
+import { useLocation } from 'react-router'
+import { SettingsLayout } from '../components/SettingsLayout'
 
 export const Settings = () => {
     const location = useLocation()
@@ -8,9 +9,5 @@ export const Settings = () => {
         window.scrollTo(0, 0)
     }, [location.pathname])
 
-    return (
-        <section className='space-y-6 pb-12'>
-            <Outlet />
-        </section>
-    )
+    return <SettingsLayout />
 }

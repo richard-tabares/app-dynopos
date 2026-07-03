@@ -10,7 +10,13 @@ import { InventoryMovements } from '../features/reports/inventario/pages/Invento
 import { DevolucionesReports } from '../features/reports/devoluciones/pages/DevolucionesReports'
 import { GananciasReports } from '../features/reports/ganancias/pages/GananciasReports'
 import { Settings } from '../features/settings/pages/Settings'
-import { Account } from '../features/settings/account/pages/Account'
+import { StoreInfo } from '../features/settings/components/sections/StoreInfo'
+import { Appearance } from '../features/settings/components/sections/Appearance'
+import { Receipts } from '../features/settings/components/sections/Receipts'
+import { Notifications } from '../features/settings/components/sections/Notifications'
+import { Printing } from '../features/settings/components/sections/Printing'
+import { UnitsOfMeasure } from '../features/settings/components/sections/UnitsOfMeasure'
+import { Security } from '../features/settings/components/sections/Security'
 import { Billing } from '../features/settings/billing/pages/Billing'
 import { Users } from '../features/users/pages/Users'
 import { Login } from '../features/auth/components/Login'
@@ -186,14 +192,38 @@ export const App = () => {
                                     index
                                     element={
                                         <Navigate
-                                            to='account'
+                                            to='info'
                                             replace
                                         />
                                     }
                                 />
                                 <Route
-                                    path='account'
-                                    element={<Account />}
+                                    path='info'
+                                    element={<StoreInfo />}
+                                />
+                                <Route
+                                    path='appearance'
+                                    element={<Appearance />}
+                                />
+                                <Route
+                                    path='receipts'
+                                    element={<Receipts />}
+                                />
+                                <Route
+                                    path='notifications'
+                                    element={<Notifications />}
+                                />
+                                <Route
+                                    path='printing'
+                                    element={<Printing />}
+                                />
+                                <Route
+                                    path='units'
+                                    element={<UnitsOfMeasure />}
+                                />
+                                <Route
+                                    path='security'
+                                    element={<Security />}
                                 />
                                 <Route
                                     path='billing'

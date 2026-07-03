@@ -172,7 +172,7 @@ export const PaymentHistoryTable = ({ transactions, loading }) => {
                     Historial de Pagos
                 </h2>
             </div>
-            <div className='overflow-x-auto'>
+            <div>
                 <table className='w-full text-sm'>
                     <thead>
                         <tr className='border-b border-divider bg-body/50'>

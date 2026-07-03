@@ -68,7 +68,8 @@
         --toast-warning: hsl(48, 100%, 87%);
         --toast-info: hsl(210, 100%, 87%);
         --text-toast: #111827;
-        --surface: #1f2937;
+        --surface: hsl(215, 28%, 15%);
+        /* --surface: #1f2937; */
         --accent: #00ffffff;
         --login-accent: #00ffffff;
         --body: #030712;
