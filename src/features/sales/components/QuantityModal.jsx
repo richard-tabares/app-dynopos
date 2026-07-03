@@ -42,13 +42,14 @@ export const QuantityModal = ({ product, variation, onClose }) => {
         const qty = parseFloat(quantity)
         if (!qty || qty <= 0) return
         if (currentLabel === null) initCurrentOrder()
+        const mainUnitQty = qty * conversionFactor
         addToCart(product, variation, {
-            quantity: qty,
-            soldInUnitId: selectedUnit.id,
-            displayUnit: selectedUnit.short_name,
-            conversionFactor: conversionFactor,
+            quantity: mainUnitQty,
+            soldInUnitId: baseUnit?.id || 1,
+            displayUnit: baseUnit?.short_name || '',
+            conversionFactor: 1,
             basePrice: basePrice,
-            effectivePrice: effectiveUnitPrice,
+            effectivePrice: basePrice,
         })
         onClose()
     }
