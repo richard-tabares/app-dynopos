@@ -30,6 +30,7 @@ export const PrintTicket = ({ children, printRef, sale, business, ticketFooter }
         if (!sale) return
         const activeBusiness = business || useStore.getState().user?.business
         if (!activeBusiness) return
+        const { unitsOfMeasure } = useStore.getState()
 
         const pdfWindow = window.open('', '_blank')
         if (!pdfWindow) {
@@ -50,11 +51,14 @@ export const PrintTicket = ({ children, printRef, sale, business, ticketFooter }
             .map(
                 (item) => {
                 const displayName = item.variation_name && item.variation_name !== 'Default' ? `${item.name} - ${item.variation_name}` : item.name
+                const qty = Number(item.quantity) || 0
+                const unitId = item.sold_in_unit_id || item.soldInUnitId
+                const unit = item.displayUnit || (unitId ? unitsOfMeasure.find(u => u.id === unitId)?.short_name : '') || ''
                 return `
             <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:4px;margin-bottom:8px;">
                 <div style="flex:1;min-width:0;">
                     <p style="margin:0;font-weight:700;text-transform:uppercase;font-size:10px;color:#111827;word-break:break-word;">${displayName}</p>
-                    <p style="margin:4px 0 0;font-size:9px;color:#374151;">${item.quantity}x ${formatCurrency(item.price)}</p>
+                    <p style="margin:4px 0 0;font-size:9px;color:#374151;">${qty}${unit ? ' ' + unit : ''} x ${formatCurrency(item.price)}</p>
                 </div>
                 <span style="font-weight:700;font-size:10px;color:#111827;white-space:nowrap;">${formatCurrency(item.subtotal)}</span>
             </div>`

@@ -60,7 +60,7 @@ export const SaleConfirmationModal = ({
                                 {cartSnapshot.map((item) => (
                                     <li key={item.cartKey || item.id} className='flex justify-between items-center text-sm'>
                                         <div className='flex items-center gap-2 flex-1 truncate pr-2'>
-                                            <span className='font-medium text-on-body'>{item.quantity}x</span>
+                                            <span className='font-medium text-on-body'>{item.quantity}{item.displayUnit ? ` ${item.displayUnit}` : ''}x</span>
                                             <span className='truncate text-on-surface'>{item.name}</span>
                                         </div>
                                         <span className='font-semibold text-on-surface'>

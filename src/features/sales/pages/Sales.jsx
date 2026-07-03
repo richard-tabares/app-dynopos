@@ -8,6 +8,7 @@ import { ProductGrid } from '../components/ProductGrid'
 import { OrderTabs } from '../components/OrderTabs'
 import { OrderSidebar } from '../components/OrderSidebar'
 import { VariationPicker } from '../components/VariationPicker'
+import { QuantityModal } from '../components/QuantityModal'
 import { Modal } from '../../../shared/components/Modal'
 import { SaleConfirmationModal } from '../components/SaleConfirmationModal'
 import { SalesHistoryCard } from '../components/SalesHistoryCard'
@@ -25,7 +26,8 @@ import { useIsMobileDevice } from '../../../shared/hooks/useIsMobileDevice'
 
 export const Sales = () => {
     const isMobileDevice = useIsMobileDevice()
-    const { user, products, setProducts, cart, clearCart, setTodayRevenue, setCategories, setSubscription, addToCart, pendingOrders, currentLabel, initCurrentOrder, holdCurrentOrder, switchToOrder, finalizeCurrentOrder, resetOrderState } = useStore()
+    const { user, products, setProducts, cart, clearCart, setTodayRevenue, setCategories, setSubscription, setUnitsOfMeasure, addToCart, pendingOrders, currentLabel, initCurrentOrder, holdCurrentOrder, switchToOrder, finalizeCurrentOrder, resetOrderState } = useStore()
+    const variableUnitsEnabled = user?.business?.variable_units_enabled ?? false
     const [searchTerm, setSearchTerm] = useState('')
     const searchInputRef = useRef(null)
     const processingSale = useRef(false)
@@ -34,6 +36,8 @@ export const Sales = () => {
     const [showConfirmationModal, setShowConfirmationModal] = useState(false)
     const [saleSummaryData, setSaleSummaryData] = useState(null)
     const [variationPickerProduct, setVariationPickerProduct] = useState(null)
+    const [quantityModalProduct, setQuantityModalProduct] = useState(null)
+    const [quantityModalVariation, setQuantityModalVariation] = useState(null)
 
     const [salesList, setSalesList] = useState([])
     const [visibleCount, setVisibleCount] = useState(10)
@@ -61,13 +65,21 @@ export const Sales = () => {
                 if (subResult.data) {
                     setSubscription(subResult.data)
                 }
+
+                if (variableUnitsEnabled) {
+                    const unitsResponse = await apiFetch(`${apiUrl}/api/products/units/list`)
+                    const units = await unitsResponse.json()
+                    if (Array.isArray(units)) {
+                        setUnitsOfMeasure(units)
+                    }
+                }
             } catch (error) {
                 console.error('Error loading sales data:', error)
                 sileo.error({ fill: 'var(--toast-error)', title: 'Error', description: 'Error al cargar datos de venta'})
             }
         }
         loadData()
-    }, [businessId, setProducts, setSubscription])
+    }, [businessId, setProducts, setSubscription, variableUnitsEnabled, setUnitsOfMeasure])
 
     useEffect(() => {
         const term = searchTerm.trim()
@@ -151,6 +163,8 @@ export const Sales = () => {
                 product_id: item.product_id,
                 quantity: item.quantity,
                 variation_id: item.variation_id,
+                sold_in_unit_id: item.soldInUnitId || null,
+                conversion_factor: item.conversionFactor || 1,
             }))
         }
 
@@ -170,12 +184,14 @@ export const Sales = () => {
                     date: sale.created_at?.split('T')[0] || '',
                     paymentMethod: sale.payment_method,
                     salesperson: currentUser?.profile?.full_name || currentUser?.data?.user?.email || '',
-                    items: (sale.salesItems || []).map(item => ({
+                    items: (sale.salesItems || []).map((item, i) => ({
                         name: item.products?.name || '',
                         variationName: item.variation_name || '',
                         quantity: item.quantity || 0,
                         price: item.unit_price || 0,
                         subtotal: item.subtotal || 0,
+                        displayUnit: cart[i]?.displayUnit || '',
+                        decimalPlaces: 0,
                     })),
                     total: sale.total_amount || 0,
                     footer: currentUser?.business?.ticket_footer || '',
@@ -201,11 +217,13 @@ export const Sales = () => {
                 total: sale.total_amount,
                 date: sale.created_at.split('T')[0],
                 paymentMethod: sale.payment_method,
-                items: sale.salesItems.map(item => ({
+                items: sale.salesItems.map((item, i) => ({
                     quantity: item.quantity,
                     price: item.unit_price,
                     subtotal: item.subtotal,
-                    name: item.products?.name || 'Producto'
+                    name: item.products?.name || 'Producto',
+                    displayUnit: cart[i]?.displayUnit || '',
+                    soldInUnitId: cart[i]?.soldInUnitId || null,
                 }))
             })
 
@@ -261,6 +279,12 @@ export const Sales = () => {
         if (currentLabel === null) initCurrentOrder()
 
         if (preSelectedVariation) {
+            const uomId = preSelectedVariation.unit_of_measure_id
+            if (variableUnitsEnabled && uomId && uomId !== 1) {
+                setQuantityModalProduct(product)
+                setQuantityModalVariation(preSelectedVariation)
+                return
+            }
             addToCart(product, preSelectedVariation)
             return
         }
@@ -271,6 +295,12 @@ export const Sales = () => {
             const variations = getActiveVariations(product)
             const barcodeMatch = variations.find(v => v.barcode === idBusqueda)
             if (barcodeMatch) {
+                const uomId = barcodeMatch.unit_of_measure_id
+                if (variableUnitsEnabled && uomId && uomId !== 1) {
+                    setQuantityModalProduct(product)
+                    setQuantityModalVariation(barcodeMatch)
+                    return
+                }
                 addToCart(product, barcodeMatch)
                 return
             }
@@ -278,9 +308,26 @@ export const Sales = () => {
 
         const variations = getActiveVariations(product)
         if (variations.length === 1) {
-            addToCart(product, variations[0])
+            const v = variations[0]
+            const uomId = v.unit_of_measure_id
+            if (variableUnitsEnabled && uomId && uomId !== 1) {
+                setQuantityModalProduct(product)
+                setQuantityModalVariation(v)
+                return
+            }
+            addToCart(product, v)
         } else if (variations.length > 1) {
             setVariationPickerProduct(product)
+        }
+    }
+
+    const handleSelectVariation = (product, variation) => {
+        const uomId = variation.unit_of_measure_id
+        if (variableUnitsEnabled && uomId && uomId !== 1) {
+            setQuantityModalProduct(product)
+            setQuantityModalVariation(variation)
+        } else {
+            addToCart(product, variation)
         }
     }
 
@@ -424,6 +471,18 @@ export const Sales = () => {
                 <VariationPicker
                     product={variationPickerProduct}
                     onClose={() => setVariationPickerProduct(null)}
+                    onSelectVariation={handleSelectVariation}
+                />
+            )}
+
+            {quantityModalProduct && quantityModalVariation && (
+                <QuantityModal
+                    product={quantityModalProduct}
+                    variation={quantityModalVariation}
+                    onClose={() => {
+                        setQuantityModalProduct(null)
+                        setQuantityModalVariation(null)
+                    }}
                 />
             )}
 

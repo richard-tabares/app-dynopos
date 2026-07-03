@@ -6,6 +6,7 @@ import {
     Plus,
     Trash2,
     Settings2,
+    Ruler,
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { sileo } from 'sileo'
@@ -16,6 +17,7 @@ import {
     getDefaultVariation,
 } from '../../../shared/helpers/productHelpers'
 import { procesarCodigoUniversal } from '../../../shared/helpers/procesarCodigoUniversal'
+import { useStore } from '../../../app/providers/store'
 
 export const Modal = ({
     handleSubmit,
@@ -39,6 +41,10 @@ export const Modal = ({
 
     const [productType, setProductTypeState] = useState(initialProductType)
 
+    const { user, unitsOfMeasure, setUnitsOfMeasure } = useStore()
+    const variableUnitsEnabled = user?.business?.variable_units_enabled ?? false
+    const baseUnits = unitsOfMeasure.filter(u => u.base_unit_id === null)
+
     const [formData, setFormData] = useState({
         sku: defaultVar?.sku || '',
         barcode: defaultVar?.barcode || '',
@@ -50,6 +56,7 @@ export const Modal = ({
         is_active: editProductData.is_active ?? true,
         track_stock: defaultVar?.track_stock ?? true,
         variation_type: editProductData.variation_type || '',
+        unit_of_measure_id: defaultVar?.unit_of_measure_id || 1,
     })
 
     const [initialStock, setInitialStock] = useState(
@@ -74,6 +81,7 @@ export const Modal = ({
                       min_stock: v.min_stock || 0,
                       track_stock: v.track_stock ?? true,
                       is_active: v.is_active !== false,
+                      unit_of_measure_id: v.unit_of_measure_id || 1,
                   }))
             : [
                   {
@@ -86,6 +94,7 @@ export const Modal = ({
                       min_stock: '',
                       track_stock: true,
                       is_active: true,
+                      unit_of_measure_id: 1,
                   },
               ],
     )
@@ -118,6 +127,16 @@ export const Modal = ({
         setFormData(prev => ({ ...prev, unit_cost: defaultVar?.unit_cost ?? '' }))
     }, [defaultVar?.unit_cost])
 
+    useEffect(() => {
+        if (variableUnitsEnabled && unitsOfMeasure.length === 0) {
+            const apiUrl = import.meta.env.VITE_API_URL
+            fetch(`${apiUrl}/api/products/units/list`)
+                .then(r => r.json())
+                .then(data => { if (Array.isArray(data)) setUnitsOfMeasure(data) })
+                .catch(() => {})
+        }
+    }, [variableUnitsEnabled, unitsOfMeasure.length, setUnitsOfMeasure])
+
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target
         if (type === 'number' && value !== '' && Number(value) < 0) return
@@ -144,6 +163,7 @@ export const Modal = ({
                 stock: '',
                 min_stock: '',
                 is_active: true,
+                unit_of_measure_id: formData.unit_of_measure_id || 1,
             },
             ...prev,
         ])
@@ -171,6 +191,7 @@ export const Modal = ({
                         stock: v.stock || 0,
                         min_stock: v.min_stock || 0,
                         is_active: true,
+                        unit_of_measure_id: v.unit_of_measure_id || 1,
                     })),
                 )
             } else {
@@ -251,6 +272,7 @@ export const Modal = ({
                     ? formData.variation_type
                     : editProductData.variation_type || null,
             variations_disabled: productType !== 'variant',
+            unit_of_measure_id: productType === 'simple' ? formData.unit_of_measure_id : 1,
             ...(editProductData.id
                 ? {}
                 : {
@@ -408,6 +430,28 @@ export const Modal = ({
                                     ))}
                                 </select>
                             </section>
+                            {variableUnitsEnabled && (
+                                <section>
+                                    <label className='block text-sm font-medium text-on-body mb-1 flex items-center gap-1'>
+                                        <Ruler className='w-4 h-4 text-accent' />
+                                        Unidad de Venta
+                                    </label>
+                                    <select
+                                        name='unit_of_measure_id'
+                                        value={formData.unit_of_measure_id}
+                                        onChange={handleChange}
+                                        className='w-full px-4 py-3 bg-surface border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0 text-on-body'>
+                                        {baseUnits.map((u) => (
+                                            <option
+                                                className='text-on-body'
+                                                key={u.id}
+                                                value={u.id}>
+                                                {u.name} ({u.short_name})
+                                            </option>
+                                        ))}
+                                    </select>
+                                </section>
+                            )}
                             <div className={`grid ${editProductData.id ? 'grid-cols-3' : 'grid-cols-2'} gap-4`}>
                                 <section>
                                     <label className='block text-sm font-medium text-on-body mb-1'>
@@ -480,6 +524,10 @@ export const Modal = ({
                                                 )
                                             }
                                             min='0'
+                                            step={formData.unit_of_measure_id !== 1
+                                                ? (baseUnits.find(u => u.id === formData.unit_of_measure_id)?.allow_decimals ? '0.001' : '1')
+                                                : '1'
+                                            }
                                             className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
                                             placeholder='Stock inicial del producto'
                                         />
@@ -733,6 +781,35 @@ export const Modal = ({
                                                         />
                                                     </section>
                                                 </div>
+                                                {variableUnitsEnabled && (
+                                                    <div className='grid grid-cols-1 gap-x-3'>
+                                                        <section>
+                                                            <label className='block text-xs font-medium text-on-body mb-1 flex items-center gap-1'>
+                                                                <Ruler className='w-3.5 h-3.5 text-accent' />
+                                                                Unidad de Venta
+                                                            </label>
+                                                            <select
+                                                                value={v.unit_of_measure_id || 1}
+                                                                onChange={(e) =>
+                                                                    handleVariationChange(
+                                                                        index,
+                                                                        'unit_of_measure_id',
+                                                                        Number(e.target.value),
+                                                                    )
+                                                                }
+                                                                className='w-full px-3 py-2 bg-surface border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0 text-on-body'>
+                                                                {baseUnits.map((u) => (
+                                                                    <option
+                                                                        className='text-on-body'
+                                                                        key={u.id}
+                                                                        value={u.id}>
+                                                                        {u.name} ({u.short_name})
+                                                                    </option>
+                                                                ))}
+                                                            </select>
+                                                        </section>
+                                                    </div>
+                                                )}
                                                 <div className='grid grid-cols-3 gap-x-3'>
                                                     <section>
                                                         <label className='block text-xs font-medium text-on-body mb-1'>
@@ -859,6 +936,33 @@ export const Modal = ({
                                                         className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
                                                     />
                                                 </section>
+                                                {variableUnitsEnabled && (
+                                                    <section className='col-span-2'>
+                                                        <label className='block text-xs font-medium text-on-body mb-1 flex items-center gap-1'>
+                                                            <Ruler className='w-3.5 h-3.5 text-accent' />
+                                                            Unidad de Venta
+                                                        </label>
+                                                        <select
+                                                            value={v.unit_of_measure_id || 1}
+                                                            onChange={(e) =>
+                                                                handleVariationChange(
+                                                                    index,
+                                                                    'unit_of_measure_id',
+                                                                    Number(e.target.value),
+                                                                )
+                                                            }
+                                                            className='w-full px-3 py-2 bg-surface border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0 text-on-body'>
+                                                            {baseUnits.map((u) => (
+                                                                <option
+                                                                    className='text-on-body'
+                                                                    key={u.id}
+                                                                    value={u.id}>
+                                                                    {u.name} ({u.short_name})
+                                                                </option>
+                                                            ))}
+                                                        </select>
+                                                    </section>
+                                                )}
                                                 <section>
                                                     <label className='block text-xs font-medium text-on-body mb-1'>
                                                         Costo Unitario
@@ -907,6 +1011,10 @@ export const Modal = ({
                                                             placeholder='Stock inicial'
                                                             value={v.stock}
                                                             min='0'
+                                                            step={v.unit_of_measure_id !== 1
+                                                                ? (baseUnits.find(u => u.id === v.unit_of_measure_id)?.allow_decimals ? '0.001' : '1')
+                                                                : '1'
+                                                            }
                                                             onChange={(e) =>
                                                                 handleVariationChange(
                                                                     index,

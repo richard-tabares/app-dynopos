@@ -99,6 +99,7 @@ export const ProductCard = ({ product, onAddToCart }) => {
                 <VariationPicker
                     product={product}
                     onClose={() => setShowVariationPicker(false)}
+                    onSelectVariation={(prod, variation) => addToCart(prod, variation)}
                 />
             )}
         </>

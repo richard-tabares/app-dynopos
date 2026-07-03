@@ -15,6 +15,7 @@ import {
 
 export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
     const business = useStore((state) => state.user.business)
+    const unitsOfMeasure = useStore((state) => state.unitsOfMeasure)
     const setTodayRevenue = useStore((state) => state.setTodayRevenue)
     const businessId = useStore(
         (state) =>
@@ -103,6 +104,8 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
                     quantity: item.quantity || 0,
                     price: item.price || 0,
                     subtotal: item.subtotal || 0,
+                    displayUnit: item.display_unit_short || '',
+                    decimalPlaces: item.decimal_places || 0,
                 })),
                 total: sale.total || 0,
                 footer: ticketFooter,
@@ -271,8 +274,11 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
                                                 {item.variation_name && item.variation_name !== 'Default' ? `${item.name} - ${item.variation_name}` : item.name}
                                             </p>
                                             <p className='text-[10px] text-on-body mt-0.5'>
-                                                {item.quantity}x{' '}
-                                                {formatCurrency(item.price)}
+                                                {(() => {
+                                                    const unitId = item.sold_in_unit_id || item.soldInUnitId
+                                                    const unit = item.displayUnit || (unitId ? unitsOfMeasure.find(u => u.id === unitId)?.short_name : '') || ''
+                                                    return `${item.quantity}${unit ? ` ${unit}` : ''} x ${formatCurrency(item.price)}`
+                                                })()}
                                             </p>
                                         </div>
                                         <span className='text-on-surface font-bold shrink-0 text-[11px]'>

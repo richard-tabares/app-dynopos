@@ -3,11 +3,13 @@ import { useEscape } from '../../../shared/helpers/useEscape'
 import { useStore } from '../../../app/providers/store'
 import { getActiveVariations } from '../../../shared/helpers/productHelpers'
 
-export const VariationPicker = ({ product, onClose }) => {
+export const VariationPicker = ({ product, onClose, onSelectVariation }) => {
     const addToCart = useStore((state) => state.addToCart)
     const cart = useStore((state) => state.cart)
     const currentLabel = useStore((state) => state.currentLabel)
     const initCurrentOrder = useStore((state) => state.initCurrentOrder)
+    const { user } = useStore()
+    const variableUnitsEnabled = user?.business?.variable_units_enabled ?? false
 
     useEscape(onClose)
 
@@ -25,6 +27,12 @@ export const VariationPicker = ({ product, onClose }) => {
     const handleSelect = (variation) => {
         if (currentLabel === null) {
             initCurrentOrder()
+        }
+        const uomId = variation.unit_of_measure_id
+        if (variableUnitsEnabled && uomId && uomId !== 1) {
+            onSelectVariation?.(product, variation)
+            onClose()
+            return
         }
         addToCart(product, variation)
         onClose()

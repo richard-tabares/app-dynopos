@@ -128,6 +128,7 @@ export const OrderSidebar = ({ onProcessSale }) => {
                                     {new Intl.NumberFormat('es-CO', {
                                         maximumFractionDigits: 0,
                                     }).format(item.price)}
+                                    {item.displayUnit ? ` / ${item.displayUnit}` : ''}
                                 </p>
                             </div>
 

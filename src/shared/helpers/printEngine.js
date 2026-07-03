@@ -89,6 +89,8 @@ export async function handlePrint(sale, businessFallback = null) {
       quantity: item.quantity || 0,
       price: item.price || 0,
       subtotal: item.subtotal || 0,
+      displayUnit: item.display_unit_short || item.displayUnit || '',
+      decimalPlaces: item.decimal_places || 0,
     })),
     total: sale.total || 0,
     footer: business.ticket_footer || '',

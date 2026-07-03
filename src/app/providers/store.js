@@ -50,6 +50,7 @@ export const useStore = create(
             cart: [],
             todayRevenue: 0,
             categories: [],
+            unitsOfMeasure: [],
             pendingOrders: [],
             currentLabel: null,
             setLogin: (payload) =>
@@ -94,7 +95,7 @@ export const useStore = create(
                 set((state) => ({ isDarkMode: !state.isDarkMode })),
             setIsCollapsed: (payload) => set({ isCollapsed: payload }),
             setProducts: (payload) => set({ products: payload }),
-            addToCart: (product, variation = null) =>
+            addToCart: (product, variation = null, unitOptions = null) =>
                 set((state) => {
                     const v = variation || getActiveVariations(product)[0]
                     if (!v) return state
@@ -104,6 +105,23 @@ export const useStore = create(
                         (item) => item.cartKey === cartKey,
                     )
                     if (existingItem) {
+                        if (unitOptions) {
+                            return {
+                                cart: state.cart.map((item) =>
+                                    item.cartKey === cartKey
+                                        ? {
+                                            ...item,
+                                            quantity: item.quantity + unitOptions.quantity,
+                                            soldInUnitId: unitOptions.soldInUnitId,
+                                            displayUnit: unitOptions.displayUnit,
+                                            conversionFactor: unitOptions.conversionFactor,
+                                            basePrice: unitOptions.basePrice,
+                                            price: unitOptions.effectivePrice,
+                                        }
+                                        : item,
+                                ),
+                            }
+                        }
                         return {
                             cart: state.cart.map((item) =>
                                 item.cartKey === cartKey
@@ -120,7 +138,7 @@ export const useStore = create(
                         id: cartKey,
                         cartKey,
                         product_id: product.id,
-                        price: v.price,
+                        price: unitOptions ? unitOptions.effectivePrice : v.price,
                         stock: v.stock,
                         variation_id: v.id,
                         variation_name: v.variation_name,
@@ -128,9 +146,13 @@ export const useStore = create(
                         variation_barcode: v.barcode,
                         track_stock: v.track_stock,
                         name: displayName,
+                        soldInUnitId: unitOptions ? unitOptions.soldInUnitId : null,
+                        displayUnit: unitOptions ? unitOptions.displayUnit : '',
+                        conversionFactor: unitOptions ? unitOptions.conversionFactor : 1,
+                        basePrice: unitOptions ? unitOptions.basePrice : v.price,
                     }
                     return {
-                        cart: [...state.cart, { ...cartItem, quantity: 1 }],
+                        cart: [...state.cart, { ...cartItem, quantity: unitOptions ? unitOptions.quantity : 1 }],
                     }
                 }),
             removeFromCart: (cartKey) => {
@@ -152,6 +174,7 @@ export const useStore = create(
             clearCart: () => set({ cart: [], currentLabel: null }),
             setTodayRevenue: (payload) => set({ todayRevenue: payload }),
             setCategories: (payload) => set({ categories: payload }),
+            setUnitsOfMeasure: (payload) => set({ unitsOfMeasure: payload }),
             saleDate: new Date().toLocaleDateString('en-CA'),
             setSaleDate: (payload) => set({ saleDate: payload }),
 

@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router'
-import { Store, Shield, Receipt, Bell, Save, Loader, Palette, Lock, Eye, EyeClosed, Printer, CheckCircle, XCircle, RotateCw, Trash2, AlertTriangle } from 'lucide-react'
+import { Store, Shield, Receipt, Bell, Save, Loader, Palette, Lock, Eye, EyeClosed, Printer, CheckCircle, XCircle, RotateCw, Trash2, AlertTriangle, Ruler } from 'lucide-react'
 import { sileo } from 'sileo'
 import { Modal } from '../../../../shared/components/Modal'
 import { useStore } from '../../../../app/providers/store'
@@ -50,6 +50,9 @@ export const Account = () => {
     )
     const [printerWidth, setPrinterWidth] = useState(
         user?.profile?.printer_width ?? 32
+    )
+    const [variableUnitsToggle, setVariableUnitsToggle] = useState(
+        user?.business?.variable_units_enabled ?? false
     )
 
     const handleTogglePrinting = async () => {
@@ -230,6 +233,8 @@ export const Account = () => {
                 }
                 setUploadingLogo(false)
             }
+
+            formData.variable_units_enabled = variableUnitsToggle
 
             const updated = await updateBusiness(businessId, formData)
             if (updated) {
@@ -689,6 +694,33 @@ export const Account = () => {
                             Activar correo de notificación cuando un producto tenga stock bajo
                         </span>
                     </label>
+                </div>
+            </section>
+
+            {/* Card: Unidades de Medida */}
+            <section className='bg-surface border border-outline shadow-sm rounded-lg'>
+                <div className='px-6 py-4 border-b border-divider bg-body/50'>
+                    <h2 className='text-lg font-semibold flex items-center gap-2'>
+                        <Ruler className='w-5 h-5 text-accent' />
+                        Unidades de Medida
+                    </h2>
+                </div>
+                <div className='p-6'>
+                    <div className='flex items-center justify-between'>
+                        <div>
+                            <p className='text-on-body font-medium'>Vender en metros, kilogramos y submúltiplos</p>
+                            <p className='text-muted text-sm'>Permite configurar productos con unidades de medida como Metro, Kilogramo, Centímetro y Gramo</p>
+                        </div>
+                        <label className='relative inline-flex items-center cursor-pointer'>
+                            <input
+                                type='checkbox'
+                                className='sr-only peer'
+                                checked={variableUnitsToggle}
+                                onChange={() => setVariableUnitsToggle(!variableUnitsToggle)}
+                            />
+                            <div className="w-11 h-6 bg-hover-icon peer-focus:outline-none peer-focus:ring-0 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-surface after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-surface after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
+                        </label>
+                    </div>
                 </div>
             </section>
 
