@@ -217,12 +217,14 @@ export const PaymentHistoryTable = ({ transactions, loading }) => {
                     </tbody>
                 </table>
                 {visibleCount < (transactions || []).length && (
-                    <button
-                        onClick={() => setVisibleCount(prev => prev + 10)}
-                        className='w-full py-2 text-sm font-medium text-on-surface hover:text-surface hover:bg-accent rounded-lg border border-accent transition-colors cursor-pointer flex items-center justify-center gap-2 mx-4 mb-4'
-                    >
-                        <ChevronDown className='w-4 h-4' /> Cargar más ({(transactions || []).length - visibleCount} restantes)
-                    </button>
+                    <div className='px-4 pb-4'>
+                        <button
+                            onClick={() => setVisibleCount(prev => prev + 10)}
+                            className='w-full py-2 text-sm font-medium text-on-surface hover:text-surface hover:bg-accent rounded-lg border border-accent transition-colors cursor-pointer flex items-center justify-center gap-2'
+                        >
+                            <ChevronDown className='w-4 h-4' /> Cargar más ({(transactions || []).length - visibleCount} restantes)
+                        </button>
+                    </div>
                 )}
             </div>
         </section>
