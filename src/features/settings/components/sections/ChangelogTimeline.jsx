@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Sparkles, ArrowUp, Bug, Megaphone, Loader } from 'lucide-react'
+import { Sparkles, ArrowUp, Bug, ChevronDown, Megaphone, Loader } from 'lucide-react'
 import { getChangelog } from '../../helpers/getChangelog'
 
 const typeMeta = {
@@ -10,12 +10,16 @@ const typeMeta = {
 
 export const ChangelogTimeline = () => {
     const [entries, setEntries] = useState([])
+    const [expandedIds, setExpandedIds] = useState(new Set())
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         const load = async () => {
             const data = await getChangelog()
             setEntries(data)
+            if (data.length > 0) {
+                setExpandedIds(new Set([data[0].id]))
+            }
 
             const maxId = data.reduce((max, e) => Math.max(max, e.id), 0)
             if (maxId > 0) {
@@ -25,6 +29,18 @@ export const ChangelogTimeline = () => {
         }
         load()
     }, [])
+
+    const toggleExpanded = (id) => {
+        setExpandedIds((prev) => {
+            const next = new Set(prev)
+            if (next.has(id)) {
+                next.delete(id)
+            } else {
+                next.add(id)
+            }
+            return next
+        })
+    }
 
     const formatDate = (dateStr) => {
         const d = new Date(dateStr)
@@ -69,51 +85,62 @@ export const ChangelogTimeline = () => {
                     {entries.map((entry) => {
                         const typeInfo = typeMeta[entry.type] || typeMeta.feature
                         const TypeIcon = typeInfo.icon
+                        const isExpanded = expandedIds.has(entry.id)
 
                         return (
                             <li key={entry.id} className='relative pl-8'>
                                 <section className={`absolute left-0 top-1.5 w-3 h-3 rounded-full border-2 border-surface ${typeInfo.dotClass}`} />
                                 <section className='space-y-2'>
-                                    <section className='flex items-center gap-3 flex-wrap'>
-                                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium ${typeInfo.class}`}>
-                                            <TypeIcon className='w-3 h-3' />
-                                            {typeInfo.label}
-                                        </span>
-                                        <time className='text-xs text-faint'>{formatDate(entry.created_at)}</time>
-                                    </section>
-                                    <h3 className='text-base font-semibold text-on-body'>{entry.title}</h3>
-                                    {entry.description && (
-                                        <p className='text-sm text-muted leading-relaxed'>{entry.description}</p>
-                                    )}
-                                    {entry.bullets && entry.bullets.length > 0 && (
-                                        <section className='flex flex-wrap gap-1.5'>
-                                            {entry.bullets.map((bullet, bIdx) => (
-                                                <span key={bIdx} className='px-2.5 py-0.5 text-xs font-medium bg-accent/10 text-accent rounded-full'>
-                                                    {bullet}
-                                                </span>
-                                            ))}
+                                    <button
+                                        onClick={() => toggleExpanded(entry.id)}
+                                        className='w-full text-left cursor-pointer group'
+                                    >
+                                        <section className='flex items-center gap-3 flex-wrap min-w-0'>
+                                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${typeInfo.class}`}>
+                                                <TypeIcon className='w-3.5 h-3.5' />
+                                                {typeInfo.label}
+                                            </span>
+                                            <time className='text-xs text-faint shrink-0'>{formatDate(entry.created_at)}</time>
+                                            <ChevronDown className={`w-4 h-4 text-accent shrink-0 ml-auto transition-transform duration-200 ${isExpanded ? 'rotate-0' : '-rotate-90'}`} />
                                         </section>
-                                    )}
-                                    {entry.media_url && (
-                                        <section className='mt-3'>
-                                            {isVideo(entry.media_url) ? (
-                                                <video
-                                                    src={entry.media_url}
-                                                    loop
-                                                    autoPlay
-                                                    muted
-                                                    playsInline
-                                                    className='rounded-lg max-w-full max-h-80 object-contain bg-body'
-                                                />
-                                            ) : (
-                                                <img
-                                                    src={entry.media_url}
-                                                    alt={entry.title}
-                                                    className='rounded-lg max-w-full max-h-80 object-contain bg-body'
-                                                />
+                                        <h3 className='text-base font-semibold text-on-body mt-1'>{entry.title}</h3>
+                                    </button>
+                                    <section className={`overflow-hidden transition-all duration-300 ${isExpanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                                        <section className='pt-2 space-y-2'>
+                                            {entry.description && (
+                                                <p className='text-sm text-muted leading-relaxed'>{entry.description}</p>
+                                            )}
+                                            {entry.bullets && entry.bullets.length > 0 && (
+                                                <section className='flex flex-wrap gap-1.5'>
+                                                    {entry.bullets.map((bullet, bIdx) => (
+                                                        <span key={bIdx} className='px-2.5 py-0.5 text-xs font-medium bg-accent/10 text-accent rounded-full'>
+                                                            {bullet}
+                                                        </span>
+                                                    ))}
+                                                </section>
+                                            )}
+                                            {entry.media_url && (
+                                                <section className='mt-3'>
+                                                    {isVideo(entry.media_url) ? (
+                                                        <video
+                                                            src={entry.media_url}
+                                                            loop
+                                                            autoPlay
+                                                            muted
+                                                            playsInline
+                                                            className='rounded-lg max-w-full max-h-80 object-contain bg-body'
+                                                        />
+                                                    ) : (
+                                                        <img
+                                                            src={entry.media_url}
+                                                            alt={entry.title}
+                                                            className='rounded-lg max-w-full max-h-80 object-contain bg-body'
+                                                        />
+                                                    )}
+                                                </section>
                                             )}
                                         </section>
-                                    )}
+                                    </section>
                                 </section>
                             </li>
                         )
