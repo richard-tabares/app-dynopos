@@ -322,23 +322,48 @@ export const Products = () => {
     const handleDeleteVariation = async (variationId, e) => {
         e.stopPropagation()
         try {
-            await deleteVariation(variationId)
-            setProducts(
-                products.map((product) => {
-                    if (!product.product_variations) return product
-                    return {
-                        ...product,
-                        product_variations: product.product_variations.filter(
-                            (v) => v.id !== variationId,
-                        ),
-                    }
-                }),
-            )
-            sileo.success({
-                fill: 'var(--toast-success)',
-                title: 'Completado',
-                description: 'Variación eliminada correctamente',
-            })
+            const result = await deleteVariation(variationId)
+
+            if (result.softDeleted) {
+                setProducts(
+                    products.map((product) => {
+                        if (!product.product_variations) return product
+                        return {
+                            ...product,
+                            product_variations: product.product_variations.map(
+                                (v) =>
+                                    v.id === variationId
+                                        ? { ...v, is_active: false }
+                                        : v,
+                            ),
+                        }
+                    }),
+                )
+                sileo.info({
+                    fill: 'var(--toast-info)',
+                    title: 'Información',
+                    description:
+                        'La variación tiene ventas asociadas y se ha marcado como inactiva.',
+                })
+            } else {
+                setProducts(
+                    products.map((product) => {
+                        if (!product.product_variations) return product
+                        return {
+                            ...product,
+                            product_variations:
+                                product.product_variations.filter(
+                                    (v) => v.id !== variationId,
+                                ),
+                        }
+                    }),
+                )
+                sileo.success({
+                    fill: 'var(--toast-success)',
+                    title: 'Completado',
+                    description: 'Variación eliminada correctamente',
+                })
+            }
         } catch (error) {
             sileo.error({
                 fill: 'var(--toast-error)',
@@ -565,7 +590,7 @@ export const Products = () => {
                     </td>
                 </tr>
                 {expandedProductId === product.id && product.product_variations
-                    ?.filter(v => v.is_active !== false && v.variation_name !== 'Default')
+                    ?.filter(v => v.variation_name !== 'Default')
                     .map(v => (
                     <tr key={v.id}
                         className='border-b border-divider-light bg-hover/50 hover:bg-hover cursor-pointer group'

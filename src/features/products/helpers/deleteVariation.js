@@ -11,5 +11,5 @@ export const deleteVariation = async (variationId) => {
         throw new Error(result.error || 'Error al eliminar la variación')
     }
 
-    return result.data
+    return result
 }
