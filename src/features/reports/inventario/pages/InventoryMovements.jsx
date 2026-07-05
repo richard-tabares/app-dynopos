@@ -183,7 +183,7 @@ export const InventoryMovements = () => {
             {productsLoading ? (
                 <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4'>
                     {[1, 2, 3, 4].map(i => (
-                        <div key={i} className='h-28 bg-gray-100 rounded-lg animate-pulse' />
+                        <div key={i} className='h-28 bg-hover-icon rounded-lg animate-pulse' />
                     ))}
                 </div>
             ) : (
@@ -245,7 +245,7 @@ export const InventoryMovements = () => {
                 ) : movLoading ? (
                     <div className='p-8 space-y-4'>
                         {[1, 2, 3, 4, 5].map(i => (
-                            <div key={i} className='h-16 bg-gray-100 rounded animate-pulse' />
+                            <div key={i} className='h-16 bg-hover-icon rounded animate-pulse' />
                         ))}
                     </div>
                 ) : movError ? (
