@@ -59,7 +59,7 @@ export const Header = ({ todayRevenue = 0 }) => {
                     <p className='text-muted text-sm max-sm:hidden'>
                         {description}
                     </p>
-                    <p className='text-muted text-sm hidden max-sm:block max-xs:!hidden'>
+                    <p className='text-muted text-sm hidden max-sm:block'>
                         Ventas hoy: <span className='text-green-600 font-bold'>${formatCurrency(todayRevenue)}</span>
                     </p>
                 </section>
