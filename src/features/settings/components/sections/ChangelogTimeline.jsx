@@ -80,8 +80,8 @@ export const ChangelogTimeline = () => {
     return (
         <section className='bg-surface rounded-xl border border-outline p-6'>
             <section className='relative'>
-                <section className='absolute left-[5.5px] top-3 bottom-3 w-0.5 bg-divider' />
-                <ul className='space-y-8'>
+                <section className='absolute left-[5.5px] top-6 bottom-3 w-0.5 bg-divider' />
+                <ul className='space-y-6'>
                     {entries.map((entry) => {
                         const typeInfo = typeMeta[entry.type] || typeMeta.feature
                         const TypeIcon = typeInfo.icon
@@ -89,21 +89,23 @@ export const ChangelogTimeline = () => {
 
                         return (
                             <li key={entry.id} className='relative pl-8'>
-                                <section className={`absolute left-0 top-1.5 w-3 h-3 rounded-full border-2 border-surface ${typeInfo.dotClass}`} />
-                                <section className='space-y-2'>
+                                <section className={`absolute left-0 top-6 w-3.5 h-3.5 rounded-full border-2 border-surface ${typeInfo.dotClass}`} />
+                                <section className='space-y-4'>
                                     <button
                                         onClick={() => toggleExpanded(entry.id)}
-                                        className='w-full text-left cursor-pointer group'
+                                        className='w-full text-left cursor-pointer group rounded-lg hover:bg-hover/50 transition-colors px-3 py-4 -mx-3 flex items-center gap-3'
                                     >
-                                        <section className='flex items-center gap-3 flex-wrap min-w-0'>
-                                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${typeInfo.class}`}>
-                                                <TypeIcon className='w-3.5 h-3.5' />
-                                                {typeInfo.label}
-                                            </span>
-                                            <time className='text-xs text-faint shrink-0'>{formatDate(entry.created_at)}</time>
-                                            <ChevronDown className={`w-4 h-4 text-accent shrink-0 ml-auto transition-transform duration-200 ${isExpanded ? 'rotate-0' : '-rotate-90'}`} />
+                                        <section className='flex-1 min-w-0'>
+                                            <section className='flex items-center gap-3 flex-wrap'>
+                                                <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${typeInfo.class}`}>
+                                                    <TypeIcon className='w-3.5 h-3.5' />
+                                                    {typeInfo.label}
+                                                </span>
+                                                <time className='text-xs text-faint shrink-0'>{formatDate(entry.created_at)}</time>
+                                            </section>
+                                            <h3 className='text-base font-semibold text-on-body mt-0.5'>{entry.title}</h3>
                                         </section>
-                                        <h3 className='text-base font-semibold text-on-body mt-1'>{entry.title}</h3>
+                                        <ChevronDown className={`w-4 h-4 text-accent shrink-0 transition-transform duration-200 ${isExpanded ? 'rotate-0' : '-rotate-90'}`} />
                                     </button>
                                     <section className={`overflow-hidden transition-all duration-300 ${isExpanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}>
                                         <section className='pt-2 space-y-2'>
