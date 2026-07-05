@@ -475,7 +475,7 @@ export const Products = () => {
         return (
             <Fragment key={product.id}>
                 <tr
-                    className={`border-b border-divider-light hover:bg-hover cursor-pointer ${expandedProductId === product.id ? 'bg-accent/5' : ''}`}
+                    className={`border-b border-divider-light hover:bg-hover cursor-pointer ${expandedProductId === product.id ? 'bg-hover' : ''}`}
                     onClick={(e) => handleRowClick(product, e)}>
                     <td className='py-3 px-4 text-on-body'>
                         <span className='flex items-center gap-1'>
@@ -491,7 +491,7 @@ export const Products = () => {
                             {product.name}
                         </span>
                         {skuDisplay && (
-                            <span className='text-xs text-muted block mt-0.5'>{skuDisplay}</span>
+                            <span className={`text-xs text-muted block mt-0.5 ${hasMultipleVars ? 'pl-5' : ''}`}>{skuDisplay}</span>
                         )}
                     </td>
                     <td className='py-3 px-4 text-muted'>{product.categories?.name || 'Sin categoría'}</td>
@@ -568,10 +568,11 @@ export const Products = () => {
                     ?.filter(v => v.is_active !== false && v.variation_name !== 'Default')
                     .map(v => (
                     <tr key={v.id}
-                        className='border-b border-divider-light bg-accent/5 hover:bg-accent/10 cursor-pointer'
+                        className='border-b border-divider-light bg-hover/50 hover:bg-hover cursor-pointer group'
                         onClick={(e) => onEditVariation(v, e)}>
                         <td className='py-2 px-4'>
                             <span className='flex items-center gap-2 text-sm'>
+                                <div className='w-3 h-3 border-b border-l border-muted rounded-bl-md shrink-0 ml-4' />
                                 {product.variation_type && (
                                     <span className='px-2.5 py-0.5 text-xs font-medium bg-accent/10 text-accent rounded-full'>
                                         {product.variation_type.toLowerCase()}
@@ -601,7 +602,14 @@ export const Products = () => {
 }</td>
                         <td className='py-2 px-4 whitespace-nowrap'><span className='text-xs text-muted'>—</span></td>
                         <td className='py-2 px-4 whitespace-nowrap'>
-                            <div className='flex items-center gap-1.5'>
+                            {v.is_active ? (
+                                <span className='px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full'>Activo</span>
+                            ) : (
+                                <span className='px-2.5 py-0.5 text-xs font-medium bg-red-100 text-red-800 rounded-full'>Inactivo</span>
+                            )}
+                        </td>
+                        <td className='py-2 px-2 text-right whitespace-nowrap'>
+                            <div className='flex items-center justify-end gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity'>
                                 <button onClick={(e) => onEditVariation(v, e)} className='bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-800 p-1 rounded-sm cursor-pointer' title='Editar Variación'>
                                     <Edit2 className='w-3.5 h-3.5 text-accent' />
                                 </button>
