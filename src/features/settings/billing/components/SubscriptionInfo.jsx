@@ -30,13 +30,7 @@ export const SubscriptionInfo = ({ subscription, loading, onPayNow, isPaying, ha
     const formatDate = useFormatDate()
     if (loading) {
         return (
-            <section className='bg-surface border border-outline shadow-sm rounded-lg'>
-                <div className='px-6 py-4 border-b border-divider bg-body/50'>
-                    <h2 className='text-lg font-semibold flex items-center gap-2'>
-                        <Crown className='w-5 h-5 text-accent' />
-                        Información de Suscripción
-                    </h2>
-                </div>
+            <section className='bg-settings-card border border-outline shadow-sm rounded-lg'>
                 <div className='p-6 flex items-center justify-center py-12'>
                     <Loader className='w-5 h-5 animate-spin text-accent' />
                 </div>
@@ -46,13 +40,7 @@ export const SubscriptionInfo = ({ subscription, loading, onPayNow, isPaying, ha
 
     if (!subscription) {
         return (
-            <section className='bg-surface border border-outline shadow-sm rounded-lg'>
-                <div className='px-6 py-4 border-b border-divider bg-body/50'>
-                    <h2 className='text-lg font-semibold flex items-center gap-2'>
-                        <Crown className='w-5 h-5 text-accent' />
-                        Información de Suscripción
-                    </h2>
-                </div>
+            <section className='bg-settings-card border border-outline shadow-sm rounded-lg'>
                 <div className='p-6 text-center py-12'>
                     <Crown className='w-12 h-12 text-faint mx-auto mb-3' />
                     <p className='text-muted'>No tienes una suscripción activa</p>
@@ -62,13 +50,7 @@ export const SubscriptionInfo = ({ subscription, loading, onPayNow, isPaying, ha
     }
 
     return (
-        <section className='bg-surface border border-outline shadow-sm rounded-lg'>
-            <div className='px-6 py-4 border-b border-divider bg-body/50'>
-                <h2 className='text-lg font-semibold flex items-center gap-2'>
-                    <Crown className='w-5 h-5 text-accent' />
-                    Información de Suscripción
-                </h2>
-            </div>
+        <section className='bg-settings-card border border-outline shadow-sm rounded-lg'>
             <div className='p-6'>
                 {(() => {
                     const today = new Date().toISOString().split('T')[0]

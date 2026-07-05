@@ -133,13 +133,7 @@ export const PaymentHistoryTable = ({ transactions, loading }) => {
 
     if (loading) {
         return (
-            <section className='bg-surface border border-outline shadow-sm rounded-lg'>
-                <div className='px-6 py-4 border-b border-divider bg-body/50'>
-                    <h2 className='text-lg font-semibold flex items-center gap-2'>
-                        <Receipt className='w-5 h-5 text-accent' />
-                        Historial de Pagos
-                    </h2>
-                </div>
+            <section className='bg-settings-card border border-outline shadow-sm rounded-lg'>
                 <div className='p-6 flex items-center justify-center py-12'>
                     <Loader className='w-5 h-5 animate-spin text-accent' />
                 </div>
@@ -149,13 +143,7 @@ export const PaymentHistoryTable = ({ transactions, loading }) => {
 
     if (!transactions || transactions.length === 0) {
         return (
-            <section className='bg-surface border border-outline shadow-sm rounded-lg'>
-                <div className='px-6 py-4 border-b border-divider bg-body/50'>
-                    <h2 className='text-lg font-semibold flex items-center gap-2'>
-                        <Receipt className='w-5 h-5 text-accent' />
-                        Historial de Pagos
-                    </h2>
-                </div>
+            <section className='bg-settings-card border border-outline shadow-sm rounded-lg'>
                 <div className='p-6 text-center py-12'>
                     <Receipt className='w-12 h-12 text-faint mx-auto mb-3' />
                     <p className='text-muted'>No hay pagos registrados</p>
@@ -165,31 +153,25 @@ export const PaymentHistoryTable = ({ transactions, loading }) => {
     }
 
     return (
-        <section className='bg-surface border border-outline shadow-sm rounded-lg'>
-            <div className='px-6 py-4 border-b border-divider bg-body/50'>
-                <h2 className='text-lg font-semibold flex items-center gap-2'>
-                    <Receipt className='w-5 h-5 text-accent' />
-                    Historial de Pagos
-                </h2>
-            </div>
+        <section className='bg-settings-card border border-outline shadow-sm rounded-lg'>
             <div>
                 <table className='w-full text-sm'>
                     <thead>
-                        <tr className='border-b border-divider bg-body/50'>
+                        <tr className='border-b border-divider bg-subtle'>
                             <th className='text-left px-4 py-3 font-medium text-muted'>Fecha</th>
-                            <th className='text-left px-4 py-3 font-medium text-muted'>Referencia</th>
+                            <th className='text-left px-4 py-3 font-medium text-muted'>Frecuencia</th>
                             <th className='text-right px-4 py-3 font-medium text-muted'>Monto</th>
                             <th className='text-left px-4 py-3 font-medium text-muted'>Método</th>
                             <th className='text-left px-4 py-3 font-medium text-muted'>Estado</th>
-                            <th className='text-center px-4 py-3 font-medium text-muted'>Acción</th>
+                            <th className='text-center px-4 py-3 font-medium text-muted'>Recibo</th>
                         </tr>
                     </thead>
                     <tbody>
                         {visibleTransactions.map((tx) => (
-                            <tr key={tx.id} className='border-b border-divider hover:bg-body/50 transition'>
+                            <tr key={tx.id} className='border-b border-divider hover:bg-hover transition'>
                                 <td className='px-4 py-3 text-sm'>{formatDate(tx.created_at, { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
-                                <td className='px-4 py-3 text-sm font-mono max-w-[140px] truncate overflow-hidden text-ellipsis whitespace-nowrap'>
-                                    {tx.reference || tx.wompi_transaction_id || '—'}
+                                <td className='px-4 py-3 text-sm'>
+                                    {tx.billing_frequency === 'annual' ? 'Anual' : tx.billing_frequency === 'quarterly' ? 'Trimestral' : 'Mensual'}
                                 </td>
                                 <td className='px-4 py-3 text-sm text-right font-medium'>
                                     ${formatCurrency(tx.amount)}

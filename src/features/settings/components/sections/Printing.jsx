@@ -112,14 +112,8 @@ export const Printing = () => {
     }
 
     return (
-        <section className='bg-surface border border-outline shadow-sm rounded-lg'>
-            <div className='px-6 py-4 border-b border-divider bg-body/50'>
-                <h2 className='text-lg font-semibold flex items-center gap-2'>
-                    <Printer className='w-5 h-5 text-accent' />
-                    Impresora Térmica
-                </h2>
-            </div>
-            <div className='p-6 space-y-4'>
+<section className='bg-settings-card border border-outline shadow-sm rounded-lg'>
+        <div className='p-6 space-y-4'>
                 <div className='flex items-center justify-between'>
                     <div>
                         <p className='text-on-body font-medium'>Habilitar impresión térmica</p>

@@ -212,9 +212,10 @@ export const CardPayment = () => {
         new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(
             value,
         )
-    const monthlyPrice = 39900
-    const quarterlyPrice = monthlyPrice * 3
-    const annualPrice = Math.round(monthlyPrice * 12 * 0.9)
+    const plan = stateData?.plan || storedData?.plan || {}
+    const monthlyPrice = plan?.monthly_price || 39900
+    const quarterlyPrice = plan?.quarterly_price || monthlyPrice * 3
+    const annualPrice = plan?.annual_price || Math.round(monthlyPrice * 12 * 0.9)
     const currentPrice =
         stateData?.billing_frequency === 'annual'
             ? annualPrice

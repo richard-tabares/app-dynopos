@@ -93,11 +93,6 @@ export const Billing = () => {
 
     return (
         <section className='flex flex-col gap-6'>
-            <section>
-                <h1 className='text-2xl font-bold'>Facturación</h1>
-                <p className='text-on-body'>Gestiona tu suscripción y métodos de pago</p>
-            </section>
-
             <SubscriptionInfo
                 subscription={subscription}
                 loading={loadingSub}

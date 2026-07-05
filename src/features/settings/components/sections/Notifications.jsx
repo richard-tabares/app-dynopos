@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Bell, Save, Loader } from 'lucide-react'
+import { Save, Loader } from 'lucide-react'
 import { sileo } from 'sileo'
 import { useStore } from '../../../../app/providers/store'
 import { updateBusiness } from '../../account/helpers/updateBusiness'
@@ -31,14 +31,8 @@ export const Notifications = () => {
     }
 
     return (
-        <section className='bg-surface border border-outline shadow-sm rounded-lg'>
-            <div className='px-6 py-4 border-b border-divider bg-body/50'>
-                <h2 className='text-lg font-semibold flex items-center gap-2'>
-                    <Bell className='w-5 h-5 text-accent' />
-                    Notificaciones
-                </h2>
-            </div>
-            <div className='p-6'>
+<section className='bg-settings-card border border-outline shadow-sm rounded-lg'>
+        <div className='p-6'>
                 <label className='flex items-center gap-3 cursor-pointer mb-4'>
                     <input
                         type='checkbox'

@@ -30,6 +30,7 @@
     --color-hover: var(--hover);
     --color-hover-strong: var(--hover-strong);
     --color-hover-icon: var(--hover-icon);
+    --color-settings-card: var(--settings-card);
 }
 
 @layer base {
@@ -39,10 +40,10 @@
         --toast-warning: hsl(48, 100%, 85%);
         --toast-info: hsl(210, 100%, 85%);
         --text-toast: #111827;
-        --surface: #ffffff;
-        --accent: #3b7597ff;
+        --surface: hsl(215, 5%, 99%);
+        --accent: hsl(215, 40%, 40%);
         --login-accent: #00ffffff;
-        --body: #f9fafb;
+        --body: #ffffff;
         --subtle: #f9fafb;
         --overlay: rgba(17, 24, 39, 0.5);
         --on-surface: #111827;
@@ -60,6 +61,7 @@
         --hover: #f9fafb;
         --hover-strong: #f3f4f6;
         --hover-icon: #e5e7eb;
+        --settings-card: #f3f4f6;
     }
 
     .dark {
@@ -68,7 +70,7 @@
         --toast-warning: hsl(48, 100%, 87%);
         --toast-info: hsl(210, 100%, 87%);
         --text-toast: #111827;
-        --surface: hsl(215, 28%, 15%);
+        --surface: hsl(215, 28%, 13%);
         /* --surface: #1f2937; */
         --accent: #00ffffff;
         --login-accent: #00ffffff;
@@ -87,9 +89,11 @@
         --corporate: #1f2937;
         --danger: #dc2626;
         --select-input: #1f2937;
-        --hover: #374151;
+        --hover: hsl(215, 28%, 10%);
+        /* --hover: #374151; */
         --hover-strong: #4b5563;
         --hover-icon: #6b7280;
+        --settings-card: hsl(215, 28%, 13%);
     }
 
     html {

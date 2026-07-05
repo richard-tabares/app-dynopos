@@ -85,9 +85,11 @@ export const PaymentStep = () => {
         new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(value)
 
     const monthlyPrice = plan?.monthly_price || 39900
-    const quarterlyPrice = monthlyPrice * 3
-    const annualPrice = Math.round(monthlyPrice * 12 * 0.9)
+    const quarterlyPrice = plan?.quarterly_price || monthlyPrice * 3
+    const annualPrice = plan?.annual_price || Math.round(monthlyPrice * 12 * 0.9)
     const currentPrice = billingFrequency === 'annual' ? annualPrice : billingFrequency === 'quarterly' ? quarterlyPrice : monthlyPrice
+    const quarterlyDiscount = quarterlyPrice < monthlyPrice * 3 ? Math.round((1 - quarterlyPrice / (monthlyPrice * 3)) * 100) : 0
+    const annualDiscount = annualPrice < monthlyPrice * 12 ? Math.round((1 - annualPrice / (monthlyPrice * 12)) * 100) : 0
 
     return (
         <section className='w-full flex flex-col items-center justify-center bg-surface px-4 py-8'>
@@ -168,6 +170,11 @@ export const PaymentStep = () => {
                             <p className={`text-xl font-bold ${billingFrequency === 'quarterly' ? 'text-accent' : 'text-on-surface'}`}>
                                 ${formatPrice(quarterlyPrice)}
                             </p>
+                            {quarterlyDiscount > 0 && (
+                                <span className='absolute top-2.5 right-2 bg-accent text-surface text-xs font-bold px-2 py-1 rounded-full'>
+                                    -{quarterlyDiscount}%
+                                </span>
+                            )}
                             <p className='text-xs text-muted mt-1'>
                                 ${formatPrice(Math.round(quarterlyPrice / 3))}/mes
                             </p>
@@ -180,9 +187,11 @@ export const PaymentStep = () => {
                                     ? 'border-accent bg-hover'
                                     : 'border-divider hover:border-outline'
                             }`}>
-                            <span className='absolute top-2.5 right-2 bg-accent text-surface text-xs font-bold px-2 py-1 rounded-full'>
-                                -10%
-                            </span>
+                            {annualDiscount > 0 && (
+                                <span className='absolute top-2.5 right-2 bg-accent text-surface text-xs font-bold px-2 py-1 rounded-full'>
+                                    -{annualDiscount}%
+                                </span>
+                            )}
                             <CalendarCheck className={`w-5 h-5 mb-2 ${billingFrequency === 'annual' ? 'text-accent' : 'text-faint'}`} />
                             <p className={`text-sm font-medium ${billingFrequency === 'annual' ? 'text-accent' : 'text-muted'}`}>
                                 Anual

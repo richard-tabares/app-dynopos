@@ -1,19 +1,20 @@
 import { useState } from 'react'
 import { Outlet, useLocation } from 'react-router'
-import { Menu } from 'lucide-react'
+import { Store, Palette, Receipt, Bell, Printer, Scale, Shield, CreditCard, Menu } from 'lucide-react'
 import { SettingsNav } from './SettingsNav'
 
 const sectionMeta = {
-    '/settings/info': { title: 'Información', description: 'Información general del negocio' },
-    '/settings/appearance': { title: 'Apariencia', description: 'Personaliza la apariencia de la aplicación' },
-    '/settings/receipts': { title: 'Recibos', description: 'Configura el mensaje de pie de página de los tickets' },
-    '/settings/notifications': { title: 'Notificaciones', description: 'Administra las notificaciones del sistema' },
-    '/settings/printing': { title: 'Impresión Térmica', description: 'Configura tu impresora térmica para tickets' },
-    '/settings/units': { title: 'Unidades de Medida', description: 'Configura las unidades de medida variables' },
-    '/settings/security': { title: 'Seguridad', description: 'Cambia tu contraseña de acceso' },
-    '/settings/billing': { title: 'Facturación', description: 'Administra tu suscripción y métodos de pago' },
-    '/settings/users': { title: 'Usuarios', description: 'Gestiona los usuarios del sistema' },
+    '/settings/info': { title: 'Información', description: 'Información general del negocio', icon: Store },
+    '/settings/appearance': { title: 'Apariencia', description: 'Personaliza la apariencia de la aplicación', icon: Palette },
+    '/settings/receipts': { title: 'Recibos', description: 'Configura el mensaje de pie de página de los tickets', icon: Receipt },
+    '/settings/notifications': { title: 'Notificaciones', description: 'Administra las notificaciones del sistema', icon: Bell },
+    '/settings/printing': { title: 'Impresión Térmica', description: 'Configura tu impresora térmica para tickets', icon: Printer },
+    '/settings/units': { title: 'Unidades de Medida', description: 'Configura las unidades de medida variables', icon: Scale },
+    '/settings/security': { title: 'Seguridad', description: 'Cambia tu contraseña de acceso', icon: Shield },
+    '/settings/billing': { title: 'Facturación', description: 'Administra tu suscripción y métodos de pago', icon: CreditCard },
 }
+
+const selfTitled = new Set(['/settings/users'])
 
 export const SettingsLayout = () => {
     const [showMobileNav, setShowMobileNav] = useState(false)
@@ -29,10 +30,15 @@ export const SettingsLayout = () => {
                     className='p-2 rounded-lg hover:bg-hover text-muted cursor-pointer'>
                     <Menu className='w-5 h-5' />
                 </button>
-                <section>
-                    <h1 className='text-xl font-bold text-on-body'>{meta.title}</h1>
-                    <p className='text-sm text-muted'>{meta.description}</p>
-                </section>
+                {!selfTitled.has(location.pathname) && (
+                    <section>
+                        <h1 className='text-xl font-bold text-on-body flex items-center gap-2'>
+                            {meta.icon && <meta.icon className='w-6 h-6 text-accent' />}
+                            {meta.title}
+                        </h1>
+                        <p className='text-sm text-muted'>{meta.description}</p>
+                    </section>
+                )}
             </section>
 
             {/* Mobile nav overlay */}
@@ -62,10 +68,15 @@ export const SettingsLayout = () => {
             {/* Content */}
             <section className='flex-1 min-w-0'>
                 {/* Desktop header */}
-                <section className='hidden lg:block mb-6'>
-                    <h1 className='text-2xl font-bold text-on-body'>{meta.title}</h1>
-                    <p className='text-muted'>{meta.description}</p>
-                </section>
+                {!selfTitled.has(location.pathname) && (
+                    <section className='hidden lg:block mb-6'>
+                        <h1 className='text-2xl font-bold text-on-body flex items-center gap-2'>
+                            {meta.icon && <meta.icon className='w-6 h-6 text-accent' />}
+                            {meta.title}
+                        </h1>
+                        <p className='text-muted'>{meta.description}</p>
+                    </section>
+                )}
                 <Outlet />
             </section>
         </section>

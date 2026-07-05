@@ -65,7 +65,7 @@ export const Users = () => {
                     </button>
                 </section>
 
-                <section className='bg-surface border border-outline rounded-xl'>
+                <section className='bg-settings-card border border-outline rounded-lg shadow-sm'>
                     {loading ? (
                         <section className='flex items-center justify-center py-16'>
                             <Loader className='w-5 h-5 animate-spin text-accent' />
@@ -80,10 +80,10 @@ export const Users = () => {
                         <section className='overflow-x-auto'>
                             <table className='w-full'>
                                 <thead>
-                                    <tr className='border-b border-outline'>
-                                        <th className='text-left text-xs font-semibold text-muted uppercase tracking-wider px-6 py-4'>Usuario</th>
-                                        <th className='text-left text-xs font-semibold text-muted uppercase tracking-wider px-6 py-4'>Correo</th>
-                                        <th className='text-left text-xs font-semibold text-muted uppercase tracking-wider px-6 py-4'>Rol</th>
+                                    <tr className='border-b border-divider bg-subtle'>
+                                        <th className='text-left px-4 py-3 font-medium text-muted'>Usuario</th>
+                                        <th className='text-left px-4 py-3 font-medium text-muted'>Correo</th>
+                                        <th className='text-left px-4 py-3 font-medium text-muted'>Rol</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -99,8 +99,8 @@ export const Users = () => {
                                             <tr
                                                 key={u.id}
                                                 onClick={() => handleEdit(u)}
-                                                className='border-b border-outline last:border-b-0 hover:bg-accent/5 transition cursor-pointer'>
-                                                <td className='px-6 py-4'>
+                                                className='border-b border-divider hover:bg-hover transition cursor-pointer'>
+                                                <td className='px-4 py-3'>
                                                     <section className='flex items-center gap-3'>
                                                         <section className='w-9 h-9 rounded-full bg-accent/10 flex items-center justify-center shrink-0'>
                                                             <span className='text-sm font-semibold text-accent'>{initials}</span>
@@ -110,10 +110,10 @@ export const Users = () => {
                                                         </span>
                                                     </section>
                                                 </td>
-                                                <td className='px-6 py-4 text-sm text-muted'>
+                                                <td className='px-4 py-3 text-sm text-muted'>
                                                     {u.email || '—'}
                                                 </td>
-                                                <td className='px-6 py-4'>
+                                                <td className='px-4 py-3'>
                                                     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${role.className}`}>
                                                         {u.role === 'cajero' ? <UserCog className='w-3 h-3' /> : <Shield className='w-3 h-3' />}
                                                         {role.label}
