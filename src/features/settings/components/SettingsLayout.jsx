@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Outlet, useLocation } from 'react-router'
-import { Store, Palette, Receipt, Bell, Printer, Scale, Shield, CreditCard, Menu } from 'lucide-react'
+import { Store, Palette, Receipt, Bell, Printer, Scale, Shield, CreditCard, Megaphone, Menu } from 'lucide-react'
 import { SettingsNav } from './SettingsNav'
 
 const sectionMeta = {
@@ -12,6 +12,7 @@ const sectionMeta = {
     '/settings/units': { title: 'Unidades de Medida', description: 'Configura las unidades de medida variables', icon: Scale },
     '/settings/security': { title: 'Seguridad', description: 'Cambia tu contraseña de acceso', icon: Shield },
     '/settings/billing': { title: 'Facturación', description: 'Administra tu suscripción y métodos de pago', icon: CreditCard },
+    '/settings/changelog': { title: 'Novedades', description: 'Últimas actualizaciones y cambios del sistema', icon: Megaphone },
 }
 
 const selfTitled = new Set(['/settings/users'])

@@ -1,4 +1,4 @@
-import { Settings, CreditCard, Scale, Printer, Shield, Bell, Users, X } from 'lucide-react'
+import { Settings, CreditCard, Scale, Printer, Shield, Bell, Users, Megaphone, X } from 'lucide-react'
 import { NavLink } from 'react-router'
 
 const sections = [
@@ -51,6 +51,13 @@ const sections = [
         icon: Users,
         items: [
             { id: 'users', label: 'Gestión', path: '/settings/users' },
+        ],
+    },
+    {
+        category: 'Novedades',
+        icon: Megaphone,
+        items: [
+            { id: 'changelog', label: 'Actualizaciones', path: '/settings/changelog' },
         ],
     },
 ]

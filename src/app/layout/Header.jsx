@@ -1,10 +1,12 @@
-import { Bell, Menu, MessageCircleQuestionMark } from 'lucide-react'
+import { Megaphone, Menu, MessageCircleQuestionMark } from 'lucide-react'
 import { useState, useRef, useEffect } from 'react'
 import { useStore } from '../providers/store'
 import { useLocation } from 'react-router'
 import { LogoSymbol } from '../../shared/components/LogoSymbol'
 import { SupportDropdown } from '../../features/support/components/SupportDropdown'
 import { SupportModal } from '../../features/support/components/SupportModal'
+import { getLatestChangelogId } from '../../features/settings/helpers/getChangelog'
+import { ChangelogDropdown } from '../../features/settings/components/sections/ChangelogDropdown'
 
 const pageInfo = [
     { path: '/dashboard', title: 'Dashboard', description: 'Resumen general de tu negocio' },
@@ -14,6 +16,7 @@ const pageInfo = [
     { path: '/reports', title: 'Reportes', description: 'Visualiza análisis y estadísticas de ventas' },
     { path: '/settings/account', title: 'Configuraciones', description: 'Ajusta la configuración de tu negocio' },
     { path: '/settings/billing', title: 'Facturación', description: 'Gestiona tu suscripción y métodos de pago' },
+    { path: '/settings/changelog', title: 'Novedades', description: 'Últimas actualizaciones del sistema' },
 ]
 
 export const Header = ({ todayRevenue = 0 }) => {
@@ -22,12 +25,32 @@ export const Header = ({ todayRevenue = 0 }) => {
     const location = useLocation()
     const [supportOpen, setSupportOpen] = useState(false)
     const [supportModalOpen, setSupportModalOpen] = useState(false)
+    const [changelogOpen, setChangelogOpen] = useState(false)
+    const [hasNewUpdates, setHasNewUpdates] = useState(false)
     const supportRef = useRef(null)
+    const changelogRef = useRef(null)
+
+    useEffect(() => {
+        const checkUpdates = async () => {
+            const maxId = await getLatestChangelogId()
+            if (maxId === 0) return
+            const lastSeen = localStorage.getItem('dynopos_last_seen_id')
+            if (!lastSeen || Number(lastSeen) < maxId) {
+                setHasNewUpdates(true)
+            } else {
+                setHasNewUpdates(false)
+            }
+        }
+        checkUpdates()
+    }, [location.pathname])
 
     useEffect(() => {
         const handleClickOutside = (e) => {
             if (supportRef.current && !supportRef.current.contains(e.target)) {
                 setSupportOpen(false)
+            }
+            if (changelogRef.current && !changelogRef.current.contains(e.target)) {
+                setChangelogOpen(false)
             }
         }
         document.addEventListener('mousedown', handleClickOutside)
@@ -72,8 +95,17 @@ export const Header = ({ todayRevenue = 0 }) => {
                     </section>
 
                     {/* notifications */}
-                    <section className='p-2 text-on-body hover:text-accent rounded-lg cursor-pointer transition-all duration-300'>
-                        <Bell className='w-5 h-5' />
+                    <section ref={changelogRef} className='relative'>
+                        <section
+                            onClick={() => setChangelogOpen((prev) => !prev)}
+                            className='relative p-2 text-on-body hover:text-accent rounded-lg cursor-pointer transition-all duration-300'
+                        >
+                            <Megaphone className='w-5 h-5' />
+                            {hasNewUpdates && (
+                                <span className='absolute top-1 right-1 w-2 h-2 rounded-full bg-accent shadow-[0_0_6px] shadow-accent/50' />
+                            )}
+                        </section>
+                        {changelogOpen && <ChangelogDropdown onClose={() => setChangelogOpen(false)} onMarkRead={() => setHasNewUpdates(false)} />}
                     </section>
                     <section ref={supportRef} className='relative'>
                         <section

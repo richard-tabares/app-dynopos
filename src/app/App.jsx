@@ -19,6 +19,7 @@ import { UnitsOfMeasure } from '../features/settings/components/sections/UnitsOf
 import { Security } from '../features/settings/components/sections/Security'
 import { Billing } from '../features/settings/billing/pages/Billing'
 import { Users } from '../features/users/pages/Users'
+import { ChangelogTimeline } from '../features/settings/components/sections/ChangelogTimeline'
 import { Login } from '../features/auth/components/Login'
 import { SignUp } from '../features/auth/components/SignUp'
 import { PaymentStep } from '../features/auth/components/PaymentStep'
@@ -232,6 +233,10 @@ export const App = () => {
                                 <Route
                                     path='users'
                                     element={<Users />}
+                                />
+                                <Route
+                                    path='changelog'
+                                    element={<ChangelogTimeline />}
                                 />
                             </Route>
                             <Route
