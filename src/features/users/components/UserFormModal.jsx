@@ -144,25 +144,40 @@ export const UserFormModal = ({ mode, userData, onClose, onSuccess }) => {
             onClose={onClose}
             title={isEdit ? 'Editar Usuario' : 'Nuevo Usuario'}
             icon={Users}
+            size='xl'
         >
             <form onSubmit={handleSubmit} className='p-6 flex flex-col gap-4'>
-                <section>
-                    <label className='block text-sm font-medium text-on-body mb-1'>
-                        Nombre
-                    </label>
-                    <input
-                        type='text'
-                        name='display_name'
-                        value={formData.display_name}
-                        onChange={handleChange}
-                        autoFocus={!isMobileDevice}
-                        className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
-                        placeholder='Nombre del usuario'
-                    />
-                </section>
-
-                {!isEdit && (
-                    <>
+                {isEdit ? (
+                    <section>
+                        <label className='block text-sm font-medium text-on-body mb-1'>
+                            Nombre
+                        </label>
+                        <input
+                            type='text'
+                            name='display_name'
+                            value={formData.display_name}
+                            onChange={handleChange}
+                            autoFocus={!isMobileDevice}
+                            className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
+                            placeholder='Nombre del usuario'
+                        />
+                    </section>
+                ) : (
+                    <section className='grid grid-cols-2 gap-4'>
+                        <section className='flex flex-col gap-2'>
+                            <label className='block text-sm font-medium text-on-body mb-1'>
+                                Nombre
+                            </label>
+                            <input
+                                type='text'
+                                name='display_name'
+                                value={formData.display_name}
+                                onChange={handleChange}
+                                autoFocus={!isMobileDevice}
+                                className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
+                                placeholder='Nombre del usuario'
+                            />
+                        </section>
                         <section className='flex flex-col gap-2'>
                             <label className='block text-sm font-medium text-on-body mb-1'>
                                 Correo electrónico{' '}
@@ -187,103 +202,106 @@ export const UserFormModal = ({ mode, userData, onClose, onSuccess }) => {
                                 </p>
                             )}
                         </section>
+                    </section>
+                )}
 
-                        <section className='flex flex-col gap-2'>
-                            <label className='block text-sm font-medium text-on-body mb-1'>
-                                Contraseña{' '}
-                                <span className='text-red-500 font-bold'>*</span>
-                            </label>
-                            <section className='relative flex items-center'>
-                                <input
-                                    type={showPassword ? 'text' : 'password'}
-                                    name='password'
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    placeholder='Mínimo 8 caracteres (letras y números)'
-                                    className={`w-full px-4 py-3 pr-10 border rounded-md transition-all duration-300 focus:outline-none ${
-                                        touched.password && errors.password
-                                            ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-0'
-                                            : 'border-divider focus:border-accent focus:ring-0'
-                                    }`}
-                                />
-                                <button
-                                    type='button'
-                                    className='absolute right-3 bg-transparent border-none cursor-pointer text-lg p-1 text-accent hover:scale-110 transition-transform duration-300'
-                                    onClick={() => setShowPassword(!showPassword)}>
-                                    {showPassword ? <Eye /> : <EyeClosed />}
-                                </button>
-                            </section>
-                            {touched.password && errors.password && (
-                                <p className='text-xs font-semibold text-red-500'>
-                                    {errors.password}
-                                </p>
-                            )}
-                            {formData.password && !errors.password && (
-                                <section className='bg-accent/10 border-l-4 border-accent p-3 rounded flex flex-col gap-1.5'>
-                                    <p className='text-xs font-semibold text-on-surface'>
-                                        Requisitos cumplidos:
-                                    </p>
-                                    <section
-                                        className={`text-xs transition-colors duration-300 ${/[a-zA-Z]/.test(formData.password) ? 'text-green-600 font-semibold' : 'text-muted'}`}>
-                                        ✓ Contiene letras
-                                    </section>
-                                    <section
-                                        className={`text-xs transition-colors duration-300 ${/[0-9]/.test(formData.password) ? 'text-green-600 font-semibold' : 'text-muted'}`}>
-                                        ✓ Contiene números
-                                    </section>
-                                    <section
-                                        className={`text-xs transition-colors duration-300 ${formData.password.length >= 8 ? 'text-green-600 font-semibold' : 'text-muted'}`}>
-                                        ✓ Mínimo 8 caracteres
-                                    </section>
+                {!isEdit && <section className='grid grid-cols-2 gap-4'>
+                            <section className='flex flex-col gap-2'>
+                                <label className='block text-sm font-medium text-on-body mb-1'>
+                                    Contraseña{' '}
+                                    <span className='text-red-500 font-bold'>*</span>
+                                </label>
+                                <section className='relative flex items-center'>
+                                    <input
+                                        type={showPassword ? 'text' : 'password'}
+                                        name='password'
+                                        value={formData.password}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        placeholder='Mínimo 8 caracteres (letras y números)'
+                                        className={`w-full px-4 py-3 pr-10 border rounded-md transition-all duration-300 focus:outline-none ${
+                                            touched.password && errors.password
+                                                ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-0'
+                                                : 'border-divider focus:border-accent focus:ring-0'
+                                        }`}
+                                    />
+                                    <button
+                                        type='button'
+                                        className='absolute right-3 bg-transparent border-none cursor-pointer text-lg p-1 text-accent hover:scale-110 transition-transform duration-300'
+                                        onClick={() => setShowPassword(!showPassword)}>
+                                        {showPassword ? <Eye /> : <EyeClosed />}
+                                    </button>
                                 </section>
-                            )}
-                        </section>
-
-                        <section className='flex flex-col gap-2'>
-                            <label className='block text-sm font-medium text-on-body mb-1'>
-                                Confirmar contraseña{' '}
-                                <span className='text-red-500 font-bold'>*</span>
-                            </label>
-                            <section className='relative flex items-center'>
-                                <input
-                                    type={showConfirmPassword ? 'text' : 'password'}
-                                    name='confirm_password'
-                                    value={formData.confirm_password}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    placeholder='Confirma tu contraseña'
-                                    className={`w-full px-4 py-3 pr-10 border rounded-md transition-all duration-300 focus:outline-none ${
-                                        touched.confirm_password &&
-                                        errors.confirm_password
-                                            ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-0'
-                                            : 'border-divider focus:border-accent focus:ring-0'
-                                    }`}
-                                />
-                                <button
-                                    type='button'
-                                    className='absolute right-3 bg-transparent border-none cursor-pointer text-lg p-1 text-accent hover:scale-110 transition-transform duration-300'
-                                    onClick={() =>
-                                        setShowConfirmPassword(!showConfirmPassword)
-                                    }>
-                                    {showConfirmPassword ? <Eye /> : <EyeClosed />}
-                                </button>
-                            </section>
-                            {touched.confirm_password && errors.confirm_password && (
-                                <p className='text-xs font-semibold text-red-500'>
-                                    {errors.confirm_password}
-                                </p>
-                            )}
-                            {formData.confirm_password &&
-                                formData.password === formData.confirm_password &&
-                                !errors.confirm_password && (
-                                    <p className='text-xs font-semibold text-green-600'>
-                                        ✓ Las contraseñas coinciden
+                                {touched.password && errors.password && (
+                                    <p className='text-xs font-semibold text-red-500'>
+                                        {errors.password}
                                     </p>
                                 )}
+                                {formData.password && !errors.password && (
+                                    <section className='bg-accent/10 border-l-4 border-accent p-3 rounded flex flex-col gap-1.5'>
+                                        <p className='text-xs font-semibold text-on-surface'>
+                                            Requisitos cumplidos:
+                                        </p>
+                                        <section
+                                            className={`text-xs transition-colors duration-300 ${/[a-zA-Z]/.test(formData.password) ? 'text-green-600 font-semibold' : 'text-muted'}`}>
+                                            ✓ Contiene letras
+                                        </section>
+                                        <section
+                                            className={`text-xs transition-colors duration-300 ${/[0-9]/.test(formData.password) ? 'text-green-600 font-semibold' : 'text-muted'}`}>
+                                            ✓ Contiene números
+                                        </section>
+                                        <section
+                                            className={`text-xs transition-colors duration-300 ${formData.password.length >= 8 ? 'text-green-600 font-semibold' : 'text-muted'}`}>
+                                            ✓ Mínimo 8 caracteres
+                                        </section>
+                                    </section>
+                                )}
+                            </section>
+
+                            <section className='flex flex-col gap-2'>
+                                <label className='block text-sm font-medium text-on-body mb-1'>
+                                    Confirmar contraseña{' '}
+                                    <span className='text-red-500 font-bold'>*</span>
+                                </label>
+                                <section className='relative flex items-center'>
+                                    <input
+                                        type={showConfirmPassword ? 'text' : 'password'}
+                                        name='confirm_password'
+                                        value={formData.confirm_password}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        placeholder='Confirma tu contraseña'
+                                        className={`w-full px-4 py-3 pr-10 border rounded-md transition-all duration-300 focus:outline-none ${
+                                            touched.confirm_password &&
+                                            errors.confirm_password
+                                                ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-0'
+                                                : 'border-divider focus:border-accent focus:ring-0'
+                                        }`}
+                                    />
+                                    <button
+                                        type='button'
+                                        className='absolute right-3 bg-transparent border-none cursor-pointer text-lg p-1 text-accent hover:scale-110 transition-transform duration-300'
+                                        onClick={() =>
+                                            setShowConfirmPassword(!showConfirmPassword)
+                                        }>
+                                        {showConfirmPassword ? <Eye /> : <EyeClosed />}
+                                    </button>
+                                </section>
+                                {touched.confirm_password && errors.confirm_password && (
+                                    <p className='text-xs font-semibold text-red-500'>
+                                        {errors.confirm_password}
+                                    </p>
+                                )}
+                                {formData.confirm_password &&
+                                    formData.password === formData.confirm_password &&
+                                    !errors.confirm_password && (
+                                        <p className='text-xs font-semibold text-green-600'>
+                                            ✓ Las contraseñas coinciden
+                                        </p>
+                                    )}
+                            </section>
                         </section>
-                    </>
-                )}
+                }
 
                 <section>
                     <label className='block text-sm font-medium text-on-body mb-1'>

@@ -58,10 +58,11 @@
         --corporate: #1f2937;
         --danger: #dc2626;
         --select-input: #1f2937;
-        --hover: #f9fafb;
+        --hover: hsl(210, 20%, 95%);
+        /* --hover: #f9fafb; */
         --hover-strong: #f3f4f6;
         --hover-icon: #e5e7eb;
-        --settings-card: #f3f4f6;
+        --settings-card: hsl(215, 5%, 99%);
     }
 
     .dark {
@@ -70,7 +71,7 @@
         --toast-warning: hsl(48, 100%, 87%);
         --toast-info: hsl(210, 100%, 87%);
         --text-toast: #111827;
-        --surface: hsl(215, 28%, 13%);
+        --surface: hsl(215, 28%, 14%);
         /* --surface: #1f2937; */
         --accent: #00ffffff;
         --login-accent: #00ffffff;
