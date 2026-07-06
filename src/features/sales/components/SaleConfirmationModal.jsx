@@ -124,7 +124,7 @@ export const SaleConfirmationModal = ({
                         {isEfectivo && (
                             <div className='flex justify-between items-center py-2'>
                                 <span className='font-medium'>Su Devuelta:</span>
-                                <span className={`text-md font-bold ${change > 0 ? 'text-toast-success' : change < 0 ? 'text-red-500' : 'text-muted/50'}`}>
+                                <span className={`text-md font-bold ${change > 0 ? 'text-change-positive' : change < 0 ? 'text-red-500' : 'text-muted/50'}`}>
                                     {change >= 0 ? '' : '-'}${nf(Math.abs(change))}
                                 </span>
                             </div>

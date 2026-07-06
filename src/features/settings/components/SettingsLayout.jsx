@@ -23,7 +23,7 @@ export const SettingsLayout = () => {
     const meta = sectionMeta[location.pathname] || { title: 'Configuraciones', description: '' }
 
     return (
-        <section className='flex flex-col lg:flex-row gap-0 lg:gap-6'>
+        <section className='flex flex-col lg:flex-row gap-0 lg:gap-6 lg:h-[calc(100vh-7rem)] lg:overflow-hidden'>
             {/* Mobile nav toggle */}
             <section className='flex items-center gap-3 lg:hidden mb-4'>
                 <button
@@ -61,13 +61,11 @@ export const SettingsLayout = () => {
 
             {/* Desktop sidebar */}
             <aside className='hidden lg:block lg:w-64 shrink-0'>
-                <section className='sticky top-6'>
-                    <SettingsNav />
-                </section>
+                <SettingsNav />
             </aside>
 
             {/* Content */}
-            <section className='flex-1 min-w-0'>
+            <section className='flex-1 min-w-0 lg:overflow-y-auto scrollbar-none'>
                 {/* Desktop header */}
                 {!selfTitled.has(location.pathname) && (
                     <section className='hidden lg:block mb-6'>

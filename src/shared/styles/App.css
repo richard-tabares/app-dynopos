@@ -31,6 +31,7 @@
     --color-hover-strong: var(--hover-strong);
     --color-hover-icon: var(--hover-icon);
     --color-settings-card: var(--settings-card);
+    --color-change-positive: var(--change-positive);
 }
 
 @layer base {
@@ -63,6 +64,7 @@
         --hover-strong: #f3f4f6;
         --hover-icon: #e5e7eb;
         --settings-card: hsl(215, 5%, 99%);
+        --change-positive: hsl(142, 70%, 35%);
     }
 
     .dark {
@@ -95,6 +97,7 @@
         --hover-strong: #4b5563;
         --hover-icon: #6b7280;
         --settings-card: hsl(215, 28%, 13%);
+        --change-positive: hsl(142, 60%, 55%);
     }
 
     html {
