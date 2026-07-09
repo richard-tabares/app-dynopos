@@ -83,11 +83,11 @@ export const PaymentPieChart = ({ data = [] }) => {
                                         </tr>
                                     )
                                 })}
-                                <tr className='font-semibold bg-subtle/50'>
-                                    <td className='py-3 px-4 text-on-surface'>Total</td>
+                                <tr className='font-semibold bg-subtle/50 text-accent'>
+                                    <td className='py-3 px-4'>Total</td>
                                     <td className='py-3 px-4 text-right'>{data.reduce((s, item) => s + item.sale_count, 0)}</td>
-                                    <td className='py-3 px-4 text-right text-on-surface'>{formatCurrency(total)}</td>
-                                    <td className='py-3 px-4 text-right text-muted'>100%</td>
+                                    <td className='py-3 px-4 text-right'>{formatCurrency(total)}</td>
+                                    <td className='py-3 px-4 text-right'>100%</td>
                                 </tr>
                             </tbody>
                         </table>
