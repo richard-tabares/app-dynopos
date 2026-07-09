@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Sparkles, ArrowUp, Bug, ChevronDown, Megaphone, Loader } from 'lucide-react'
+import ReactMarkdown from 'react-markdown'
+import remarkBreaks from 'remark-breaks'
 import { getChangelog } from '../../helpers/getChangelog'
 
 const typeMeta = {
@@ -7,6 +9,8 @@ const typeMeta = {
     improvement: { label: 'Mejora', icon: ArrowUp, class: 'bg-blue-500/10 text-blue-500', dotClass: 'bg-blue-500 shadow-[0_0_8px] shadow-blue-500/40' },
     fix: { label: 'Corrección', icon: Bug, class: 'bg-amber-500/10 text-amber-500', dotClass: 'bg-amber-500 shadow-[0_0_8px] shadow-amber-500/40' },
 }
+
+const isVideo = (url) => /\.(mp4|webm|ogg)$/i.test(url)
 
 export const ChangelogTimeline = () => {
     const [entries, setEntries] = useState([])
@@ -46,8 +50,6 @@ export const ChangelogTimeline = () => {
         const d = new Date(dateStr)
         return d.toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' })
     }
-
-    const isVideo = (url) => /\.(mp4|webm|ogg)$/i.test(url)
 
     if (loading) {
         return (
@@ -90,10 +92,10 @@ export const ChangelogTimeline = () => {
                         return (
                             <li key={entry.id} className='relative pl-8'>
                                 <section className={`absolute left-0 top-6 w-3.5 h-3.5 rounded-full border-2 border-surface ${typeInfo.dotClass}`} />
-                                <section className='space-y-4'>
+                                <section className='space-y-2'>
                                     <button
                                         onClick={() => toggleExpanded(entry.id)}
-                                        className='w-full text-left cursor-pointer group rounded-lg hover:bg-hover/50 transition-colors px-3 py-4 -mx-3 flex items-center gap-3'
+                                        className='w-full text-left cursor-pointer group rounded-lg hover:bg-hover/50 transition-colors px-3 py-1 -mx-3 flex items-center gap-3'
                                     >
                                         <section className='flex-1 min-w-0'>
                                             <section className='flex items-center gap-3 flex-wrap'>
@@ -108,9 +110,43 @@ export const ChangelogTimeline = () => {
                                         <ChevronDown className={`w-4 h-4 text-accent shrink-0 transition-transform duration-200 ${isExpanded ? 'rotate-0' : '-rotate-90'}`} />
                                     </button>
                                     <section className={`overflow-hidden transition-all duration-300 ${isExpanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                                        <section className='pt-2 space-y-2'>
+                                        <section className='pt-0'>
                                             {entry.description && (
-                                                <p className='text-sm text-muted leading-relaxed'>{entry.description}</p>
+                                                <section className='text-sm text-muted leading-relaxed'>
+                                                    <ReactMarkdown
+                                                        remarkPlugins={[remarkBreaks]}
+                                                        components={{
+                                                            p: ({ children }) => <p className='my-3'>{children}</p>,
+                                                            h2: ({ children }) => <h2 className='text-base font-semibold text-on-body mt-4 mb-2'>{children}</h2>,
+                                                            h3: ({ children }) => <h3 className='text-sm font-semibold text-on-body mt-3 mb-1'>{children}</h3>,
+                                                            ul: ({ children }) => <ul className='list-disc pl-5 my-1 space-y-0.5'>{children}</ul>,
+                                                            ol: ({ children }) => <ol className='list-decimal pl-5 my-1 space-y-0.5'>{children}</ol>,
+                                                            li: ({ children }) => <li className='text-sm text-muted'>{children}</li>,
+                                                            blockquote: ({ children }) => <blockquote className='border-l-2 border-accent/30 pl-3 my-3 italic text-muted'>{children}</blockquote>,
+                                                            strong: ({ children }) => <strong className='font-semibold text-on-body'>{children}</strong>,
+                                                            code: ({ children }) => <code className='px-1 py-0.5 rounded bg-hover text-xs font-mono text-accent'>{children}</code>,
+                                                            img: ({ src, alt }) =>
+                                                                isVideo(src) ? (
+                                                                    <video
+                                                                        src={src}
+                                                                        loop
+                                                                        autoPlay
+                                                                        muted
+                                                                        playsInline
+                                                                        className='rounded-lg max-w-full max-h-80 object-contain bg-body my-3'
+                                                                    />
+                                                                ) : (
+                                                                    <img
+                                                                        src={src}
+                                                                        alt={alt}
+                                                                        className='rounded-lg max-w-full max-h-80 object-contain bg-body my-3'
+                                                                    />
+                                                                ),
+                                                        }}
+                                                    >
+                                                        {entry.description}
+                                                    </ReactMarkdown>
+                                                </section>
                                             )}
                                             {entry.bullets && entry.bullets.length > 0 && (
                                                 <section className='flex flex-wrap gap-1.5'>
@@ -119,26 +155,6 @@ export const ChangelogTimeline = () => {
                                                             {bullet}
                                                         </span>
                                                     ))}
-                                                </section>
-                                            )}
-                                            {entry.media_url && (
-                                                <section className='mt-3'>
-                                                    {isVideo(entry.media_url) ? (
-                                                        <video
-                                                            src={entry.media_url}
-                                                            loop
-                                                            autoPlay
-                                                            muted
-                                                            playsInline
-                                                            className='rounded-lg max-w-full max-h-80 object-contain bg-body'
-                                                        />
-                                                    ) : (
-                                                        <img
-                                                            src={entry.media_url}
-                                                            alt={entry.title}
-                                                            className='rounded-lg max-w-full max-h-80 object-contain bg-body'
-                                                        />
-                                                    )}
                                                 </section>
                                             )}
                                         </section>
