@@ -79,7 +79,7 @@ export const VariationEditModal = ({
             onClose={onClose}
             title='Editar Variación'
             icon={Layers}
-            size='xl'>
+            size='2xl'>
             <div className='p-6'>
                 <form
                     className='flex flex-col gap-4'

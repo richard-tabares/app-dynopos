@@ -6,6 +6,8 @@ const sizeMap = {
     md: 'max-w-md',
     lg: 'max-w-lg',
     xl: 'max-w-xl',
+    '2xl': 'max-w-2xl',
+    '3xl': 'max-w-3xl',
 }
 
 export const Modal = ({ isOpen = true, onClose, title, icon: Icon, iconColor = 'text-accent', size = 'md', zIndex = 'z-50', children }) => {

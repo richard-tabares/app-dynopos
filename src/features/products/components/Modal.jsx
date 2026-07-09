@@ -322,7 +322,7 @@ export const Modal = ({
             onClose={handleOpenModal}
             title={editProductData.id ? 'Editar Producto' : 'Nuevo Producto'}
             icon={Package}
-            size='xl'>
+            size='2xl'>
             <div className='p-6'>
                 <form
                     className='flex flex-col gap-4'
@@ -721,25 +721,25 @@ export const Modal = ({
                                         </div>
                                         {v.id ? (
                                             <div className='space-y-3'>
-                                                <div className='grid grid-cols-1 md:grid-cols-3 gap-x-3 gap-y-3'>
-                                                    <section>
-                                                        <label className='block text-sm font-medium text-on-body mb-1'>
-                                                            Nombre
-                                                        </label>
-                                                        <input
-                                                            type='text'
-                                                            placeholder='Ej: S, M, Rojo'
-                                                            value={v.variation_name}
-                                                            onChange={(e) =>
-                                                                handleVariationChange(
-                                                                    index,
-                                                                    'variation_name',
-                                                                    e.target.value,
-                                                                )
-                                                            }
-                                                            className='w-full px-4 py-3 border border-divider rounded-md focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
-                                                        />
-                                                    </section>
+                                                <section>
+                                                    <label className='block text-sm font-medium text-on-body mb-1'>
+                                                        Nombre de variación
+                                                    </label>
+                                                    <input
+                                                        type='text'
+                                                        placeholder='Ej: S, M, Rojo'
+                                                        value={v.variation_name}
+                                                        onChange={(e) =>
+                                                            handleVariationChange(
+                                                                index,
+                                                                'variation_name',
+                                                                e.target.value,
+                                                            )
+                                                        }
+                                                        className='w-full px-4 py-3 border border-divider rounded-md focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
+                                                    />
+                                                </section>
+                                                <div className='grid grid-cols-1 md:grid-cols-2 gap-x-3 gap-y-3'>
                                                     <section>
                                                         <label className='block text-sm font-medium text-on-body mb-1'>
                                                             SKU
