@@ -504,7 +504,7 @@ export const Products = () => {
                     onClick={(e) => handleRowClick(product, e)}>
                     <td className='py-3 px-4 text-on-body'>
                         <span className='flex items-center gap-1'>
-                            {hasMultipleVars && (
+                            {hasMultipleVars ? (
                                 <>
                                     {expandedProductId === product.id ? (
                                         <ChevronDown className='w-3.5 h-3.5 text-accent shrink-0' />
@@ -512,11 +512,13 @@ export const Products = () => {
                                         <ChevronRight className='w-3.5 h-3.5 text-accent shrink-0' />
                                     )}
                                 </>
+                            ) : (
+                                <div className='w-3.5 shrink-0' />
                             )}
-                            {product.name}
+                            <span className='font-medium'>{product.name}</span>
                         </span>
                         {skuDisplay && (
-                            <span className={`text-xs text-muted block mt-0.5 ${hasMultipleVars ? 'pl-5' : ''}`}>{skuDisplay}</span>
+                            <span className='text-xs text-muted block mt-0.5 pl-5'>{skuDisplay}</span>
                         )}
                     </td>
                     <td className='py-3 px-4 text-muted'>{product.categories?.name || 'Sin categoría'}</td>
@@ -527,7 +529,7 @@ export const Products = () => {
                             <span className='text-faint italic'>—</span>
                         )}
                     </td>
-                    <td className='py-3 px-4 text-on-body font-bold text-right'>
+                    <td className='py-3 px-4 text-on-body text-right'>
                         {price > 0 ? (
                             `$${new Intl.NumberFormat('es-CO').format(price)}`
                         ) : (
@@ -595,7 +597,7 @@ export const Products = () => {
                     <tr key={v.id}
                         className='border-b border-divider-light bg-hover/50 hover:bg-hover cursor-pointer group'
                         onClick={(e) => onEditVariation(v, e)}>
-                        <td className='py-2 px-4'>
+                        <td className='py-3 px-4'>
                             <span className='flex items-center gap-2 text-sm'>
                                 <div className='w-3 h-3 border-b border-l border-muted rounded-bl-md shrink-0 ml-4' />
                                 {product.variation_type && (
@@ -606,10 +608,10 @@ export const Products = () => {
                                 <span className='font-medium text-on-surface'>{v.variation_name}</span>
                             </span>
                         </td>
-                        <td className='py-2 px-4 text-xs text-muted'>—</td>
-                        <td className='py-2 px-4 text-right'>{v.unit_cost ? <span className='text-sm font-medium text-on-body'>${new Intl.NumberFormat('es-CO').format(v.unit_cost)}</span> : <span className='text-faint italic text-xs'>—</span>}</td>
-                        <td className='py-2 px-4 text-sm font-bold text-on-body text-right'>${new Intl.NumberFormat('es-CO').format(v.price)}</td>
-                        <td className='py-2 px-4 text-right'>
+                        <td className='py-3 px-4 text-xs text-muted'>—</td>
+                        <td className='py-3 px-4 text-right'>{v.unit_cost ? <span className='text-sm font-medium text-on-body'>${new Intl.NumberFormat('es-CO').format(v.unit_cost)}</span> : <span className='text-faint italic text-xs'>—</span>}</td>
+                        <td className='py-3 px-4 text-sm text-on-body font-medium text-right'>${new Intl.NumberFormat('es-CO').format(v.price)}</td>
+                        <td className='py-3 px-4 text-right'>
                             {v.unit_cost && v.price > 0 ? (
                                 <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${
                                     Math.round(((v.price - v.unit_cost) / v.price) * 100) >= 30 ? 'bg-green-100 text-green-800'
@@ -620,21 +622,21 @@ export const Products = () => {
                                 </span>
                             ) : <span className='text-faint italic text-xs'>—</span>}
                         </td>
-                        <td className='py-2 px-4 whitespace-nowrap text-right'>{
+                        <td className='py-3 px-4 whitespace-nowrap text-right'>{
     v.track_stock === false
         ? <span className='text-xs text-muted italic'>Sin control</span>
         : <span className={`text-xs ${(v.stock || 0) < (v.min_stock ?? 0) ? 'text-red-600 font-medium' : 'text-muted'}`}>{v.stock || 0} {getUnitLabel(v.unit_of_measure_id, unitsOfMeasure)}</span>
 }</td>
-                        <td className='py-2 px-4 whitespace-nowrap'><span className='text-xs text-muted'>—</span></td>
-                        <td className='py-2 px-4 whitespace-nowrap'>
+                        <td className='py-3 px-4 whitespace-nowrap'><span className='text-xs text-muted'>—</span></td>
+                        <td className='py-3 px-4 whitespace-nowrap'>
                             {v.is_active ? (
                                 <span className='px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full'>Activo</span>
                             ) : (
                                 <span className='px-2.5 py-0.5 text-xs font-medium bg-red-100 text-red-800 rounded-full'>Inactivo</span>
                             )}
                         </td>
-                        <td className='py-2 px-2 text-right whitespace-nowrap'>
-                            <div className='flex items-center justify-end gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity'>
+                        <td className='py-3 px-2 text-right whitespace-nowrap'>
+                            <div className='flex items-center justify-end gap-1.5'>
                                 <button onClick={(e) => onEditVariation(v, e)} className='bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-800 p-1 rounded-sm cursor-pointer' title='Editar Variación'>
                                     <Edit2 className='w-3.5 h-3.5 text-accent' />
                                 </button>
@@ -1064,7 +1066,7 @@ export const Products = () => {
                                     {productsHeaders.map((header, index) => (
                                         <th
                                             key={index}
-                                            className={`py-3 px-4 font-medium ${header === 'Precio' || header === 'Acciones' || header === 'Stock' || header === 'Costo' || header === 'Margen' ? 'text-right' : 'text-left'}`}>
+                                            className={`py-3 px-4 font-bold ${header === 'Precio' || header === 'Acciones' || header === 'Stock' || header === 'Costo' || header === 'Margen' ? 'text-right' : 'text-left'}`}>
                                             {header}
                                         </th>
                                     ))}

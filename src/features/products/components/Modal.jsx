@@ -653,7 +653,7 @@ export const Modal = ({
                                         className={`border ${v.is_active ? 'border-accent/85' : 'border-divider'} rounded-lg p-3 py-4`}>
                                         <div className='flex items-center justify-between'>
                                             <span
-                                                className={`text-sm font-medium my-1.5 ${v.is_active ? 'text-accent' : 'text-muted'}`}>
+                                                className={`text-sm font-medium mt-1.5 mb-3 ${v.is_active ? 'text-accent' : 'text-muted'}`}>
                                                 Variación{' - '}
                                                 {v.variation_name ||
                                                     'Sin nombre'}
