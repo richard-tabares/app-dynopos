@@ -84,7 +84,7 @@ export const VariationEditModal = ({
                 <form
                     className='flex flex-col gap-4'
                     onSubmit={handleSubmit}>
-                    <div className='grid grid-cols-2 gap-4'>
+                    <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                         <section>
                             <label className='block text-sm font-medium text-on-body mb-1'>
                                 SKU
@@ -126,7 +126,7 @@ export const VariationEditModal = ({
                             placeholder='Ej: S, M, L, XL'
                         />
                     </section>
-                    <div className='grid grid-cols-3 gap-4'>
+                    <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
                         <section>
                             <label className='block text-sm font-medium text-on-body mb-1'>
                                 Costo Unitario

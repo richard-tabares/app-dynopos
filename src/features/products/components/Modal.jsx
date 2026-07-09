@@ -363,7 +363,7 @@ export const Modal = ({
 
                     {productType === 'simple' ? (
                         <>
-                            <div className='grid grid-cols-2 gap-4'>
+                            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                                 <section>
                                     <label className='block text-sm font-medium text-on-body mb-1'>
                                         SKU o Código del Producto
@@ -409,7 +409,7 @@ export const Modal = ({
                                     placeholder='Ingrese el nombre del producto'
                                 />
                             </section>
-                            <div className={`grid ${variableUnitsEnabled ? 'grid-cols-2' : 'grid-cols-1'} gap-4`}>
+                            <div className={`grid grid-cols-1 ${variableUnitsEnabled ? 'md:grid-cols-2' : ''} gap-4`}>
                                 <section>
                                     <label className='block text-sm font-medium text-on-body mb-1'>
                                         Categoría
@@ -452,7 +452,7 @@ export const Modal = ({
                                     </section>
                                 )}
                             </div>
-                            <div className={`grid ${editProductData.id ? 'grid-cols-3' : 'grid-cols-2'} gap-4`}>
+                            <div className={`grid grid-cols-1 ${editProductData.id ? 'md:grid-cols-3' : 'md:grid-cols-2'} gap-4`}>
                                 <section>
                                     <label className='block text-sm font-medium text-on-body mb-1'>
                                         Costo Unitario
@@ -506,7 +506,7 @@ export const Modal = ({
                                 )}
                             </div>
                             {!editProductData.id && formData.track_stock !== false && (
-                                <div className='grid grid-cols-2 gap-4'>
+                                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                                     <section>
                                         <label className='block text-sm font-medium text-on-body mb-1'>
                                             Stock Inicial
@@ -635,7 +635,7 @@ export const Modal = ({
                                     placeholder='ej: Talla, Color, Tamaño'
                                 />
                             </section>
-                            <div className='space-y-3 p-4 rounded-md'>
+                            <div className='space-y-3 pt-4 border-t border-divider'>
                                 <div className='flex items-center justify-between'>
                                     <span className='text-sm font-medium text-on-body'>
                                         Variaciones
@@ -721,9 +721,9 @@ export const Modal = ({
                                         </div>
                                         {v.id ? (
                                             <div className='space-y-3'>
-                                                <div className='grid grid-cols-3 gap-x-3'>
+                                                <div className='grid grid-cols-1 md:grid-cols-3 gap-x-3 gap-y-3'>
                                                     <section>
-                                                        <label className='block text-xs font-medium text-on-body mb-1'>
+                                                        <label className='block text-sm font-medium text-on-body mb-1'>
                                                             Nombre
                                                         </label>
                                                         <input
@@ -737,11 +737,11 @@ export const Modal = ({
                                                                     e.target.value,
                                                                 )
                                                             }
-                                                            className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                            className='w-full px-4 py-3 border border-divider rounded-md focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                                                         />
                                                     </section>
                                                     <section>
-                                                        <label className='block text-xs font-medium text-on-body mb-1'>
+                                                        <label className='block text-sm font-medium text-on-body mb-1'>
                                                             SKU
                                                         </label>
                                                         <input
@@ -759,11 +759,11 @@ export const Modal = ({
                                                                     e.target.value,
                                                                 )
                                                             }
-                                                            className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                            className='w-full px-4 py-3 border border-divider rounded-md focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                                                         />
                                                     </section>
                                                     <section>
-                                                        <label className='block text-xs font-medium text-on-body mb-1'>
+                                                        <label className='block text-sm font-medium text-on-body mb-1'>
                                                             Código de Barras
                                                         </label>
                                                         <input
@@ -777,14 +777,14 @@ export const Modal = ({
                                                                     e.target.value,
                                                                 )
                                                             }
-                                                            className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                            className='w-full px-4 py-3 border border-divider rounded-md focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                                                         />
                                                     </section>
                                                 </div>
                                                 {variableUnitsEnabled && (
                                                     <div className='grid grid-cols-1 gap-x-3'>
                                                         <section>
-                                                            <label className='block text-xs font-medium text-on-body mb-1'>
+                                                            <label className='block text-sm font-medium text-on-body mb-1'>
                                                                 Unidad de Venta
                                                             </label>
                                                             <select
@@ -796,7 +796,7 @@ export const Modal = ({
                                                                         Number(e.target.value),
                                                                     )
                                                                 }
-                                                                className='w-full px-3 py-2 bg-surface border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0 text-on-body'>
+                                                                className='w-full px-4 py-3 bg-surface border border-divider rounded-md focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300 text-on-body'>
                                                                 {baseUnits.map((u) => (
                                                                     <option
                                                                         className='text-on-body'
@@ -809,9 +809,9 @@ export const Modal = ({
                                                         </section>
                                                     </div>
                                                 )}
-                                                <div className='grid grid-cols-3 gap-x-3'>
+                                                <div className='grid grid-cols-1 md:grid-cols-3 gap-x-3 gap-y-3'>
                                                     <section>
-                                                        <label className='block text-xs font-medium text-on-body mb-1'>
+                                                        <label className='block text-sm font-medium text-on-body mb-1'>
                                                             Costo Unitario
                                                         </label>
                                                         <input
@@ -826,11 +826,11 @@ export const Modal = ({
                                                                     e.target.value,
                                                                 )
                                                             }
-                                                            className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                            className='w-full px-4 py-3 border border-divider rounded-md focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                                                         />
                                                     </section>
                                                     <section>
-                                                        <label className='block text-xs font-medium text-on-body mb-1'>
+                                                        <label className='block text-sm font-medium text-on-body mb-1'>
                                                             Precio Unitario
                                                         </label>
                                                         <input
@@ -845,12 +845,12 @@ export const Modal = ({
                                                                     e.target.value,
                                                                 )
                                                             }
-                                                            className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                            className='w-full px-4 py-3 border border-divider rounded-md focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                                                         />
                                                     </section>
                                                     {v.track_stock !== false && (
                                                         <section>
-                                                            <label className='block text-xs font-medium text-on-body mb-1'>
+                                                            <label className='block text-sm font-medium text-on-body mb-1'>
                                                                 Stock Mínimo
                                                             </label>
                                                             <input
@@ -873,16 +873,16 @@ export const Modal = ({
                                                                               ),
                                                                     )
                                                                 }
-                                                                className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                                className='w-full px-4 py-3 border border-divider rounded-md focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                                                             />
                                                         </section>
                                                     )}
                                                 </div>
                                             </div>
                                         ) : (
-                                            <div className='grid grid-cols-2 gap-x-3 gap-y-3'>
-                                                <section className='col-span-2'>
-                                                    <label className='block text-xs font-medium text-on-body mb-1'>
+                                            <div className='grid grid-cols-1 md:grid-cols-2 gap-x-3 gap-y-3'>
+                                                <section className='md:col-span-2'>
+                                                    <label className='block text-sm font-medium text-on-body mb-1'>
                                                         Nombre de la Variación
                                                     </label>
                                                     <input
@@ -896,11 +896,11 @@ export const Modal = ({
                                                                 e.target.value,
                                                             )
                                                         }
-                                                        className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                        className='w-full px-4 py-3 border border-divider rounded-md focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                                                     />
                                                 </section>
                                                 <section>
-                                                    <label className='block text-xs font-medium text-on-body mb-1'>
+                                                    <label className='block text-sm font-medium text-on-body mb-1'>
                                                         SKU
                                                     </label>
                                                     <input
@@ -914,11 +914,11 @@ export const Modal = ({
                                                                 e.target.value,
                                                             )
                                                         }
-                                                        className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                        className='w-full px-4 py-3 border border-divider rounded-md focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                                                     />
                                                 </section>
                                                 <section>
-                                                    <label className='block text-xs font-medium text-on-body mb-1'>
+                                                    <label className='block text-sm font-medium text-on-body mb-1'>
                                                         Código de Barras
                                                     </label>
                                                     <input
@@ -932,12 +932,12 @@ export const Modal = ({
                                                                 e.target.value,
                                                             )
                                                         }
-                                                        className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                        className='w-full px-4 py-3 border border-divider rounded-md focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                                                     />
                                                 </section>
                                                 {variableUnitsEnabled && (
-                                                    <section className='col-span-2'>
-                                                        <label className='block text-xs font-medium text-on-body mb-1'>
+                                                    <section className='md:col-span-2'>
+                                                        <label className='block text-sm font-medium text-on-body mb-1'>
                                                             Unidad de Venta
                                                         </label>
                                                         <select
@@ -949,7 +949,7 @@ export const Modal = ({
                                                                     Number(e.target.value),
                                                                 )
                                                             }
-                                                            className='w-full px-3 py-2 bg-surface border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0 text-on-body'>
+                                                            className='w-full px-4 py-3 bg-surface border border-divider rounded-md focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300 text-on-body'>
                                                             {baseUnits.map((u) => (
                                                                 <option
                                                                     className='text-on-body'
@@ -962,7 +962,7 @@ export const Modal = ({
                                                     </section>
                                                 )}
                                                 <section>
-                                                    <label className='block text-xs font-medium text-on-body mb-1'>
+                                                    <label className='block text-sm font-medium text-on-body mb-1'>
                                                         Costo Unitario
                                                     </label>
                                                     <input
@@ -977,11 +977,11 @@ export const Modal = ({
                                                                 e.target.value,
                                                             )
                                                         }
-                                                        className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                        className='w-full px-4 py-3 border border-divider rounded-md focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                                                     />
                                                 </section>
                                                 <section>
-                                                    <label className='block text-xs font-medium text-on-body mb-1'>
+                                                    <label className='block text-sm font-medium text-on-body mb-1'>
                                                         Precio Unitario
                                                     </label>
                                                     <input
@@ -996,12 +996,12 @@ export const Modal = ({
                                                                 e.target.value,
                                                             )
                                                         }
-                                                        className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                        className='w-full px-4 py-3 border border-divider rounded-md focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                                                     />
                                                 </section>
                                                 {v.track_stock !== false && (
                                                     <section>
-                                                        <label className='block text-xs font-medium text-on-body mb-1'>
+                                                        <label className='block text-sm font-medium text-on-body mb-1'>
                                                             Stock Inicial
                                                         </label>
                                                         <input
@@ -1028,13 +1028,13 @@ export const Modal = ({
                                                                           ),
                                                                 )
                                                             }
-                                                            className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                            className='w-full px-4 py-3 border border-divider rounded-md focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                                                         />
                                                     </section>
                                                 )}
                                                 {v.track_stock !== false && (
                                                     <section>
-                                                        <label className='block text-xs font-medium text-on-body mb-1'>
+                                                        <label className='block text-sm font-medium text-on-body mb-1'>
                                                             Stock Mínimo
                                                         </label>
                                                         <input
@@ -1057,7 +1057,7 @@ export const Modal = ({
                                                                           ),
                                                                 )
                                                             }
-                                                            className='w-full px-3 py-2 border border-divider rounded-md text-sm focus:outline-none focus:border-accent focus:ring-0'
+                                                            className='w-full px-4 py-3 border border-divider rounded-md focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                                                         />
                                                     </section>
                                                 )}
