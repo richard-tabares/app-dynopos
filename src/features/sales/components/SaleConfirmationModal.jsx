@@ -72,7 +72,7 @@ export const SaleConfirmationModal = ({
                         </div>
                     </div>
 
-                    <div className='flex flex-col gap-0 text-on-body bg-subtle py-3 rounded-lg shrink'>
+                    <div className='flex flex-col gap-0 text-on-body py-3 shrink'>
                         <div className='flex justify-between items-center py-2 border-y border-divider'>
                             <span className='font-semibold'>Método de Pago:</span>
                             <span className='font-medium'>{paymentMethod}</span>

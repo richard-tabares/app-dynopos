@@ -53,6 +53,47 @@ export const PaymentPieChart = ({ data = [] }) => {
                     <div className='h-full flex items-center justify-center text-faint italic'>Sin datos de métodos de pago</div>
                 )}
             </div>
+
+            {data.length > 0 && (
+                <div className='mt-6 pt-6 border-t border-divider'>
+                    <div className='overflow-x-auto'>
+                        <table className='w-full text-sm overflow-hidden rounded-t-lg'>
+                            <thead>
+                                <tr className='bg-subtle border-b border-divider text-muted uppercase text-xs tracking-wider'>
+                                    <th className='text-left py-3 px-4 font-medium'>Método de Pago</th>
+                                    <th className='text-right py-3 px-4 font-medium'>Cant. Ventas</th>
+                                    <th className='text-right py-3 px-4 font-medium'>Total</th>
+                                    <th className='text-right py-3 px-4 font-medium'>%</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data.map((item, i) => {
+                                    const pct = total > 0 ? ((item.total_amount / total) * 100).toFixed(1) : 0
+                                    return (
+                                        <tr key={i} className='border-b border-divider-light hover:bg-hover'>
+                                            <td className='py-3 px-4 font-medium text-on-surface'>
+                                                <span className='flex items-center gap-2'>
+                                                    <span className='w-2.5 h-2.5 rounded-full shrink-0' style={{ backgroundColor: COLORS[i % COLORS.length] }} />
+                                                    {item.payment_method}
+                                                </span>
+                                            </td>
+                                            <td className='py-3 px-4 text-right'>{item.sale_count}</td>
+                                            <td className='py-3 px-4 text-right font-semibold'>{formatCurrency(item.total_amount)}</td>
+                                            <td className='py-3 px-4 text-right text-muted'>{pct}%</td>
+                                        </tr>
+                                    )
+                                })}
+                                <tr className='font-semibold bg-subtle/50'>
+                                    <td className='py-3 px-4 text-on-surface'>Total</td>
+                                    <td className='py-3 px-4 text-right'>{data.reduce((s, item) => s + item.sale_count, 0)}</td>
+                                    <td className='py-3 px-4 text-right text-on-surface'>{formatCurrency(total)}</td>
+                                    <td className='py-3 px-4 text-right text-muted'>100%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            )}
         </section>
     )
 }
