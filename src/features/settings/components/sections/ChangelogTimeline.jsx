@@ -95,7 +95,7 @@ export const ChangelogTimeline = () => {
                                 <section className='space-y-2'>
                                     <button
                                         onClick={() => toggleExpanded(entry.id)}
-                                        className='w-full text-left cursor-pointer group rounded-lg hover:bg-hover/50 transition-colors px-3 py-1 -mx-3 flex items-center gap-3'
+                                        className='w-full text-left cursor-pointer group rounded-lg hover:bg-hover/50 transition-colors px-3 py-4 -mx-3 flex items-center gap-3'
                                     >
                                         <section className='flex-1 min-w-0'>
                                             <section className='flex items-center gap-3 flex-wrap'>
@@ -116,7 +116,7 @@ export const ChangelogTimeline = () => {
                                                     <ReactMarkdown
                                                         remarkPlugins={[remarkBreaks]}
                                                         components={{
-                                                            p: ({ children }) => <p className='my-3'>{children}</p>,
+                                                            p: ({ children }) => <p className='my-4'>{children}</p>,
                                                             h2: ({ children }) => <h2 className='text-base font-semibold text-on-body mt-4 mb-2'>{children}</h2>,
                                                             h3: ({ children }) => <h3 className='text-sm font-semibold text-on-body mt-3 mb-1'>{children}</h3>,
                                                             ul: ({ children }) => <ul className='list-disc pl-5 my-1 space-y-0.5'>{children}</ul>,
