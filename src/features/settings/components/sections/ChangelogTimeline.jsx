@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Sparkles, ArrowUp, Bug, ChevronDown, Megaphone, Loader } from 'lucide-react'
+import { Sparkles, ArrowUp, Bug, ChevronDown, Megaphone, Loader, ZoomIn } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import remarkBreaks from 'remark-breaks'
 import { getChangelog } from '../../helpers/getChangelog'
@@ -139,12 +139,16 @@ export const ChangelogTimeline = () => {
                                                                         className='rounded-lg max-w-full max-h-80 object-contain bg-body my-3'
                                                                     />
                                                                 ) : (
-                                                                    <img
-                                                                        src={src}
-                                                                        alt={alt}
-                                                                        className='rounded-lg max-w-full max-h-80 object-contain bg-body my-3 cursor-zoom-in hover:ring-2 hover:ring-accent/50 transition-all'
-                                                                        onClick={() => setPreviewImage(src)}
-                                                                    />
+                                                                    <section className='relative inline-block my-3 cursor-zoom-in group' onClick={() => setPreviewImage(src)}>
+                                                                        <img
+                                                                            src={src}
+                                                                            alt={alt}
+                                                                            className='rounded-lg max-w-full max-h-80 object-contain bg-body hover:ring-2 hover:ring-accent/50 transition-all'
+                                                                        />
+                                                                        <section className='absolute bottom-1.5 right-1.5 bg-surface/70 backdrop-blur-xs rounded-md p-1 pointer-events-none transition-opacity group-hover:opacity-100 opacity-70'>
+                                                                            <ZoomIn className='w-3.5 h-3.5 text-muted' />
+                                                                        </section>
+                                                                    </section>
                                                                 ),
                                                         }}
                                                     >
