@@ -3,6 +3,7 @@ import { Sparkles, ArrowUp, Bug, ChevronDown, Megaphone, Loader } from 'lucide-r
 import ReactMarkdown from 'react-markdown'
 import remarkBreaks from 'remark-breaks'
 import { getChangelog } from '../../helpers/getChangelog'
+import { ImagePreview } from '../../../../shared/components/ImagePreview'
 
 const typeMeta = {
     feature: { label: 'Nueva Característica', icon: Sparkles, class: 'bg-green-500/10 text-green-600', dotClass: 'bg-green-500 shadow-[0_0_8px] shadow-green-500/50' },
@@ -16,6 +17,7 @@ export const ChangelogTimeline = () => {
     const [entries, setEntries] = useState([])
     const [expandedIds, setExpandedIds] = useState(new Set())
     const [loading, setLoading] = useState(true)
+    const [previewImage, setPreviewImage] = useState(null)
 
     useEffect(() => {
         const load = async () => {
@@ -80,6 +82,7 @@ export const ChangelogTimeline = () => {
     }
 
     return (
+        <>
         <section className='bg-surface rounded-xl border border-outline p-6'>
             <section className='relative'>
                 <section className='absolute left-[5.5px] top-6 bottom-3 w-0.5 bg-divider' />
@@ -139,7 +142,8 @@ export const ChangelogTimeline = () => {
                                                                     <img
                                                                         src={src}
                                                                         alt={alt}
-                                                                        className='rounded-lg max-w-full max-h-80 object-contain bg-body my-3'
+                                                                        className='rounded-lg max-w-full max-h-80 object-contain bg-body my-3 cursor-zoom-in hover:ring-2 hover:ring-accent/50 transition-all'
+                                                                        onClick={() => setPreviewImage(src)}
                                                                     />
                                                                 ),
                                                         }}
@@ -166,5 +170,10 @@ export const ChangelogTimeline = () => {
                 </ul>
             </section>
         </section>
+
+            {previewImage && (
+                <ImagePreview src={previewImage} alt='' onClose={() => setPreviewImage(null)} />
+            )}
+        </>
     )
 }
