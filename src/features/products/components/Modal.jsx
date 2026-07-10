@@ -323,9 +323,10 @@ export const Modal = ({
             title={editProductData.id ? 'Editar Producto' : 'Nuevo Producto'}
             icon={Package}
             size='2xl'>
-            <div className='p-6'>
+            <div className='flex flex-col min-h-full'>
                 <form
-                    className='flex flex-col gap-4'
+                    id='product-form'
+                    className='flex flex-col gap-4 p-6 flex-1 overflow-y-auto scrollbar-none'
                     onSubmit={handleFormSubmit}>
                     <section>
                         <label className='block text-sm font-medium text-on-body mb-2'>
@@ -1116,57 +1117,57 @@ export const Modal = ({
                             </div>
                         </>
                     )}
-                    <section className='flex flex-col gap-3 pt-4 border-t border-divider'>
-                        {editProductData.id &&
-                            onOpenStockAdjust &&
-                            productType === 'simple' &&
-                            formData.track_stock !== false && (
-                                <section className='flex flex-row justify-between gap-3'>
-                                    <div className='w-1/2 px-4 py-3 border border-accent/85 text-accent rounded-md text-sm flex items-center justify-between'>
-                                        <span>Stock actual</span>
-                                        <span className='font-semibold text-accent'>
-                                            {defaultVar?.stock ?? 0}
-                                        </span>
-                                    </div>
-                                    <button
-                                        type='button'
-                                        onClick={() => onOpenStockAdjust()}
-                                        className='w-1/2 flex items-center justify-center gap-2 px-4 py-3 bg-accent/5 border border-accent/85 text-accent hover:bg-hover rounded-lg transition cursor-pointer font-medium'>
-                                        <Settings2 className='w-4 h-4' />
-                                        Ajustar Stock
-                                    </button>
-                                </section>
-                            )}
-                        <div className='sticky bottom-0 bg-surface border-t border-divider pt-4 flex justify-end gap-4'>
-                            <button
-                                type='button'
-                                className='px-4 py-2 border border-outline text-on-body hover:bg-hover font-medium rounded-lg transition cursor-pointer'
-                                onClick={handleOpenModal}>
-                                Cancelar
-                            </button>
-                            <button
-                                type='submit'
-                                disabled={!isFormValid || submitting}
-                                className='px-4 py-2 bg-accent text-surface rounded-lg hover:bg-accent/85 font-medium transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
-                                {submitting ? (
-                                    <>
-                                        <Loader className='w-5 h-5 animate-spin text-surface' />{' '}
-                                        {editProductData.id
-                                            ? 'Actualizando...'
-                                            : 'Guardando...'}
-                                    </>
-                                ) : (
-                                    <>
-                                        <Save className='w-5 h-5' />{' '}
-                                        {editProductData.id
-                                            ? 'Actualizar'
-                                            : 'Guardar'}
-                                    </>
-                                )}
-                            </button>
-                        </div>
-                    </section>
+                    {editProductData.id &&
+                        onOpenStockAdjust &&
+                        productType === 'simple' &&
+                        formData.track_stock !== false && (
+                            <section className='flex flex-row justify-between gap-3'>
+                                <div className='w-1/2 px-4 py-3 border border-accent/85 text-accent rounded-md text-sm flex items-center justify-between'>
+                                    <span>Stock actual</span>
+                                    <span className='font-semibold text-accent'>
+                                        {defaultVar?.stock ?? 0}
+                                    </span>
+                                </div>
+                                <button
+                                    type='button'
+                                    onClick={() => onOpenStockAdjust()}
+                                    className='w-1/2 flex items-center justify-center gap-2 px-4 py-3 bg-accent/5 border border-accent/85 text-accent hover:bg-hover rounded-lg transition cursor-pointer font-medium'>
+                                    <Settings2 className='w-4 h-4' />
+                                    Ajustar Stock
+                                </button>
+                            </section>
+                        )}
                 </form>
+
+                <div className='sticky bottom-0 bg-surface border-t border-divider px-6 py-4 flex justify-end gap-4'>
+                    <button
+                        type='button'
+                        className='px-4 py-2 border border-outline text-on-body hover:bg-hover font-medium rounded-lg transition cursor-pointer'
+                        onClick={handleOpenModal}>
+                        Cancelar
+                    </button>
+                    <button
+                        type='submit'
+                        form='product-form'
+                        disabled={!isFormValid || submitting}
+                        className='px-4 py-2 bg-accent text-surface rounded-lg hover:bg-accent/85 font-medium transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
+                        {submitting ? (
+                            <>
+                                <Loader className='w-5 h-5 animate-spin text-surface' />{' '}
+                                {editProductData.id
+                                    ? 'Actualizando...'
+                                    : 'Guardando...'}
+                            </>
+                        ) : (
+                            <>
+                                <Save className='w-5 h-5' />{' '}
+                                {editProductData.id
+                                    ? 'Actualizar'
+                                    : 'Guardar'}
+                            </>
+                        )}
+                    </button>
+                </div>
             </div>
         </SharedModal>
     )

@@ -32,9 +32,8 @@ export const SaleConfirmationModal = ({
             title='Confirmar Venta'
             icon={CircleDollarSign}
         >
-            <section
-                className='flex flex-col flex-1 overflow-y-auto scrollbar-none max-h-[calc(90dvh-65px)]'>
-                <div className='p-6 flex flex-col flex-1'>
+            <div className='flex flex-col min-h-full'>
+                <div className='p-6 flex-1 overflow-y-auto scrollbar-none'>
                     <p className='text-sm text-muted mb-4 flex-shrink-0'>
                         Revisa los detalles de la venta antes de confirmar.
                     </p>
@@ -130,30 +129,30 @@ export const SaleConfirmationModal = ({
                             </div>
                         )}
                     </div>
-
-                    <div className='flex justify-end gap-4 pt-2 mt-2'>
-                        <button
-                            type='button'
-                            className='px-6 py-3 border border-outline text-on-body hover:bg-hover font-medium rounded-lg transition cursor-pointer'
-                            onClick={onCancel}>
-                            {saleCompleted ? 'Cerrar' : 'Cancelar'}
-                        </button>
-                        <button
-                            type='button'
-                            disabled={loading || saleCompleted || (isEfectivo && (change < 0 || paymentAmount <= 0))}
-                            className='px-6 py-3 bg-accent text-surface rounded-lg hover:bg-accent/85 font-medium transition cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed'
-                            onClick={() => onConfirm(paymentAmount)}>
-                            {loading ? (
-                                <><Loader className='w-5 h-5 animate-spin text-surface' /> Confirmando...</>
-                            ) : saleCompleted ? (
-                                <><CheckCircle className='w-5 h-5' /> Venta Confirmada</>
-                            ) : (
-                                <><CheckCircle className='w-5 h-5' /> Confirmar Venta</>
-                            )}
-                        </button>
-                    </div>
                 </div>
-            </section>
+
+                <div className='sticky bottom-0 bg-surface border-t border-divider px-6 py-4 flex justify-end gap-4'>
+                    <button
+                        type='button'
+                        className='px-6 py-3 border border-outline text-on-body hover:bg-hover font-medium rounded-lg transition cursor-pointer'
+                        onClick={onCancel}>
+                        {saleCompleted ? 'Cerrar' : 'Cancelar'}
+                    </button>
+                    <button
+                        type='button'
+                        disabled={loading || saleCompleted || (isEfectivo && (change < 0 || paymentAmount <= 0))}
+                        className='px-6 py-3 bg-accent text-surface rounded-lg hover:bg-accent/85 font-medium transition cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed'
+                        onClick={() => onConfirm(paymentAmount)}>
+                        {loading ? (
+                            <><Loader className='w-5 h-5 animate-spin text-surface' /> Confirmando...</>
+                        ) : saleCompleted ? (
+                            <><CheckCircle className='w-5 h-5' /> Venta Confirmada</>
+                        ) : (
+                            <><CheckCircle className='w-5 h-5' /> Confirmar Venta</>
+                        )}
+                    </button>
+                </div>
+            </div>
         </Modal>
     )
 }

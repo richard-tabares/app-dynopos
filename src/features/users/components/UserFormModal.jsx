@@ -146,25 +146,13 @@ export const UserFormModal = ({ mode, userData, onClose, onSuccess }) => {
             icon={Users}
             size='xl'
         >
-            <form onSubmit={handleSubmit} className='p-6 flex flex-col gap-4'>
-                {isEdit ? (
-                    <section>
-                        <label className='block text-sm font-medium text-on-body mb-1'>
-                            Nombre
-                        </label>
-                        <input
-                            type='text'
-                            name='display_name'
-                            value={formData.display_name}
-                            onChange={handleChange}
-                            autoFocus={!isMobileDevice}
-                            className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
-                            placeholder='Nombre del usuario'
-                        />
-                    </section>
-                ) : (
-                    <section className='grid grid-cols-2 gap-4'>
-                        <section className='flex flex-col gap-2'>
+            <div className='flex flex-col min-h-full'>
+                <form
+                    id='user-form'
+                    onSubmit={handleSubmit}
+                    className='p-6 flex flex-col gap-4 flex-1 overflow-y-auto scrollbar-none'>
+                    {isEdit ? (
+                        <section>
                             <label className='block text-sm font-medium text-on-body mb-1'>
                                 Nombre
                             </label>
@@ -178,198 +166,215 @@ export const UserFormModal = ({ mode, userData, onClose, onSuccess }) => {
                                 placeholder='Nombre del usuario'
                             />
                         </section>
-                        <section className='flex flex-col gap-2'>
-                            <label className='block text-sm font-medium text-on-body mb-1'>
-                                Correo electrónico{' '}
-                                <span className='text-red-500 font-bold'>*</span>
-                            </label>
-                            <input
-                                type='email'
-                                name='email'
-                                value={formData.email}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                className={`w-full px-4 py-3 border rounded-md transition-all duration-300 focus:outline-none ${
-                                    touched.email && errors.email
-                                        ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-0'
-                                        : 'border-divider focus:border-accent focus:ring-0'
-                                }`}
-                                placeholder='correo@ejemplo.com'
-                            />
-                            {touched.email && errors.email && (
-                                <p className='text-xs font-semibold text-red-500'>
-                                    {errors.email}
-                                </p>
-                            )}
-                        </section>
-                    </section>
-                )}
-
-                {!isEdit && <section className='grid grid-cols-2 gap-4'>
+                    ) : (
+                        <section className='grid grid-cols-2 gap-4'>
                             <section className='flex flex-col gap-2'>
                                 <label className='block text-sm font-medium text-on-body mb-1'>
-                                    Contraseña{' '}
+                                    Nombre
+                                </label>
+                                <input
+                                    type='text'
+                                    name='display_name'
+                                    value={formData.display_name}
+                                    onChange={handleChange}
+                                    autoFocus={!isMobileDevice}
+                                    className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
+                                    placeholder='Nombre del usuario'
+                                />
+                            </section>
+                            <section className='flex flex-col gap-2'>
+                                <label className='block text-sm font-medium text-on-body mb-1'>
+                                    Correo electrónico{' '}
                                     <span className='text-red-500 font-bold'>*</span>
                                 </label>
-                                <section className='relative flex items-center'>
-                                    <input
-                                        type={showPassword ? 'text' : 'password'}
-                                        name='password'
-                                        value={formData.password}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        placeholder='Mínimo 8 caracteres (letras y números)'
-                                        className={`w-full px-4 py-3 pr-10 border rounded-md transition-all duration-300 focus:outline-none ${
-                                            touched.password && errors.password
-                                                ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-0'
-                                                : 'border-divider focus:border-accent focus:ring-0'
-                                        }`}
-                                    />
-                                    <button
-                                        type='button'
-                                        className='absolute right-3 bg-transparent border-none cursor-pointer text-lg p-1 text-accent hover:scale-110 transition-transform duration-300'
-                                        onClick={() => setShowPassword(!showPassword)}>
-                                        {showPassword ? <Eye /> : <EyeClosed />}
-                                    </button>
-                                </section>
-                                {touched.password && errors.password && (
+                                <input
+                                    type='email'
+                                    name='email'
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    className={`w-full px-4 py-3 border rounded-md transition-all duration-300 focus:outline-none ${
+                                        touched.email && errors.email
+                                            ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-0'
+                                            : 'border-divider focus:border-accent focus:ring-0'
+                                    }`}
+                                    placeholder='correo@ejemplo.com'
+                                />
+                                {touched.email && errors.email && (
                                     <p className='text-xs font-semibold text-red-500'>
-                                        {errors.password}
+                                        {errors.email}
                                     </p>
-                                )}
-                                {formData.password && !errors.password && (
-                                    <section className='bg-accent/10 border-l-4 border-accent p-3 rounded flex flex-col gap-1.5'>
-                                        <p className='text-xs font-semibold text-on-surface'>
-                                            Requisitos cumplidos:
-                                        </p>
-                                        <section
-                                            className={`text-xs transition-colors duration-300 ${/[a-zA-Z]/.test(formData.password) ? 'text-green-600 font-semibold' : 'text-muted'}`}>
-                                            ✓ Contiene letras
-                                        </section>
-                                        <section
-                                            className={`text-xs transition-colors duration-300 ${/[0-9]/.test(formData.password) ? 'text-green-600 font-semibold' : 'text-muted'}`}>
-                                            ✓ Contiene números
-                                        </section>
-                                        <section
-                                            className={`text-xs transition-colors duration-300 ${formData.password.length >= 8 ? 'text-green-600 font-semibold' : 'text-muted'}`}>
-                                            ✓ Mínimo 8 caracteres
-                                        </section>
-                                    </section>
                                 )}
                             </section>
+                        </section>
+                    )}
 
-                            <section className='flex flex-col gap-2'>
-                                <label className='block text-sm font-medium text-on-body mb-1'>
-                                    Confirmar contraseña{' '}
-                                    <span className='text-red-500 font-bold'>*</span>
-                                </label>
-                                <section className='relative flex items-center'>
-                                    <input
-                                        type={showConfirmPassword ? 'text' : 'password'}
-                                        name='confirm_password'
-                                        value={formData.confirm_password}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        placeholder='Confirma tu contraseña'
-                                        className={`w-full px-4 py-3 pr-10 border rounded-md transition-all duration-300 focus:outline-none ${
-                                            touched.confirm_password &&
-                                            errors.confirm_password
-                                                ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-0'
-                                                : 'border-divider focus:border-accent focus:ring-0'
-                                        }`}
-                                    />
-                                    <button
-                                        type='button'
-                                        className='absolute right-3 bg-transparent border-none cursor-pointer text-lg p-1 text-accent hover:scale-110 transition-transform duration-300'
-                                        onClick={() =>
-                                            setShowConfirmPassword(!showConfirmPassword)
-                                        }>
-                                        {showConfirmPassword ? <Eye /> : <EyeClosed />}
-                                    </button>
-                                </section>
-                                {touched.confirm_password && errors.confirm_password && (
-                                    <p className='text-xs font-semibold text-red-500'>
-                                        {errors.confirm_password}
-                                    </p>
-                                )}
-                                {formData.confirm_password &&
-                                    formData.password === formData.confirm_password &&
-                                    !errors.confirm_password && (
-                                        <p className='text-xs font-semibold text-green-600'>
-                                            ✓ Las contraseñas coinciden
+                    {!isEdit && <section className='grid grid-cols-2 gap-4'>
+                                <section className='flex flex-col gap-2'>
+                                    <label className='block text-sm font-medium text-on-body mb-1'>
+                                        Contraseña{' '}
+                                        <span className='text-red-500 font-bold'>*</span>
+                                    </label>
+                                    <section className='relative flex items-center'>
+                                        <input
+                                            type={showPassword ? 'text' : 'password'}
+                                            name='password'
+                                            value={formData.password}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            placeholder='Mínimo 8 caracteres (letras y números)'
+                                            className={`w-full px-4 py-3 pr-10 border rounded-md transition-all duration-300 focus:outline-none ${
+                                                touched.password && errors.password
+                                                    ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-0'
+                                                    : 'border-divider focus:border-accent focus:ring-0'
+                                            }`}
+                                        />
+                                        <button
+                                            type='button'
+                                            className='absolute right-3 bg-transparent border-none cursor-pointer text-lg p-1 text-accent hover:scale-110 transition-transform duration-300'
+                                            onClick={() => setShowPassword(!showPassword)}>
+                                            {showPassword ? <Eye /> : <EyeClosed />}
+                                        </button>
+                                    </section>
+                                    {touched.password && errors.password && (
+                                        <p className='text-xs font-semibold text-red-500'>
+                                            {errors.password}
                                         </p>
                                     )}
+                                    {formData.password && !errors.password && (
+                                        <section className='bg-accent/10 border-l-4 border-accent p-3 rounded flex flex-col gap-1.5'>
+                                            <p className='text-xs font-semibold text-on-surface'>
+                                                Requisitos cumplidos:
+                                            </p>
+                                            <section
+                                                className={`text-xs transition-colors duration-300 ${/[a-zA-Z]/.test(formData.password) ? 'text-green-600 font-semibold' : 'text-muted'}`}>
+                                                ✓ Contiene letras
+                                            </section>
+                                            <section
+                                                className={`text-xs transition-colors duration-300 ${/[0-9]/.test(formData.password) ? 'text-green-600 font-semibold' : 'text-muted'}`}>
+                                                ✓ Contiene números
+                                            </section>
+                                            <section
+                                                className={`text-xs transition-colors duration-300 ${formData.password.length >= 8 ? 'text-green-600 font-semibold' : 'text-muted'}`}>
+                                                ✓ Mínimo 8 caracteres
+                                            </section>
+                                        </section>
+                                    )}
+                                </section>
+
+                                <section className='flex flex-col gap-2'>
+                                    <label className='block text-sm font-medium text-on-body mb-1'>
+                                        Confirmar contraseña{' '}
+                                        <span className='text-red-500 font-bold'>*</span>
+                                    </label>
+                                    <section className='relative flex items-center'>
+                                        <input
+                                            type={showConfirmPassword ? 'text' : 'password'}
+                                            name='confirm_password'
+                                            value={formData.confirm_password}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            placeholder='Confirma tu contraseña'
+                                            className={`w-full px-4 py-3 pr-10 border rounded-md transition-all duration-300 focus:outline-none ${
+                                                touched.confirm_password &&
+                                                errors.confirm_password
+                                                    ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-0'
+                                                    : 'border-divider focus:border-accent focus:ring-0'
+                                            }`}
+                                        />
+                                        <button
+                                            type='button'
+                                            className='absolute right-3 bg-transparent border-none cursor-pointer text-lg p-1 text-accent hover:scale-110 transition-transform duration-300'
+                                            onClick={() =>
+                                                setShowConfirmPassword(!showConfirmPassword)
+                                            }>
+                                            {showConfirmPassword ? <Eye /> : <EyeClosed />}
+                                        </button>
+                                    </section>
+                                    {touched.confirm_password && errors.confirm_password && (
+                                        <p className='text-xs font-semibold text-red-500'>
+                                            {errors.confirm_password}
+                                        </p>
+                                    )}
+                                    {formData.confirm_password &&
+                                        formData.password === formData.confirm_password &&
+                                        !errors.confirm_password && (
+                                            <p className='text-xs font-semibold text-green-600'>
+                                                ✓ Las contraseñas coinciden
+                                            </p>
+                                        )}
+                                </section>
+                            </section>
+                    }
+
+                    <section>
+                        <label className='block text-sm font-medium text-on-body mb-1'>
+                            Rol
+                        </label>
+                        <select
+                            name='role'
+                            value={formData.role}
+                            onChange={(e) => {
+                                handleChange(e)
+                                setPermissions(getDefaultPermissions(e.target.value))
+                            }}
+                            className='w-full px-4 py-3 bg-surface border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0 text-on-body'>
+                            {roles.map((r) => (
+                                <option className='text-on-body' key={r.value} value={r.value}>
+                                    {r.label}
+                                </option>
+                            ))}
+                        </select>
+                    </section>
+
+                    <section>
+                        <label className='block text-sm font-medium text-on-body mb-1 flex items-center gap-1.5'>
+                            <ShieldCheck className='w-4 h-4 text-accent' />
+                            Permisos por sección
+                        </label>
+                        <section className='border border-divider rounded-md px-3 py-1 bg-body/20'>
+                            <PermissionSelector
+                                value={permissions}
+                                onChange={setPermissions}
+                                role={formData.role}
+                            />
+                        </section>
+                    </section>
+
+                    {isEdit && showDeleteConfirm ? (
+                        <section className='bg-danger/5 border border-danger/20 rounded-lg p-4 space-y-3'>
+                            <p className='text-sm font-medium text-danger text-center'>
+                                ¿Estás seguro de eliminar este usuario?
+                            </p>
+                            <section className='flex gap-3'>
+                                <button
+                                    type='button'
+                                    onClick={() => setShowDeleteConfirm(false)}
+                                    className='flex-1 px-4 py-2 border border-outline text-on-body hover:bg-hover font-medium rounded-lg transition cursor-pointer'>
+                                    Cancelar
+                                </button>
+                                <button
+                                    type='button'
+                                    onClick={handleDelete}
+                                    disabled={deleting}
+                                    className='flex-1 px-4 py-2 bg-danger text-white rounded-lg hover:bg-danger/85 font-medium transition cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2'>
+                                    {deleting ? <Loader className='w-5 h-5 animate-spin text-surface' /> : <Trash2 className='w-4 h-4' />}
+                                    Eliminar
+                                </button>
                             </section>
                         </section>
-                }
+                    ) : isEdit ? (
+                        <button
+                            type='button'
+                            onClick={() => setShowDeleteConfirm(true)}
+                            className='w-full flex items-center justify-center gap-2 px-4 py-3 border border-danger/30 text-danger hover:bg-danger/5 rounded-lg transition cursor-pointer font-medium'>
+                            <Trash2 className='w-4 h-4' />
+                            Eliminar este usuario
+                        </button>
+                    ) : null}
+                </form>
 
-                <section>
-                    <label className='block text-sm font-medium text-on-body mb-1'>
-                        Rol
-                    </label>
-                    <select
-                        name='role'
-                        value={formData.role}
-                        onChange={(e) => {
-                            handleChange(e)
-                            setPermissions(getDefaultPermissions(e.target.value))
-                        }}
-                        className='w-full px-4 py-3 bg-surface border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0 text-on-body'>
-                        {roles.map((r) => (
-                            <option className='text-on-body' key={r.value} value={r.value}>
-                                {r.label}
-                            </option>
-                        ))}
-                    </select>
-                </section>
-
-                <section>
-                    <label className='block text-sm font-medium text-on-body mb-1 flex items-center gap-1.5'>
-                        <ShieldCheck className='w-4 h-4 text-accent' />
-                        Permisos por sección
-                    </label>
-                    <section className='border border-divider rounded-md px-3 py-1 bg-body/20'>
-                        <PermissionSelector
-                            value={permissions}
-                            onChange={setPermissions}
-                            role={formData.role}
-                        />
-                    </section>
-                </section>
-
-                {isEdit && showDeleteConfirm ? (
-                    <section className='bg-danger/5 border border-danger/20 rounded-lg p-4 space-y-3'>
-                        <p className='text-sm font-medium text-danger text-center'>
-                            ¿Estás seguro de eliminar este usuario?
-                        </p>
-                        <section className='flex gap-3'>
-                            <button
-                                type='button'
-                                onClick={() => setShowDeleteConfirm(false)}
-                                className='flex-1 px-4 py-2 border border-outline text-on-body hover:bg-hover font-medium rounded-lg transition cursor-pointer'>
-                                Cancelar
-                            </button>
-                            <button
-                                type='button'
-                                onClick={handleDelete}
-                                disabled={deleting}
-                                className='flex-1 px-4 py-2 bg-danger text-white rounded-lg hover:bg-danger/85 font-medium transition cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2'>
-                                {deleting ? <Loader className='w-5 h-5 animate-spin text-surface' /> : <Trash2 className='w-4 h-4' />}
-                                Eliminar
-                            </button>
-                        </section>
-                    </section>
-                ) : isEdit ? (
-                    <button
-                        type='button'
-                        onClick={() => setShowDeleteConfirm(true)}
-                        className='w-full flex items-center justify-center gap-2 px-4 py-3 border border-danger/30 text-danger hover:bg-danger/5 rounded-lg transition cursor-pointer font-medium'>
-                        <Trash2 className='w-4 h-4' />
-                        Eliminar este usuario
-                    </button>
-                ) : null}
-
-                <section className='flex justify-end gap-4 pt-4'>
+                <div className='sticky bottom-0 bg-surface border-t border-divider px-6 py-4 flex justify-end gap-4'>
                     <button
                         type='button'
                         className='px-4 py-2 border border-outline text-on-body hover:bg-hover font-medium rounded-lg transition cursor-pointer'
@@ -378,14 +383,15 @@ export const UserFormModal = ({ mode, userData, onClose, onSuccess }) => {
                     </button>
                     <button
                         type='submit'
+                        form='user-form'
                         disabled={!isFormValid || submitting}
                         className='px-4 py-2 bg-accent text-surface rounded-lg hover:bg-accent/85 font-medium transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
                         {submitting
                             ? <><Loader className='w-5 h-5 animate-spin text-surface' /> Guardando...</>
                             : <><Save className='w-5 h-5' /> {isEdit ? 'Guardar' : 'Crear Usuario'}</>}
                     </button>
-                </section>
-            </form>
+                </div>
+            </div>
         </Modal>
     )
 }

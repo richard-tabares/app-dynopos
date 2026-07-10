@@ -163,7 +163,7 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
 
     return (
         <section
-            className='fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex flex-col items-center justify-center z-[70] p-4'
+            className='fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex flex-col items-center justify-center z-[70] max-lg:p-2 p-4'
             onClick={onClose}>
             <PrintTicket
                 printRef={printRef}
@@ -171,7 +171,7 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
                 business={business}
                 ticketFooter={ticketFooter}>
                 <section
-                    className='bg-surface border border-outline rounded-xl w-full max-w-sm relative overflow-y-auto scrollbar-none max-h-[85dvh]'
+                    className='bg-surface border border-outline rounded-xl w-full max-w-sm relative flex flex-col max-h-[85dvh]'
                     onClick={(e) => e.stopPropagation()}
                     onKeyDown={(e) =>
                         e.key === 'Enter' && printRef.current?.()
@@ -188,120 +188,122 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
                         </button>
                     </section>
 
-                    <div className='p-6 font-mono text-sm'>
-                        <div className='text-center mb-4 border-b border-dashed border-outline pb-2'>
-                            <h2 className='text-lg font-bold uppercase'>
-                                {business?.business_name}
-                            </h2>
-                            <p className='text-[11px] text-muted'>
-                                Comprobante No Fiscal
-                            </p>
-                        </div>
-
-                        <div className='space-y-1 mb-4 text-[11px]'>
-                            <div className='flex justify-between gap-1'>
-                                <span className='text-muted uppercase shrink-0'>
-                                    Orden:
-                                </span>
-                                <span className='font-bold text-on-surface truncate'>
-                                    #
-                                    {String(
-                                        sale.ticketNumber || sale.id,
-                                    ).padStart(4, '0')}
-                                </span>
+                    <div className='flex-1 overflow-y-auto scrollbar-none'>
+                        <div className='p-6 font-mono text-sm'>
+                            <div className='text-center mb-4 border-b border-dashed border-outline pb-2'>
+                                <h2 className='text-lg font-bold uppercase'>
+                                    {business?.business_name}
+                                </h2>
+                                <p className='text-[11px] text-muted'>
+                                    Comprobante No Fiscal
+                                </p>
                             </div>
-                            <div className='flex justify-between gap-1 items-center'>
-                                <span className='text-muted uppercase shrink-0'>
-                                    Fecha:
-                                </span>
-                                <div className='flex items-center gap-1'>
-                                    <span className='relative w-5 h-5 flex items-center justify-center no-print'>
-                                        <Calendar
-                                            className='w-3.5 h-3.5 cursor-pointer hover:text-accent z-10'
+
+                            <div className='space-y-1 mb-4 text-[11px]'>
+                                <div className='flex justify-between gap-1'>
+                                    <span className='text-muted uppercase shrink-0'>
+                                        Orden:
+                                    </span>
+                                    <span className='font-bold text-on-surface truncate'>
+                                        #
+                                        {String(
+                                            sale.ticketNumber || sale.id,
+                                        ).padStart(4, '0')}
+                                    </span>
+                                </div>
+                                <div className='flex justify-between gap-1 items-center'>
+                                    <span className='text-muted uppercase shrink-0'>
+                                        Fecha:
+                                    </span>
+                                    <div className='flex items-center gap-1'>
+                                        <span className='relative w-5 h-5 flex items-center justify-center no-print'>
+                                            <Calendar
+                                                className='w-3.5 h-3.5 cursor-pointer hover:text-accent z-10'
+                                                onClick={() =>
+                                                    dateInputRef.current?.showPicker()
+                                                }
+                                            />
+                                            <input
+                                                ref={dateInputRef}
+                                                type='date'
+                                                value={currentSaleDate}
+                                                onChange={(e) => {
+                                                    handleDateSave(e.target.value)
+                                                }}
+                                                className='absolute inset-0 opacity-0 border-0'
+                                            />
+                                        </span>
+                                        <span
+                                            className='text-on-surface font-medium truncate z-10 hover:text-accent cursor-pointer'
                                             onClick={() =>
                                                 dateInputRef.current?.showPicker()
-                                            }
-                                        />
-                                        <input
-                                            ref={dateInputRef}
-                                            type='date'
-                                            value={currentSaleDate}
-                                            onChange={(e) => {
-                                                handleDateSave(e.target.value)
-                                            }}
-                                            className='absolute inset-0 opacity-0 border-0'
-                                        />
+                                            }>
+                                            {formatDate(currentSaleDate)}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className='flex justify-between gap-1'>
+                                    <span className='text-muted uppercase shrink-0'>
+                                        Pago:
                                     </span>
-                                    <span
-                                        className='text-on-surface font-medium truncate z-10 hover:text-accent cursor-pointer'
-                                        onClick={() =>
-                                            dateInputRef.current?.showPicker()
-                                        }>
-                                        {formatDate(currentSaleDate)}
+                                    <span className='text-on-surface font-medium capitalize truncate'>
+                                        {sale.paymentMethod}
+                                    </span>
+                                </div>
+                                <div className='flex justify-between gap-1'>
+                                    <span className='text-muted uppercase shrink-0'>
+                                        Vendedor:
+                                    </span>
+                                    <span className='text-on-surface font-medium truncate'>
+                                        {sale.salesperson || '—'}
                                     </span>
                                 </div>
                             </div>
-                            <div className='flex justify-between gap-1'>
-                                <span className='text-muted uppercase shrink-0'>
-                                    Pago:
-                                </span>
-                                <span className='text-on-surface font-medium capitalize truncate'>
-                                    {sale.paymentMethod}
-                                </span>
-                            </div>
-                            <div className='flex justify-between gap-1'>
-                                <span className='text-muted uppercase shrink-0'>
-                                    Vendedor:
-                                </span>
-                                <span className='text-on-surface font-medium truncate'>
-                                    {sale.salesperson || '—'}
-                                </span>
-                            </div>
-                        </div>
 
-                        <div className='border-t border-b border-dashed border-outline py-2 my-2'>
-                            <div className='flex justify-between font-bold text-[10px] uppercase mb-1 text-muted'>
-                                <span>Detalle</span>
-                                <span className='text-right'>Total</span>
-                            </div>
-                            <div className='space-y-3'>
-                                {sale.items.map((item, index) => (
-                                    <div
-                                        key={index}
-                                        className='flex justify-between items-start gap-1'>
-                                        <div className='flex-1 min-w-0'>
-                                            <p className='text-on-surface font-bold leading-tight uppercase text-[11px] break-words'>
-                                                {item.variation_name && item.variation_name !== 'Default' ? `${item.name} - ${item.variation_name}` : item.name}
-                                            </p>
-                                            <p className='text-[10px] text-on-body mt-0.5'>
-                                                {(() => {
-                                                    const unitId = item.sold_in_unit_id || item.soldInUnitId
-                                                    const unit = item.displayUnit || (unitId ? unitsOfMeasure.find(u => u.id === unitId)?.short_name : '') || ''
-                                                    return `${item.quantity}${unit ? ` ${unit}` : ''} x ${formatCurrency(item.price)}`
-                                                })()}
-                                            </p>
+                            <div className='border-t border-b border-dashed border-outline py-2 my-2'>
+                                <div className='flex justify-between font-bold text-[10px] uppercase mb-1 text-muted'>
+                                    <span>Detalle</span>
+                                    <span className='text-right'>Total</span>
+                                </div>
+                                <div className='space-y-3'>
+                                    {sale.items.map((item, index) => (
+                                        <div
+                                            key={index}
+                                            className='flex justify-between items-start gap-1'>
+                                            <div className='flex-1 min-w-0'>
+                                                <p className='text-on-surface font-bold leading-tight uppercase text-[11px] break-words'>
+                                                    {item.variation_name && item.variation_name !== 'Default' ? `${item.name} - ${item.variation_name}` : item.name}
+                                                </p>
+                                                <p className='text-[10px] text-on-body mt-0.5'>
+                                                    {(() => {
+                                                        const unitId = item.sold_in_unit_id || item.soldInUnitId
+                                                        const unit = item.displayUnit || (unitId ? unitsOfMeasure.find(u => u.id === unitId)?.short_name : '') || ''
+                                                        return `${item.quantity}${unit ? ` ${unit}` : ''} x ${formatCurrency(item.price)}`
+                                                    })()}
+                                                </p>
+                                            </div>
+                                            <span className='text-on-surface font-bold shrink-0 text-[11px]'>
+                                                {formatCurrency(item.subtotal)}
+                                            </span>
                                         </div>
-                                        <span className='text-on-surface font-bold shrink-0 text-[11px]'>
-                                            {formatCurrency(item.subtotal)}
-                                        </span>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
-                        </div>
 
-                        <div className='flex justify-between text-base font-bold text-on-surface pt-1'>
-                            <span>TOTAL</span>
-                            <span>{formatCurrency(sale.total)}</span>
-                        </div>
+                            <div className='flex justify-between text-base font-bold text-on-surface pt-1'>
+                                <span>TOTAL</span>
+                                <span>{formatCurrency(sale.total)}</span>
+                            </div>
 
-                        <div className='text-center mt-6 pt-2 border-t border-dashed border-outline'>
-                            <p className='text-[9px] text-faint tracking-widest'>
-                                {ticketFooter || '¡Gracias por su compra!'}
-                            </p>
+                            <div className='text-center mt-6 pt-2 border-t border-dashed border-outline'>
+                                <p className='text-[9px] text-faint tracking-widest'>
+                                    {ticketFooter || '¡Gracias por su compra!'}
+                                </p>
+                            </div>
                         </div>
                     </div>
 
-                    <div className='p-4 bg-subtle border-t border-divider-light flex gap-2 no-print'>
+                    <div className='sticky bottom-0 bg-surface border-t border-divider-light px-6 py-4 flex gap-2 no-print'>
                         <button
                             className='flex-1 flex items-center justify-center gap-2 bg-accent text-surface py-2 rounded-lg font-bold hover:bg-accent/85 transition text-sm cursor-pointer'
                             onClick={() => printRef.current?.()}>

@@ -93,7 +93,8 @@ export const ReturnModal = ({ isOpen, sale, onClose, onConfirm }) => {
             icon={RotateCcw}
             iconColor='text-red-600'
         >
-            <div className='p-6 overflow-y-auto flex-1 scrollbar-none max-h-[calc(90dvh-65px)]'>
+            <div className='flex flex-col min-h-full'>
+                <div className='p-6 flex-1 overflow-y-auto scrollbar-none'>
                 <p className='text-sm font-semibold text-on-body mb-3'>
                     Selecciona los productos a devolver:
                 </p>
@@ -219,24 +220,25 @@ export const ReturnModal = ({ isOpen, sale, onClose, onConfirm }) => {
                     placeholder='Motivo de la devolución (obligatorio)'
                     className='w-full border border-divider rounded-md py-3 px-4 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300 resize-none h-20 mt-4'
                 />
-            </div>
+                </div>
 
-            <div className='px-6 pb-6 flex gap-3 border-t border-divider pt-4'>
-                <button
-                    onClick={onClose}
-                    className='flex-1 py-2.5 border border-outline text-on-body rounded-lg font-medium hover:bg-hover transition text-sm cursor-pointer'>
-                    Cancelar
-                </button>
-                <button
-                    onClick={handleConfirm}
-                    className='flex-1 py-2.5 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 transition text-sm disabled:opacity-50 flex items-center justify-center gap-2 disabled:cursor-not-allowed cursor-pointer'
-                    disabled={
-                        !returnReason.trim() || !hasSelectedItems || isReturning
-                    }>
-                    {isReturning ? <><Loader className='w-5 h-5 animate-spin text-accent' /> Devolviendo...</> : `Devolver ($${new Intl.NumberFormat('es-CO', {
-                        maximumFractionDigits: 0,
-                    }).format(totalReturn)})`}
-                </button>
+                <div className='sticky bottom-0 bg-surface border-t border-divider px-6 py-4 flex gap-3'>
+                    <button
+                        onClick={onClose}
+                        className='flex-1 py-2.5 border border-outline text-on-body rounded-lg font-medium hover:bg-hover transition text-sm cursor-pointer'>
+                        Cancelar
+                    </button>
+                    <button
+                        onClick={handleConfirm}
+                        className='flex-1 py-2.5 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 transition text-sm disabled:opacity-50 flex items-center justify-center gap-2 disabled:cursor-not-allowed cursor-pointer'
+                        disabled={
+                            !returnReason.trim() || !hasSelectedItems || isReturning
+                        }>
+                        {isReturning ? <><Loader className='w-5 h-5 animate-spin text-accent' /> Devolviendo...</> : `Devolver ($${new Intl.NumberFormat('es-CO', {
+                            maximumFractionDigits: 0,
+                        }).format(totalReturn)})`}
+                    </button>
+                </div>
             </div>
         </Modal>
     )

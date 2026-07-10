@@ -80,9 +80,10 @@ export const VariationEditModal = ({
             title='Editar Variación'
             icon={Layers}
             size='2xl'>
-            <div className='p-6'>
+            <div className='flex flex-col min-h-full'>
                 <form
-                    className='flex flex-col gap-4'
+                    id='variation-edit-form'
+                    className='flex flex-col gap-4 p-6 flex-1 overflow-y-auto scrollbar-none'
                     onSubmit={handleSubmit}>
                     <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                         <section>
@@ -221,31 +222,33 @@ export const VariationEditModal = ({
                                 </button>
                             </section>
                         )}
-                        <div className='flex justify-end gap-4 border-t border-divider pt-4'>
-                            <button
-                                type='button'
-                                className='px-4 py-2 border border-outline text-on-body hover:bg-hover font-medium rounded-lg transition cursor-pointer'
-                                onClick={onClose}>
-                                Cancelar
-                            </button>
-                            <button
-                                type='submit'
-                                disabled={!isFormValid || submitting}
-                                className='px-4 py-2 bg-accent text-surface rounded-lg hover:bg-accent/85 font-medium transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
-                                {submitting ? (
-                                    <>
-                                        <Loader className='w-5 h-5 animate-spin text-surface' />{' '}
-                                        Guardando...
-                                    </>
-                                ) : (
-                                    <>
-                                        <Save className='w-5 h-5' /> Guardar
-                                    </>
-                                )}
-                            </button>
-                        </div>
                     </section>
                 </form>
+
+                <div className='sticky bottom-0 bg-surface border-t border-divider px-6 py-4 flex justify-end gap-4'>
+                    <button
+                        type='button'
+                        className='px-4 py-2 border border-outline text-on-body hover:bg-hover font-medium rounded-lg transition cursor-pointer'
+                        onClick={onClose}>
+                        Cancelar
+                    </button>
+                    <button
+                        type='submit'
+                        form='variation-edit-form'
+                        disabled={!isFormValid || submitting}
+                        className='px-4 py-2 bg-accent text-surface rounded-lg hover:bg-accent/85 font-medium transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
+                        {submitting ? (
+                            <>
+                                <Loader className='w-5 h-5 animate-spin text-surface' />{' '}
+                                Guardando...
+                            </>
+                        ) : (
+                            <>
+                                <Save className='w-5 h-5' /> Guardar
+                            </>
+                        )}
+                    </button>
+                </div>
             </div>
         </Modal>
     )
