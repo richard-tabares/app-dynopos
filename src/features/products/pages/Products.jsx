@@ -784,7 +784,7 @@ export const Products = () => {
                     </p>
                 </section>
                 <section className='bg-surface border border-outline shadow-xs rounded-lg'>
-                    <section className='border-b border-outline flex justify-between items-center px-6 py-4 bg-subtle'>
+                    <section className='border-b border-outline flex justify-between items-center max-lg:px-4 px-6 py-4 bg-subtle'>
                         <section className='flex items-center gap-2'>
                             <Package className='w-5 h-5 text-accent' />
                             <h2 className='text-lg font-semibold flex flex-col'>
@@ -1059,7 +1059,7 @@ export const Products = () => {
                             </div>
                         </div>
                     </section>
-                    <div className='overflow-x-auto px-6 pb-2'>
+                    <div className='overflow-x-auto max-lg:px-4 px-6 pb-2'>
                         <table className='text-sm overflow-hidden rounded-t-lg w-full'>
                             <thead>
                                 <tr className='bg-subtle border-b border-divider text-muted uppercase text-xs tracking-wider'>

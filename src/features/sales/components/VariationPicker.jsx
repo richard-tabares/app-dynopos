@@ -42,7 +42,7 @@ export const VariationPicker = ({ product, onClose, onSelectVariation }) => {
         <section
             className='fixed inset-0 bg-overlay backdrop-blur-xs w-full h-full flex flex-col items-center justify-center z-[70] p-4'>
             <section
-                className='bg-surface border border-outline rounded-xl w-full max-w-sm relative max-h-[90vh] overflow-y-auto scrollbar-none'
+                className='bg-surface border border-outline rounded-xl w-full max-w-sm relative max-h-[90dvh] overflow-y-auto scrollbar-none'
                 onClick={(e) => e.stopPropagation()}>
                 <section className='sticky top-0 bg-title-surface/50 backdrop-blur-3xl z-50 flex items-center justify-between px-6 py-3.5 border-b border-divider'>
                     <h2 className='text-lg font-semibold flex items-center gap-2'>

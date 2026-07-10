@@ -116,7 +116,7 @@ export const SideBar = () => {
                     onClick={() => setIsMobile(false)}></section>
             )}
             <aside
-                className={`fixed flex flex-col top-0 justify-between h-screen bg-surface z-30 transition-all duration-300 border-outline
+                className={`fixed flex flex-col top-0 justify-between max-lg:h-dvh h-screen bg-surface z-30 transition-all duration-300 border-outline
                 lg:left-0 lg:border-r
                 max-lg:right-0 max-lg:border-l
                 ${isMobile ? 'max-lg:translate-x-0' : 'max-lg:translate-x-full'}

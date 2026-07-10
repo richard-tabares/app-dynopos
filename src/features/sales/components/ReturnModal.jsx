@@ -93,7 +93,7 @@ export const ReturnModal = ({ isOpen, sale, onClose, onConfirm }) => {
             icon={RotateCcw}
             iconColor='text-red-600'
         >
-            <div className='p-6 overflow-y-auto flex-1 scrollbar-none max-h-[calc(90vh-65px)]'>
+            <div className='p-6 overflow-y-auto flex-1 scrollbar-none max-h-[calc(90dvh-65px)]'>
                 <p className='text-sm font-semibold text-on-body mb-3'>
                     Selecciona los productos a devolver:
                 </p>

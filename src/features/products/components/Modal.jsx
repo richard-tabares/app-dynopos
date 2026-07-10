@@ -1137,7 +1137,7 @@ export const Modal = ({
                                     </button>
                                 </section>
                             )}
-                        <div className='flex justify-end gap-4'>
+                        <div className='sticky bottom-0 bg-surface border-t border-divider pt-4 flex justify-end gap-4'>
                             <button
                                 type='button'
                                 className='px-4 py-2 border border-outline text-on-body hover:bg-hover font-medium rounded-lg transition cursor-pointer'
