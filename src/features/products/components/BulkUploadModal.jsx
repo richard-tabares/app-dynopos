@@ -147,6 +147,7 @@ export const BulkUploadModal = ({ onClose, onComplete }) => {
                                         <tr><td className='py-1 pr-2 font-medium'>Categoria</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Nombre de la categoría</td></tr>
                                         <tr><td className='py-1 pr-2 font-medium'>Stock Inicial</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Stock inicial (si tiene valor, habilita control de stock)</td></tr>
                                         <tr><td className='py-1 pr-2 font-medium'>Stock Minimo</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Stock mínimo (notificaciones)</td></tr>
+                                        <tr><td className='py-1 pr-2 font-medium'>Unidad de Medida</td><td className='py-1 pr-2 text-muted'>No</td><td className='py-1'>Unidad base: Unidad, Metro o Kilogramo. Default: Unidad</td></tr>
                                     </tbody>
                                 </table>
                                 <p className='text-xs text-muted mt-2'>Producto <strong>simple</strong>: dejar <strong>Tipo Variacion</strong> y <strong>Nombre Variacion</strong> vacíos.<br />Producto con <strong>variaciones</strong>: varias filas con el mismo <strong>Nombre</strong> + <strong>Tipo Variacion</strong> crean un producto con múltiples variantes.</p>
