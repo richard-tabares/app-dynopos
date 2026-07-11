@@ -9,6 +9,7 @@ export const BulkUploadModal = ({ onClose, onComplete }) => {
     const [file, setFile] = useState(null)
     const [uploading, setUploading] = useState(false)
     const [result, setResult] = useState(null)
+    const [progress, setProgress] = useState(null)
     const fileRef = useRef(null)
     const { user } = useStore()
 
@@ -35,10 +36,12 @@ export const BulkUploadModal = ({ onClose, onComplete }) => {
         if (!file) return
         setUploading(true)
         setResult(null)
+        setProgress({ current: 0, total: 0 })
 
         try {
-            const res = await bulkUpload(businessId, file)
+            const res = await bulkUpload(businessId, file, setProgress)
             setResult(res)
+            setProgress(null)
             sileo.success({
                 fill: 'var(--toast-success)',
                 title: 'Completado',
@@ -109,6 +112,20 @@ export const BulkUploadModal = ({ onClose, onComplete }) => {
                                             className='text-sm text-red-500 hover:text-red-600 cursor-pointer'>
                                             Quitar archivo
                                         </button>
+                                        {uploading && progress && (
+                                            <div className='w-full'>
+                                                <div className='flex justify-between text-sm text-muted mb-1.5'>
+                                                    <span>Procesando productos...</span>
+                                                    <span className='font-medium tabular-nums'>{progress.current} / {progress.total}</span>
+                                                </div>
+                                                <div className='w-full bg-subtle rounded-full h-2.5 overflow-hidden'>
+                                                    <div
+                                                        className='bg-accent h-full rounded-full transition-all duration-300 ease-out'
+                                                        style={{ width: progress.total > 0 ? `${(progress.current / progress.total) * 100}%` : '0%' }}
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 ) : (
                                     <div className='flex flex-col items-center gap-2'>
@@ -220,7 +237,7 @@ export const BulkUploadModal = ({ onClose, onComplete }) => {
                             {uploading ? (
                                 <>
                                     <Loader className='w-5 h-5 animate-spin text-surface' />
-                                    Subiendo...
+                                    Procesando...
                                 </>
                             ) : (
                                 <>
