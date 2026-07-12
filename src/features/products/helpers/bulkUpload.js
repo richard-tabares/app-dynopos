@@ -1,10 +1,11 @@
 import { apiFetch } from '../../../shared/helpers/apiFetch'
 
-export const bulkUpload = async (businessId, file, onProgress) => {
+export const bulkUpload = async (businessId, file, onProgress, mode = 'create') => {
     const apiUrl = import.meta.env.VITE_API_URL
     const formData = new FormData()
     formData.append('file', file)
     formData.append('business_id', businessId)
+    formData.append('mode', mode)
 
     const response = await apiFetch(`${apiUrl}/api/products/bulk-upload`, {
         method: 'POST',

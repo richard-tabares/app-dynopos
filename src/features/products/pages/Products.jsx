@@ -18,6 +18,7 @@ import {
     Save,
     Loader,
     Upload,
+    Download,
     AlertTriangle,
 } from 'lucide-react'
 import { Fragment, useEffect, useState } from 'react'
@@ -42,6 +43,7 @@ import { getUnitLabel, ensureUnitsLoaded } from '../../../shared/helpers/unitsOf
 import { BulkUploadModal } from '../components/BulkUploadModal'
 import { StockAdjustmentModal } from '../components/StockAdjustmentModal'
 import { updateInventory } from '../helpers/updateInventory'
+import { downloadProducts } from '../helpers/downloadProducts'
 import { productHasActiveVariations, getActiveVariations, getDefaultVariation } from '../../../shared/helpers/productHelpers'
 import { useIsMobileDevice } from '../../../shared/hooks/useIsMobileDevice'
 
@@ -476,6 +478,23 @@ export const Products = () => {
         setVisibleCount((prev) => prev + 20)
     }
 
+    const handleDownloadProducts = async () => {
+        try {
+            await downloadProducts(businessId)
+            sileo.success({
+                fill: 'var(--toast-success)',
+                title: 'Descarga iniciada',
+                description: 'El archivo con tus productos se está descargando',
+            })
+        } catch (error) {
+            sileo.error({
+                fill: 'var(--toast-error)',
+                title: 'Error',
+                description: error.message || 'Error al descargar productos',
+            })
+        }
+    }
+
     const renderProductRow = (product) => {
         const defaultVar = getDefaultVariation(product)
         const allVariations = getActiveVariations(product)
@@ -844,6 +863,12 @@ export const Products = () => {
                                     <Settings2 className='w-4 h-5 mr-2' />
                                     Ajusta Stock
                                 </button>
+                                <button
+                                    onClick={handleDownloadProducts}
+                                    className='flex items-center font-medium px-4 py-2 border border-outline text-on-body text-sm rounded-lg hover:bg-hover-strong transition cursor-pointer'>
+                                    <Download className='w-4 h-5 mr-2' />
+                                    Descargar
+                                </button>
                                 <section className='relative'>
                                     <button
                                         onClick={() => setShowNewProductDropdown(!showNewProductDropdown)}
@@ -944,9 +969,18 @@ export const Products = () => {
                                             setShowStockModal(true)
                                             setShowMobileActions(null)
                                         }}
-                                        className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-on-body hover:bg-hover rounded-b-lg cursor-pointer'>
+                                        className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-on-body hover:bg-hover cursor-pointer'>
                                         <Settings2 className='w-4 h-4' />
                                         Ajusta Stock
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            handleDownloadProducts()
+                                            setShowMobileActions(null)
+                                        }}
+                                        className='flex items-center gap-2 w-full px-4 py-2.5 text-sm text-on-body hover:bg-hover rounded-b-lg cursor-pointer'>
+                                        <Download className='w-4 h-4' />
+                                        Descargar Productos
                                     </button>
                                 </section>
                             </section>

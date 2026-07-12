@@ -1,7 +1,8 @@
-import { Upload, FileSpreadsheet, Loader, CheckCircle2, XCircle, AlertTriangle, Download } from 'lucide-react'
+import { Upload, FileSpreadsheet, Loader, CheckCircle2, XCircle, AlertTriangle, Download, RefreshCw } from 'lucide-react'
 import { useState, useRef } from 'react'
 import { Modal as SharedModal } from '../../../shared/components/Modal'
 import { bulkUpload } from '../helpers/bulkUpload'
+import { downloadProducts } from '../helpers/downloadProducts'
 import { useStore } from '../../../app/providers/store'
 import { sileo } from 'sileo'
 
@@ -10,6 +11,8 @@ export const BulkUploadModal = ({ onClose, onComplete }) => {
     const [uploading, setUploading] = useState(false)
     const [result, setResult] = useState(null)
     const [progress, setProgress] = useState(null)
+    const [uploadMode, setUploadMode] = useState('create')
+    const [downloading, setDownloading] = useState(false)
     const fileRef = useRef(null)
     const { user } = useStore()
 
@@ -39,13 +42,13 @@ export const BulkUploadModal = ({ onClose, onComplete }) => {
         setProgress({ current: 0, total: 0 })
 
         try {
-            const res = await bulkUpload(businessId, file, setProgress)
+            const res = await bulkUpload(businessId, file, setProgress, uploadMode)
             setResult(res)
             setProgress(null)
             sileo.success({
                 fill: 'var(--toast-success)',
                 title: 'Completado',
-                description: `${res.created} de ${res.total} productos creados correctamente`,
+                description: `${res.created} creados, ${res.updated || 0} actualizados de ${res.total} registros`,
             })
         } catch (error) {
             sileo.error({
@@ -63,8 +66,28 @@ export const BulkUploadModal = ({ onClose, onComplete }) => {
         window.open(`${apiUrl}/api/products/template`, '_blank')
     }
 
+    const handleDownloadProducts = async () => {
+        setDownloading(true)
+        try {
+            await downloadProducts(businessId)
+            sileo.success({
+                fill: 'var(--toast-success)',
+                title: 'Descarga iniciada',
+                description: 'El archivo con tus productos se está descargando',
+            })
+        } catch (error) {
+            sileo.error({
+                fill: 'var(--toast-error)',
+                title: 'Error',
+                description: error.message || 'Error al descargar productos',
+            })
+        } finally {
+            setDownloading(false)
+        }
+    }
+
     const handleClose = () => {
-        if (result && result.created > 0) {
+        if (result && (result.created > 0 || result.updated > 0)) {
             onComplete()
         }
         onClose()
@@ -73,13 +96,42 @@ export const BulkUploadModal = ({ onClose, onComplete }) => {
     return (
         <SharedModal
             onClose={handleClose}
-            title='Carga Masiva de Productos'
-            icon={Upload}
+            title={uploadMode === 'create' ? 'Carga Masiva de Productos' : 'Actualización Masiva de Productos'}
+            icon={uploadMode === 'create' ? Upload : RefreshCw}
             size='lg'>
             <div className='flex flex-col min-h-full'>
                 <div className='p-6 flex-1 overflow-y-auto scrollbar-none'>
+                    <div className='flex rounded-lg border border-divider p-1 bg-subtle mb-4'>
+                        <button
+                            onClick={() => { setUploadMode('create'); setFile(null); setResult(null) }}
+                            className={`flex-1 px-4 py-2.5 rounded-md text-sm font-medium transition-all cursor-pointer ${
+                                uploadMode === 'create'
+                                    ? 'bg-surface shadow-sm text-accent'
+                                    : 'text-muted hover:text-on-body'
+                            }`}>
+                            <Upload className='w-4 h-4 inline mr-1.5 -mt-0.5' />
+                            Crear Productos
+                        </button>
+                        <button
+                            onClick={() => { setUploadMode('update'); setFile(null); setResult(null) }}
+                            className={`flex-1 px-4 py-2.5 rounded-md text-sm font-medium transition-all cursor-pointer ${
+                                uploadMode === 'update'
+                                    ? 'bg-surface shadow-sm text-accent'
+                                    : 'text-muted hover:text-on-body'
+                            }`}>
+                            <RefreshCw className='w-4 h-4 inline mr-1.5 -mt-0.5' />
+                            Actualizar Productos
+                        </button>
+                    </div>
+
                     {!result ? (
                         <>
+                            {uploadMode === 'update' && (
+                                <div className='bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm text-amber-800 mb-4 flex items-start gap-2'>
+                                    <AlertTriangle className='w-4 h-4 shrink-0 mt-0.5' />
+                                    <span>El archivo se procesará buscando productos por <strong>SKU</strong> o <strong>Código de Barras</strong>. Si existe, se actualizará la información. Si no existe, se creará un producto nuevo.</span>
+                                </div>
+                            )}
                             <div
                                 onDrop={handleDrop}
                                 onDragOver={(e) => e.preventDefault()}
@@ -140,7 +192,7 @@ export const BulkUploadModal = ({ onClose, onComplete }) => {
                                 )}
                             </div>
 
-                            <div className='bg-subtle border border-divider rounded-lg p-4 text-sm'>
+                            <div className='bg-subtle border border-divider rounded-lg p-4 text-sm mt-4'>
                                 <h4 className='font-medium text-on-body flex items-center gap-2 mb-2'>
                                     <FileSpreadsheet className='w-4 h-4 text-accent' />
                                     Columnas del archivo
@@ -177,6 +229,7 @@ export const BulkUploadModal = ({ onClose, onComplete }) => {
                                 <div>
                                     <p className='text-lg font-bold text-accent'>
                                         {result.created} productos creados
+                                        {result.updated > 0 && `, ${result.updated} actualizados`}
                                     </p>
                                     <p className='text-sm text-muted'>
                                         De un total de {result.total} registros procesados
@@ -203,7 +256,7 @@ export const BulkUploadModal = ({ onClose, onComplete }) => {
                                                 key={idx}
                                                 className='flex items-start gap-2 px-3 py-2 text-sm border-b border-red-100 last:border-0'>
                                                 <span className='text-red-400 font-medium whitespace-nowrap'>
-                                                    Fila {err.row}:
+                                                    {err.row ? `Fila ${err.row}:` : 'Error:'}
                                                 </span>
                                                 <span className='text-red-600'>{err.error}</span>
                                             </div>
@@ -218,10 +271,15 @@ export const BulkUploadModal = ({ onClose, onComplete }) => {
                 <div className='sticky bottom-0 bg-surface border-t border-divider px-6 py-4 flex justify-end gap-3'>
                     {!result && (
                         <button
-                            onClick={handleDownloadTemplate}
-                            className='px-4 py-2 border border-outline text-on-body hover:bg-hover font-medium rounded-lg transition cursor-pointer flex items-center gap-2'>
-                            <Download className='w-4 h-4' />
-                            Plantilla
+                            onClick={uploadMode === 'create' ? handleDownloadTemplate : handleDownloadProducts}
+                            disabled={downloading}
+                            className='px-4 py-2 border border-outline text-on-body hover:bg-hover font-medium rounded-lg transition cursor-pointer flex items-center gap-2 disabled:opacity-50'>
+                            {downloading ? (
+                                <Loader className='w-4 h-4 animate-spin' />
+                            ) : (
+                                <Download className='w-4 h-4' />
+                            )}
+                            {uploadMode === 'create' ? 'Plantilla' : 'Descargar Productos'}
                         </button>
                     )}
                     <button
