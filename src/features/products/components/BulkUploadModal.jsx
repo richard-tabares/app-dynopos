@@ -98,7 +98,7 @@ export const BulkUploadModal = ({ onClose, onComplete }) => {
             onClose={handleClose}
             title={uploadMode === 'create' ? 'Carga Masiva de Productos' : 'Actualización Masiva de Productos'}
             icon={uploadMode === 'create' ? Upload : RefreshCw}
-            size='lg'>
+            size='2xl'>
             <div className='flex flex-col min-h-full'>
                 <div className='p-6 flex-1 overflow-y-auto scrollbar-none'>
                     <div className='flex rounded-lg border border-divider p-1 bg-subtle mb-4'>
@@ -268,12 +268,12 @@ export const BulkUploadModal = ({ onClose, onComplete }) => {
                     )}
                 </div>
 
-                <div className='sticky bottom-0 bg-surface border-t border-divider px-6 py-4 flex justify-end gap-3'>
+                <div className='sticky bottom-0 bg-surface border-t border-divider px-6 py-4 flex gap-3'>
                     {!result && (
                         <button
                             onClick={uploadMode === 'create' ? handleDownloadTemplate : handleDownloadProducts}
                             disabled={downloading}
-                            className='px-4 py-2 border border-outline text-on-body hover:bg-hover font-medium rounded-lg transition cursor-pointer flex items-center gap-2 disabled:opacity-50'>
+                            className='mr-auto px-4 py-2 border border-outline text-on-body hover:bg-hover font-medium rounded-lg transition cursor-pointer flex items-center gap-2 disabled:opacity-50'>
                             {downloading ? (
                                 <Loader className='w-4 h-4 animate-spin' />
                             ) : (
