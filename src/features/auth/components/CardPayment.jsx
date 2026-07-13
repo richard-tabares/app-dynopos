@@ -13,6 +13,7 @@ import { processCardPayment } from '../helpers/processCardPayment'
 import { sileo } from 'sileo'
 import { decryptData } from '../../../shared/helpers/crypto'
 import { PaymentModal } from '../../../shared/components/PaymentModal'
+import { RequiredIndicator } from '../../../shared/components/RequiredIndicator'
 
 const WOMPI_API = 'https://api-sandbox.wompi.co/v1'
 const WOMPI_PUB_KEY = import.meta.env.VITE_WOMPI_PUBLIC_KEY
@@ -282,7 +283,7 @@ export const CardPayment = () => {
                     <section className='flex flex-col gap-2'>
                         <label className='font-semibold text-on-surface'>
                             Nombre del comprador{' '}
-                            <span className='text-red-500'>*</span>
+                            <RequiredIndicator />
                         </label>
                         <input
                             type='text'
@@ -297,7 +298,7 @@ export const CardPayment = () => {
                     <section className='grid grid-cols-2 gap-4'>
                         <section className='flex flex-col gap-2'>
                             <label className='font-semibold text-on-surface'>
-                                Correo <span className='text-red-500'>*</span>
+                                Correo <RequiredIndicator />
                             </label>
                             <input
                                 type='email'
@@ -310,7 +311,7 @@ export const CardPayment = () => {
                         </section>
                         <section className='flex flex-col gap-2'>
                             <label className='font-semibold text-on-surface'>
-                                Teléfono <span className='text-red-500'>*</span>
+                                Teléfono <RequiredIndicator />
                             </label>
                             <input
                                 type='tel'
@@ -332,7 +333,7 @@ export const CardPayment = () => {
                         <section className='flex flex-col gap-2 mb-3'>
                             <label className='font-semibold text-on-surface'>
                                 Número de tarjeta{' '}
-                                <span className='text-red-500'>*</span>
+                                <RequiredIndicator />
                             </label>
                             <input
                                 type='text'
@@ -348,7 +349,7 @@ export const CardPayment = () => {
                         <section className='grid grid-cols-3 gap-3 mb-3'>
                             <section className='flex flex-col gap-2'>
                                 <label className='font-semibold text-on-surface'>
-                                    Mes <span className='text-red-500'>*</span>
+                                    Mes <RequiredIndicator />
                                 </label>
                                 <input
                                     type='text'
@@ -362,7 +363,7 @@ export const CardPayment = () => {
                             </section>
                             <section className='flex flex-col gap-2'>
                                 <label className='font-semibold text-on-surface'>
-                                    Año <span className='text-red-500'>*</span>
+                                    Año <RequiredIndicator />
                                 </label>
                                 <input
                                     type='text'
@@ -376,7 +377,7 @@ export const CardPayment = () => {
                             </section>
                             <section className='flex flex-col gap-2'>
                                 <label className='font-semibold text-on-surface'>
-                                    CVV <span className='text-red-500'>*</span>
+                                    CVV <RequiredIndicator />
                                 </label>
                                 <input
                                     type='password'
@@ -393,7 +394,7 @@ export const CardPayment = () => {
                         <section className='flex flex-col gap-2 mb-3'>
                             <label className='font-semibold text-on-surface'>
                                 Nombre del titular{' '}
-                                <span className='text-red-500'>*</span>
+                                <RequiredIndicator />
                             </label>
                             <input
                                 type='text'
@@ -414,7 +415,7 @@ export const CardPayment = () => {
                         <section className='grid grid-cols-3 gap-3'>
                             <section className='flex flex-col gap-2 bg-surface text-on-body'>
                                 <label className='font-semibold text-on-surface'>
-                                    Tipo <span className='text-red-500'>*</span>
+                                    Tipo <RequiredIndicator />
                                 </label>
                                 <select
                                     name='legal_id_type'
@@ -451,7 +452,7 @@ export const CardPayment = () => {
                             <section className='flex flex-col gap-2 col-span-2'>
                                 <label className='font-semibold text-on-surface'>
                                     Número{' '}
-                                    <span className='text-red-500'>*</span>
+                                    <RequiredIndicator />
                                 </label>
                                 <input
                                     type='text'

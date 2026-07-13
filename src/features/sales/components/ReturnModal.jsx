@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { RotateCcw, Loader } from 'lucide-react'
 import { Modal } from '../../../shared/components/Modal'
+import { RequiredIndicator } from '../../../shared/components/RequiredIndicator'
 import { useStore } from '../../../app/providers/store'
 import { getUnitLabel, ensureUnitsLoaded } from '../../../shared/helpers/unitsOfMeasure'
 
@@ -212,13 +213,16 @@ export const ReturnModal = ({ isOpen, sale, onClose, onConfirm }) => {
                     </div>
                 )}
 
+                <label className='block text-sm font-medium text-on-body mb-1 mt-4'>
+                    Motivo de la devolución{' '}<RequiredIndicator />
+                </label>
                 <textarea
                     value={returnReason}
                     onChange={(e) =>
                         setReturnReason(e.target.value)
                     }
-                    placeholder='Motivo de la devolución (obligatorio)'
-                    className='w-full border border-divider rounded-md py-3 px-4 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300 resize-none h-20 mt-4'
+                    placeholder='Describe el motivo de la devolución'
+                    className='w-full border border-divider rounded-md py-3 px-4 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300 resize-none h-20'
                 />
                 </div>
 

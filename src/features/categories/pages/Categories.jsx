@@ -4,6 +4,7 @@ import { Link } from 'react-router'
 import { sileo } from 'sileo'
 import { useStore } from '../../../app/providers/store'
 import { Modal } from '../../../shared/components/Modal'
+import { RequiredIndicator } from '../../../shared/components/RequiredIndicator'
 import { getCategories } from '../../categories/helpers/getCategories'
 import { createCategory } from '../../categories/helpers/createCategory'
 import { updateCategory } from '../../categories/helpers/updateCategory'
@@ -165,7 +166,7 @@ export const Categories = () => {
                     icon={Tag}>
                     <div className='p-6'>
                         <label className='block text-sm font-medium text-on-body mb-2'>
-                            Nombre
+                            Nombre{' '}<RequiredIndicator />
                         </label>
                         <input
                             type='text'

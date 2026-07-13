@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react'
 import { Loader, Save, Layers, Settings2 } from 'lucide-react'
 import { sileo } from 'sileo'
 import { Modal } from '../../../shared/components/Modal'
+import { RequiredIndicator } from '../../../shared/components/RequiredIndicator'
 import { updateVariation as updateVariationApi } from '../helpers/updateVariation'
 import { procesarCodigoUniversal } from '../../../shared/helpers/procesarCodigoUniversal'
 import { useIsMobileDevice } from '../../../shared/hooks/useIsMobileDevice'
+import { useStore } from '../../../app/providers/store'
 
 export const VariationEditModal = ({
     variation,
@@ -13,6 +15,9 @@ export const VariationEditModal = ({
     onOpenStockAdjust,
 }) => {
     const isMobileDevice = useIsMobileDevice()
+    const unitsOfMeasure = useStore((state) => state.unitsOfMeasure)
+    const variationUnitId = variation.unit_of_measure_id || 1
+    const allowDecimals = variationUnitId !== 1 && unitsOfMeasure.find(u => u.id === variationUnitId)?.allow_decimals
     const [formData, setFormData] = useState({
         variation_name: variation.variation_name || '',
         price: variation.price ?? '',
@@ -23,7 +28,17 @@ export const VariationEditModal = ({
         track_stock: variation.track_stock ?? true,
         is_active: variation.is_active ?? true,
     })
+    const [decimalWarning, setDecimalWarning] = useState(false)
     const [submitting, setSubmitting] = useState(false)
+
+    const processNumericInput = (raw) => {
+        if (raw === '') return { value: '', warning: false }
+        const num = parseFloat(raw) || 0
+        if (!allowDecimals && num % 1 !== 0) {
+            return { value: Math.trunc(num), warning: true }
+        }
+        return { value: num, warning: false }
+    }
 
     useEffect(() => {
         setFormData(prev => ({ ...prev, unit_cost: variation.unit_cost ?? '' }))
@@ -115,7 +130,7 @@ export const VariationEditModal = ({
                     </div>
                     <section>
                         <label className='block text-sm font-medium text-on-body mb-1'>
-                            Nombre
+                            Nombre{' '}<RequiredIndicator />
                         </label>
                         <input
                             type='text'
@@ -144,7 +159,7 @@ export const VariationEditModal = ({
                         </section>
                         <section>
                             <label className='block text-sm font-medium text-on-body mb-1'>
-                                Precio
+                                Precio{' '}<RequiredIndicator />
                             </label>
                             <input
                                 type='number'
@@ -165,11 +180,19 @@ export const VariationEditModal = ({
                                     type='number'
                                     name='min_stock'
                                     value={formData.min_stock}
-                                    onChange={handleChange}
+                                    onChange={(e) => {
+                                        const { value, warning } = processNumericInput(e.target.value)
+                                        setDecimalWarning(warning)
+                                        setFormData(prev => ({ ...prev, min_stock: value }))
+                                    }}
                                     min='0'
+                                    step={allowDecimals ? '0.001' : 'any'}
                                     className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
                                     placeholder='Stock mínimo (opcional)'
                                 />
+                                {decimalWarning && (
+                                    <span className='text-xs text-danger mt-1 block'>Solo números enteros para esta unidad</span>
+                                )}
                             </section>
                         )}
                     </div>

@@ -10,6 +10,7 @@ import {
 import { useState, useEffect } from 'react'
 import { sileo } from 'sileo'
 import { Modal as SharedModal } from '../../../shared/components/Modal'
+import { RequiredIndicator } from '../../../shared/components/RequiredIndicator'
 import { useIsMobileDevice } from '../../../shared/hooks/useIsMobileDevice'
 import {
     productHasActiveVariations,
@@ -64,6 +65,22 @@ export const Modal = ({
     const [minStock, setMinStock] = useState(
         defaultVar?.min_stock?.toString() || '',
     )
+    const [decimalWarning, setDecimalWarning] = useState(false)
+    const [variationWarnings, setVariationWarnings] = useState({})
+
+    const getAllowDecimals = (unitId) => {
+        const id = Number(unitId)
+        return id !== 1 && unitsOfMeasure.find(u => u.id === id)?.allow_decimals
+    }
+
+    const processNumericInput = (raw, allowDec) => {
+        if (raw === '') return { value: '', warning: false }
+        const num = parseFloat(raw) || 0
+        if (!allowDec && num % 1 !== 0) {
+            return { value: Math.trunc(num), warning: true }
+        }
+        return { value: num, warning: false }
+    }
 
     const [variations, setVariations] = useState(
         existingVariations.length > 0 && !editProductData.variations_disabled
@@ -398,19 +415,19 @@ export const Modal = ({
                                 </section>
                             </div>
                             <section>
-                                <label className='block text-sm font-medium text-on-body mb-1'>
-                                    Nombre del Producto
-                                </label>
-                                <input
-                                    type='text'
-                                    name='name'
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                    className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
-                                    placeholder='Ingrese el nombre del producto'
-                                />
-                            </section>
-                            <div className={`grid grid-cols-1 ${variableUnitsEnabled ? 'md:grid-cols-2' : ''} gap-4`}>
+                            <label className='block text-sm font-medium text-on-body mb-1'>
+                                Nombre del Producto{' '}<RequiredIndicator />
+                            </label>
+                            <input
+                                type='text'
+                                name='name'
+                                value={formData.name}
+                                onChange={handleChange}
+                                className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
+                                placeholder='Ingrese el nombre del producto'
+                            />
+                        </section>
+                        <div className={`grid grid-cols-1 ${variableUnitsEnabled ? 'md:grid-cols-2' : ''} gap-4`}>
                                 <section>
                                     <label className='block text-sm font-medium text-on-body mb-1'>
                                         Categoría
@@ -469,20 +486,20 @@ export const Modal = ({
                                     />
                                 </section>
                                 <section>
-                                    <label className='block text-sm font-medium text-on-body mb-1'>
-                                        Precio Unitario
-                                    </label>
-                                    <input
-                                        type='number'
-                                        name='price'
-                                        value={formData.price}
-                                        onChange={handleChange}
-                                        min='0'
-                                        className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
-                                        placeholder='Precio del producto'
-                                    />
-                                </section>
-                                {editProductData.id && formData.track_stock !== false && (
+                                <label className='block text-sm font-medium text-on-body mb-1'>
+                                    Precio Unitario{' '}<RequiredIndicator />
+                                </label>
+                                <input
+                                    type='number'
+                                    name='price'
+                                    value={formData.price}
+                                    onChange={handleChange}
+                                    min='0'
+                                    className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
+                                    placeholder='Precio del producto'
+                                />
+                            </section>
+                            {editProductData.id && formData.track_stock !== false && (
                                     <section>
                                         <label className='block text-sm font-medium text-on-body mb-1'>
                                             Stock Mínimo
@@ -490,19 +507,19 @@ export const Modal = ({
                                         <input
                                             type='number'
                                             value={minStock}
-                                            onChange={(e) =>
-                                                setMinStock(
-                                                    e.target.value === ''
-                                                        ? ''
-                                                        : Number(
-                                                              e.target.value,
-                                                          ),
-                                                )
-                                            }
+                                            onChange={(e) => {
+                                                const { value, warning } = processNumericInput(e.target.value, getAllowDecimals(formData.unit_of_measure_id))
+                                                setDecimalWarning(warning)
+                                                setMinStock(value)
+                                            }}
                                             min='0'
+                                            step={getAllowDecimals(formData.unit_of_measure_id) ? '0.001' : 'any'}
                                             className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
                                             placeholder='Stock mínimo (opcional)'
                                         />
+                                        {decimalWarning && (
+                                            <span className='text-xs text-danger mt-1 block'>Solo números enteros para esta unidad</span>
+                                        )}
                                     </section>
                                 )}
                             </div>
@@ -515,23 +532,19 @@ export const Modal = ({
                                         <input
                                             type='number'
                                             value={initialStock}
-                                            onChange={(e) =>
-                                                setInitialStock(
-                                                    e.target.value === ''
-                                                        ? ''
-                                                        : Number(
-                                                              e.target.value,
-                                                          ),
-                                                )
-                                            }
+                                            onChange={(e) => {
+                                                const { value, warning } = processNumericInput(e.target.value, getAllowDecimals(formData.unit_of_measure_id))
+                                                setDecimalWarning(warning)
+                                                setInitialStock(value)
+                                            }}
                                             min='0'
-                                            step={formData.unit_of_measure_id !== 1
-                                                ? (baseUnits.find(u => u.id === formData.unit_of_measure_id)?.allow_decimals ? '0.001' : '1')
-                                                : '1'
-                                            }
+                                            step={getAllowDecimals(formData.unit_of_measure_id) ? '0.001' : 'any'}
                                             className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
                                             placeholder='Stock inicial del producto'
                                         />
+                                        {decimalWarning && (
+                                            <span className='text-xs text-danger mt-1 block'>Solo números enteros para esta unidad</span>
+                                        )}
                                     </section>
                                     <section>
                                         <label className='block text-sm font-medium text-on-body mb-1'>
@@ -540,19 +553,19 @@ export const Modal = ({
                                         <input
                                             type='number'
                                             value={minStock}
-                                            onChange={(e) =>
-                                                setMinStock(
-                                                    e.target.value === ''
-                                                        ? ''
-                                                        : Number(
-                                                              e.target.value,
-                                                          ),
-                                                )
-                                            }
+                                            onChange={(e) => {
+                                                const { value, warning } = processNumericInput(e.target.value, getAllowDecimals(formData.unit_of_measure_id))
+                                                setDecimalWarning(warning)
+                                                setMinStock(value)
+                                            }}
                                             min='0'
+                                            step={getAllowDecimals(formData.unit_of_measure_id) ? '0.001' : 'any'}
                                             className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
                                             placeholder='Stock mínimo (opcional)'
                                         />
+                                        {decimalWarning && (
+                                            <span className='text-xs text-danger mt-1 block'>Solo números enteros para esta unidad</span>
+                                        )}
                                     </section>
                                 </div>
                             )}
@@ -590,22 +603,22 @@ export const Modal = ({
                     ) : (
                         <>
                             <section>
-                                <label className='block text-sm font-medium text-on-body mb-1'>
-                                    Nombre del Producto
-                                </label>
-                                <input
-                                    type='text'
-                                    name='name'
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                    autoFocus={!isMobileDevice}
-                                    className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
-                                    placeholder='Ingrese el nombre del producto'
-                                />
-                            </section>
-                            <section>
-                                <label className='block text-sm font-medium text-on-body mb-1'>
-                                    Categoría
+                            <label className='block text-sm font-medium text-on-body mb-1'>
+                                Nombre del Producto{' '}<RequiredIndicator />
+                            </label>
+                            <input
+                                type='text'
+                                name='name'
+                                value={formData.name}
+                                onChange={handleChange}
+                                autoFocus={!isMobileDevice}
+                                className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
+                                placeholder='Ingrese el nombre del producto'
+                            />
+                        </section>
+                        <section>
+                            <label className='block text-sm font-medium text-on-body mb-1'>
+                                Categoría
                                 </label>
                                 <select
                                     name='category_id'
@@ -624,17 +637,17 @@ export const Modal = ({
                                 </select>
                             </section>
                             <section>
-                                <label className='block text-sm font-medium text-on-body mb-1'>
-                                    Tipo de variación
-                                </label>
-                                <input
-                                    type='text'
-                                    name='variation_type'
-                                    value={formData.variation_type}
-                                    onChange={handleChange}
-                                    className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
-                                    placeholder='ej: Talla, Color, Tamaño'
-                                />
+                            <label className='block text-sm font-medium text-on-body mb-1'>
+                                Tipo de variación{' '}<RequiredIndicator />
+                            </label>
+                            <input
+                                type='text'
+                                name='variation_type'
+                                value={formData.variation_type}
+                                onChange={handleChange}
+                                className='w-full px-4 py-3 border border-divider rounded-md transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0'
+                                placeholder='ej: Talla, Color, Tamaño'
+                            />
                             </section>
                             <div className='space-y-3 pt-4 border-t border-divider'>
                                 <div className='flex items-center justify-between'>
@@ -724,7 +737,7 @@ export const Modal = ({
                                             <div className='space-y-3'>
                                                 <section>
                                                     <label className='block text-sm font-medium text-on-body mb-1'>
-                                                        Nombre de variación
+                                                        Nombre de variación{' '}<RequiredIndicator />
                                                     </label>
                                                     <input
                                                         type='text'
@@ -859,23 +872,17 @@ export const Modal = ({
                                                                 placeholder='Stock mínimo'
                                                                 value={v.min_stock}
                                                                 min='0'
-                                                                onChange={(e) =>
-                                                                    handleVariationChange(
-                                                                        index,
-                                                                        'min_stock',
-                                                                        e.target
-                                                                            .value ===
-                                                                            ''
-                                                                            ? ''
-                                                                            : Number(
-                                                                                  e
-                                                                                      .target
-                                                                                      .value,
-                                                                              ),
-                                                                    )
-                                                                }
+                                                                step={getAllowDecimals(v.unit_of_measure_id) ? '0.001' : 'any'}
+                                                                onChange={(e) => {
+                                                                    const { value, warning } = processNumericInput(e.target.value, getAllowDecimals(v.unit_of_measure_id))
+                                                                    setVariationWarnings(prev => ({ ...prev, [index]: warning }))
+                                                                    handleVariationChange(index, 'min_stock', value)
+                                                                }}
                                                                 className='w-full px-4 py-3 border border-divider rounded-md focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                                                             />
+                                                            {variationWarnings[index] && (
+                                                                <span className='text-xs text-danger mt-1 block'>Solo números enteros para esta unidad</span>
+                                                            )}
                                                         </section>
                                                     )}
                                                 </div>
@@ -884,7 +891,7 @@ export const Modal = ({
                                             <div className='grid grid-cols-1 md:grid-cols-2 gap-x-3 gap-y-3'>
                                                 <section className='md:col-span-2'>
                                                     <label className='block text-sm font-medium text-on-body mb-1'>
-                                                        Nombre de la Variación
+                                                        Nombre de la Variación{' '}<RequiredIndicator />
                                                     </label>
                                                     <input
                                                         type='text'
@@ -983,7 +990,7 @@ export const Modal = ({
                                                 </section>
                                                 <section>
                                                     <label className='block text-sm font-medium text-on-body mb-1'>
-                                                        Precio Unitario
+                                                        Precio Unitario{' '}<RequiredIndicator />
                                                     </label>
                                                     <input
                                                         type='number'
@@ -1010,27 +1017,17 @@ export const Modal = ({
                                                             placeholder='Stock inicial'
                                                             value={v.stock}
                                                             min='0'
-                                                            step={v.unit_of_measure_id !== 1
-                                                                ? (baseUnits.find(u => u.id === v.unit_of_measure_id)?.allow_decimals ? '0.001' : '1')
-                                                                : '1'
-                                                            }
-                                                            onChange={(e) =>
-                                                                handleVariationChange(
-                                                                    index,
-                                                                    'stock',
-                                                                    e.target
-                                                                        .value ===
-                                                                        ''
-                                                                        ? ''
-                                                                        : Number(
-                                                                              e
-                                                                                  .target
-                                                                                  .value,
-                                                                          ),
-                                                                )
-                                                            }
+                                                            step={getAllowDecimals(v.unit_of_measure_id) ? '0.001' : 'any'}
+                                                            onChange={(e) => {
+                                                                const { value, warning } = processNumericInput(e.target.value, getAllowDecimals(v.unit_of_measure_id))
+                                                                setVariationWarnings(prev => ({ ...prev, [index]: warning }))
+                                                                handleVariationChange(index, 'stock', value)
+                                                            }}
                                                             className='w-full px-4 py-3 border border-divider rounded-md focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                                                         />
+                                                        {variationWarnings[index] && (
+                                                            <span className='text-xs text-danger mt-1 block'>Solo números enteros para esta unidad</span>
+                                                        )}
                                                     </section>
                                                 )}
                                                 {v.track_stock !== false && (
@@ -1043,23 +1040,17 @@ export const Modal = ({
                                                             placeholder='Stock mínimo'
                                                             value={v.min_stock}
                                                             min='0'
-                                                            onChange={(e) =>
-                                                                handleVariationChange(
-                                                                    index,
-                                                                    'min_stock',
-                                                                    e.target
-                                                                        .value ===
-                                                                        ''
-                                                                        ? ''
-                                                                        : Number(
-                                                                              e
-                                                                                  .target
-                                                                                  .value,
-                                                                          ),
-                                                                )
-                                                            }
+                                                            step={getAllowDecimals(v.unit_of_measure_id) ? '0.001' : 'any'}
+                                                            onChange={(e) => {
+                                                                const { value, warning } = processNumericInput(e.target.value, getAllowDecimals(v.unit_of_measure_id))
+                                                                setVariationWarnings(prev => ({ ...prev, [index]: warning }))
+                                                                handleVariationChange(index, 'min_stock', value)
+                                                            }}
                                                             className='w-full px-4 py-3 border border-divider rounded-md focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                                                         />
+                                                        {variationWarnings[index] && (
+                                                            <span className='text-xs text-danger mt-1 block'>Solo números enteros para esta unidad</span>
+                                                        )}
                                                     </section>
                                                 )}
                                             </div>

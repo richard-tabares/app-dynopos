@@ -3,6 +3,7 @@ import { CreditCard, Lock, ShieldCheck, Loader } from 'lucide-react'
 import { sileo } from 'sileo'
 import { apiFetch } from '../../../../shared/helpers/apiFetch'
 import { Modal } from '../../../../shared/components/Modal'
+import { RequiredIndicator } from '../../../../shared/components/RequiredIndicator'
 
 const WOMPI_API = import.meta.env.VITE_WOMPI_API_URL || 'https://api-sandbox.wompi.co/v1'
 const WOMPI_PUB_KEY = import.meta.env.VITE_WOMPI_PUBLIC_KEY
@@ -131,7 +132,7 @@ export const UpdatePaymentMethodModal = ({ isOpen, onClose, businessId, customer
         >
             <form onSubmit={handleSubmit} className='p-6 space-y-4'>
                 <section className='flex flex-col gap-2'>
-                    <label className='font-semibold text-on-surface text-sm'>Número de tarjeta <span className='text-red-500'>*</span></label>
+                    <label className='font-semibold text-on-surface text-sm'>Número de tarjeta <RequiredIndicator /></label>
                     <input
                         type='text'
                         name='card_number'
@@ -145,7 +146,7 @@ export const UpdatePaymentMethodModal = ({ isOpen, onClose, businessId, customer
 
                 <section className='grid grid-cols-3 gap-3'>
                     <section className='flex flex-col gap-2'>
-                        <label className='font-semibold text-on-surface text-sm'>Mes <span className='text-red-500'>*</span></label>
+                        <label className='font-semibold text-on-surface text-sm'>Mes <RequiredIndicator /></label>
                         <input
                             type='text'
                             name='exp_month'
@@ -157,7 +158,7 @@ export const UpdatePaymentMethodModal = ({ isOpen, onClose, businessId, customer
                         />
                     </section>
                     <section className='flex flex-col gap-2'>
-                        <label className='font-semibold text-on-surface text-sm'>Año <span className='text-red-500'>*</span></label>
+                        <label className='font-semibold text-on-surface text-sm'>Año <RequiredIndicator /></label>
                         <input
                             type='text'
                             name='exp_year'
@@ -169,7 +170,7 @@ export const UpdatePaymentMethodModal = ({ isOpen, onClose, businessId, customer
                         />
                     </section>
                     <section className='flex flex-col gap-2'>
-                        <label className='font-semibold text-on-surface text-sm'>CVV <span className='text-red-500'>*</span></label>
+                        <label className='font-semibold text-on-surface text-sm'>CVV <RequiredIndicator /></label>
                         <input
                             type='password'
                             name='cvc'
@@ -183,7 +184,7 @@ export const UpdatePaymentMethodModal = ({ isOpen, onClose, businessId, customer
                 </section>
 
                 <section className='flex flex-col gap-2'>
-                    <label className='font-semibold text-on-surface text-sm'>Nombre completo <span className='text-red-500'>*</span></label>
+                    <label className='font-semibold text-on-surface text-sm'>Nombre completo <RequiredIndicator /></label>
                     <input
                         type='text'
                         name='card_holder'

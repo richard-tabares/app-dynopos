@@ -6,6 +6,7 @@ import { createUser } from '../helpers/createUser'
 import { updateUser } from '../helpers/updateUser'
 import { deleteUser } from '../helpers/deleteUser'
 import { PermissionSelector } from '../../../shared/components/PermissionSelector'
+import { RequiredIndicator } from '../../../shared/components/RequiredIndicator'
 import { getDefaultPermissions } from '../../../shared/helpers/permissions'
 import { useIsMobileDevice } from '../../../shared/hooks/useIsMobileDevice'
 
@@ -154,7 +155,7 @@ export const UserFormModal = ({ mode, userData, onClose, onSuccess }) => {
                     {isEdit ? (
                         <section>
                             <label className='block text-sm font-medium text-on-body mb-1'>
-                                Nombre
+                                Nombre{' '}<RequiredIndicator />
                             </label>
                             <input
                                 type='text'
@@ -170,7 +171,7 @@ export const UserFormModal = ({ mode, userData, onClose, onSuccess }) => {
                         <section className='grid grid-cols-2 gap-4'>
                             <section className='flex flex-col gap-2'>
                                 <label className='block text-sm font-medium text-on-body mb-1'>
-                                    Nombre
+                                    Nombre{' '}<RequiredIndicator />
                                 </label>
                                 <input
                                     type='text'
@@ -185,7 +186,7 @@ export const UserFormModal = ({ mode, userData, onClose, onSuccess }) => {
                             <section className='flex flex-col gap-2'>
                                 <label className='block text-sm font-medium text-on-body mb-1'>
                                     Correo electrónico{' '}
-                                    <span className='text-red-500 font-bold'>*</span>
+                                    <RequiredIndicator />
                                 </label>
                                 <input
                                     type='email'
@@ -213,7 +214,7 @@ export const UserFormModal = ({ mode, userData, onClose, onSuccess }) => {
                                 <section className='flex flex-col gap-2'>
                                     <label className='block text-sm font-medium text-on-body mb-1'>
                                         Contraseña{' '}
-                                        <span className='text-red-500 font-bold'>*</span>
+                                        <RequiredIndicator />
                                     </label>
                                     <section className='relative flex items-center'>
                                         <input
@@ -265,7 +266,7 @@ export const UserFormModal = ({ mode, userData, onClose, onSuccess }) => {
                                 <section className='flex flex-col gap-2'>
                                     <label className='block text-sm font-medium text-on-body mb-1'>
                                         Confirmar contraseña{' '}
-                                        <span className='text-red-500 font-bold'>*</span>
+                                        <RequiredIndicator />
                                     </label>
                                     <section className='relative flex items-center'>
                                         <input

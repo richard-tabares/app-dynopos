@@ -3,6 +3,7 @@ import { CheckCircle, CircleDollarSign, Loader, AlertTriangle, Banknote, RotateC
 import { useStore } from '../../../app/providers/store'
 import { useFormatDate } from '../../../shared/helpers/useFormatDate'
 import { Modal } from '../../../shared/components/Modal'
+import { RequiredIndicator } from '../../../shared/components/RequiredIndicator'
 
 const nf = (value) =>
     new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(value)
@@ -79,7 +80,7 @@ export const SaleConfirmationModal = ({
 
                         {isEfectivo && (
                             <div className='py-4 border-b border-divider space-y-3'>
-                                <p className='font-semibold'>¿Con cuánto pagan?</p>
+                                <p className='font-semibold'>¿Con cuánto pagan?{' '}<RequiredIndicator /></p>
                                 <div className='flex gap-2 flex-wrap justify-center px-2'>
                                     {presets.map(amount => (
                                         <button

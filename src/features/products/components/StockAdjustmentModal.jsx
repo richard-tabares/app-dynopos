@@ -1,6 +1,7 @@
 import { ArrowDownCircle, ArrowUpCircle, Loader, Settings2, Search, X } from 'lucide-react'
 import { useState, useMemo, useEffect } from 'react'
 import { Modal } from '../../../shared/components/Modal'
+import { RequiredIndicator } from '../../../shared/components/RequiredIndicator'
 import { getActiveVariations } from '../../../shared/helpers/productHelpers'
 import { normalizeSearch } from '../../../shared/helpers/normalizeSearch'
 import { useIsMobileDevice } from '../../../shared/hooks/useIsMobileDevice'
@@ -26,6 +27,7 @@ export const StockAdjustmentModal = ({
     const [selected, setSelected] = useState(preselect || null)
     const [movementType, setMovementType] = useState('entry')
     const [isFocused, setIsFocused] = useState(false)
+    const [decimalWarning, setDecimalWarning] = useState(false)
     const [formData, setFormData] = useState({
         quantity: '',
         unit_cost: preselect?.variation?.unit_cost ?? '',
@@ -67,20 +69,38 @@ export const StockAdjustmentModal = ({
     const handleSelect = (product, variation) => {
         setSelected({ product, variation })
         setSearchTerm('')
+        setDecimalWarning(false)
         setFormData({ quantity: '', unit_cost: variation.unit_cost ?? '', notes: '' })
     }
 
     const handleClearSelection = () => {
         setSelected(null)
+        setDecimalWarning(false)
     }
 
     const handleChange = (e) => {
         const { name, value } = e.target
         if (value !== '' && parseFloat(value) < 0) return
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value === '' ? '' : parseFloat(value) || 0,
-        }))
+        if (name === 'quantity') {
+            if (value === '') {
+                setFormData(prev => ({ ...prev, quantity: '' }))
+                setDecimalWarning(false)
+                return
+            }
+            const num = parseFloat(value) || 0
+            if (!allowDecimals && num % 1 !== 0) {
+                setDecimalWarning(true)
+                setFormData(prev => ({ ...prev, quantity: Math.trunc(num) }))
+            } else {
+                setDecimalWarning(false)
+                setFormData(prev => ({ ...prev, quantity: num }))
+            }
+        } else {
+            setFormData((prev) => ({
+                ...prev,
+                [name]: value === '' ? '' : parseFloat(value) || 0,
+            }))
+        }
     }
 
     const handleCostChange = (e) => {
@@ -122,7 +142,7 @@ export const StockAdjustmentModal = ({
                     onSubmit={onFormSubmit}>
                     <section>
                         <label className='block text-sm font-medium text-on-body mb-1'>
-                            Producto
+                            Producto{' '}<RequiredIndicator />
                         </label>
                         {showSearch && (
                             <div className='relative'>
@@ -236,7 +256,7 @@ export const StockAdjustmentModal = ({
 
                     <section>
                         <label className='block text-sm font-medium text-on-body mb-1'>
-                            Cantidad
+                            Cantidad{' '}<RequiredIndicator />
                         </label>
                         <div className='flex w-full'>
                             <input
@@ -247,7 +267,7 @@ export const StockAdjustmentModal = ({
                                 onFocus={() => setIsFocused(true)}
                                 onBlur={() => setIsFocused(false)}
                                 min='0'
-                                step={allowDecimals ? '0.001' : '1'}
+                                step={allowDecimals ? '0.001' : 'any'}
                                 className={`flex-1 border border-divider px-4 py-3 transition-all duration-300 focus:outline-none focus:border-accent focus:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
                                     selected ? 'border-r-0 rounded-l-md' : 'rounded-md'
                                 }`}
@@ -263,6 +283,9 @@ export const StockAdjustmentModal = ({
                                 </span>
                             )}
                         </div>
+                        {decimalWarning && (
+                            <span className='text-xs text-danger mt-1 block'>Solo números enteros para esta unidad</span>
+                        )}
                     </section>
 
                     <section>

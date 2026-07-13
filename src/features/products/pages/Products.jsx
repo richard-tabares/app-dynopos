@@ -25,6 +25,7 @@ import { Fragment, useEffect, useState } from 'react'
 import { sileo } from 'sileo'
 import { Modal } from '../components/Modal'
 import { Modal as SharedModal } from '../../../shared/components/Modal'
+import { RequiredIndicator } from '../../../shared/components/RequiredIndicator'
 import { ConfirmModal } from '../components/ConfirmModal'
 import { VariationEditModal } from '../components/VariationEditModal'
 import { createNewProduct } from '../helpers/createNewProduct'
@@ -747,7 +748,7 @@ export const Products = () => {
                     icon={Tags}>
                     <div className='p-6'>
                         <label className='block text-sm font-medium text-on-body mb-2'>
-                            Nombre
+                            Nombre{' '}<RequiredIndicator />
                         </label>
                         <input
                             type='text'

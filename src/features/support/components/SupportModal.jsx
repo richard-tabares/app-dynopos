@@ -2,6 +2,7 @@ import { Loader, Send, MessageCircleQuestionMark } from 'lucide-react'
 import { useState } from 'react'
 import { sileo } from 'sileo'
 import { Modal } from '../../../shared/components/Modal'
+import { RequiredIndicator } from '../../../shared/components/RequiredIndicator'
 import { useIsMobileDevice } from '../../../shared/hooks/useIsMobileDevice'
 import { createSupportTicket } from '../helpers/createSupportTicket'
 
@@ -52,7 +53,7 @@ export const SupportModal = ({ onClose }) => {
                 <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
                     <section>
                         <label className='block text-sm font-medium text-on-body mb-1'>
-                            Tipo de reporte
+                            Tipo de reporte{' '}<RequiredIndicator />
                         </label>
                         <select
                             name='type'
@@ -69,7 +70,7 @@ export const SupportModal = ({ onClose }) => {
                     </section>
                     <section>
                         <label className='block text-sm font-medium text-on-body mb-1'>
-                            Asunto
+                            Asunto{' '}<RequiredIndicator />
                         </label>
                         <input
                             type='text'
@@ -83,7 +84,7 @@ export const SupportModal = ({ onClose }) => {
                     </section>
                     <section>
                         <label className='block text-sm font-medium text-on-body mb-1'>
-                            Descripción
+                            Descripción{' '}<RequiredIndicator />
                         </label>
                         <textarea
                             name='description'

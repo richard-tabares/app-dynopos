@@ -1,6 +1,7 @@
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { X, ShoppingCart } from 'lucide-react'
 import { useEscape } from '../../../shared/helpers/useEscape'
+import { RequiredIndicator } from '../../../shared/components/RequiredIndicator'
 import { useStore } from '../../../app/providers/store'
 
 const nf = (value) =>
@@ -116,7 +117,7 @@ export const QuantityModal = ({ product, variation, onClose }) => {
 
                     <section>
                         <label className='block text-sm font-medium text-on-body mb-1'>
-                            Cantidad
+                            Cantidad{' '}<RequiredIndicator />
                         </label>
                         <div className='flex w-full'>
                             <input

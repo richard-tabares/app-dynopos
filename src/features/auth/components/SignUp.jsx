@@ -5,6 +5,7 @@ import { checkEmail } from '../helpers/checkEmail'
 import { NavLink, useNavigate } from 'react-router'
 import { sileo } from 'sileo'
 import { encryptData } from '../../../shared/helpers/crypto'
+import { RequiredIndicator } from '../../../shared/components/RequiredIndicator'
 
 export const SignUp = () => {
     const navigate = useNavigate()
@@ -224,7 +225,7 @@ export const SignUp = () => {
                             htmlFor='businessName'
                             className='font-semibold text-on-surface'>
                             Empresa{' '}
-                            <span className='text-red-500 font-bold'>*</span>
+                            <RequiredIndicator />
                         </label>
                         <input
                             type='text'
@@ -252,7 +253,7 @@ export const SignUp = () => {
                             htmlFor='ownerName'
                             className='font-semibold text-on-surface'>
                             Nombres y Apellidos{' '}
-                            <span className='text-red-500 font-bold'>*</span>
+                            <RequiredIndicator />
                         </label>
                         <input
                             type='text'
@@ -280,7 +281,7 @@ export const SignUp = () => {
                             htmlFor='email'
                             className='font-semibold text-on-surface'>
                             Email{' '}
-                            <span className='text-red-500 font-bold'>*</span>
+                            <RequiredIndicator />
                         </label>
                         <input
                             type='email'
@@ -323,7 +324,7 @@ export const SignUp = () => {
                             htmlFor='password'
                             className='font-semibold text-on-surface'>
                             Contraseña{' '}
-                            <span className='text-red-500 font-bold'>*</span>
+                            <RequiredIndicator />
                         </label>
                         <section className='relative flex items-center'>
                             <input
@@ -378,7 +379,7 @@ export const SignUp = () => {
                             htmlFor='confirmPassword'
                             className='font-semibold text-on-surface'>
                             Confirmar Contraseña{' '}
-                            <span className='text-red-500 font-bold'>*</span>
+                            <RequiredIndicator />
                         </label>
                         <section className='relative flex items-center'>
                             <input
@@ -424,7 +425,7 @@ export const SignUp = () => {
                             htmlFor='phone'
                             className='font-semibold text-on-surface'>
                             Teléfono{' '}
-                            <span className='text-red-500 font-bold'>*</span>
+                            <RequiredIndicator />
                         </label>
                         <input
                             type='tel'

@@ -4,6 +4,7 @@ import { sileo } from 'sileo'
 import { useNavigate } from 'react-router'
 import { useStore } from '../../../../app/providers/store'
 import { changePassword } from '../../account/helpers/changePassword'
+import { RequiredIndicator } from '../../../../shared/components/RequiredIndicator'
 
 export const Security = () => {
     const { user, setLogOut } = useStore()
@@ -75,7 +76,7 @@ export const Security = () => {
         <div className='p-6'>
                 <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
                     <section>
-                        <label className='block text-sm font-medium text-on-body mb-1'>Contraseña Actual</label>
+                        <label className='block text-sm font-medium text-on-body mb-1'>Contraseña Actual{' '}<RequiredIndicator /></label>
                         <div className='relative flex items-center'>
                             <input
                                 type={showPasswords.current ? 'text' : 'password'}
@@ -94,7 +95,7 @@ export const Security = () => {
                         </div>
                     </section>
                     <section>
-                        <label className='block text-sm font-medium text-on-body mb-1'>Nueva Contraseña</label>
+                        <label className='block text-sm font-medium text-on-body mb-1'>Nueva Contraseña{' '}<RequiredIndicator /></label>
                         <div className='relative flex items-center'>
                             <input
                                 type={showPasswords.new ? 'text' : 'password'}
@@ -113,7 +114,7 @@ export const Security = () => {
                         </div>
                     </section>
                     <section>
-                        <label className='block text-sm font-medium text-on-body mb-1'>Confirmar Contraseña</label>
+                        <label className='block text-sm font-medium text-on-body mb-1'>Confirmar Contraseña{' '}<RequiredIndicator /></label>
                         <div className='relative flex items-center'>
                             <input
                                 type={showPasswords.confirm ? 'text' : 'password'}
