@@ -4,9 +4,7 @@ import { sileo } from 'sileo'
 import { useStore } from '../../app/providers/store'
 
 const formatCurrency = (value) =>
-    new Intl.NumberFormat('es-CO', {
-        style: 'currency',
-        currency: 'COP',
+    '$ ' + new Intl.NumberFormat('es-CO', {
         maximumFractionDigits: 0,
     }).format(value)
 

@@ -52,7 +52,14 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
         setPrinting(true)
 
         try {
-            const result = await handlePrint(sale, business)
+            const saleWithUnits = {
+                ...sale,
+                items: (sale.items || []).map((item) => {
+                    const unitId = item.sold_in_unit_id || item.soldInUnitId
+                    return { ...item, displayUnit: item.displayUnit || (unitId ? unitsOfMeasure.find(u => u.id === unitId)?.short_name : '') || '' }
+                }),
+            }
+            const result = await handlePrint(saleWithUnits, business)
 
             if (result.success) {
                 sileo.success({
@@ -98,15 +105,19 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
                 date: sale.date || '',
                 paymentMethod: sale.paymentMethod || '',
                 salesperson: sale.salesperson || '',
-                items: (sale.items || []).map((item) => ({
-                    name: item.name || '',
-                    variationName: item.variation_name || '',
-                    quantity: item.quantity || 0,
-                    price: item.price || 0,
-                    subtotal: item.subtotal || 0,
-                    displayUnit: item.display_unit_short || '',
-                    decimalPlaces: item.decimal_places || 0,
-                })),
+                items: (sale.items || []).map((item) => {
+                    const unitId = item.sold_in_unit_id || item.soldInUnitId
+                    const dUnit = item.displayUnit || (unitId ? unitsOfMeasure.find(u => u.id === unitId)?.short_name : '') || ''
+                    return {
+                        name: item.name || '',
+                        variationName: item.variation_name || '',
+                        quantity: item.quantity || 0,
+                        price: item.price || 0,
+                        subtotal: item.subtotal || 0,
+                        displayUnit: dUnit,
+                        decimalPlaces: item.decimal_places || 0,
+                    }
+                }),
                 total: sale.total || 0,
                 footer: ticketFooter,
             }
@@ -132,9 +143,7 @@ export const SaleTicketModal = ({ isOpen, onClose, sale, onSaleUpdated }) => {
     if (!isOpen || !sale) return null
 
     const formatCurrency = (value) =>
-        new Intl.NumberFormat('es-CO', {
-            style: 'currency',
-            currency: 'COP',
+        '$ ' + new Intl.NumberFormat('es-CO', {
             maximumFractionDigits: 0,
         }).format(value)
 

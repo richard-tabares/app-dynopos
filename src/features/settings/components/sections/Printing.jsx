@@ -3,7 +3,7 @@ import { Printer, Loader, CheckCircle, XCircle, RotateCw } from 'lucide-react'
 import { sileo } from 'sileo'
 import { useStore } from '../../../../app/providers/store'
 import { updateProfile } from '../../account/helpers/updateProfile'
-import { checkAgent, getPrinters, printTicket, setStoredPrinter, getStoredPrinter } from '../../../../shared/helpers/printEngine'
+import { checkAgent, getPrinters, refreshPrinters, printTicket, setStoredPrinter, getStoredPrinter } from '../../../../shared/helpers/printEngine'
 import { isAndroid, getRawBTPlayStoreUrl } from '../../../../shared/helpers/rawbtPrint'
 
 export const Printing = () => {
@@ -56,13 +56,13 @@ export const Printing = () => {
         }
     }
 
-    const refreshAgentStatus = useCallback(async () => {
+    const refreshAgentStatus = useCallback(async (fullRefresh = false) => {
         setCheckingAgent(true)
         try {
             const health = await checkAgent()
             if (health) {
                 setAgentStatus('connected')
-                const result = await getPrinters()
+                const result = fullRefresh ? await refreshPrinters() : await getPrinters()
                 setAvailablePrinters(result.printers || [])
             } else {
                 setAgentStatus('disconnected')
@@ -191,7 +191,7 @@ export const Printing = () => {
                                         </div>
                                     )}
                                     <button
-                                        onClick={refreshAgentStatus}
+                                        onClick={() => refreshAgentStatus(true)}
                                         className='p-1.5 border border-outline rounded-md hover:bg-hover transition cursor-pointer'
                                         title='Actualizar estado'>
                                         <RotateCw className='w-3.5 h-3.5 text-muted' />

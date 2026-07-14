@@ -20,7 +20,20 @@ export async function checkAgent() {
 export async function getPrinters() {
   try {
     const res = await fetch(`${AGENT_URL}/api/printers`, {
-      signal: AbortSignal.timeout(TIMEOUT),
+      signal: AbortSignal.timeout(10000),
+    })
+    if (!res.ok) return { printers: [] }
+    return await res.json()
+  } catch {
+    return { printers: [] }
+  }
+}
+
+export async function refreshPrinters() {
+  try {
+    const res = await fetch(`${AGENT_URL}/api/printers/refresh`, {
+      method: 'POST',
+      signal: AbortSignal.timeout(20000),
     })
     if (!res.ok) return { printers: [] }
     return await res.json()
