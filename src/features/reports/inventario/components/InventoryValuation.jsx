@@ -3,6 +3,7 @@ import { Search, DollarSign, ChevronDown } from 'lucide-react'
 import { normalizeSearch } from '../../../../shared/helpers/normalizeSearch'
 import { useStore } from '../../../../app/providers/store'
 import { getUnitLabel, ensureUnitsLoaded } from '../../../../shared/helpers/unitsOfMeasure'
+import { ensureCategoriesLoaded } from '../../../../shared/helpers/ensureCategoriesLoaded'
 
 const formatCurrency = (value) =>
     new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(value)
@@ -10,27 +11,47 @@ const formatCurrency = (value) =>
 export const InventoryValuation = ({ data = [] }) => {
     const unitsOfMeasure = useStore((state) => state.unitsOfMeasure)
     const setUnitsOfMeasure = useStore((state) => state.setUnitsOfMeasure)
+    const categories = useStore((state) => state.categories)
+    const setCategories = useStore((state) => state.setCategories)
+    const user = useStore((state) => state.user)
+    const businessId = user?.profile?.business_id || user?.data?.user?.id
     const [visibleCount, setVisibleCount] = useState(10)
     const [search, setSearch] = useState('')
+    const [selectedCategoryIds, setSelectedCategoryIds] = useState([])
 
     useEffect(() => {
         ensureUnitsLoaded(unitsOfMeasure, setUnitsOfMeasure)
     }, [unitsOfMeasure, setUnitsOfMeasure])
 
-    const totalValuation = useMemo(() =>
-        data.reduce((sum, item) => sum + Number(item.total_value), 0),
-    [data])
+    useEffect(() => {
+        ensureCategoriesLoaded(categories, setCategories, businessId)
+    }, [categories, setCategories, businessId])
+
+    const selectedCategoryNames = useMemo(
+        () => categories.filter((c) => selectedCategoryIds.includes(c.id)).map((c) => c.name),
+        [categories, selectedCategoryIds],
+    )
 
     const filtered = useMemo(() => {
-        if (!search.trim()) return data
-        const term = normalizeSearch(search)
-        return data.filter(item =>
-            normalizeSearch(item.product_name).includes(term) ||
-            normalizeSearch(item.variation_name || '').includes(term) ||
-            normalizeSearch(item.sku).includes(term) ||
-            (item.barcode && normalizeSearch(item.barcode).includes(term))
-        )
-    }, [data, search])
+        let result = data
+        if (search.trim()) {
+            const term = normalizeSearch(search)
+            result = result.filter(item =>
+                normalizeSearch(item.product_name).includes(term) ||
+                normalizeSearch(item.variation_name || '').includes(term) ||
+                normalizeSearch(item.sku).includes(term) ||
+                (item.barcode && normalizeSearch(item.barcode).includes(term))
+            )
+        }
+        if (selectedCategoryNames.length > 0) {
+            result = result.filter((d) => d.category_name && selectedCategoryNames.includes(d.category_name))
+        }
+        return result
+    }, [data, search, selectedCategoryNames])
+
+    const totalValuation = useMemo(() =>
+        filtered.reduce((sum, item) => sum + Number(item.total_value), 0),
+    [filtered])
 
     const visible = filtered.slice(0, visibleCount)
 
@@ -55,6 +76,33 @@ export const InventoryValuation = ({ data = [] }) => {
                     className='w-full border border-divider rounded-md pl-10 pr-3 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
                 />
             </div>
+
+            {categories.length > 0 && (
+                <div className='flex flex-wrap items-center gap-2 mb-4'>
+                    {categories.map((cat) => {
+                        const isSelected = selectedCategoryIds.includes(cat.id)
+                        return (
+                            <button
+                                key={cat.id}
+                                onClick={() => {
+                                    setSelectedCategoryIds((prev) =>
+                                        prev.includes(cat.id)
+                                            ? prev.filter((id) => id !== cat.id)
+                                            : [...prev, cat.id],
+                                    )
+                                    setVisibleCount(10)
+                                }}
+                                className={`rounded-full px-3.5 py-1.5 text-sm font-medium border transition-colors cursor-pointer whitespace-nowrap ${
+                                    isSelected
+                                        ? 'bg-surface text-accent border-accent'
+                                        : 'bg-surface text-on-surface border-divider hover:border-accent/50'
+                                }`}>
+                                {cat.name}
+                            </button>
+                        )
+                    })}
+                </div>
+            )}
 
             <div className='overflow-x-auto'>
                 {visible.length > 0 ? (

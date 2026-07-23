@@ -5,6 +5,7 @@ import { getReports } from '../../shared/helpers/getReports'
 import { useStore } from '../../../../app/providers/store'
 import { normalizeSearch } from '../../../../shared/helpers/normalizeSearch'
 import { getUnitLabel, ensureUnitsLoaded } from '../../../../shared/helpers/unitsOfMeasure'
+import { ensureCategoriesLoaded } from '../../../../shared/helpers/ensureCategoriesLoaded'
 
 const formatCurrency = (value) =>
     new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(value)
@@ -30,7 +31,7 @@ const computeDates = (filter) => {
 }
 
 export const GananciasReports = () => {
-    const { user, unitsOfMeasure, setUnitsOfMeasure } = useStore()
+    const { user, unitsOfMeasure, setUnitsOfMeasure, categories, setCategories } = useStore()
     const businessId = user?.profile?.business_id || user?.data?.user?.id
 
     const [filter, setFilter] = useState('month')
@@ -41,6 +42,7 @@ export const GananciasReports = () => {
     const [data, setData] = useState(null)
     const initialLoad = useRef(true)
     const [searchTerm, setSearchTerm] = useState('')
+    const [selectedCategoryIds, setSelectedCategoryIds] = useState([])
     const [visibleCount, setVisibleCount] = useState(10)
 
     const fetchData = useCallback(async () => {
@@ -74,6 +76,10 @@ export const GananciasReports = () => {
         ensureUnitsLoaded(unitsOfMeasure, setUnitsOfMeasure)
     }, [unitsOfMeasure, setUnitsOfMeasure])
 
+    useEffect(() => {
+        ensureCategoriesLoaded(categories, setCategories, businessId)
+    }, [categories, setCategories, businessId])
+
     const handleFilterChange = ({ filter: newFilter, startDate, endDate }) => {
         setFilter(newFilter)
         if (newFilter === 'range') {
@@ -93,14 +99,26 @@ export const GananciasReports = () => {
 
     const summary = data?.summary
     const productMargins = useMemo(() => data?.productMargins || [], [data])
+
+    const selectedCategoryNames = useMemo(
+        () => categories.filter((c) => selectedCategoryIds.includes(c.id)).map((c) => c.name),
+        [categories, selectedCategoryIds],
+    )
+
     const filteredMargins = useMemo(() => {
-        if (!searchTerm.trim()) return productMargins
-        const term = normalizeSearch(searchTerm)
-        return productMargins.filter(p =>
-            normalizeSearch(p.name).includes(term) ||
-            normalizeSearch(p.variation_name || '').includes(term)
-        )
-    }, [productMargins, searchTerm])
+        let result = productMargins
+        if (searchTerm.trim()) {
+            const term = normalizeSearch(searchTerm)
+            result = result.filter(p =>
+                normalizeSearch(p.name).includes(term) ||
+                normalizeSearch(p.variation_name || '').includes(term)
+            )
+        }
+        if (selectedCategoryNames.length > 0) {
+            result = result.filter((p) => p.category_name && selectedCategoryNames.includes(p.category_name))
+        }
+        return result
+    }, [productMargins, searchTerm, selectedCategoryNames])
     const visibleMargins = filteredMargins.slice(0, visibleCount)
 
     if (!shouldFetch && filter !== 'month') {
@@ -197,6 +215,32 @@ export const GananciasReports = () => {
                                 className='w-full border border-divider rounded-md pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-accent focus:ring-0'
                             />
                         </div>
+                        {categories.length > 0 && (
+                            <div className='flex flex-wrap items-center gap-2 mb-4'>
+                                {categories.map((cat) => {
+                                    const isSelected = selectedCategoryIds.includes(cat.id)
+                                    return (
+                                        <button
+                                            key={cat.id}
+                                            onClick={() => {
+                                                setSelectedCategoryIds((prev) =>
+                                                    prev.includes(cat.id)
+                                                        ? prev.filter((id) => id !== cat.id)
+                                                        : [...prev, cat.id],
+                                                )
+                                                setVisibleCount(10)
+                                            }}
+                                            className={`rounded-full px-3.5 py-1.5 text-sm font-medium border transition-colors cursor-pointer whitespace-nowrap ${
+                                                isSelected
+                                                    ? 'bg-surface text-accent border-accent'
+                                                    : 'bg-surface text-on-surface border-divider hover:border-accent/50'
+                                            }`}>
+                                            {cat.name}
+                                        </button>
+                                    )
+                                })}
+                            </div>
+                        )}
                         {filteredMargins.length > 0 ? (
                             <div className='overflow-x-auto'>
                                 <table className='w-full text-sm'>

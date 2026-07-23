@@ -9,6 +9,7 @@ import { History, Search, ArrowDownCircle, ArrowUpCircle, ShoppingCart, Undo2, L
 import { useFormatDate } from '../../../../shared/helpers/useFormatDate'
 import { normalizeSearch } from '../../../../shared/helpers/normalizeSearch'
 import { getUnitLabel, ensureUnitsLoaded } from '../../../../shared/helpers/unitsOfMeasure'
+import { ensureCategoriesLoaded } from '../../../../shared/helpers/ensureCategoriesLoaded'
 import { getProducts } from '../../../products/helpers/getProducts'
 import { InventorySummary } from '../components/InventorySummary'
 
@@ -48,7 +49,7 @@ const computeDates = (filter) => {
 }
 
 export const InventoryMovements = () => {
-    const { user, unitsOfMeasure, setUnitsOfMeasure } = useStore()
+    const { user, unitsOfMeasure, setUnitsOfMeasure, categories, setCategories } = useStore()
     const businessId = user?.profile?.business_id || user?.data?.user?.id
 
     const [allProducts, setAllProducts] = useState([])
@@ -69,6 +70,7 @@ export const InventoryMovements = () => {
 
     const [typeFilter, setTypeFilter] = useState('')
     const [searchTerm, setSearchTerm] = useState('')
+    const [movSelectedCategoryIds, setMovSelectedCategoryIds] = useState([])
     const [movVisibleCount, setMovVisibleCount] = useState(10)
 
     const formatDate = useFormatDate()
@@ -93,6 +95,10 @@ export const InventoryMovements = () => {
     useEffect(() => {
         ensureUnitsLoaded(unitsOfMeasure, setUnitsOfMeasure)
     }, [unitsOfMeasure, setUnitsOfMeasure])
+
+    useEffect(() => {
+        ensureCategoriesLoaded(categories, setCategories, businessId)
+    }, [categories, setCategories, businessId])
 
     const activeProducts = allProducts.filter((p) => p.is_active !== false)
 
@@ -159,16 +165,23 @@ export const InventoryMovements = () => {
     }
 
     const filteredMovements = movementsData.filter(m => {
-        if (!searchTerm) return true
-        const term = normalizeSearch(searchTerm)
-        return (
-            normalizeSearch(m.products?.name || '').includes(term) ||
-            normalizeSearch(m.product_variations?.sku || '').includes(term) ||
-            normalizeSearch(m.product_variations?.barcode || '').includes(term) ||
-            normalizeSearch(m.product_variations?.variation_name || '').includes(term) ||
-            normalizeSearch(m.notes || '').includes(term)
-        )
+        if (searchTerm) {
+            const term = normalizeSearch(searchTerm)
+            const matchesSearch =
+                normalizeSearch(m.products?.name || '').includes(term) ||
+                normalizeSearch(m.product_variations?.sku || '').includes(term) ||
+                normalizeSearch(m.product_variations?.barcode || '').includes(term) ||
+                normalizeSearch(m.product_variations?.variation_name || '').includes(term) ||
+                normalizeSearch(m.notes || '').includes(term)
+            if (!matchesSearch) return false
+        }
+        if (movSelectedCategoryIds.length > 0) {
+            const catId = m.products?.category_id
+            if (!catId || !movSelectedCategoryIds.includes(catId)) return false
+        }
+        return true
     })
+
 
     const visibleMovements = filteredMovements.slice(0, movVisibleCount)
     const canShowMovements = shouldFetch || filter === 'month'
@@ -237,6 +250,33 @@ export const InventoryMovements = () => {
                         )
                     })}
                 </div>
+
+                {categories.length > 0 && (
+                    <div className='flex flex-wrap items-center gap-2 mb-4'>
+                        {categories.map((cat) => {
+                            const isSelected = movSelectedCategoryIds.includes(cat.id)
+                            return (
+                                <button
+                                    key={cat.id}
+                                    onClick={() => {
+                                        setMovSelectedCategoryIds((prev) =>
+                                            prev.includes(cat.id)
+                                                ? prev.filter((id) => id !== cat.id)
+                                                : [...prev, cat.id],
+                                        )
+                                        setMovVisibleCount(10)
+                                    }}
+                                    className={`rounded-full px-3.5 py-1.5 text-sm font-medium border transition-colors cursor-pointer whitespace-nowrap ${
+                                        isSelected
+                                            ? 'bg-surface text-accent border-accent'
+                                            : 'bg-surface text-on-surface border-divider hover:border-accent/50'
+                                    }`}>
+                                    {cat.name}
+                                </button>
+                            )
+                        })}
+                    </div>
+                )}
 
                 {!canShowMovements ? (
                     <div className='text-center text-faint italic py-12'>

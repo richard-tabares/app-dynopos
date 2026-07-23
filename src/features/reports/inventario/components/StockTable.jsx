@@ -3,6 +3,7 @@ import { Search, AlertTriangle, PackageCheck, Package, PackageX, Layers, Clipboa
 import { normalizeSearch } from '../../../../shared/helpers/normalizeSearch'
 import { useStore } from '../../../../app/providers/store'
 import { getUnitLabel, ensureUnitsLoaded } from '../../../../shared/helpers/unitsOfMeasure'
+import { ensureCategoriesLoaded } from '../../../../shared/helpers/ensureCategoriesLoaded'
 
 const formatCurrency = (value) =>
     new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(value)
@@ -25,13 +26,27 @@ const stockFilters = [
 export const StockTable = ({ data = [] }) => {
     const unitsOfMeasure = useStore((state) => state.unitsOfMeasure)
     const setUnitsOfMeasure = useStore((state) => state.setUnitsOfMeasure)
+    const categories = useStore((state) => state.categories)
+    const setCategories = useStore((state) => state.setCategories)
+    const user = useStore((state) => state.user)
+    const businessId = user?.profile?.business_id || user?.data?.user?.id
     const [filter, setFilter] = useState('all')
     const [search, setSearch] = useState('')
+    const [selectedCategoryIds, setSelectedCategoryIds] = useState([])
     const [visibleCount, setVisibleCount] = useState(10)
 
     useEffect(() => {
         ensureUnitsLoaded(unitsOfMeasure, setUnitsOfMeasure)
     }, [unitsOfMeasure, setUnitsOfMeasure])
+
+    useEffect(() => {
+        ensureCategoriesLoaded(categories, setCategories, businessId)
+    }, [categories, setCategories, businessId])
+
+    const selectedCategoryNames = useMemo(
+        () => categories.filter((c) => selectedCategoryIds.includes(c.id)).map((c) => c.name),
+        [categories, selectedCategoryIds],
+    )
 
     const filtered = useMemo(() => {
         let result = filter === 'all' ? data : data.filter(d => d.stock_status === filter)
@@ -44,8 +59,11 @@ export const StockTable = ({ data = [] }) => {
                 (d.barcode && normalizeSearch(d.barcode).includes(term))
             )
         }
+        if (selectedCategoryNames.length > 0) {
+            result = result.filter((d) => d.category_name && selectedCategoryNames.includes(d.category_name))
+        }
         return result
-    }, [data, filter, search])
+    }, [data, filter, search, selectedCategoryNames])
 
     const visible = filtered.slice(0, visibleCount)
 
@@ -56,6 +74,17 @@ export const StockTable = ({ data = [] }) => {
             <div className='flex items-center gap-2 text-accent mb-4'>
                 <ClipboardList className='w-5 h-5' />
                 <h3 className='text-lg font-semibold text-on-surface'>Estado de Inventario</h3>
+            </div>
+
+            <div className='relative mb-4'>
+                <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-faint' />
+                <input
+                    type='text'
+                    value={search}
+                    onChange={(e) => { setSearch(e.target.value); setVisibleCount(10) }}
+                    placeholder='Buscar por código o nombre...'
+                    className='w-full border border-divider rounded-md pl-10 pr-3 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
+                />
             </div>
 
             <div className='flex gap-2 bg-disabled/70 rounded-lg p-1 w-fit max-w-full overflow-x-auto scrollbar-none mb-4'>
@@ -78,16 +107,32 @@ export const StockTable = ({ data = [] }) => {
                 })}
             </div>
 
-            <div className='relative mb-4'>
-                <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-faint' />
-                <input
-                    type='text'
-                    value={search}
-                    onChange={(e) => { setSearch(e.target.value); setVisibleCount(10) }}
-                    placeholder='Buscar por código o nombre...'
-                    className='w-full border border-divider rounded-md pl-10 pr-3 py-3 text-sm focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300'
-                />
-            </div>
+            {categories.length > 0 && (
+                <div className='flex flex-wrap items-center gap-2 mb-4'>
+                    {categories.map((cat) => {
+                        const isSelected = selectedCategoryIds.includes(cat.id)
+                        return (
+                            <button
+                                key={cat.id}
+                                onClick={() => {
+                                    setSelectedCategoryIds((prev) =>
+                                        prev.includes(cat.id)
+                                            ? prev.filter((id) => id !== cat.id)
+                                            : [...prev, cat.id],
+                                    )
+                                    setVisibleCount(10)
+                                }}
+                                className={`rounded-full px-3.5 py-1.5 text-sm font-medium border transition-colors cursor-pointer whitespace-nowrap ${
+                                    isSelected
+                                        ? 'bg-surface text-accent border-accent'
+                                        : 'bg-surface text-on-surface border-divider hover:border-accent/50'
+                                }`}>
+                                {cat.name}
+                            </button>
+                        )
+                    })}
+                </div>
+            )}
 
             <div className='overflow-x-auto'>
                 {visible.length > 0 ? (
