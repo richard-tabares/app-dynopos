@@ -57,6 +57,7 @@ export const Products = () => {
     const [searchTerm, setSearchTerm] = useState('')
     const [activeStatus, setActiveStatus] = useState('all')
     const [stockFilter, setStockFilter] = useState('all')
+    const [selectedCategoryIds, setSelectedCategoryIds] = useState([])
     const [visibleCount, setVisibleCount] = useState(20)
     const { user, products, setProducts, categories, setCategories, unitsOfMeasure, setUnitsOfMeasure } =
         useStore()
@@ -122,7 +123,11 @@ export const Products = () => {
                     })
             }
 
-            return matchesSearch && matchesStatus && matchesStock
+            const matchesCategory =
+                selectedCategoryIds.length === 0 ||
+                (product.categories?.id && selectedCategoryIds.includes(product.categories.id))
+
+            return matchesSearch && matchesStatus && matchesStock && matchesCategory
         })
         // Products come from API in default order
         .sort((a, b) => (b.created_at || '').localeCompare(a.created_at || ''))
@@ -1093,6 +1098,32 @@ export const Products = () => {
                                 </button>
                             </div>
                         </div>
+                        {categories.length > 0 && (
+                            <div className='flex flex-wrap items-center gap-2'>
+                                {categories.map((cat) => {
+                                    const isSelected = selectedCategoryIds.includes(cat.id)
+                                    return (
+                                        <button
+                                            key={cat.id}
+                                            onClick={() => {
+                                                setSelectedCategoryIds((prev) =>
+                                                    prev.includes(cat.id)
+                                                        ? prev.filter((id) => id !== cat.id)
+                                                        : [...prev, cat.id],
+                                                )
+                                                setVisibleCount(20)
+                                            }}
+                                            className={`rounded-full px-3.5 py-1.5 text-sm font-medium border transition-colors cursor-pointer whitespace-nowrap ${
+                                                isSelected
+                                                    ? 'bg-surface text-accent border-accent'
+                                                    : 'bg-surface text-on-surface border-divider hover:border-accent/50'
+                                            }`}>
+                                            {cat.name}
+                                        </button>
+                                    )
+                                })}
+                            </div>
+                        )}
                     </section>
                     <div className='overflow-x-auto max-lg:px-4 px-6 pb-2'>
                         <table className='text-sm overflow-hidden rounded-t-lg w-full'>
