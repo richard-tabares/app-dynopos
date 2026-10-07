@@ -183,7 +183,7 @@ export const Sales = () => {
                     ticketNumber: sale.ticket_number,
                     date: sale.created_at?.split('T')[0] || '',
                     paymentMethod: sale.payment_method,
-                    salesperson: currentUser?.profile?.full_name || currentUser?.data?.user?.email || '',
+                    salesperson: currentUser?.profile?.display_name || currentUser?.data?.user?.email || '',
                     items: (sale.salesItems || []).map((item, i) => ({
                         name: item.products?.name || '',
                         variationName: item.variation_name || '',
